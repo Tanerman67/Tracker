@@ -554,3 +554,46 @@ DATA SAFETY
 - schemaVersion remains 2.
 - Adaptive Trends is render-only and writes nothing to storage.
 - No stored data field was renamed or migrated.
+
+
+V6.7.3 — INTERACTIVE TRENDS
+
+RANGES
+- 7 days: daily values
+- 30 days: daily values
+- 3 months: calendar-week aggregation
+- 1 year: exactly 12 calendar-month buckets ending with the current month
+- All time: calendar-quarter aggregation from the first available record for the selected metric
+
+AGGREGATION
+- Weight: average measurement within weekly/monthly/quarterly bucket
+- Sleep: average across logged nights
+- Steps: average across logged days
+- Protein: average across logged days
+- Outdoors: average across logged days
+- English: total practice minutes
+- Gym: number of workout sessions
+
+READABILITY FIX
+- Axis labels are no longer rendered inside the stretchable SVG.
+- Y-axis values are normal HTML text in a dedicated 52 px column.
+- X-axis dates/period labels are normal HTML text in a dedicated bottom row.
+- This prevents the left/right and bottom labels from being horizontally or vertically squashed on iPhone.
+- Chart height and label contrast were increased.
+
+INTERACTION
+- Every visible data point or workout bar has a large invisible tap target.
+- Tapping shows an exact detail card below the chart:
+  period/date, exact value, and logged-day count / aggregation meaning.
+- Selected points are visibly highlighted.
+
+GOAL LINES
+- 3-month English/Gym use weekly goals.
+- 1-year English/Gym use monthly equivalents.
+- All-time English/Gym use quarterly equivalents.
+- Sleep/Steps/Protein/Outdoors retain their daily target reference.
+
+DATA SAFETY
+- schemaVersion remains 2.
+- Trends are computed at render time.
+- No stored data field is renamed, migrated, duplicated, or deleted.
