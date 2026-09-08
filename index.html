@@ -222,7 +222,7 @@ input,select,textarea{
 }
 
 
-/* V6.3 GitHub compact home */
+/* V6.4 GitHub compact home */
 .metric-card{
   min-height:98px;
   padding:12px 13px;
@@ -246,7 +246,7 @@ input,select,textarea{
 }
 
 
-/* V6.3 GitHub: smoke/alcohol cards are statistic-only and sit on top */
+/* V6.4 GitHub: smoke/alcohol cards are statistic-only and sit on top */
 .metric-static{cursor:default}
 .metric-static .metric-head{align-items:center}
 .metric-mini-stat{
@@ -267,7 +267,7 @@ input,select,textarea{
 }
 
 
-/* V6.3 GitHub Health actual-history view */
+/* V6.4 GitHub Health actual-history view */
 .health-data-card{padding:15px 16px}
 .health-data-card .goal-top{align-items:flex-start}
 .health-main{min-width:0;flex:1}
@@ -285,7 +285,7 @@ input,select,textarea{
 }
 
 
-/* V6.3 GitHub Steps input restored on Today */
+/* V6.4 GitHub Steps input restored on Today */
 .metric-wide{
   grid-column:1 / -1;
 }
@@ -305,7 +305,7 @@ input,select,textarea{
 }
 
 
-/* V6.3 GitHub — Weight card + exact 2×4 Today grid */
+/* V6.4 GitHub — Weight card + exact 2×4 Today grid */
 .metric-weight{
   cursor:pointer;
 }
@@ -341,7 +341,7 @@ input,select,textarea{
 }
 
 
-/* V6.3 GitHub — storage safety status */
+/* V6.4 GitHub — storage safety status */
 .storage-ok{color:#71ffd0}
 .storage-warn{color:#ffd27a}
 .backup-reminder{
@@ -363,7 +363,7 @@ input,select,textarea{
 }
 
 
-/* V6.3 GitHub Alcohol calendar */
+/* V6.4 GitHub Alcohol calendar */
 .metric-alcohol-clickable{cursor:pointer!important}
 .metric-alcohol-clickable:active{transform:scale(.985)}
 .alcohol-modal{display:none;position:fixed;inset:0;z-index:120;overflow:auto;background:radial-gradient(circle at 10% -5%,rgba(44,223,167,.18),transparent 27%),radial-gradient(circle at 100% 7%,rgba(107,102,255,.22),transparent 31%),linear-gradient(180deg,rgba(4,13,22,.99),rgba(5,9,18,.995));-webkit-overflow-scrolling:touch}
@@ -551,13 +551,123 @@ input,select,textarea{
   .body-checkin-grid{grid-template-columns:1fr}
 }
 
+
+/* V6.4 Motivation Engine */
+.motivation-card{
+  cursor:pointer;
+  position:relative;
+  transition:transform .14s ease,border-color .2s ease,box-shadow .2s ease;
+}
+.motivation-card:active{transform:scale(.992)}
+.motivation-card.milestone{
+  border-color:rgba(95,255,211,.34);
+  box-shadow:0 20px 48px rgba(0,0,0,.29),0 0 28px rgba(44,223,167,.10),0 0 24px rgba(107,102,255,.08);
+}
+.motivation-card.medical{
+  border-color:rgba(126,119,255,.31);
+}
+.motivation-copy{min-width:0}
+.motivation-kicker{
+  display:none;
+  width:max-content;
+  max-width:100%;
+  margin-bottom:6px;
+  padding:4px 8px;
+  border-radius:999px;
+  font-size:9px;
+  font-weight:800;
+  letter-spacing:.06em;
+  text-transform:uppercase;
+  color:#7fffd6;
+  background:rgba(28,174,131,.10);
+  border:1px solid rgba(80,255,204,.15);
+}
+.motivation-card.milestone .motivation-kicker,
+.motivation-card.medical .motivation-kicker{display:inline-flex}
+.motivation-card.medical .motivation-kicker{
+  color:#c1bdff;
+  background:rgba(93,79,211,.12);
+  border-color:rgba(133,122,255,.20)
+}
+.motivation-card .quote-sub{
+  display:flex;
+  align-items:center;
+  gap:6px;
+}
+.motivation-card .quote-sub:after{
+  content:'›';
+  font-size:17px;
+  opacity:.7;
+  line-height:1;
+}
+.motivation-card.generic .quote-sub:after{opacity:.35}
+
+.motivation-modal{
+  display:none;position:fixed;inset:0;z-index:150;
+  align-items:flex-end;justify-content:center;
+  background:rgba(1,5,10,.72);
+  backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px)
+}
+.motivation-modal.show{display:flex}
+.motivation-sheet{
+  width:min(620px,100%);
+  position:relative;
+  border-radius:28px 28px 0 0;
+  padding:23px 18px calc(20px + env(safe-area-inset-bottom));
+  background:
+    radial-gradient(circle at 0 0,rgba(44,223,167,.13),transparent 34%),
+    radial-gradient(circle at 100% 0,rgba(107,102,255,.18),transparent 40%),
+    linear-gradient(180deg,rgba(14,31,43,.995),rgba(7,15,26,.998));
+  border:1px solid rgba(103,139,205,.16);
+  border-bottom:0;
+  box-shadow:0 -18px 55px rgba(0,0,0,.45)
+}
+.motivation-detail-icon{
+  width:54px;height:54px;border-radius:18px;
+  display:grid;place-items:center;
+  font-size:29px;
+  background:linear-gradient(145deg,rgba(34,190,144,.18),rgba(93,83,218,.20));
+  border:1px solid rgba(91,255,209,.17);
+  margin-bottom:12px
+}
+.motivation-detail-kicker{
+  width:max-content;
+  padding:5px 9px;border-radius:999px;
+  font-size:9.5px;font-weight:850;letter-spacing:.06em;text-transform:uppercase;
+  color:#82ffd7;background:rgba(40,180,140,.10);border:1px solid rgba(80,255,204,.15)
+}
+.motivation-sheet h3{font-size:24px;margin:9px 44px 9px 0;line-height:1.15}
+.motivation-detail-text{
+  color:#b8ccda;font-size:14px;line-height:1.55
+}
+.motivation-source-box{
+  margin-top:16px;padding:13px;border-radius:16px;
+  background:rgba(10,24,39,.60);
+  border:1px solid rgba(111,104,255,.17)
+}
+.motivation-source-box strong{display:block;margin:4px 0 10px;font-size:13px}
+.motivation-source-box button{width:100%;padding:10px 12px}
+.motivation-ack-btn{width:100%;margin-top:16px}
+@media(max-width:430px){
+  .motivation-card .quote-text{font-size:18px}
+  .motivation-card .quote-left{font-size:28px}
+}
+
 </style>
 </head>
 <body>
 <div class="app">
 <header><div class="topbar"><div class="brand"><div class="brand-icon">🌱</div><div><h1>Мой ритм</h1><div class="sub">Лучше, чем вчера</div></div></div><div class="top-actions"><button id="topLanguageBtn" class="top-mini ghost" onclick="toggleLanguage()">RU</button><button class="top-icon ghost" onclick="show('progress',document.getElementById('tabProgress'))">⌕</button><button class="top-icon ghost" onclick="show('analytics',document.getElementById('tabAnalytics'))">⚙</button></div></div></header>
 
-<section id="today" class="section active"><div class="home-stack"><div class="hero card"><div class="hero-row"><div><div class="hero-title">Сегодня</div><div class="hero-date" id="heroDate"></div></div><div class="hero-pill"><span class="hero-star">✦</span><span id="heroTip">Маленькие шаги меняют большие жизни</span></div></div></div><div id="todayGrid" class="metric-grid"></div><div class="quote-card card"><div class="quote-left">🌱</div><div><div class="quote-text">Дисциплина сегодня — свобода завтра.</div><div class="quote-sub">Мой ритм</div></div><div class="quote-art"><div class="moon"></div><div class="mount"></div></div></div></div></section>
+<section id="today" class="section active"><div class="home-stack"><div class="hero card"><div class="hero-row"><div><div class="hero-title">Сегодня</div><div class="hero-date" id="heroDate"></div></div><div class="hero-pill"><span class="hero-star">✦</span><span id="heroTip">Маленькие шаги меняют большие жизни</span></div></div></div><div id="todayGrid" class="metric-grid"></div><div id="motivationCard" class="quote-card card motivation-card" onclick="openMotivationDetail()">
+  <div class="quote-left" id="motivationIcon">🌱</div>
+  <div class="motivation-copy">
+    <div class="motivation-kicker" id="motivationKicker"></div>
+    <div class="quote-text" id="motivationText">Дисциплина сегодня — свобода завтра.</div>
+    <div class="quote-sub" id="motivationSub">Мой ритм</div>
+  </div>
+  <div class="quote-art"><div class="moon"></div><div class="mount"></div></div>
+</div></div></section>
 
 
 <section id="english" class="section">
@@ -653,7 +763,7 @@ input,select,textarea{
       Каждое сохранение дублируется локально: основная база + зеркало + IndexedDB snapshots + recovery cache.
       Внешний JSON-backup всё равно нужен перед удалением PWA или очисткой Safari.
     </div>
-    <div class="row"><span>Версия приложения</span><strong id="appVersionText">V6.3 GitHub</strong></div>
+    <div class="row"><span>Версия приложения</span><strong id="appVersionText">V6.4 GitHub</strong></div>
     <div class="row"><span>Версия структуры данных</span><strong id="schemaVersionText">2</strong></div>
     <div class="row"><span>Локальная защита</span><strong id="vaultStatusText">Проверяем…</strong></div>
     <div class="row"><span>Snapshots</span><strong id="vaultSnapshotText">—</strong></div>
@@ -681,6 +791,25 @@ input,select,textarea{
 </div></div>
 
 
+
+
+<div id="motivationModal" class="motivation-modal">
+  <div class="motivation-sheet">
+    <button class="close" onclick="closeMotivationDetail()">✕</button>
+    <div class="motivation-detail-icon" id="motivationDetailIcon">✨</div>
+    <div class="motivation-detail-kicker" id="motivationDetailKicker">Milestone</div>
+    <h3 id="motivationDetailTitle">—</h3>
+    <div class="motivation-detail-text" id="motivationDetailText">—</div>
+
+    <div id="motivationSourceBox" class="motivation-source-box" style="display:none">
+      <div class="small" id="motivationSourceLabel">Источник</div>
+      <strong id="motivationSourceName">—</strong>
+      <button class="secondary" id="motivationSourceBtn" type="button">Открыть источник ↗</button>
+    </div>
+
+    <button id="motivationAckBtn" class="motivation-ack-btn" onclick="acknowledgeMotivation()">Понятно</button>
+  </div>
+</div>
 
 <div id="bodyModal" class="body-modal">
   <div class="body-page">
@@ -880,7 +1009,7 @@ input,select,textarea{
 </div></div>
 
 <script>
-const APP_VERSION='6.3-github';
+const APP_VERSION='6.4-github';
 const DATA_KEY='my-life-tracker-data';
 const MIRROR_KEY='my-life-tracker-data-mirror-v1';
 const CURRENT_SCHEMA_VERSION=2;
@@ -909,6 +1038,7 @@ const defaults={
  bodyMeasurements:{"2026-01-09":{"chest":104,"waist":96,"abdomen":103,"hips":108},"2026-01-23":{"chest":102,"waist":93,"abdomen":101,"hips":106},"2026-02-11":{"chest":99,"waist":91,"abdomen":100,"hips":106},"2026-02-20":{"chest":99,"waist":92,"abdomen":98,"hips":106},"2026-03-07":{"chest":101,"waist":91,"abdomen":99,"hips":108},"2026-03-18":{"chest":99,"waist":92,"abdomen":99,"hips":108},"2026-04-10":{"chest":98,"waist":90,"abdomen":99,"hips":106},"2026-06-12":{"chest":99,"waist":90,"abdomen":98,"hips":107},"2026-06-28":{"chest":102,"waist":90,"abdomen":98,"hips":106}},
  proteinGoal:120,stepsGoal:7000,outdoorsGoal:60,sleepGoal:7.5,englishGoal:240,gymGoal:3,
  trackers:defaultTrackers,logs:{},theme:'dark',language:'ru',experiments:[],
+ motivationSeen:{},
  lastExternalBackupAt:''
 };
 
@@ -990,6 +1120,7 @@ function migrateData(raw){
     alcoholTrackingStart:d.alcoholTrackingStart||defaults.alcoholTrackingStart,
     alcoholHistory:(d.alcoholHistory && typeof d.alcoholHistory==='object') ? d.alcoholHistory : structuredClone(defaults.alcoholHistory),
     bodyMeasurements:(d.bodyMeasurements && typeof d.bodyMeasurements==='object') ? d.bodyMeasurements : structuredClone(defaults.bodyMeasurements),
+    motivationSeen:(d.motivationSeen && typeof d.motivationSeen==='object') ? d.motivationSeen : {},
     lastExternalBackupAt:d.lastExternalBackupAt||''
   };
 
@@ -2197,6 +2328,378 @@ function renderAlcoholCalendar(){
   }
 }
 
+
+const MOTIVATION_SOURCES={
+  acsSmoking:{
+    name:'American Cancer Society',
+    url:'https://www.cancer.org/cancer/risk-prevention/tobacco/guide-quitting-smoking/benefits-of-quitting-smoking-over-time.html'
+  },
+  cdcSmoking:{
+    name:'CDC — Benefits of Quitting Smoking',
+    url:'https://www.cdc.gov/tobacco/about/benefits-of-quitting.html'
+  },
+  cdcAlcohol:{
+    name:'CDC — Alcohol Use and Your Health',
+    url:'https://www.cdc.gov/alcohol/about-alcohol-use/index.html'
+  },
+  whoAlcohol:{
+    name:'WHO — Alcohol and cancer',
+    url:'https://www.who.int/europe/news-room/fact-sheets/item/alcohol-and-cancer'
+  }
+};
+
+const MOTIVATION_GENERIC=[
+  {ru:'Стабильность важнее идеального дня.',en:'Consistency matters more than a perfect day.'},
+  {ru:'Маленькое действие сегодня облегчает большое действие завтра.',en:'A small action today makes the bigger action easier tomorrow.'},
+  {ru:'Смотри на направление, а не на один отдельный день.',en:'Watch the direction, not one isolated day.'},
+  {ru:'Результат складывается из обычных дней.',en:'Progress is built from ordinary days.'},
+  {ru:'Не нужно сделать всё. Сделай то, что двигает тебя вперёд.',en:"You don't need to do everything. Do what moves you forward."},
+  {ru:'Лучший ритм — тот, который можно повторить завтра.',en:'The best rhythm is one you can repeat tomorrow.'},
+  {ru:'Записанный прогресс легче заметить — и легче продолжить.',en:'Tracked progress is easier to see — and easier to continue.'},
+  {ru:'Один хороший выбор не меняет всё. Повторение — меняет.',en:"One good choice doesn't change everything. Repetition does."},
+  {ru:'Сравнивай себя с собой неделю назад.',en:'Compare yourself with yourself a week ago.'},
+  {ru:'Дисциплина сегодня — свобода завтра.',en:'Discipline today — freedom tomorrow.'}
+];
+
+const MOTIVATION_MILESTONES=[
+  // Smoking — official recovery timeline
+  {id:'smoke_1',group:'smoke',threshold:1,icon:'🚭',medical:true,source:'cdcSmoking',
+   ru:'24 часа без сигарет',en:'24 hours smoke-free',
+   detailRu:'После прекращения курения уровень никотина в крови падает до нуля примерно за 24 часа.',
+   detailEn:'After quitting smoking, nicotine levels in the blood fall to zero at about 24 hours.'},
+  {id:'smoke_3',group:'smoke',threshold:3,icon:'🚭',medical:true,source:'cdcSmoking',
+   ru:'Несколько дней без сигарет',en:'Several days smoke-free',
+   detailRu:'В течение нескольких дней уровень угарного газа в крови снижается до уровня человека, который не курит.',
+   detailEn:"Within several days, carbon monoxide in the blood falls to the level of someone who doesn't smoke."},
+  {id:'smoke_30',group:'smoke',threshold:30,icon:'🫁',medical:true,source:'acsSmoking',
+   ru:'Месяц без сигарет',en:'One month smoke-free',
+   detailRu:'В период от 1 до 12 месяцев после отказа от курения обычно уменьшаются кашель и одышка.',
+   detailEn:'During the first 1–12 months after quitting, coughing and shortness of breath decrease.'},
+  {id:'smoke_365',group:'smoke',threshold:365,icon:'❤️',medical:true,source:'acsSmoking',
+   ru:'Год без сигарет',en:'One year smoke-free',
+   detailRu:'Ты вошёл в период 1–2 лет после отказа от курения, когда риск сердечного приступа заметно снижается.',
+   detailEn:'You are now in the 1–2 year period after quitting, when heart-attack risk drops dramatically.'},
+  {id:'smoke_730',group:'smoke',threshold:730,icon:'❤️',medical:true,source:'acsSmoking',
+   ru:'2 года без сигарет',en:'2 years smoke-free',
+   detailRu:'К отметке 1–2 года после отказа от курения риск сердечного приступа заметно снижается.',
+   detailEn:'By the 1–2 year mark after quitting, heart-attack risk drops dramatically.'},
+  {id:'smoke_1825',group:'smoke',threshold:1825,icon:'🫁',medical:true,source:'acsSmoking',
+   ru:'5 лет без сигарет',en:'5 years smoke-free',
+   detailRu:'В период 5–10 лет после отказа риск рака полости рта, горла и гортани снижается примерно вдвое.',
+   detailEn:'During the 5–10 year period after quitting, the risk of cancers of the mouth, throat and larynx is cut about in half.'},
+  {id:'smoke_3650',group:'smoke',threshold:3650,icon:'🫁',medical:true,source:'acsSmoking',
+   ru:'10 лет без сигарет',en:'10 years smoke-free',
+   detailRu:'В период 10–15 лет после отказа риск рака лёгкого снижается примерно вдвое по сравнению с продолжающим курить человеком.',
+   detailEn:'During the 10–15 year period after quitting, lung-cancer risk falls to about half that of a person who continues to smoke.'},
+  {id:'smoke_5475',group:'smoke',threshold:5475,icon:'❤️',medical:true,source:'acsSmoking',
+   ru:'15 лет без сигарет',en:'15 years smoke-free',
+   detailRu:'Примерно через 15 лет риск ишемической болезни сердца становится близким к риску человека, который не курит.',
+   detailEn:"At about 15 years, coronary heart disease risk becomes close to that of a person who doesn't smoke."},
+
+  // Alcohol — no fake recovery timeline; use supported risk facts + achievement
+  {id:'alcohol_7',group:'alcohol',threshold:7,icon:'🍷',medical:true,source:'cdcAlcohol',
+   ru:'7 дней без алкоголя',en:'7 days alcohol-free',
+   detailRu:'Первая полная неделя. CDC отмечает: чем меньше алкоголя человек употребляет, тем ниже связанные с алкоголем риски для здоровья.',
+   detailEn:'A full week. CDC notes that drinking less alcohol lowers alcohol-related health risks.'},
+  {id:'alcohol_14',group:'alcohol',threshold:14,icon:'🍷',
+   ru:'2 недели без алкоголя',en:'2 weeks alcohol-free',
+   detailRu:'Две недели подряд — это уже устойчивый отрезок, а не один удачный день.',
+   detailEn:'Two consecutive weeks is already a sustained stretch, not just one good day.'},
+  {id:'alcohol_30',group:'alcohol',threshold:30,icon:'🍷',medical:true,source:'whoAlcohol',
+   ru:'30 дней без алкоголя',en:'30 days alcohol-free',
+   detailRu:'Месяц без алкоголя. WHO указывает, что для риска рака не установлено безопасного уровня употребления алкоголя: меньше — безопаснее.',
+   detailEn:'A month alcohol-free. WHO states that no safe level has been established for alcohol-related cancer risk: less is safer.'},
+  {id:'alcohol_60',group:'alcohol',threshold:60,icon:'🍷',
+   ru:'60 дней без алкоголя',en:'60 days alcohol-free',
+   detailRu:'Два месяца последовательности. Календарь уже показывает изменение привычки, а не отдельные решения.',
+   detailEn:'Two months of consistency. Your calendar now reflects a changed pattern, not isolated choices.'},
+  {id:'alcohol_90',group:'alcohol',threshold:90,icon:'🍷',medical:true,source:'cdcAlcohol',
+   ru:'90 дней без алкоголя',en:'90 days alcohol-free',
+   detailRu:'Три месяца. Отказ от алкоголя — один из способов снизить связанные с его употреблением риски для здоровья.',
+   detailEn:'Three months. Choosing not to drink is one way to lower alcohol-related health risks.'},
+  {id:'alcohol_180',group:'alcohol',threshold:180,icon:'🍷',
+   ru:'Полгода без алкоголя',en:'Six months alcohol-free',
+   detailRu:'Полгода — длинный отрезок последовательного поведения. Посмотри на годовой календарь: это уже видимая история.',
+   detailEn:'Six months is a long stretch of consistent behaviour. Your year calendar now shows a visible history.'},
+  {id:'alcohol_365',group:'alcohol',threshold:365,icon:'🍷',medical:true,source:'whoAlcohol',
+   ru:'Год без алкоголя',en:'One year alcohol-free',
+   detailRu:'365 дней. WHO подчёркивает, что риск вреда от алкоголя в целом растёт с количеством употребляемого алкоголя.',
+   detailEn:'365 days. WHO emphasizes that alcohol-related harm generally increases as alcohol consumption increases.'},
+
+  // English — accumulated practice
+  {id:'english_600',group:'english',threshold:600,icon:'🇬🇧',ru:'10 часов English',en:'10 hours of English',detailRu:'Ты накопил первые 600 минут практики.',detailEn:'You have accumulated your first 600 minutes of practice.'},
+  {id:'english_1500',group:'english',threshold:1500,icon:'🇬🇧',ru:'25 часов English',en:'25 hours of English',detailRu:'1 500 минут английского уже лежат в твоей истории.',detailEn:'1,500 minutes of English are now in your history.'},
+  {id:'english_3000',group:'english',threshold:3000,icon:'🇬🇧',ru:'50 часов English',en:'50 hours of English',detailRu:'3 000 минут практики — хороший момент посмотреть, какие навыки стали легче.',detailEn:'3,000 minutes of practice is a good point to notice which skills now feel easier.'},
+  {id:'english_6000',group:'english',threshold:6000,icon:'🇬🇧',ru:'100 часов English',en:'100 hours of English',detailRu:'Ты накопил 100 часов реальной практики.',detailEn:'You have accumulated 100 hours of real practice.'},
+  {id:'english_12000',group:'english',threshold:12000,icon:'🇬🇧',ru:'200 часов English',en:'200 hours of English',detailRu:'12 000 минут практики — уже большая собственная история обучения.',detailEn:'12,000 minutes of practice is a substantial personal learning history.'},
+
+  // Gym total
+  {id:'gym_5',group:'gym',threshold:5,icon:'🏋️',ru:'5 тренировок',en:'5 workouts',detailRu:'Первые пять тренировок записаны. Продолжай строить повторяемый ритм.',detailEn:'Your first five workouts are logged. Keep building a repeatable rhythm.'},
+  {id:'gym_10',group:'gym',threshold:10,icon:'🏋️',ru:'10 тренировок',en:'10 workouts',detailRu:'Десять тренировок — уже не случайность.',detailEn:'Ten workouts is no longer a coincidence.'},
+  {id:'gym_25',group:'gym',threshold:25,icon:'🏋️',ru:'25 тренировок',en:'25 workouts',detailRu:'Четверть сотни тренировок в истории My Rhythm.',detailEn:'Twenty-five workouts are now part of your My Rhythm history.'},
+  {id:'gym_50',group:'gym',threshold:50,icon:'🏋️',ru:'50 тренировок',en:'50 workouts',detailRu:'50 тренировок. Посмотри, как изменились вес и замеры тела за этот период.',detailEn:'50 workouts. Compare your weight and body measurements across the same period.'},
+
+  // Protein longest goal streak
+  {id:'protein_3',group:'protein',threshold:3,icon:'🥩',ru:'3 дня белка подряд',en:'3 protein-goal days in a row',detailRu:'Три дня подряд ты достигал своей текущей цели по белку.',detailEn:'You reached your current protein goal three days in a row.'},
+  {id:'protein_7',group:'protein',threshold:7,icon:'🥩',ru:'Неделя по цели белка',en:'A full week on your protein goal',detailRu:'Семь дней подряд с выполненной целью по белку.',detailEn:'Seven consecutive days meeting your protein goal.'},
+  {id:'protein_14',group:'protein',threshold:14,icon:'🥩',ru:'14 дней по цели белка',en:'14 days on your protein goal',detailRu:'Две недели подряд с выполненной целью по белку.',detailEn:'Two consecutive weeks meeting your protein goal.'},
+
+  // Steps longest goal streak
+  {id:'steps_3',group:'steps',threshold:3,icon:'🚶',ru:'3 дня по цели шагов',en:'3 step-goal days in a row',detailRu:'Три дня подряд ты достигал своей цели по шагам.',detailEn:'You reached your step goal three days in a row.'},
+  {id:'steps_7',group:'steps',threshold:7,icon:'🚶',ru:'Неделя по цели шагов',en:'A full week on your step goal',detailRu:'Семь дней подряд с выполненной целью по шагам.',detailEn:'Seven consecutive days meeting your step goal.'},
+  {id:'steps_14',group:'steps',threshold:14,icon:'🚶',ru:'14 дней по цели шагов',en:'14 days on your step goal',detailRu:'Две недели подряд с выполненной целью по шагам.',detailEn:'Two consecutive weeks meeting your step goal.'},
+
+  // Sleep tracking
+  {id:'sleep_7',group:'sleep',threshold:7,icon:'😴',ru:'7 ночей сна записано',en:'7 nights of sleep logged',detailRu:'У тебя уже есть неделя данных сна — теперь тренд становится полезнее одного отдельного значения.',detailEn:'You now have a week of sleep data, so the trend is becoming more useful than a single value.'},
+  {id:'sleep_30',group:'sleep',threshold:30,icon:'😴',ru:'30 ночей сна записано',en:'30 nights of sleep logged',detailRu:'Месяц данных сна. Уже можно сравнивать недели между собой.',detailEn:'A month of sleep data. You can now compare weeks more meaningfully.'},
+  {id:'sleep_90',group:'sleep',threshold:90,icon:'😴',ru:'90 ночей сна записано',en:'90 nights of sleep logged',detailRu:'Три месяца наблюдений за сном — сильная база для персональных трендов.',detailEn:'Three months of sleep observations is a strong base for personal trends.'},
+
+  // Body check-ins
+  {id:'body_1',group:'body',threshold:1,icon:'📏',ru:'Первый Body Check-in',en:'First Body Check-in',detailRu:'Первая точка есть. Следующий замер превратит число в динамику.',detailEn:'Your first point is in. The next measurement turns a number into a trend.'},
+  {id:'body_5',group:'body',threshold:5,icon:'📏',ru:'5 Body Check-ins',en:'5 Body Check-ins',detailRu:'У тебя уже пять точек замеров тела — графики начинают рассказывать историю.',detailEn:'You now have five body-measurement points, so the charts are starting to tell a story.'},
+  {id:'body_10',group:'body',threshold:10,icon:'📏',ru:'10 Body Check-ins',en:'10 Body Check-ins',detailRu:'Десять замеров — достаточно, чтобы смотреть на направление, а не на случайные колебания.',detailEn:'Ten check-ins make it easier to focus on direction rather than random fluctuations.'}
+];
+
+let currentMotivation=null;
+
+function motivationEnglishTotalAll(){
+  let total=0;
+  for(const date of Object.keys(data.logs||{})){
+    const row=data.logs[date]||{};
+    const detailed=(Number(row.english_chatgpt)||0)+(Number(row.english_native)||0)+(Number(row.english_russian)||0)+(Number(row.english_watching)||0);
+    total+=detailed || (Number(row.english_general)||0);
+  }
+  return total;
+}
+
+function motivationGymTotal(){
+  return Object.values(data.logs||{}).filter(row=>row&&row.gym===true).length;
+}
+
+function motivationLoggedCount(id){
+  return Object.values(data.logs||{}).filter(row=>{
+    const v=row?.[id];
+    return v!==undefined&&v!==null&&v!==''&&Number(v)>0;
+  }).length;
+}
+
+function motivationLongestGoalStreak(id,goal){
+  goal=Number(goal||0);
+  if(!goal)return 0;
+  const keys=Object.keys(data.logs||{}).filter(k=>/^\d{4}-\d{2}-\d{2}$/.test(k)).sort();
+  if(!keys.length)return 0;
+  const first=new Date(keys[0]+'T12:00:00');
+  const last=new Date(keys[keys.length-1]+'T12:00:00');
+  let best=0,current=0;
+  for(let d=new Date(first);d<=last;d.setDate(d.getDate()+1)){
+    const key=localDate(d);
+    const v=Number(data.logs?.[key]?.[id]);
+    if(Number.isFinite(v)&&v>=goal){current++;best=Math.max(best,current)}
+    else current=0;
+  }
+  return best;
+}
+
+function motivationBodyCount(){
+  return Object.values(data.bodyMeasurements||{}).filter(row=>row&&typeof row==='object'&&Object.values(row).some(v=>Number(v)>0)).length;
+}
+
+function motivationGroupValue(group){
+  if(group==='smoke')return data.smokeDate?daysSince(data.smokeDate):0;
+  if(group==='alcohol')return alcoholCurrentStreakDays();
+  if(group==='english')return motivationEnglishTotalAll();
+  if(group==='gym')return motivationGymTotal();
+  if(group==='protein')return motivationLongestGoalStreak('protein',data.proteinGoal);
+  if(group==='steps')return motivationLongestGoalStreak('steps',data.stepsGoal);
+  if(group==='sleep')return motivationLoggedCount('sleep');
+  if(group==='body')return motivationBodyCount();
+  return 0;
+}
+
+function motivationHighestUnseen(){
+  const seen=data.motivationSeen||{};
+  const groupOrder=['smoke','alcohol','body','english','gym','protein','steps','sleep'];
+  for(const group of groupOrder){
+    const value=motivationGroupValue(group);
+    const reached=MOTIVATION_MILESTONES
+      .filter(m=>m.group===group&&value>=m.threshold&&!seen[m.id])
+      .sort((a,b)=>b.threshold-a.threshold);
+    if(reached.length){
+      const m={...reached[0]};
+      m.kind=m.medical?'medical':'milestone';
+      m.groupValue=value;
+      return m;
+    }
+  }
+  return null;
+}
+
+function motivationPersonal(){
+  const options=[];
+
+  const alcohol=alcoholCurrentStreakDays();
+  if(alcohol>=2)options.push({
+    kind:'personal',icon:'🍷',
+    ru:`${alcohol} дней без алкоголя`,
+    en:`${alcohol} days alcohol-free`,
+    detailRu:'Текущая серия продолжается. Каждый новый день автоматически добавляется в календарь как день без алкоголя, если ты не отметил обратное.',
+    detailEn:'Your current streak continues. Each new day is automatically treated as alcohol-free unless you mark otherwise.'
+  });
+
+  const smoke=data.smokeDate?daysSince(data.smokeDate):0;
+  if(smoke>=30)options.push({
+    kind:'personal',icon:'🚭',
+    ru:`${smoke} дней без сигарет`,
+    en:`${smoke} days smoke-free`,
+    detailRu:'Это твоя текущая непрерывная серия без сигарет.',
+    detailEn:'This is your current continuous smoke-free streak.'
+  });
+
+  const eng7=englishTotalN(7);
+  if(eng7>0)options.push({
+    kind:'personal',icon:'🇬🇧',
+    ru:`English: ${Math.round(eng7/60*10)/10} ч за 7 дней`,
+    en:`English: ${Math.round(eng7/60*10)/10} h in 7 days`,
+    detailRu:`За последние 7 дней записано ${Math.round(eng7)} минут английского.`,
+    detailEn:`You logged ${Math.round(eng7)} minutes of English in the last 7 days.`
+  });
+
+  const firstWaist=bodyFirst('waist'),latestWaist=bodyLatest('waist');
+  if(firstWaist&&latestWaist&&firstWaist.date!==latestWaist.date){
+    const diff=Math.round((latestWaist.value-firstWaist.value)*10)/10;
+    options.push({
+      kind:'personal',icon:'📏',
+      ru:`Талия: ${bodyFormatDelta(diff,'см')} с первого замера`,
+      en:`Waist: ${bodyFormatDelta(diff,'cm')} from your first check-in`,
+      detailRu:`Первый замер: ${bodyFormatNumber(firstWaist.value)} см. Последний: ${bodyFormatNumber(latestWaist.value)} см.`,
+      detailEn:`First measurement: ${bodyFormatNumber(firstWaist.value)} cm. Latest: ${bodyFormatNumber(latestWaist.value)} cm.`
+    });
+  }
+
+  const sleepRows=dates(7).map(d=>Number(data.logs?.[d]?.sleep)).filter(v=>Number.isFinite(v)&&v>0);
+  if(sleepRows.length>=4){
+    const avg=sleepRows.reduce((a,b)=>a+b,0)/sleepRows.length;
+    options.push({
+      kind:'personal',icon:'😴',
+      ru:`Средний сон: ${Math.round(avg*10)/10} ч`,
+      en:`Average sleep: ${Math.round(avg*10)/10} h`,
+      detailRu:`Среднее по ${sleepRows.length} заполненным ночам за последние 7 дней.`,
+      detailEn:`Average across ${sleepRows.length} logged nights in the last 7 days.`
+    });
+  }
+
+  if(!options.length)return null;
+  const seed=motivationHash(localDate()+'personal');
+  return options[seed%options.length];
+}
+
+function motivationHash(str){
+  let h=2166136261;
+  for(let i=0;i<str.length;i++){h^=str.charCodeAt(i);h=Math.imul(h,16777619)}
+  return Math.abs(h>>>0);
+}
+
+function motivationGeneric(){
+  const g=MOTIVATION_GENERIC[motivationHash(localDate())%MOTIVATION_GENERIC.length];
+  return {
+    kind:'generic',icon:'🌱',
+    ru:g.ru,en:g.en,
+    detailRu:g.ru,detailEn:g.en
+  };
+}
+
+function getMotivation(){
+  return motivationHighestUnseen() || motivationPersonal() || motivationGeneric();
+}
+
+function motivationTitle(m){
+  return (data.language||'ru')==='en'?m.en:m.ru;
+}
+function motivationDetail(m){
+  return (data.language||'ru')==='en'?(m.detailEn||m.en):(m.detailRu||m.ru);
+}
+function motivationKicker(m){
+  if(m.kind==='medical')return trText('Медицинский milestone','Medical milestone');
+  if(m.kind==='milestone')return trText('Новый milestone','New milestone');
+  if(m.kind==='personal')return trText('Твой прогресс','Your progress');
+  return '';
+}
+function motivationSub(m){
+  if(m.source&&MOTIVATION_SOURCES[m.source])return `Source · ${MOTIVATION_SOURCES[m.source].name}`;
+  if(m.kind==='milestone')return trText('Достижение · My Rhythm','Achievement · My Rhythm');
+  if(m.kind==='personal')return trText('Персональный прогресс · My Rhythm','Personal progress · My Rhythm');
+  return 'My Rhythm';
+}
+
+function renderMotivationCard(){
+  const card=document.getElementById('motivationCard');
+  if(!card)return;
+
+  currentMotivation=getMotivation();
+  const m=currentMotivation;
+
+  card.classList.remove('milestone','medical','personal','generic');
+  card.classList.add(m.kind);
+
+  const icon=document.getElementById('motivationIcon');
+  const kicker=document.getElementById('motivationKicker');
+  const text=document.getElementById('motivationText');
+  const sub=document.getElementById('motivationSub');
+
+  if(icon)icon.textContent=m.icon||'✨';
+  if(kicker)kicker.textContent=motivationKicker(m);
+  if(text)text.textContent=motivationTitle(m);
+  if(sub)sub.textContent=motivationSub(m);
+}
+
+function openMotivationDetail(){
+  const m=currentMotivation||getMotivation();
+  currentMotivation=m;
+
+  const set=(id,val)=>{const el=document.getElementById(id);if(el)el.textContent=val};
+  set('motivationDetailIcon',m.icon||'✨');
+  set('motivationDetailKicker',motivationKicker(m)||trText('My Rhythm','My Rhythm'));
+  set('motivationDetailTitle',motivationTitle(m));
+  set('motivationDetailText',motivationDetail(m));
+  set('motivationSourceLabel',trText('Источник','Source'));
+
+  const sourceBox=document.getElementById('motivationSourceBox');
+  const sourceName=document.getElementById('motivationSourceName');
+  const sourceBtn=document.getElementById('motivationSourceBtn');
+  const src=m.source?MOTIVATION_SOURCES[m.source]:null;
+
+  if(sourceBox)sourceBox.style.display=src?'block':'none';
+  if(src&&sourceName)sourceName.textContent=src.name;
+  if(src&&sourceBtn){
+    sourceBtn.textContent=trText('Открыть источник ↗','Open source ↗');
+    sourceBtn.onclick=()=>window.open(src.url,'_blank','noopener');
+  }
+
+  const ack=document.getElementById('motivationAckBtn');
+  if(ack)ack.textContent=(m.kind==='milestone'||m.kind==='medical')
+    ?trText('Отметить как просмотренное','Mark as seen')
+    :trText('Закрыть','Close');
+
+  document.getElementById('motivationModal')?.classList.add('show');
+}
+
+function closeMotivationDetail(){
+  document.getElementById('motivationModal')?.classList.remove('show');
+}
+
+function acknowledgeMotivation(){
+  const m=currentMotivation;
+  if(m&&(m.kind==='milestone'||m.kind==='medical')&&m.group){
+    if(!data.motivationSeen||typeof data.motivationSeen!=='object')data.motivationSeen={};
+    const currentValue=motivationGroupValue(m.group);
+    for(const item of MOTIVATION_MILESTONES){
+      if(item.group===m.group&&item.threshold<=currentValue)data.motivationSeen[item.id]=new Date().toISOString();
+    }
+    persistData({renderAfter:true,makeSnapshot:true});
+  }
+  closeMotivationDetail();
+}
+
 function renderToday(){
  const now=new Date(),lang=data.language||'ru',
  ruW=['Воскресенье','Понедельник','Вторник','Среда','Четверг','Пятница','Суббота'],
@@ -2246,6 +2749,7 @@ function renderToday(){
    }
    grid.appendChild(el);
  }
+ renderMotivationCard();
 }
 function renderHealth(){
  const host=document.getElementById('healthGoals');
@@ -2416,6 +2920,7 @@ render();
 recoverFromVaults().catch(err=>{console.warn('Vault recovery failed',err);updateStorageSafetyUI()})
 addEventListener('keydown',e=>{
   if(e.key!=='Escape')return;
+  if(document.getElementById('motivationModal')?.classList.contains('show'))return closeMotivationDetail();
   if(document.getElementById('bodyCheckinModal')?.classList.contains('show'))return closeBodyCheckin();
   if(document.getElementById('bodyModal')?.classList.contains('show'))return closeBody();
   if(document.getElementById('alcoholModal')?.classList.contains('show'))return closeAlcohol();

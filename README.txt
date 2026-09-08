@@ -268,3 +268,51 @@ No historical Thigh values were invented. Thigh starts with the first new measur
 
 V6 safe redundant storage, Alcohol Calendar, GitHub Pages-relative paths,
 and Safari Home Screen icons are preserved.
+
+
+V6.4 — MOTIVATION ENGINE (GitHub Pages)
+
+PLACEMENT
+- The top Today pill ("Small steps change big lives") stays unchanged.
+- The large mountain card under the eight Today metric cards is now dynamic.
+- No changes to the eight metric-card layout.
+
+PRIORITY
+1. Unseen milestone
+2. Personal progress from the user's own data
+3. One deterministic daily motivation message
+
+LIBRARY
+46 built-in motivational outcomes:
+- 8 smoking milestones
+- 7 alcohol milestones
+- 5 English accumulated-practice milestones
+- 4 gym milestones
+- 3 protein-goal streak milestones
+- 3 step-goal streak milestones
+- 3 sleep-tracking milestones
+- 3 body-check-in milestones
+- 10 general daily messages
+
+MEDICAL CONTENT
+Smoking facts use official CDC / American Cancer Society timelines.
+Alcohol facts intentionally do NOT claim a precise bodily recovery timeline.
+They use supported risk-reduction wording from CDC and WHO.
+Medical cards are clickable and expose their source link in the detail sheet.
+
+MILESTONE BEHAVIOR
+- A newly reached milestone stays on the mountain card until opened and marked as seen.
+- Acknowledging a milestone also marks lower milestones in the same category as seen,
+  so an old 1-day milestone will not appear after a newer 365-day milestone.
+- Seen-state is stored in additive field motivationSeen and is included in backup/recovery.
+- Generic daily messages are deterministic for the date and do not randomly change on every render.
+
+PERSONAL PROGRESS
+The fallback can use:
+- current alcohol-free streak
+- current smoke-free streak
+- English minutes/hours in last 7 days
+- waist change from first to latest Body check-in
+- 7-day average sleep
+
+V6 safe storage, Alcohol Calendar, Body, GitHub Pages paths, and Safari Home Screen icons are preserved.
