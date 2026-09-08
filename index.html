@@ -67,11 +67,11 @@ input,select{width:100%;padding:13px 14px;border:1px solid var(--line);border-ra
 .insight{background:linear-gradient(135deg,rgba(25,245,166,.09),rgba(25,245,166,.03));border:1px solid var(--line);border-radius:16px;padding:13px;line-height:1.45;font-size:14px}
 .section-spacer{height:12px}
 
-.range-tabs{display:flex;gap:7px;margin-bottom:10px}.range-tabs button{padding:8px 11px;font-size:12px}.completion-line{display:grid;grid-template-columns:120px 1fr 48px;gap:8px;align-items:center;padding:8px 0}.mini-bar{height:8px;background:rgba(255,255,255,.07);border-radius:99px;overflow:hidden}.mini-bar span{display:block;height:100%;background:linear-gradient(90deg,var(--green),var(--indigo));border-radius:99px}
-.chart{height:145px;display:flex;align-items:flex-end;gap:4px;padding-top:8px}.chart-col{flex:1;height:100%;display:flex;align-items:flex-end}.chart-bar{width:100%;min-height:2px;background:linear-gradient(180deg,var(--green),var(--green2));border-radius:5px 5px 2px 2px;box-shadow:0 0 10px rgba(25,245,166,.12)}.chart-labels{display:flex;gap:4px;margin-top:5px}.chart-labels span{flex:1;text-align:center;font-size:9px;color:var(--muted);overflow:hidden}
+
+
 .calendar-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}.calendar-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:6px}.dow{text-align:center;color:var(--muted);font-size:10px}.cday{aspect-ratio:1;border-radius:12px;background:rgba(255,255,255,.035);border:1px solid rgba(255,255,255,.06);display:flex;align-items:center;justify-content:center;font-size:11px;position:relative}.cday.mid{border-color:rgba(87,232,255,.24);color:#57e8ff}.cday.good{border-color:rgba(25,245,166,.38);background:rgba(25,245,166,.10);color:var(--green)}.cday .dot{position:absolute;bottom:4px;width:4px;height:4px;border-radius:50%;background:var(--green)}
 .insight-card{background:linear-gradient(135deg,rgba(25,245,166,.09),rgba(25,245,166,.025));border:1px solid var(--line);border-radius:17px;padding:13px;margin-bottom:10px;line-height:1.42;font-size:13px}.insight-card strong{color:var(--green)}.confidence{font-size:11px;color:var(--muted);margin-top:7px}.experiment{border:1px solid var(--line);border-radius:18px;padding:13px;margin-bottom:10px;background:rgba(255,255,255,.025)}.exp-head{display:flex;justify-content:space-between;gap:8px}.exp-status{font-size:11px;padding:5px 7px;border-radius:99px;background:var(--soft);color:var(--green)}textarea{width:100%;min-height:78px;padding:13px 14px;border:1px solid var(--line);border-radius:14px;background:var(--input);color:var(--text);font-size:16px;outline:none;resize:vertical}
-@media(max-width:390px){.completion-line{grid-template-columns:105px 1fr 44px}}
+
 
 .home-stack{display:grid;gap:13px}.hero{padding:16px;background:radial-gradient(circle at 100% 0%,rgba(107,102,255,.22),transparent 34%),radial-gradient(circle at 0% 0%,rgba(39,217,159,.14),transparent 36%),linear-gradient(180deg,rgba(17,36,50,.92),rgba(14,24,39,.97))}.hero-title{font-size:26px;font-weight:830;line-height:1}.hero-date{margin-top:7px;font-size:13px;color:var(--muted)}.metric-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.metric-card{position:relative;overflow:hidden;min-height:116px;border-radius:20px;padding:14px;background:radial-gradient(circle at 0% 0%,rgba(39,217,159,.12),transparent 39%),radial-gradient(circle at 100% 0%,rgba(107,102,255,.16),transparent 40%),linear-gradient(180deg,rgba(16,41,48,.94),rgba(13,21,37,.97));border:1px solid rgba(107,102,255,.16);box-shadow:var(--shadow)}.metric-head{display:flex;align-items:flex-start;justify-content:space-between;gap:10px}.metric-left{display:flex;gap:10px}.metric-emoji{font-size:29px;line-height:1}.metric-name{font-size:14px;font-weight:760}.metric-stat{margin-top:5px;font-size:16px;color:#9edcff}.metric-goal{margin-top:3px;font-size:12px;color:var(--muted)}.metric-ring{--p:0;width:35px;height:35px;border-radius:50%;position:relative;flex:0 0 auto;background:conic-gradient(#8fffe0 calc(var(--p)*1%),rgba(255,255,255,.12) 0)}.metric-ring:after{content:'';position:absolute;inset:4px;border-radius:50%;background:#0d1727}.metric-bar{height:8px;border-radius:99px;background:rgba(255,255,255,.08);overflow:hidden;margin-top:13px}.metric-bar span{display:block;height:100%;border-radius:99px;background:linear-gradient(90deg,#2cdfa7,#6b66ff);box-shadow:0 0 11px rgba(44,223,167,.20)}.metric-special .metric-stat{color:#61ffca}.quote-text{font-size:18px;font-weight:760;line-height:1.22}.quote-sub{margin-top:9px;font-size:13px;color:#8da7c9}.tabsin{background:linear-gradient(180deg,rgba(9,20,29,.98),rgba(9,16,24,.98));border:1px solid rgba(107,102,255,.16)}.tab{min-height:62px}.tab.active{background:linear-gradient(180deg,rgba(39,217,159,.12),rgba(107,102,255,.08));border-color:rgba(87,255,201,.16)}
 
@@ -195,7 +195,7 @@ input,select,textarea{
 }
 
 
-/* V6.7 GitHub compact home */
+/* V6.7.1 GitHub compact home */
 .metric-card{
   min-height:98px;
   padding:12px 13px;
@@ -218,7 +218,7 @@ input,select,textarea{
 }
 
 
-/* V6.7 GitHub: smoke/alcohol cards are statistic-only and sit on top */
+/* V6.7.1 GitHub: smoke/alcohol cards are statistic-only and sit on top */
 .metric-static{cursor:default}
 .metric-static .metric-head{align-items:center}
 .metric-mini-stat{
@@ -239,7 +239,7 @@ input,select,textarea{
 }
 
 
-/* V6.7 GitHub Steps input restored on Today */
+/* V6.7.1 GitHub Steps input restored on Today */
 .metric-wide{
   grid-column:1 / -1;
 }
@@ -259,7 +259,7 @@ input,select,textarea{
 }
 
 
-/* V6.7 GitHub — Weight card + exact 2×4 Today grid */
+/* V6.7.1 GitHub — Weight card + exact 2×4 Today grid */
 .metric-weight{
   cursor:pointer;
 }
@@ -295,7 +295,7 @@ input,select,textarea{
 }
 
 
-/* V6.7 GitHub — storage safety status */
+/* V6.7.1 GitHub — storage safety status */
 .storage-ok{color:#71ffd0}
 .storage-warn{color:#ffd27a}
 .backup-reminder{
@@ -317,7 +317,7 @@ input,select,textarea{
 }
 
 
-/* V6.7 GitHub Alcohol calendar */
+/* V6.7.1 GitHub Alcohol calendar */
 .metric-alcohol-clickable{cursor:pointer!important}
 .metric-alcohol-clickable:active{transform:scale(.985)}
 .alcohol-modal{display:none;position:fixed;inset:0;z-index:120;overflow:auto;background:radial-gradient(circle at 10% -5%,rgba(44,223,167,.18),transparent 27%),radial-gradient(circle at 100% 7%,rgba(107,102,255,.22),transparent 31%),linear-gradient(180deg,rgba(4,13,22,.99),rgba(5,9,18,.995));-webkit-overflow-scrolling:touch}
@@ -988,22 +988,172 @@ input,select,textarea{
 .weekly-focus{
   border-color:rgba(127,116,255,.15);
 }
-.progress-detail-head{
-  align-items:flex-end;
-  margin-bottom:9px;
-}
-.progress-detail-head h2{
-  font-size:20px;
-}
-.progress-detail-head .sub{
-  max-width:62%;
-}
 @media(max-width:430px){
   .weekly-review{padding:13px}
   .weekly-review-period{font-size:18px}
   .weekly-review-status{font-size:9px;padding:6px 8px}
   .weekly-metric-card{min-height:101px;padding:10px}
   .weekly-metric-value{font-size:17px}
+}
+
+
+/* V6.7.1 — Progress cleanup: Weekly Review → Trends → Calendar → Patterns */
+.progress-trends-head,
+.progress-calendar-head{
+  align-items:flex-end;
+  margin-bottom:9px;
+}
+.progress-trends-head h2,
+.progress-calendar-head h2{
+  font-size:20px;
+}
+.progress-trends-head .sub,
+.progress-calendar-head .sub{
+  max-width:64%;
+}
+
+.trend-controls{
+  display:grid;
+  gap:8px;
+  margin-bottom:9px;
+}
+.trend-range-tabs,
+.trend-metric-tabs{
+  display:flex;
+  gap:7px;
+  overflow-x:auto;
+  scrollbar-width:none;
+  -webkit-overflow-scrolling:touch;
+}
+.trend-range-tabs::-webkit-scrollbar,
+.trend-metric-tabs::-webkit-scrollbar{display:none}
+.trend-range-tabs button,
+.trend-metric-tab{
+  flex:0 0 auto;
+  padding:8px 11px;
+  font-size:11px;
+}
+.trend-metric-tab{
+  min-height:37px;
+  border-radius:13px;
+  background:rgba(15,30,47,.78);
+  border:1px solid rgba(110,140,190,.12);
+  color:#8fa9bc;
+  box-shadow:none;
+}
+.trend-metric-tab.active{
+  color:#f0ffff;
+  border-color:rgba(75,252,199,.18);
+  background:linear-gradient(135deg,rgba(33,159,121,.31),rgba(74,69,181,.34));
+  box-shadow:0 0 15px rgba(44,223,167,.06);
+}
+
+.trend-card{
+  padding:14px;
+  border-color:rgba(105,137,206,.14);
+  background:
+    radial-gradient(circle at 0 0,rgba(44,223,167,.07),transparent 36%),
+    radial-gradient(circle at 100% 0,rgba(107,102,255,.09),transparent 40%),
+    linear-gradient(180deg,rgba(10,28,40,.88),rgba(8,17,30,.95));
+}
+.trend-summary-head{
+  display:flex;
+  align-items:flex-start;
+  justify-content:space-between;
+  gap:12px;
+  margin-bottom:7px;
+}
+.trend-primary{
+  margin-top:4px;
+  font-size:21px;
+  line-height:1.08;
+  font-weight:850;
+  color:#edfaff;
+}
+.trend-secondary{
+  margin-top:5px;
+  font-size:10px;
+  line-height:1.35;
+  color:var(--muted);
+}
+.trend-change{
+  max-width:42%;
+  padding:6px 8px;
+  border-radius:11px;
+  font-size:10px;
+  line-height:1.25;
+  font-weight:760;
+  text-align:right;
+  color:#91e4cc;
+  background:rgba(41,187,144,.07);
+  border:1px solid rgba(73,226,182,.09);
+}
+.trend-change.neutral{
+  color:#9db2c3;
+  background:rgba(117,137,165,.06);
+  border-color:rgba(117,137,165,.09);
+}
+.trend-chart-host{
+  position:relative;
+  height:190px;
+  margin-top:4px;
+}
+.trend-empty{
+  height:100%;
+  display:grid;
+  place-items:center;
+  text-align:center;
+  padding:18px;
+  color:#748e9f;
+  font-size:11px;
+  line-height:1.45;
+}
+.trend-svg{
+  width:100%;
+  height:100%;
+  overflow:visible;
+}
+.trend-grid-line{
+  stroke:rgba(150,180,210,.10);
+  stroke-width:1;
+}
+.trend-goal-line{
+  stroke:rgba(128,118,255,.40);
+  stroke-width:1.3;
+  stroke-dasharray:5 5;
+}
+.trend-line{
+  fill:none;
+  stroke:url(#trendLineGradient);
+  stroke-width:3;
+  stroke-linecap:round;
+  stroke-linejoin:round;
+  filter:drop-shadow(0 0 5px rgba(66,226,187,.20));
+}
+.trend-area{
+  fill:url(#trendAreaGradient);
+}
+.trend-point{
+  fill:#0c1725;
+  stroke:#7affdb;
+  stroke-width:2;
+}
+.trend-bar{
+  fill:url(#trendBarGradient);
+  opacity:.88;
+}
+.trend-axis-label{
+  fill:#6d879a;
+  font-size:9px;
+  font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display",sans-serif;
+}
+
+@media(max-width:430px){
+  .trend-chart-host{height:170px}
+  .trend-primary{font-size:19px}
+  .trend-change{max-width:46%}
+  .progress-trends-head .sub,
+  .progress-calendar-head .sub{max-width:60%}
 }
 
 </style>
@@ -1106,15 +1256,37 @@ input,select,textarea{
   </div>
 
   <div class="section-spacer"></div>
-  <div class="category-head progress-detail-head">
-    <h2>Детали</h2>
-    <div class="sub">7 и 30 дней: completion, график и календарь.</div>
+  <div class="category-head progress-trends-head">
+    <h2>Trends</h2>
+    <div class="sub">Один показатель во времени — без дублирования Weekly Review.</div>
   </div>
-  <div class="range-tabs"><button class="secondary" id="range7Btn" onclick="setRange(7)">7 дней</button><button class="ghost" id="range30Btn" onclick="setRange(30)">30 дней</button></div>
-  <div class="card"><div class="label">Completion rate</div><div id="completionRows"></div></div>
+
+  <div class="trend-controls">
+    <div class="trend-range-tabs">
+      <button class="secondary" id="trendRange7Btn" onclick="setTrendRange(7)">7 дней</button>
+      <button class="ghost" id="trendRange30Btn" onclick="setTrendRange(30)">30 дней</button>
+      <button class="ghost" id="trendRange90Btn" onclick="setTrendRange(90)">3 месяца</button>
+    </div>
+    <div class="trend-metric-tabs" id="trendMetricTabs"></div>
+  </div>
+
+  <div class="card trend-card">
+    <div class="trend-summary-head">
+      <div>
+        <div class="label" id="trendTitle">—</div>
+        <div class="trend-primary" id="trendPrimary">—</div>
+        <div class="trend-secondary" id="trendSecondary"></div>
+      </div>
+      <div class="trend-change" id="trendChange">—</div>
+    </div>
+    <div class="trend-chart-host" id="trendChartHost"></div>
+  </div>
+
   <div class="section-spacer"></div>
-  <div class="card"><div class="label">Активность по дням</div><div class="chart" id="activityChart"></div><div class="chart-labels" id="activityLabels"></div></div>
-  <div class="section-spacer"></div>
+  <div class="category-head progress-calendar-head">
+    <h2>Календарь</h2>
+    <div class="sub">История заполнения по конкретным дням.</div>
+  </div>
   <div class="card"><div class="calendar-head"><button class="ghost" onclick="moveMonth(-1)">‹</button><strong id="calendarTitle"></strong><button class="ghost" onclick="moveMonth(1)">›</button></div><div class="calendar-grid" id="calendarGrid"></div></div>
 
   <div class="section-spacer"></div>
@@ -1172,7 +1344,7 @@ input,select,textarea{
       Каждое сохранение дублируется локально: основная база + зеркало + IndexedDB snapshots + recovery cache.
       Внешний JSON-backup всё равно нужен перед удалением PWA или очисткой Safari.
     </div>
-    <div class="row"><span>Версия приложения</span><strong id="appVersionText">V6.7 GitHub</strong></div>
+    <div class="row"><span>Версия приложения</span><strong id="appVersionText">V6.7.1 GitHub</strong></div>
     <div class="row"><span>Версия структуры данных</span><strong id="schemaVersionText">2</strong></div>
     <div class="row"><span>Локальная защита</span><strong id="vaultStatusText">Проверяем…</strong></div>
     <div class="row"><span>Snapshots</span><strong id="vaultSnapshotText">—</strong></div>
@@ -1437,7 +1609,7 @@ input,select,textarea{
 </div></div>
 
 <script>
-const APP_VERSION='6.7-github';
+const APP_VERSION='6.7.1-github';
 const DATA_KEY='my-life-tracker-data';
 const MIRROR_KEY='my-life-tracker-data-mirror-v1';
 const CURRENT_SCHEMA_VERSION=2;
@@ -1819,7 +1991,7 @@ async function clearVaultCopies(){
 
 let data=loadData();
 data.trackers=(data.trackers||[]).filter(t=>t.id!=='mood' && t.id!=='water');
-let activeTracker=null,rangeDays=7,calendarDate=new Date();
+let activeTracker=null,trendRangeDays=7,trendMetricId='weight',calendarDate=new Date();
 
 const englishTypes=[
 ['english_chatgpt','🤖','ChatGPT'],
@@ -1906,13 +2078,15 @@ function trUnit(tOrId){
 function trText(ru,en){ return (data.language||'ru')==='en'?en:ru; }
 
 const UI_EN = new Map([
+['Один показатель во времени — без дублирования Weekly Review.','One metric over time — without duplicating Weekly Review.'],
+['Календарь','Calendar'],
+['История заполнения по конкретным дням.','Logging history by individual day.'],
+['3 месяца','3 months'],
 ['Weekly Review, детальная динамика и паттерны.','Weekly Review, detailed trends and patterns.'],
 ['Weekly Review','Weekly Review'],
 ['✨ Лучшее','✨ Strongest'],
 ['↗ Что изменилось','↗ What changed'],
 ['🎯 Фокус','🎯 Focus'],
-['Детали','Details'],
-['7 и 30 дней: completion, график и календарь.','7 and 30 days: completion, chart and calendar.'],
 ['Настройки','Settings'],
 ['Цели, оформление, резервные копии и служебные функции.','Goals, appearance, backups and service tools.'],
 ['🎯 Настройки целей','🎯 Goal settings'],
@@ -1984,10 +2158,8 @@ const UI_EN = new Map([
 ['🎬 Смотреть','🎬 Watching'],
 ['Неделя по типам занятий','Week by activity type'],
 ['Прогресс','Progress'],
-['7 и 30 дней: completion, график и календарь.','7 and 30 days: completion, chart and calendar.'],
 ['7 дней','7 days'],
 ['30 дней','30 days'],
-['Активность по дням','Daily activity'],
 ['Связи между привычками. Не причинность.','Relationships between habits. Not causation.'],
 ['Проверяй одну гипотезу за раз.','Test one hypothesis at a time.'],
 ['＋ Новый эксперимент','＋ New experiment'],
@@ -3173,13 +3345,6 @@ function renderEnglish(){
  const total=Math.max(1,englishTotalN(7));
  englishTypes.forEach(([id,ico,name])=>{const v=sum(id),el=document.createElement('div');el.className='barline';el.innerHTML=`<span>${ico} ${name}</span><div class="bar"><span style="width:${Math.min(100,v/total*100)}%"></span></div><strong>${Math.round(v)}</strong>`;bars.appendChild(el)})
 }
-function setRange(n){
- rangeDays=n;
- const b7=document.getElementById('range7Btn'),b30=document.getElementById('range30Btn');
- if(b7)b7.className=n===7?'secondary':'ghost';if(b30)b30.className=n===30?'secondary':'ghost';
- renderProgress()
-}
-
 // V6.7_WEEKLY_REVIEW_START
 function weeklyParseDate(dateKey){
   const [y,m,d]=String(dateKey).split('-').map(Number);
@@ -3748,12 +3913,277 @@ function renderWeeklyReview(){
 }
 // V6.7_WEEKLY_REVIEW_END
 
-function renderProgress(){renderWeeklyReview();const ids=['protein','steps','outdoors','sleep','english_general','gym'],host=document.getElementById('completionRows');host.innerHTML='';ids.forEach(id=>{const t=tracker(id),c=completion(id,rangeDays),r=document.createElement('div');r.className='completion-line';r.innerHTML=`<span>${t.icon} ${trTrackerName(t)}</span><div class="mini-bar"><span style="width:${c}%"></span></div><strong>${c}%</strong>`;host.appendChild(r)});renderActivityChart();renderCalendar()}
-function renderActivityChart(){
- const chart=document.getElementById('activityChart'),labels=document.getElementById('activityLabels');if(!chart||!labels)return;
- const ds=dates(rangeDays);chart.innerHTML='';labels.innerHTML='';
- ds.forEach((d,i)=>{let count=0;['protein','steps','outdoors','sleep'].forEach(id=>{if(dailyComplete(id,d))count++});if((data.logs[d]?.english_general||0)>0)count++;if(data.logs[d]?.gym===true)count++;const h=Math.max(3,Math.round(count/6*100)),c=document.createElement('div');c.className='chart-col';c.innerHTML=`<div class="chart-bar" style="height:${h}%"></div>`;chart.appendChild(c);const sp=document.createElement('span'),dt=new Date(d+'T00:00:00');sp.textContent=rangeDays===7?['Вс','Пн','Вт','Ср','Чт','Пт','Сб'][dt.getDay()]:(i%5===0?String(dt.getDate()):'');labels.appendChild(sp)})
+
+// V6.7.1_TRENDS_START
+const TREND_METRICS=[
+  {id:'weight',icon:'⚖️',ru:'Вес',en:'Weight',unitRu:'кг',unitEn:'kg',kind:'line'},
+  {id:'sleep',icon:'😴',ru:'Сон',en:'Sleep',unitRu:'ч',unitEn:'h',kind:'line'},
+  {id:'steps',icon:'🚶',ru:'Шаги',en:'Steps',unitRu:'',unitEn:'',kind:'line'},
+  {id:'protein',icon:'🥩',ru:'Белок',en:'Protein',unitRu:'г',unitEn:'g',kind:'line'},
+  {id:'outdoors',icon:'☀️',ru:'Улица',en:'Outdoors',unitRu:'мин',unitEn:'min',kind:'line'},
+  {id:'gym',icon:'🏋️',ru:'Тренировки',en:'Workouts',unitRu:'',unitEn:'',kind:'bars'},
+  {id:'english',icon:'🇬🇧',ru:'English',en:'English',unitRu:'мин',unitEn:'min',kind:'line'}
+];
+
+function trendMetricDef(id){
+  return TREND_METRICS.find(x=>x.id===id)||TREND_METRICS[0];
 }
+function trendMetricName(id){
+  const m=trendMetricDef(id);
+  return (data.language||'ru')==='en'?m.en:m.ru;
+}
+function trendMetricUnit(id){
+  const m=trendMetricDef(id);
+  return (data.language||'ru')==='en'?m.unitEn:m.unitRu;
+}
+function trendGoal(id){
+  if(id==='sleep')return Number(data.sleepGoal)||null;
+  if(id==='steps')return Number(data.stepsGoal)||null;
+  if(id==='protein')return Number(data.proteinGoal)||null;
+  if(id==='outdoors')return Number(data.outdoorsGoal)||null;
+  return null;
+}
+function trendValueForDay(id,dateKey){
+  const row=data.logs?.[dateKey]||{};
+  if(id==='english'){
+    const detailed=englishTypes.reduce((s,[typeId])=>s+(Number(row[typeId])||0),0);
+    const v=detailed || (Number(row.english_general)||0);
+    return v>0?v:null;
+  }
+  if(id==='gym'){
+    return row.gym===true?1:0;
+  }
+  if(!Object.prototype.hasOwnProperty.call(row,id))return null;
+  const n=Number(row[id]);
+  if(!Number.isFinite(n))return null;
+  if(id==='weight' || id==='sleep'){
+    return n>0?n:null;
+  }
+  return n>=0?n:null;
+}
+function trendSeries(id,n){
+  const keys=dates(n);
+  return keys.map((date,index)=>({date,index,value:trendValueForDay(id,date)}));
+}
+function trendRecorded(series,id){
+  if(id==='gym')return series;
+  return series.filter(x=>x.value!==null);
+}
+function trendSetRange(n){
+  trendRangeDays=n;
+  renderTrends();
+}
+function setTrendRange(n){
+  if(![7,30,90].includes(n))n=7;
+  trendSetRange(n);
+}
+function setTrendMetric(id){
+  if(!TREND_METRICS.some(x=>x.id===id))return;
+  trendMetricId=id;
+  renderTrends();
+}
+function trendFormatNumber(v,id=trendMetricId){
+  if(v===null||v===undefined||!Number.isFinite(Number(v)))return '—';
+  const n=Number(v);
+  if(id==='steps')return Math.round(n).toLocaleString((data.language||'ru')==='en'?'en-NZ':'ru-RU');
+  if(id==='gym')return String(Math.round(n));
+  return Number.isInteger(n)?String(n):String(Math.round(n*10)/10);
+}
+function trendFormatDate(dateKey){
+  const locale=(data.language||'ru')==='en'?'en-NZ':'ru-RU';
+  return new Date(dateKey+'T12:00:00').toLocaleDateString(locale,{day:'numeric',month:'short'});
+}
+function trendSummary(id,series){
+  const recorded=trendRecorded(series,id);
+  const unit=trendMetricUnit(id);
+  const spacedUnit=unit?` ${unit}`:'';
+
+  if(id==='gym'){
+    const sessions=series.filter(x=>x.value===1).length;
+    return {
+      primary:`${sessions} ${trText('сесс.','sessions')}`,
+      secondary:`${trendRangeDays} ${trText('дней','days')} · ${trText('недельная цель','weekly goal')} ${data.gymGoal}`,
+      change:'',
+      neutral:false
+    };
+  }
+
+  if(!recorded.length){
+    return {
+      primary:'—',
+      secondary:trText('За выбранный период записей нет.','No entries in the selected period.'),
+      change:'',
+      neutral:true
+    };
+  }
+
+  const first=recorded[0],last=recorded[recorded.length-1];
+  const avg=recorded.reduce((s,x)=>s+x.value,0)/recorded.length;
+
+  if(id==='weight'){
+    const delta=recorded.length>1?Math.round((last.value-first.value)*10)/10:null;
+    return {
+      primary:`${trendFormatNumber(last.value,id)}${spacedUnit}`,
+      secondary:`${trendFormatDate(last.date)} · ${recorded.length} ${trText('взвешиваний за период','weigh-ins in range')}`,
+      change:delta===null?'':`${weeklySigned(delta,spacedUnit)} ${trText('за период','over range')}`,
+      neutral:true
+    };
+  }
+
+  if(id==='english'){
+    const total=recorded.reduce((s,x)=>s+x.value,0);
+    return {
+      primary:weeklyFormatMinutes(total),
+      secondary:`${recorded.length}/${trendRangeDays} ${trText('дней с практикой','days with practice')}`,
+      change:`${trText('Среднее','Average')}: ${trendFormatNumber(avg,id)} ${trText('мин/день практики','min/practice day')}`,
+      neutral:false
+    };
+  }
+
+  const goal=trendGoal(id);
+  const goalDays=goal?recorded.filter(x=>x.value>=goal).length:null;
+  return {
+    primary:`${trendFormatNumber(avg,id)}${spacedUnit} avg`,
+    secondary:goal
+      ?`${recorded.length}/${trendRangeDays} ${trText('дней записано','days logged')} · ${goalDays} ${trText('дн. на цели','days at goal')}`
+      :`${recorded.length}/${trendRangeDays} ${trText('дней записано','days logged')}`,
+    change:recorded.length>1
+      ?`${trendFormatNumber(first.value,id)} → ${trendFormatNumber(last.value,id)}${spacedUnit}`
+      :'',
+    neutral:false
+  };
+}
+function trendSVG(id,series){
+  const def=trendMetricDef(id);
+  const recorded=trendRecorded(series,id);
+
+  if(id!=='gym' && recorded.length<2){
+    return `<div class="trend-empty">${trText('Для графика нужно минимум две записи за выбранный период.','At least two entries are needed for a chart in this range.')}</div>`;
+  }
+
+  const W=620,H=190,padL=38,padR=15,padT=15,padB=29;
+  const n=Math.max(1,series.length-1);
+  const x=index=>padL+(W-padL-padR)*(index/n);
+
+  if(id==='gym'){
+    const maxY=1;
+    const base=H-padB;
+    const barSpace=(W-padL-padR)/Math.max(1,series.length);
+    const barW=Math.max(2,Math.min(11,barSpace*.58));
+    const bars=series.map(r=>{
+      if(r.value!==1)return '';
+      const xx=x(r.index)-barW/2;
+      const hh=(H-padT-padB)*.76;
+      return `<rect class="trend-bar" x="${xx.toFixed(1)}" y="${(base-hh).toFixed(1)}" width="${barW.toFixed(1)}" height="${hh.toFixed(1)}" rx="2"></rect>`;
+    }).join('');
+
+    const idxs=[0,Math.floor((series.length-1)/2),series.length-1].filter((v,i,a)=>a.indexOf(v)===i);
+    const labels=idxs.map(i=>`<text class="trend-axis-label" text-anchor="${i===0?'start':(i===series.length-1?'end':'middle')}" x="${x(i)}" y="${H-5}">${trendFormatDate(series[i].date)}</text>`).join('');
+
+    return `<svg class="trend-svg" viewBox="0 0 ${W} ${H}" preserveAspectRatio="none">
+      <defs>
+        <linearGradient id="trendBarGradient" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stop-color="#78ffda"/>
+          <stop offset="1" stop-color="#6d68ff"/>
+        </linearGradient>
+      </defs>
+      <line class="trend-grid-line" x1="${padL}" y1="${base}" x2="${W-padR}" y2="${base}"></line>
+      ${bars}
+      ${labels}
+    </svg>`;
+  }
+
+  const vals=recorded.map(x=>x.value);
+  const goal=trendGoal(id);
+  if(goal!==null && goal!==undefined)vals.push(goal);
+
+  let min=Math.min(...vals),max=Math.max(...vals);
+  if(min===max){min-=1;max+=1}
+  const margin=Math.max((max-min)*.15,id==='steps'?100:.5);
+  min=Math.max(0,min-margin);
+  max+=margin;
+  const y=v=>padT+(H-padT-padB)*(1-(v-min)/(max-min));
+
+  const pointRows=recorded.map(r=>({x:x(r.index),y:y(r.value),...r}));
+  const line=pointRows.map((p,i)=>(i?'L':'M')+p.x.toFixed(1)+','+p.y.toFixed(1)).join(' ');
+  const area=`${line} L ${pointRows[pointRows.length-1].x.toFixed(1)},${(H-padB).toFixed(1)} L ${pointRows[0].x.toFixed(1)},${(H-padB).toFixed(1)} Z`;
+
+  const grid=[0,.5,1].map(t=>{
+    const yy=padT+(H-padT-padB)*t;
+    const val=max-(max-min)*t;
+    return `<line class="trend-grid-line" x1="${padL}" y1="${yy}" x2="${W-padR}" y2="${yy}"></line>
+            <text class="trend-axis-label" x="2" y="${yy+3}">${trendFormatNumber(val,id)}</text>`;
+  }).join('');
+
+  const goalLine=(goal!==null && goal>=min && goal<=max)
+    ?`<line class="trend-goal-line" x1="${padL}" y1="${y(goal)}" x2="${W-padR}" y2="${y(goal)}"></line>`
+    :'';
+
+  const circles=pointRows.map((p,i)=>`<circle class="trend-point" cx="${p.x}" cy="${p.y}" r="${i===pointRows.length-1?4.3:3}"></circle>`).join('');
+  const idxs=[0,Math.floor((series.length-1)/2),series.length-1].filter((v,i,a)=>a.indexOf(v)===i);
+  const labels=idxs.map(i=>`<text class="trend-axis-label" text-anchor="${i===0?'start':(i===series.length-1?'end':'middle')}" x="${x(i)}" y="${H-5}">${trendFormatDate(series[i].date)}</text>`).join('');
+
+  return `<svg class="trend-svg" viewBox="0 0 ${W} ${H}" preserveAspectRatio="none">
+    <defs>
+      <linearGradient id="trendLineGradient" x1="0" x2="1">
+        <stop offset="0" stop-color="#2cdfa7"/>
+        <stop offset="1" stop-color="#7770ff"/>
+      </linearGradient>
+      <linearGradient id="trendAreaGradient" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0" stop-color="#2cdfa7" stop-opacity=".16"/>
+        <stop offset="1" stop-color="#6b66ff" stop-opacity=".012"/>
+      </linearGradient>
+    </defs>
+    ${grid}
+    ${goalLine}
+    <path class="trend-area" d="${area}"></path>
+    <path class="trend-line" d="${line}"></path>
+    ${circles}
+    ${labels}
+  </svg>`;
+}
+function renderTrends(){
+  const host=document.getElementById('trendChartHost');
+  if(!host)return;
+
+  const r7=document.getElementById('trendRange7Btn');
+  const r30=document.getElementById('trendRange30Btn');
+  const r90=document.getElementById('trendRange90Btn');
+  if(r7)r7.className=trendRangeDays===7?'secondary':'ghost';
+  if(r30)r30.className=trendRangeDays===30?'secondary':'ghost';
+  if(r90)r90.className=trendRangeDays===90?'secondary':'ghost';
+
+  const tabs=document.getElementById('trendMetricTabs');
+  if(tabs){
+    tabs.innerHTML=TREND_METRICS.map(m=>`
+      <button class="trend-metric-tab ${trendMetricId===m.id?'active':''}" onclick="setTrendMetric('${m.id}')">
+        ${m.icon} ${(data.language||'ru')==='en'?m.en:m.ru}
+      </button>
+    `).join('');
+  }
+
+  const series=trendSeries(trendMetricId,trendRangeDays);
+  const summary=trendSummary(trendMetricId,series);
+  const def=trendMetricDef(trendMetricId);
+
+  const title=document.getElementById('trendTitle');
+  const primary=document.getElementById('trendPrimary');
+  const secondary=document.getElementById('trendSecondary');
+  const change=document.getElementById('trendChange');
+
+  if(title)title.textContent=`${def.icon} ${trendMetricName(trendMetricId)}`;
+  if(primary)primary.textContent=summary.primary;
+  if(secondary)secondary.textContent=summary.secondary;
+  if(change){
+    change.textContent=summary.change||trText('Выбери период и показатель','Choose range and metric');
+    change.className='trend-change'+(summary.neutral?' neutral':'');
+  }
+
+  host.innerHTML=trendSVG(trendMetricId,series);
+}
+// V6.7.1_TRENDS_END
+
+function renderProgress(){renderWeeklyReview();renderTrends();renderCalendar()}
 function moveMonth(n){calendarDate=new Date(calendarDate.getFullYear(),calendarDate.getMonth()+n,1);renderCalendar()}
 function renderCalendar(){const ruM=['Январь','Февраль','Март','Апрель','Май','Июнь','Июль','Август','Сентябрь','Октябрь','Ноябрь','Декабрь'],enM=['January','February','March','April','May','June','July','August','September','October','November','December'],ruD=['Пн','Вт','Ср','Чт','Пт','Сб','Вс'],enD=['Mon','Tue','Wed','Thu','Fri','Sat','Sun'],y=calendarDate.getFullYear(),m=calendarDate.getMonth(),lang=data.language||'ru';document.getElementById('calendarTitle').textContent=(lang==='en'?enM:ruM)[m]+' '+y;const grid=document.getElementById('calendarGrid');grid.innerHTML=(lang==='en'?enD:ruD).map(x=>`<div class="dow">${x}</div>`).join('');const first=(new Date(y,m,1).getDay()+6)%7,total=new Date(y,m+1,0).getDate();for(let i=0;i<first;i++)grid.innerHTML+='<div></div>';for(let day=1;day<=total;day++){const d=`${y}-${String(m+1).padStart(2,'0')}-${String(day).padStart(2,'0')}`,filled=Object.keys(data.logs[d]||{}).filter(k=>data.logs[d][k]!==false&&data.logs[d][k]!==undefined).length,cls=filled>=5?'good':filled>=2?'mid':'';grid.innerHTML+=`<div class="cday ${cls}">${day}${filled>=5?'<span class="dot"></span>':''}</div>`}}
 

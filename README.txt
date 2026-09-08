@@ -468,3 +468,46 @@ DATA SAFETY
 
 EXISTING PROGRESS
 The old 7/30-day completion, activity chart, calendar and Patterns remain below Weekly Review.
+
+
+V6.7.1 — PROGRESS CLEANUP
+
+NEW PROGRESS STRUCTURE
+1. Weekly Review — how the current calendar week is going
+2. Trends — how one selected metric changes over time
+3. Calendar — what was logged on specific dates
+4. Patterns — relationships between habits
+
+REMOVED AS DUPLICATES
+- Completion rate block
+- Multi-habit "Daily activity" chart
+These repeated information already represented more clearly in Weekly Review.
+
+TRENDS
+- Range selector: 7 days / 30 days / 3 months (90 days)
+- Metric selector:
+  Weight / Sleep / Steps / Protein / Outdoors / Gym / English
+- One focused chart at a time.
+- Weight:
+  latest weigh-in in selected range + neutral change over range.
+- Sleep / Steps / Protein / Outdoors:
+  average across actually logged days; missing days are not converted to zero.
+- English:
+  total practice minutes, using detailed English types first and english_general only as fallback, avoiding double-counting.
+- Gym:
+  workout-session bars across the selected date range.
+- Goal reference line is shown for Sleep / Steps / Protein / Outdoors when the goal fits the chart range.
+
+CLEANUP
+- Removed old Progress setRange() dependency.
+- Removed old renderActivityChart().
+- Removed legacy completionRows/activityChart/activityLabels DOM nodes.
+- Removed legacy Progress CSS for completion bars and multi-activity bars.
+- completion() and dailyComplete() are intentionally retained because the English module still uses completion().
+- Calendar and Patterns dependencies remain unchanged.
+
+DATA SAFETY
+- schemaVersion remains 2.
+- Trends is render-time only and writes nothing to storage.
+- No existing stored field is renamed, migrated or duplicated.
+- Weekly Review storage rules remain unchanged.
