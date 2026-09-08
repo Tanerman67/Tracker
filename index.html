@@ -195,7 +195,7 @@ input,select,textarea{
 }
 
 
-/* V6.6.2 GitHub compact home */
+/* V6.7 GitHub compact home */
 .metric-card{
   min-height:98px;
   padding:12px 13px;
@@ -218,7 +218,7 @@ input,select,textarea{
 }
 
 
-/* V6.6.2 GitHub: smoke/alcohol cards are statistic-only and sit on top */
+/* V6.7 GitHub: smoke/alcohol cards are statistic-only and sit on top */
 .metric-static{cursor:default}
 .metric-static .metric-head{align-items:center}
 .metric-mini-stat{
@@ -239,7 +239,7 @@ input,select,textarea{
 }
 
 
-/* V6.6.2 GitHub Steps input restored on Today */
+/* V6.7 GitHub Steps input restored on Today */
 .metric-wide{
   grid-column:1 / -1;
 }
@@ -259,7 +259,7 @@ input,select,textarea{
 }
 
 
-/* V6.6.2 GitHub — Weight card + exact 2×4 Today grid */
+/* V6.7 GitHub — Weight card + exact 2×4 Today grid */
 .metric-weight{
   cursor:pointer;
 }
@@ -295,7 +295,7 @@ input,select,textarea{
 }
 
 
-/* V6.6.2 GitHub — storage safety status */
+/* V6.7 GitHub — storage safety status */
 .storage-ok{color:#71ffd0}
 .storage-warn{color:#ffd27a}
 .backup-reminder{
@@ -317,7 +317,7 @@ input,select,textarea{
 }
 
 
-/* V6.6.2 GitHub Alcohol calendar */
+/* V6.7 GitHub Alcohol calendar */
 .metric-alcohol-clickable{cursor:pointer!important}
 .metric-alcohol-clickable:active{transform:scale(.985)}
 .alcohol-modal{display:none;position:fixed;inset:0;z-index:120;overflow:auto;background:radial-gradient(circle at 10% -5%,rgba(44,223,167,.18),transparent 27%),radial-gradient(circle at 100% 7%,rgba(107,102,255,.22),transparent 31%),linear-gradient(180deg,rgba(4,13,22,.99),rgba(5,9,18,.995));-webkit-overflow-scrolling:touch}
@@ -857,6 +857,155 @@ input,select,textarea{
   }
 }
 
+
+/* V6.7 — Weekly Review inside Progress */
+.weekly-review{
+  padding:15px;
+  border-color:rgba(88,236,196,.18);
+  background:
+    radial-gradient(circle at 0 0,rgba(44,223,167,.10),transparent 34%),
+    radial-gradient(circle at 100% 0,rgba(107,102,255,.15),transparent 38%),
+    linear-gradient(180deg,rgba(13,33,44,.94),rgba(9,18,31,.98));
+}
+.weekly-review-head{
+  display:flex;
+  align-items:flex-start;
+  justify-content:space-between;
+  gap:12px;
+  margin-bottom:13px;
+}
+.weekly-review-period{
+  font-size:20px;
+  line-height:1.1;
+  font-weight:850;
+  color:var(--text);
+  margin-top:2px;
+}
+.weekly-review-scope{
+  margin-top:5px;
+  font-size:10.5px;
+  line-height:1.35;
+  color:var(--muted);
+}
+.weekly-review-status{
+  flex:0 0 auto;
+  padding:7px 9px;
+  border-radius:999px;
+  font-size:9.5px;
+  font-weight:800;
+  color:#aef5df;
+  border:1px solid rgba(79,235,192,.16);
+  background:rgba(34,166,128,.08);
+  white-space:nowrap;
+}
+.weekly-review-status.complete{
+  color:#d3ceff;
+  border-color:rgba(128,118,255,.18);
+  background:rgba(95,79,200,.10);
+}
+.weekly-metric-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:9px;
+}
+.weekly-metric-card{
+  min-width:0;
+  min-height:103px;
+  padding:11px;
+  border-radius:17px;
+  background:
+    radial-gradient(circle at 0 0,rgba(44,223,167,.065),transparent 45%),
+    radial-gradient(circle at 100% 0,rgba(107,102,255,.085),transparent 46%),
+    linear-gradient(180deg,rgba(12,29,42,.80),rgba(8,18,30,.91));
+  border:1px solid rgba(105,137,206,.11);
+}
+.weekly-metric-head{
+  display:flex;
+  align-items:center;
+  gap:7px;
+  color:#a9c2d3;
+  font-size:10.5px;
+  font-weight:760;
+}
+.weekly-metric-icon{font-size:16px}
+.weekly-metric-value{
+  margin-top:8px;
+  font-size:18px;
+  line-height:1.08;
+  font-weight:850;
+  color:#edfaff;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+.weekly-metric-meta{
+  margin-top:5px;
+  font-size:9.5px;
+  line-height:1.3;
+  color:#819aac;
+}
+.weekly-metric-delta{
+  margin-top:5px;
+  font-size:9.5px;
+  line-height:1.25;
+  color:#8fdcc7;
+}
+.weekly-metric-delta.neutral{color:#9bb1c2}
+.weekly-metric-delta.warn{color:#d7cfa3}
+.weekly-insight-grid{
+  display:grid;
+  gap:8px;
+  margin-top:11px;
+}
+.weekly-insight{
+  padding:12px 13px;
+  border-radius:16px;
+  border:1px solid rgba(105,137,206,.11);
+  background:rgba(8,20,32,.60);
+}
+.weekly-insight-label{
+  font-size:9.5px;
+  font-weight:800;
+  letter-spacing:.02em;
+  color:#8aa6b9;
+  margin-bottom:4px;
+}
+.weekly-insight-title{
+  font-size:13px;
+  line-height:1.3;
+  font-weight:800;
+  color:#eefbff;
+}
+.weekly-insight-meta{
+  margin-top:4px;
+  font-size:10px;
+  line-height:1.35;
+  color:#8199aa;
+}
+.weekly-strongest{
+  border-color:rgba(67,239,185,.14);
+}
+.weekly-focus{
+  border-color:rgba(127,116,255,.15);
+}
+.progress-detail-head{
+  align-items:flex-end;
+  margin-bottom:9px;
+}
+.progress-detail-head h2{
+  font-size:20px;
+}
+.progress-detail-head .sub{
+  max-width:62%;
+}
+@media(max-width:430px){
+  .weekly-review{padding:13px}
+  .weekly-review-period{font-size:18px}
+  .weekly-review-status{font-size:9px;padding:6px 8px}
+  .weekly-metric-card{min-height:101px;padding:10px}
+  .weekly-metric-value{font-size:17px}
+}
+
 </style>
 </head>
 <body>
@@ -923,7 +1072,44 @@ input,select,textarea{
 </section>
 
 <section id="progress" class="section">
-  <div class="category-head"><h2>Прогресс</h2><div class="sub">7 и 30 дней: completion, график и календарь.</div></div>
+  <div class="category-head"><h2>Прогресс</h2><div class="sub">Weekly Review, детальная динамика и паттерны.</div></div>
+
+  <div class="weekly-review card">
+    <div class="weekly-review-head">
+      <div>
+        <div class="label">Weekly Review</div>
+        <div class="weekly-review-period" id="weeklyReviewPeriod">—</div>
+        <div class="weekly-review-scope" id="weeklyReviewScope">—</div>
+      </div>
+      <div class="weekly-review-status" id="weeklyReviewStatus">—</div>
+    </div>
+
+    <div class="weekly-metric-grid" id="weeklyMetricGrid"></div>
+
+    <div class="weekly-insight-grid">
+      <div class="weekly-insight weekly-strongest">
+        <div class="weekly-insight-label">✨ Лучшее</div>
+        <div class="weekly-insight-title" id="weeklyStrongestText">—</div>
+        <div class="weekly-insight-meta" id="weeklyStrongestMeta"></div>
+      </div>
+      <div class="weekly-insight weekly-changed">
+        <div class="weekly-insight-label">↗ Что изменилось</div>
+        <div class="weekly-insight-title" id="weeklyChangedText">—</div>
+        <div class="weekly-insight-meta" id="weeklyChangedMeta"></div>
+      </div>
+      <div class="weekly-insight weekly-focus">
+        <div class="weekly-insight-label">🎯 Фокус</div>
+        <div class="weekly-insight-title" id="weeklyFocusText">—</div>
+        <div class="weekly-insight-meta" id="weeklyFocusMeta"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-spacer"></div>
+  <div class="category-head progress-detail-head">
+    <h2>Детали</h2>
+    <div class="sub">7 и 30 дней: completion, график и календарь.</div>
+  </div>
   <div class="range-tabs"><button class="secondary" id="range7Btn" onclick="setRange(7)">7 дней</button><button class="ghost" id="range30Btn" onclick="setRange(30)">30 дней</button></div>
   <div class="card"><div class="label">Completion rate</div><div id="completionRows"></div></div>
   <div class="section-spacer"></div>
@@ -986,7 +1172,7 @@ input,select,textarea{
       Каждое сохранение дублируется локально: основная база + зеркало + IndexedDB snapshots + recovery cache.
       Внешний JSON-backup всё равно нужен перед удалением PWA или очисткой Safari.
     </div>
-    <div class="row"><span>Версия приложения</span><strong id="appVersionText">V6.6.2 GitHub</strong></div>
+    <div class="row"><span>Версия приложения</span><strong id="appVersionText">V6.7 GitHub</strong></div>
     <div class="row"><span>Версия структуры данных</span><strong id="schemaVersionText">2</strong></div>
     <div class="row"><span>Локальная защита</span><strong id="vaultStatusText">Проверяем…</strong></div>
     <div class="row"><span>Snapshots</span><strong id="vaultSnapshotText">—</strong></div>
@@ -1251,7 +1437,7 @@ input,select,textarea{
 </div></div>
 
 <script>
-const APP_VERSION='6.6.2-github';
+const APP_VERSION='6.7-github';
 const DATA_KEY='my-life-tracker-data';
 const MIRROR_KEY='my-life-tracker-data-mirror-v1';
 const CURRENT_SCHEMA_VERSION=2;
@@ -1720,6 +1906,13 @@ function trUnit(tOrId){
 function trText(ru,en){ return (data.language||'ru')==='en'?en:ru; }
 
 const UI_EN = new Map([
+['Weekly Review, детальная динамика и паттерны.','Weekly Review, detailed trends and patterns.'],
+['Weekly Review','Weekly Review'],
+['✨ Лучшее','✨ Strongest'],
+['↗ Что изменилось','↗ What changed'],
+['🎯 Фокус','🎯 Focus'],
+['Детали','Details'],
+['7 и 30 дней: completion, график и календарь.','7 and 30 days: completion, chart and calendar.'],
 ['Настройки','Settings'],
 ['Цели, оформление, резервные копии и служебные функции.','Goals, appearance, backups and service tools.'],
 ['🎯 Настройки целей','🎯 Goal settings'],
@@ -2986,7 +3179,576 @@ function setRange(n){
  if(b7)b7.className=n===7?'secondary':'ghost';if(b30)b30.className=n===30?'secondary':'ghost';
  renderProgress()
 }
-function renderProgress(){const ids=['protein','steps','outdoors','sleep','english_general','gym'],host=document.getElementById('completionRows');host.innerHTML='';ids.forEach(id=>{const t=tracker(id),c=completion(id,rangeDays),r=document.createElement('div');r.className='completion-line';r.innerHTML=`<span>${t.icon} ${trTrackerName(t)}</span><div class="mini-bar"><span style="width:${c}%"></span></div><strong>${c}%</strong>`;host.appendChild(r)});renderActivityChart();renderCalendar()}
+
+// V6.7_WEEKLY_REVIEW_START
+function weeklyParseDate(dateKey){
+  const [y,m,d]=String(dateKey).split('-').map(Number);
+  return new Date(y,m-1,d,12);
+}
+function weeklyAddDays(dateKey,days){
+  const d=weeklyParseDate(dateKey);
+  d.setDate(d.getDate()+days);
+  return localDate(d);
+}
+function weeklyDiffDays(a,b){
+  return Math.round((weeklyParseDate(b)-weeklyParseDate(a))/86400000);
+}
+function weeklyMonday(dateKey=localDate()){
+  const d=weeklyParseDate(dateKey);
+  const offset=(d.getDay()+6)%7;
+  d.setDate(d.getDate()-offset);
+  return localDate(d);
+}
+function weeklyKeys(start,count){
+  const out=[];
+  for(let i=0;i<count;i++)out.push(weeklyAddDays(start,i));
+  return out;
+}
+function weeklyWindow(todayKey=localDate()){
+  const start=weeklyMonday(todayKey);
+  const end=weeklyAddDays(start,6);
+  const elapsed=Math.max(1,Math.min(7,weeklyDiffDays(start,todayKey)+1));
+  const currentKeys=weeklyKeys(start,elapsed);
+  const prevStart=weeklyAddDays(start,-7);
+  const prevKeys=weeklyKeys(prevStart,elapsed);
+  return {todayKey,start,end,elapsed,currentKeys,prevStart,prevKeys,complete:elapsed===7};
+}
+function weeklyHasOwn(row,key){
+  return !!row && Object.prototype.hasOwnProperty.call(row,key) && row[key]!=='' && row[key]!==null && row[key]!==undefined;
+}
+function weeklyNumericStats(id,keys,{positiveOnly=false,goal=null}={}){
+  const values=[];
+  let goalDays=0;
+  for(const key of keys){
+    const row=data.logs?.[key];
+    if(!weeklyHasOwn(row,id))continue;
+    const n=Number(row[id]);
+    if(!Number.isFinite(n))continue;
+    if(positiveOnly ? n<=0 : n<0)continue;
+    values.push({date:key,value:n});
+    if(goal!==null && Number(goal)>0 && n>=Number(goal))goalDays++;
+  }
+  const avg=values.length?values.reduce((s,x)=>s+x.value,0)/values.length:null;
+  const total=values.reduce((s,x)=>s+x.value,0);
+  return {values,count:values.length,avg,total,goalDays};
+}
+function weeklyEnglishForDay(dateKey){
+  const row=data.logs?.[dateKey]||{};
+  const detailed=englishTypes.reduce((s,[id])=>s+(Number(row[id])||0),0);
+  return detailed || (Number(row.english_general)||0);
+}
+function weeklyEnglishStats(keys){
+  const rows=keys.map(date=>({date,value:weeklyEnglishForDay(date)})).filter(x=>x.value>0);
+  return {
+    rows,
+    count:rows.length,
+    total:rows.reduce((s,x)=>s+x.value,0)
+  };
+}
+function weeklyGymStats(keys){
+  const sessions=keys.filter(k=>data.logs?.[k]?.gym===true).length;
+  return {sessions};
+}
+function weeklyWeightStats(keys){
+  const all=Object.keys(data.logs||{}).sort();
+  const current=all
+    .filter(k=>keys.includes(k))
+    .map(k=>({date:k,value:Number(data.logs?.[k]?.weight)}))
+    .filter(x=>Number.isFinite(x.value)&&x.value>0)
+    .pop()||null;
+
+  const latestOverall=[...all].reverse()
+    .map(k=>({date:k,value:Number(data.logs?.[k]?.weight)}))
+    .find(x=>Number.isFinite(x.value)&&x.value>0)||null;
+
+  let previous=null;
+  if(current){
+    previous=[...all].reverse()
+      .filter(k=>k<current.date)
+      .map(k=>({date:k,value:Number(data.logs?.[k]?.weight)}))
+      .find(x=>Number.isFinite(x.value)&&x.value>0)||null;
+  }
+  const delta=current&&previous?Math.round((current.value-previous.value)*10)/10:null;
+  return {current,previous,latestOverall,delta};
+}
+function weeklyBodyChange(keys){
+  const store=data.bodyMeasurements||{};
+  const currentDate=Object.keys(store)
+    .filter(k=>keys.includes(k) && store[k] && typeof store[k]==='object')
+    .sort()
+    .pop();
+  if(!currentDate)return null;
+
+  const preference=['waist','abdomen','chest','hips','thigh'];
+  const labels={
+    waist:{ru:'Талия',en:'Waist'},
+    abdomen:{ru:'Живот',en:'Abdomen'},
+    chest:{ru:'Грудь',en:'Chest'},
+    hips:{ru:'Бёдра',en:'Hips'},
+    thigh:{ru:'Бедро',en:'Thigh'}
+  };
+
+  let metric='';
+  for(const id of preference){
+    const v=Number(store[currentDate]?.[id]);
+    if(Number.isFinite(v)&&v>0){metric=id;break}
+  }
+  if(!metric)return null;
+
+  const value=Number(store[currentDate][metric]);
+  const prevDate=Object.keys(store)
+    .filter(k=>k<currentDate && Number(store[k]?.[metric])>0)
+    .sort()
+    .pop()||'';
+  const prevValue=prevDate?Number(store[prevDate][metric]):null;
+  const delta=prevDate?Math.round((value-prevValue)*10)/10:null;
+
+  return {
+    metric,
+    label:(data.language||'ru')==='en'?labels[metric].en:labels[metric].ru,
+    date:currentDate,
+    value,
+    prevDate,
+    prevValue,
+    delta
+  };
+}
+function weeklyAlcoholStats(keys){
+  const start=alcoholTrackingStart();
+  const today=localDate();
+  const tracked=keys.filter(k=>k>=start && k<=today);
+  const drink=tracked.filter(k=>alcoholIsDrink(k)).length;
+  return {tracked:tracked.length,drink,free:Math.max(0,tracked.length-drink)};
+}
+function weeklyBuildSummary(todayKey=localDate()){
+  const window=weeklyWindow(todayKey);
+  const sleep=weeklyNumericStats('sleep',window.currentKeys,{positiveOnly:true,goal:data.sleepGoal});
+  const prevSleep=weeklyNumericStats('sleep',window.prevKeys,{positiveOnly:true,goal:data.sleepGoal});
+  const steps=weeklyNumericStats('steps',window.currentKeys,{goal:data.stepsGoal});
+  const prevSteps=weeklyNumericStats('steps',window.prevKeys,{goal:data.stepsGoal});
+  const protein=weeklyNumericStats('protein',window.currentKeys,{goal:data.proteinGoal});
+  const prevProtein=weeklyNumericStats('protein',window.prevKeys,{goal:data.proteinGoal});
+  const outdoors=weeklyNumericStats('outdoors',window.currentKeys,{goal:data.outdoorsGoal});
+  const prevOutdoors=weeklyNumericStats('outdoors',window.prevKeys,{goal:data.outdoorsGoal});
+  const english=weeklyEnglishStats(window.currentKeys);
+  const prevEnglish=weeklyEnglishStats(window.prevKeys);
+  const gym=weeklyGymStats(window.currentKeys);
+  const prevGym=weeklyGymStats(window.prevKeys);
+  const weight=weeklyWeightStats(window.currentKeys);
+  const alcohol=weeklyAlcoholStats(window.currentKeys);
+  const body=weeklyBodyChange(window.currentKeys);
+
+  return {
+    window,
+    sleep,prevSleep,
+    steps,prevSteps,
+    protein,prevProtein,
+    outdoors,prevOutdoors,
+    english,prevEnglish,
+    gym,prevGym,
+    weight,alcohol,body
+  };
+}
+function weeklyRound(v,digits=1){
+  if(v===null||v===undefined||!Number.isFinite(Number(v)))return null;
+  const p=10**digits;
+  return Math.round(Number(v)*p)/p;
+}
+function weeklySigned(v,suffix=''){
+  if(v===null||v===undefined||!Number.isFinite(Number(v)))return '—';
+  const n=weeklyRound(v,1);
+  if(n===0)return `0${suffix}`;
+  return `${n>0?'+':'−'}${Math.abs(n)}${suffix}`;
+}
+function weeklyPctChange(current,previous){
+  if(current===null||current===undefined||previous===null||previous===undefined||!Number(previous))return null;
+  return Math.round((Number(current)-Number(previous))/Math.abs(Number(previous))*100);
+}
+function weeklyFormatMinutes(mins){
+  mins=Math.max(0,Math.round(Number(mins)||0));
+  const h=Math.floor(mins/60),m=mins%60;
+  if(h&&m)return `${h}${trText('ч','h')} ${m}${trText('м','m')}`;
+  if(h)return `${h}${trText('ч','h')}`;
+  return `${m}${trText('м','m')}`;
+}
+function weeklyFormatDate(dateKey){
+  if(!dateKey)return '—';
+  const locale=(data.language||'ru')==='en'?'en-NZ':'ru-RU';
+  return weeklyParseDate(dateKey).toLocaleDateString(locale,{day:'numeric',month:'short'});
+}
+function weeklyPeriodLabel(start,end){
+  const locale=(data.language||'ru')==='en'?'en-NZ':'ru-RU';
+  const a=weeklyParseDate(start),b=weeklyParseDate(end);
+  if(a.getFullYear()===b.getFullYear() && a.getMonth()===b.getMonth()){
+    return `${a.getDate()}–${b.toLocaleDateString(locale,{day:'numeric',month:'short'})}`;
+  }
+  return `${a.toLocaleDateString(locale,{day:'numeric',month:'short'})} – ${b.toLocaleDateString(locale,{day:'numeric',month:'short'})}`;
+}
+function weeklyCompareDelta(current,previous,kind='number'){
+  if(current===null||current===undefined||previous===null||previous===undefined)return null;
+  if(kind==='pct')return weeklyPctChange(current,previous);
+  return weeklyRound(Number(current)-Number(previous),1);
+}
+function weeklyCoverageScore(count,elapsed){
+  if(!elapsed)return 0;
+  return Math.max(0,Math.min(1,Number(count||0)/elapsed));
+}
+function weeklyStrongest(summary){
+  const e=summary.window.elapsed;
+  const candidates=[];
+
+  if(summary.sleep.count){
+    const closeness=Math.max(0,1-Math.abs(summary.sleep.avg-data.sleepGoal)/Math.max(1,data.sleepGoal));
+    candidates.push({
+      id:'sleep',
+      score:closeness*weeklyCoverageScore(summary.sleep.count,e),
+      title:trText('Сон ближе всего к твоей цели.','Sleep is closest to your target.'),
+      meta:`${weeklyRound(summary.sleep.avg,1)} ${trText('ч в среднем','h avg')} · ${summary.sleep.count}/${e} ${trText('ночей записано','nights logged')}`
+    });
+  }
+  for(const [id,stats,goal,label] of [
+    ['steps',summary.steps,data.stepsGoal,trText('Шаги — самая сильная привычка недели.','Steps are your strongest habit this week.')],
+    ['protein',summary.protein,data.proteinGoal,trText('Белок — самая сильная привычка недели.','Protein is your strongest habit this week.')],
+    ['outdoors',summary.outdoors,data.outdoorsGoal,trText('Время на улице — самая сильная привычка недели.','Time outdoors is your strongest habit this week.')]
+  ]){
+    if(stats.count && Number(goal)>0){
+      const avgScore=Math.min(1,stats.avg/goal);
+      candidates.push({
+        id,
+        score:avgScore*weeklyCoverageScore(stats.count,e),
+        title:label,
+        meta:`${stats.goalDays}/${e} ${trText('дней на цели','days at goal')} · ${stats.count}/${e} ${trText('записано','logged')}`
+      });
+    }
+  }
+
+  if(Number(data.englishGoal)>0){
+    const expected=data.englishGoal*(e/7);
+    if(summary.english.total>0){
+      candidates.push({
+        id:'english',
+        score:Math.min(1,summary.english.total/Math.max(1,expected)),
+        title:trText('English идёт сильнее всего относительно темпа недели.','English is strongest relative to this week’s pace.'),
+        meta:`${weeklyFormatMinutes(summary.english.total)} · ${trText('цель','goal')} ${weeklyFormatMinutes(data.englishGoal)}`
+      });
+    }
+  }
+
+  if(Number(data.gymGoal)>0 && summary.gym.sessions>0){
+    const expected=data.gymGoal*(e/7);
+    candidates.push({
+      id:'gym',
+      score:Math.min(1,summary.gym.sessions/Math.max(.25,expected)),
+      title:trText('Тренировки идут сильнее всего относительно темпа недели.','Workouts are strongest relative to this week’s pace.'),
+      meta:`${summary.gym.sessions}/${data.gymGoal} ${trText('тренировок за неделю','workouts this week')}`
+    });
+  }
+
+  if(!candidates.length){
+    return {
+      id:'none',
+      title:trText('Пока мало данных для выбора сильной стороны.','Not enough data yet to identify a strongest area.'),
+      meta:trText('Продолжай заполнять текущую неделю.','Keep logging the current week.')
+    };
+  }
+  candidates.sort((a,b)=>b.score-a.score);
+  return candidates[0];
+}
+function weeklyChanged(summary){
+  const c=[];
+  const add=(id,score,title,meta)=>{if(Number.isFinite(score))c.push({id,score:Math.abs(score),title,meta})};
+
+  if(summary.sleep.count && summary.prevSleep.count){
+    const d=weeklyRound(summary.sleep.avg-summary.prevSleep.avg,1);
+    add(
+      'sleep',
+      d/Math.max(1,data.sleepGoal),
+      `${trText('Сон','Sleep')} ${weeklySigned(d,trText(' ч',' h'))}`,
+      `${weeklyRound(summary.sleep.avg,1)} ${trText('ч','h')} vs ${weeklyRound(summary.prevSleep.avg,1)} ${trText('ч за те же дни прошлой недели','h for the same days last week')}`
+    );
+  }
+
+  for(const [id,stats,prev,label,unit] of [
+    ['steps',summary.steps,summary.prevSteps,trText('Шаги','Steps'),''],
+    ['protein',summary.protein,summary.prevProtein,trText('Белок','Protein'),trText(' г',' g')],
+    ['outdoors',summary.outdoors,summary.prevOutdoors,trText('Улица','Outdoors'),trText(' мин',' min')]
+  ]){
+    if(stats.count && prev.count && Number(prev.avg)!==0){
+      const pct=weeklyPctChange(stats.avg,prev.avg);
+      add(
+        id,
+        pct/100,
+        `${label} ${weeklySigned(pct,'%')}`,
+        `${weeklyRound(stats.avg,1)}${unit} ${trText('в среднем vs','avg vs')} ${weeklyRound(prev.avg,1)}${unit}`
+      );
+    }
+  }
+
+  if(summary.english.total>0 && summary.prevEnglish.total>0){
+    const pct=weeklyPctChange(summary.english.total,summary.prevEnglish.total);
+    add(
+      'english',
+      pct/100,
+      `English ${weeklySigned(pct,'%')}`,
+      `${weeklyFormatMinutes(summary.english.total)} vs ${weeklyFormatMinutes(summary.prevEnglish.total)} ${trText('за те же дни прошлой недели','for the same days last week')}`
+    );
+  }
+
+  if(summary.gym.sessions!==summary.prevGym.sessions){
+    const diff=summary.gym.sessions-summary.prevGym.sessions;
+    add(
+      'gym',
+      diff/Math.max(1,data.gymGoal),
+      `${trText('Тренировки','Workouts')} ${weeklySigned(diff)}`,
+      `${summary.gym.sessions} vs ${summary.prevGym.sessions} ${trText('за те же дни прошлой недели','for the same days last week')}`
+    );
+  }
+
+  if(summary.weight.current && summary.weight.previous && summary.weight.delta!==null){
+    add(
+      'weight',
+      summary.weight.delta/Math.max(1,summary.weight.previous.value),
+      `${trText('Вес','Weight')} ${weeklySigned(summary.weight.delta,trText(' кг',' kg'))}`,
+      trText('Изменение с предыдущего взвешивания. Без оценки «лучше/хуже».','Change since the previous weigh-in. No “better/worse” judgement.')
+    );
+  }
+
+  if(summary.body && summary.body.delta!==null){
+    add(
+      'body',
+      summary.body.delta/Math.max(1,summary.body.prevValue||1),
+      `${summary.body.label} ${weeklySigned(summary.body.delta,trText(' см',' cm'))}`,
+      trText('Изменение относительно предыдущего Body Check-in.','Change vs the previous Body Check-in.')
+    );
+  }
+
+  if(!c.length){
+    return {
+      id:'none',
+      title:trText('Пока недостаточно сравнимых данных.','Not enough comparable data yet.'),
+      meta:trText('Сравнение появится, когда будут данные за те же дни прошлой недели.','Comparison appears when the same weekdays from last week have data.')
+    };
+  }
+  c.sort((a,b)=>b.score-a.score);
+  return c[0];
+}
+function weeklyFocus(summary){
+  const e=summary.window.elapsed;
+
+  if(e<=2){
+    return {
+      id:'early',
+      title:trText('Неделя только началась — не меняй курс слишком рано.','The week has just started — don’t change course too early.'),
+      meta:trText('Соберём ещё несколько дней данных и выберем один фокус.','Collect a few more days of data, then we’ll choose one focus.')
+    };
+  }
+
+  const candidates=[];
+  const add=(id,score,title,meta)=>candidates.push({id,score,title,meta});
+
+  if(summary.steps.count){
+    add(
+      'steps',
+      Math.min(1,summary.steps.avg/Math.max(1,data.stepsGoal)),
+      trText('Подтянуть шаги.','Bring steps closer to target.'),
+      `${trText('Среднее','Average')}: ${Math.round(summary.steps.avg)} · ${trText('цель','goal')}: ${Math.round(data.stepsGoal)}`
+    );
+  }
+  if(summary.protein.count){
+    add(
+      'protein',
+      Math.min(1,summary.protein.avg/Math.max(1,data.proteinGoal)),
+      trText('Подтянуть белок.','Bring protein closer to target.'),
+      `${trText('Среднее','Average')}: ${weeklyRound(summary.protein.avg,1)} ${trText('г','g')} · ${trText('цель','goal')}: ${data.proteinGoal} ${trText('г','g')}`
+    );
+  }
+  if(summary.outdoors.count){
+    add(
+      'outdoors',
+      Math.min(1,summary.outdoors.avg/Math.max(1,data.outdoorsGoal)),
+      trText('Добавить времени на улице.','Add more time outdoors.'),
+      `${trText('Среднее','Average')}: ${weeklyRound(summary.outdoors.avg,1)} ${trText('мин','min')} · ${trText('цель','goal')}: ${data.outdoorsGoal}`
+    );
+  }
+  if(summary.sleep.count>=2 && summary.sleep.avg<data.sleepGoal){
+    add(
+      'sleep',
+      Math.min(1,summary.sleep.avg/Math.max(1,data.sleepGoal)),
+      trText('Сон ниже твоей цели.','Sleep is below your target.'),
+      `${weeklyRound(summary.sleep.avg,1)} ${trText('ч в среднем','h avg')} · ${trText('цель','goal')}: ${data.sleepGoal} ${trText('ч','h')}`
+    );
+  }
+
+  if(Number(data.englishGoal)>0){
+    const expected=data.englishGoal*(e/7);
+    add(
+      'english',
+      Math.min(1,summary.english.total/Math.max(1,expected)),
+      trText('Подтянуть English до темпа недельной цели.','Bring English closer to the weekly-goal pace.'),
+      `${weeklyFormatMinutes(summary.english.total)} · ${trText('ожидаемый темп к этому дню','expected pace by now')}: ${weeklyFormatMinutes(expected)}`
+    );
+  }
+
+  if(Number(data.gymGoal)>0){
+    const expected=data.gymGoal*(e/7);
+    add(
+      'gym',
+      Math.min(1,summary.gym.sessions/Math.max(.25,expected)),
+      trText('Вернуться к темпу тренировок.','Get back to your workout pace.'),
+      `${summary.gym.sessions} ${trText('сессий','sessions')} · ${trText('недельная цель','weekly goal')}: ${data.gymGoal}`
+    );
+  }
+
+  if(!candidates.length){
+    return {
+      id:'none',
+      title:trText('Пока нет явного фокуса.','There is no clear focus yet.'),
+      meta:trText('Продолжай обычный ритм и заполняй данные.','Keep your normal rhythm and continue logging.')
+    };
+  }
+
+  candidates.sort((a,b)=>a.score-b.score);
+  const worst=candidates[0];
+
+  if(worst.score>=.90){
+    return {
+      id:'ontrack',
+      title:trText('Явного слабого места нет — сохрани текущий ритм.','No clear weak spot — protect your current rhythm.'),
+      meta:trText('Основные показатели близки к своим целям.','The main metrics are close to their targets.')
+    };
+  }
+  return worst;
+}
+function weeklyMetricCards(summary){
+  const e=summary.window.elapsed;
+  const sameWeek=trText('vs те же дни прошлой недели','vs same days last week');
+
+  const sleepDelta=summary.sleep.count&&summary.prevSleep.count
+    ? weeklyRound(summary.sleep.avg-summary.prevSleep.avg,1):null;
+  const stepsPct=summary.steps.count&&summary.prevSteps.count
+    ? weeklyPctChange(summary.steps.avg,summary.prevSteps.avg):null;
+  const proteinPct=summary.protein.count&&summary.prevProtein.count
+    ? weeklyPctChange(summary.protein.avg,summary.prevProtein.avg):null;
+  const outdoorsPct=summary.outdoors.count&&summary.prevOutdoors.count
+    ? weeklyPctChange(summary.outdoors.avg,summary.prevOutdoors.avg):null;
+  const englishPct=summary.english.total&&summary.prevEnglish.total
+    ? weeklyPctChange(summary.english.total,summary.prevEnglish.total):null;
+  const gymDiff=summary.gym.sessions-summary.prevGym.sessions;
+
+  return [
+    {
+      id:'sleep',icon:'😴',name:trText('Сон','Sleep'),
+      value:summary.sleep.count?`${weeklyRound(summary.sleep.avg,1)} ${trText('ч avg','h avg')}`:'—',
+      meta:summary.sleep.count
+        ?`${summary.sleep.count}/${e} ${trText('ночей записано','nights logged')} · ${trText('цель','goal')} ${data.sleepGoal}${trText('ч','h')}`
+        :trText('Нет записей сна на этой неделе.','No sleep logged this week.'),
+      delta:sleepDelta===null?'':`${weeklySigned(sleepDelta,trText(' ч',' h'))} ${sameWeek}`
+    },
+    {
+      id:'steps',icon:'🚶',name:trText('Шаги','Steps'),
+      value:summary.steps.count?`${Math.round(summary.steps.avg).toLocaleString((data.language||'ru')==='en'?'en-NZ':'ru-RU')} avg`:'—',
+      meta:summary.steps.count
+        ?`${summary.steps.goalDays}/${e} ${trText('дней на цели','days at goal')} · ${summary.steps.count}/${e} ${trText('записано','logged')}`
+        :trText('Нет записей шагов на этой неделе.','No steps logged this week.'),
+      delta:stepsPct===null?'':`${weeklySigned(stepsPct,'%')} ${sameWeek}`
+    },
+    {
+      id:'protein',icon:'🥩',name:trText('Белок','Protein'),
+      value:summary.protein.count?`${weeklyRound(summary.protein.avg,1)} ${trText('г avg','g avg')}`:'—',
+      meta:summary.protein.count
+        ?`${summary.protein.goalDays}/${e} ${trText('дней на цели','days at goal')} · ${summary.protein.count}/${e} ${trText('записано','logged')}`
+        :trText('Нет записей белка на этой неделе.','No protein logged this week.'),
+      delta:proteinPct===null?'':`${weeklySigned(proteinPct,'%')} ${sameWeek}`
+    },
+    {
+      id:'outdoors',icon:'☀️',name:trText('Улица','Outdoors'),
+      value:summary.outdoors.count?`${weeklyRound(summary.outdoors.avg,1)} ${trText('мин avg','min avg')}`:'—',
+      meta:summary.outdoors.count
+        ?`${summary.outdoors.goalDays}/${e} ${trText('дней на цели','days at goal')} · ${summary.outdoors.count}/${e} ${trText('записано','logged')}`
+        :trText('Нет записей улицы на этой неделе.','No outdoor time logged this week.'),
+      delta:outdoorsPct===null?'':`${weeklySigned(outdoorsPct,'%')} ${sameWeek}`
+    },
+    {
+      id:'gym',icon:'🏋️',name:trText('Тренировки','Workouts'),
+      value:`${summary.gym.sessions} / ${data.gymGoal}`,
+      meta:trText('сессий / недельная цель','sessions / weekly goal'),
+      delta:gymDiff===0?'':`${weeklySigned(gymDiff)} ${trText('сессий','sessions')} ${sameWeek}`
+    },
+    {
+      id:'english',icon:'🇬🇧',name:'English',
+      value:weeklyFormatMinutes(summary.english.total),
+      meta:`${Math.round(summary.english.total)} / ${Math.round(data.englishGoal)} ${trText('мин недельной цели','min weekly goal')}`,
+      delta:englishPct===null?'':`${weeklySigned(englishPct,'%')} ${sameWeek}`
+    },
+    {
+      id:'weight',icon:'⚖️',name:trText('Вес','Weight'),
+      value:summary.weight.current?`${weeklyRound(summary.weight.current.value,1)} ${trText('кг','kg')}`:'—',
+      meta:summary.weight.current
+        ?`${weeklyFormatDate(summary.weight.current.date)} · ${trText('взвешивание этой недели','weigh-in this week')}`
+        :(summary.weight.latestOverall
+          ?`${trText('Последний','Latest')}: ${weeklyRound(summary.weight.latestOverall.value,1)} ${trText('кг','kg')} · ${weeklyFormatDate(summary.weight.latestOverall.date)}`
+          :trText('Пока нет данных веса.','No weight data yet.')),
+      delta:summary.weight.delta===null?'':`${weeklySigned(summary.weight.delta,trText(' кг',' kg'))} ${trText('с прошлого взвешивания','since previous weigh-in')}`,
+      neutral:true
+    },
+    {
+      id:'alcohol',icon:'🍷',name:trText('Без алкоголя','Alcohol-free'),
+      value:summary.alcohol.tracked?`${summary.alcohol.free}/${summary.alcohol.tracked}`:'—',
+      meta:summary.alcohol.tracked
+        ?(summary.alcohol.drink
+          ?`${summary.alcohol.drink} ${trText('дн. с алкоголем','drinking day(s)')}`
+          :trText('алкоголь не отмечен в учтённых днях','no alcohol marked in counted days'))
+        :trText('Эта неделя пока вне периода отслеживания.','This week is outside the tracking period.'),
+      delta:''
+    }
+  ];
+}
+function renderWeeklyReview(){
+  const grid=document.getElementById('weeklyMetricGrid');
+  if(!grid)return;
+
+  const summary=weeklyBuildSummary();
+  const w=summary.window;
+  const set=(id,value)=>{
+    const el=document.getElementById(id);
+    if(el)el.textContent=value;
+  };
+
+  set('weeklyReviewPeriod',weeklyPeriodLabel(w.start,w.end));
+  set(
+    'weeklyReviewScope',
+    `${w.elapsed}/7 ${trText('дней недели прошло','days elapsed')} · ${trText('сравнение с теми же','compared with the same')} ${w.elapsed} ${trText('дн. прошлой недели','day(s) last week')}`
+  );
+
+  const status=document.getElementById('weeklyReviewStatus');
+  if(status){
+    status.textContent=w.complete?trText('Неделя завершена','Week complete'):trText('Неделя идёт','Week in progress');
+    status.className='weekly-review-status'+(w.complete?' complete':'');
+  }
+
+  grid.innerHTML=weeklyMetricCards(summary).map(card=>`
+    <div class="weekly-metric-card">
+      <div class="weekly-metric-head"><span class="weekly-metric-icon">${card.icon}</span><span>${card.name}</span></div>
+      <div class="weekly-metric-value">${card.value}</div>
+      <div class="weekly-metric-meta">${card.meta}</div>
+      ${card.delta?`<div class="weekly-metric-delta ${card.neutral?'neutral':''}">${card.delta}</div>`:''}
+    </div>
+  `).join('');
+
+  const strongest=weeklyStrongest(summary);
+  const changed=weeklyChanged(summary);
+  const focus=weeklyFocus(summary);
+
+  set('weeklyStrongestText',strongest.title);
+  set('weeklyStrongestMeta',strongest.meta||'');
+  set('weeklyChangedText',changed.title);
+  set('weeklyChangedMeta',changed.meta||'');
+  set('weeklyFocusText',focus.title);
+  set('weeklyFocusMeta',focus.meta||'');
+}
+// V6.7_WEEKLY_REVIEW_END
+
+function renderProgress(){renderWeeklyReview();const ids=['protein','steps','outdoors','sleep','english_general','gym'],host=document.getElementById('completionRows');host.innerHTML='';ids.forEach(id=>{const t=tracker(id),c=completion(id,rangeDays),r=document.createElement('div');r.className='completion-line';r.innerHTML=`<span>${t.icon} ${trTrackerName(t)}</span><div class="mini-bar"><span style="width:${c}%"></span></div><strong>${c}%</strong>`;host.appendChild(r)});renderActivityChart();renderCalendar()}
 function renderActivityChart(){
  const chart=document.getElementById('activityChart'),labels=document.getElementById('activityLabels');if(!chart||!labels)return;
  const ds=dates(rangeDays);chart.innerHTML='';labels.innerHTML='';

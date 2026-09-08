@@ -427,3 +427,44 @@ SERVICE WORKER FIX
 V6.7 remains reserved for Weekly Review.
 
 Additional cleanup: removed three obsolete unreferenced manifest files. The active GitHub Pages manifest remains manifest-github.webmanifest.
+
+
+V6.7 — WEEKLY REVIEW
+
+LOCATION
+Weekly Review lives at the top of Progress. It is not a separate tab.
+
+CALENDAR-WEEK RULES
+- Week = Monday through Sunday.
+- Current incomplete week counts only elapsed days; future days are never treated as failures.
+- Current week comparisons use the SAME weekdays from the previous week.
+  Example: on Tuesday, Monday+Tuesday are compared with Monday+Tuesday last week.
+
+METRICS
+- Sleep: average only across logged nights; missing nights are not converted to 0.
+- Steps / Protein / Outdoors: average across logged days plus goal-day count and logging coverage.
+- Gym: sessions vs weekly goal.
+- English: total minutes vs weekly goal; detailed English types are used first, english_general is fallback to avoid double-counting.
+- Weight: only a weigh-in made during the current week is treated as the weekly weight value.
+  Change is shown vs previous weigh-in and is intentionally neutral — lower/higher is not labelled good/bad.
+- Alcohol: alcohol-free days among elapsed tracked days; future days are excluded.
+- Body: if a new Body Check-in occurs this week, its change vs the prior check-in can appear in "What changed".
+
+INSIGHTS
+- Strongest: chooses the strongest current metric relative to its own target/pace.
+- What changed: largest neutral measurable change vs comparable previous data.
+- Focus:
+  - Monday/Tuesday do not overreact; the app waits for more data.
+  - From Wednesday onward it chooses one weak area.
+  - Sleep is only flagged as a focus when BELOW the user's target; extra sleep is not rewarded as "more is better".
+  - If everything is broadly on track, it recommends protecting the current rhythm.
+
+DATA SAFETY
+- Weekly Review is fully derived at render time.
+- No weekly summary is stored.
+- schemaVersion remains 2.
+- No existing field is renamed, migrated or duplicated.
+- Existing logs, alcoholHistory, bodyMeasurements, motivationSeen, experiments, goals and redundant storage remain unchanged.
+
+EXISTING PROGRESS
+The old 7/30-day completion, activity chart, calendar and Patterns remain below Weekly Review.
