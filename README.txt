@@ -327,3 +327,41 @@ V6.5 — MOTIVATION PHRASE ON HOME CARD
     line 2–3: actual fact / motivation phrase
     footer: "Tap to learn more" or achievement label
 - Today metric grid and all other screens are unchanged.
+
+
+V6.6 — SAFE UI REORGANIZATION
+
+PURPOSE
+This release reorganizes the interface BEFORE Weekly Review.
+It does NOT change the data schema or storage architecture.
+
+VISIBLE CHANGES
+- Removed the large repeated My Rhythm / Better than yesterday / RU/EN / Search / Gear header.
+- Today starts directly with the existing Today/date/Small steps hero.
+- English and Progress start directly with their compact page headings.
+- Bottom tab "Insights" is now visibly "Settings".
+- Existing relationship insights moved to Progress under "Patterns".
+- Settings now contains Goal settings, Appearance & language, Data & backup,
+  collapsible Data diagnostics, and collapsible Advanced/Experiments/Reset.
+
+SAFETY / COMPATIBILITY
+- Internal section id remains "analytics".
+- Internal tab id remains "tabAnalytics".
+- insightsList id is preserved and merely moved to Progress.
+- Existing render/save functions remain connected to their original ids.
+- schemaVersion remains 2.
+- Primary localStorage key remains my-life-tracker-data.
+- Mirror key remains my-life-tracker-data-mirror-v1.
+- IndexedDB vault remains my-rhythm-vault-v1.
+- Recovery Cache Storage remains my-rhythm-data-vault-v1.
+- logs, alcoholHistory, bodyMeasurements, motivationSeen, experiments,
+  trackers, goals, smokeDate and alcoholDate are not renamed or migrated.
+- Weekly Review is NOT included in this release.
+
+DIAGNOSTICS
+Diagnostics now also show stored alcohol drinking-day count and Body Check-in count.
+These values are derived and are not stored separately.
+
+PUBLISHING
+Upload all files from this package to the GitHub Pages repository root.
+Do NOT upload personal backup JSON files to the public repository.

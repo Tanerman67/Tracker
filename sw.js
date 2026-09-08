@@ -1,4 +1,4 @@
-const CACHE='my-rhythm-v6.5-motivation-phrase-github-pages';
+const CACHE='my-rhythm-v6.6-safe-reorg-github-pages';
 const ASSETS=[
   './',
   './index.html',

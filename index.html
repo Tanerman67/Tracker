@@ -222,7 +222,7 @@ input,select,textarea{
 }
 
 
-/* V6.5 GitHub compact home */
+/* V6.6 GitHub compact home */
 .metric-card{
   min-height:98px;
   padding:12px 13px;
@@ -246,7 +246,7 @@ input,select,textarea{
 }
 
 
-/* V6.5 GitHub: smoke/alcohol cards are statistic-only and sit on top */
+/* V6.6 GitHub: smoke/alcohol cards are statistic-only and sit on top */
 .metric-static{cursor:default}
 .metric-static .metric-head{align-items:center}
 .metric-mini-stat{
@@ -267,7 +267,7 @@ input,select,textarea{
 }
 
 
-/* V6.5 GitHub Health actual-history view */
+/* V6.6 GitHub Health actual-history view */
 .health-data-card{padding:15px 16px}
 .health-data-card .goal-top{align-items:flex-start}
 .health-main{min-width:0;flex:1}
@@ -285,7 +285,7 @@ input,select,textarea{
 }
 
 
-/* V6.5 GitHub Steps input restored on Today */
+/* V6.6 GitHub Steps input restored on Today */
 .metric-wide{
   grid-column:1 / -1;
 }
@@ -305,7 +305,7 @@ input,select,textarea{
 }
 
 
-/* V6.5 GitHub — Weight card + exact 2×4 Today grid */
+/* V6.6 GitHub — Weight card + exact 2×4 Today grid */
 .metric-weight{
   cursor:pointer;
 }
@@ -341,7 +341,7 @@ input,select,textarea{
 }
 
 
-/* V6.5 GitHub — storage safety status */
+/* V6.6 GitHub — storage safety status */
 .storage-ok{color:#71ffd0}
 .storage-warn{color:#ffd27a}
 .backup-reminder{
@@ -363,7 +363,7 @@ input,select,textarea{
 }
 
 
-/* V6.5 GitHub Alcohol calendar */
+/* V6.6 GitHub Alcohol calendar */
 .metric-alcohol-clickable{cursor:pointer!important}
 .metric-alcohol-clickable:active{transform:scale(.985)}
 .alcohol-modal{display:none;position:fixed;inset:0;z-index:120;overflow:auto;background:radial-gradient(circle at 10% -5%,rgba(44,223,167,.18),transparent 27%),radial-gradient(circle at 100% 7%,rgba(107,102,255,.22),transparent 31%),linear-gradient(180deg,rgba(4,13,22,.99),rgba(5,9,18,.995));-webkit-overflow-scrolling:touch}
@@ -689,12 +689,91 @@ input,select,textarea{
   .motivation-card-fact{font-size:11.3px;line-height:1.32}
 }
 
+
+/* V6.6 — safe UI reorganization. Storage/data schema untouched. */
+.app > .section{
+  padding-top:calc(14px + env(safe-area-inset-top));
+}
+#today.section{
+  padding-top:calc(12px + env(safe-area-inset-top));
+}
+#english > .category-head,
+#progress > .category-head:first-child,
+#analytics > .category-head:first-child{
+  margin-top:0;
+}
+#english > .category-head h2,
+#progress > .category-head:first-child h2,
+#analytics > .category-head:first-child h2{
+  font-size:25px;
+}
+.progress-patterns-head{
+  align-items:flex-start;
+  margin-top:2px;
+}
+.progress-patterns-head h2{font-size:20px}
+.progress-patterns-head .sub{max-width:62%}
+.settings-page-head{display:block;margin-bottom:12px}
+.settings-page-head .settings-head-sub{
+  margin-top:4px;
+  max-width:none;
+  text-align:left;
+}
+.settings-backup-card{border-color:rgba(72,255,199,.17)}
+.settings-details{
+  border:1px solid var(--line);
+  border-radius:20px;
+  background:linear-gradient(180deg,var(--card2),var(--card));
+  box-shadow:var(--shadow);
+  overflow:hidden;
+}
+.settings-details > summary{
+  list-style:none;
+  cursor:pointer;
+  padding:16px;
+  font-size:14px;
+  font-weight:800;
+  color:var(--text);
+  -webkit-tap-highlight-color:transparent;
+}
+.settings-details > summary::-webkit-details-marker{display:none}
+.settings-details > summary::after{
+  content:'⌄';
+  float:right;
+  color:var(--muted);
+  font-size:18px;
+  transition:transform .18s ease;
+}
+.settings-details[open] > summary::after{transform:rotate(180deg)}
+.settings-details-body{
+  padding:0 16px 16px;
+  border-top:1px solid var(--line);
+}
+.advanced-experiment-head{
+  display:block;
+  margin:14px 0 10px;
+}
+.advanced-experiment-head h2{margin:0;font-size:18px}
+.advanced-experiment-head .settings-head-sub{
+  margin-top:4px;
+  max-width:none;
+  text-align:left;
+}
+.advanced-danger-zone{
+  margin-top:18px;
+  padding-top:16px;
+  border-top:1px solid rgba(255,142,115,.18);
+}
+@media(max-width:430px){
+  #today .hero{padding:14px}
+  #today .hero-title{font-size:24px}
+  #today .hero-pill{max-width:190px;padding:10px 12px;font-size:11.5px}
+}
+
 </style>
 </head>
 <body>
 <div class="app">
-<header><div class="topbar"><div class="brand"><div class="brand-icon">🌱</div><div><h1>Мой ритм</h1><div class="sub">Лучше, чем вчера</div></div></div><div class="top-actions"><button id="topLanguageBtn" class="top-mini ghost" onclick="toggleLanguage()">RU</button><button class="top-icon ghost" onclick="show('progress',document.getElementById('tabProgress'))">⌕</button><button class="top-icon ghost" onclick="show('analytics',document.getElementById('tabAnalytics'))">⚙</button></div></div></header>
-
 <section id="today" class="section active"><div class="home-stack"><div class="hero card"><div class="hero-row"><div><div class="hero-title">Сегодня</div><div class="hero-date" id="heroDate"></div></div><div class="hero-pill"><span class="hero-star">✦</span><span id="heroTip">Маленькие шаги меняют большие жизни</span></div></div></div><div id="todayGrid" class="metric-grid"></div><div id="motivationCard" class="quote-card card motivation-card" onclick="openMotivationDetail()">
   <div class="quote-left" id="motivationIcon">🌱</div>
   <div class="motivation-copy">
@@ -748,18 +827,25 @@ input,select,textarea{
   <div class="card"><div class="label">Активность по дням</div><div class="chart" id="activityChart"></div><div class="chart-labels" id="activityLabels"></div></div>
   <div class="section-spacer"></div>
   <div class="card"><div class="calendar-head"><button class="ghost" onclick="moveMonth(-1)">‹</button><strong id="calendarTitle"></strong><button class="ghost" onclick="moveMonth(1)">›</button></div><div class="calendar-grid" id="calendarGrid"></div></div>
+
+  <div class="section-spacer"></div>
+  <div class="category-head progress-patterns-head">
+    <h2>Паттерны</h2>
+    <div class="sub">Связи между привычками. Не причинность.</div>
+  </div>
+  <div id="insightsList"></div>
 </section>
 
 <section id="analytics" class="section">
-  <div class="category-head"><h2>Insights</h2><div class="sub">Связи между привычками. Не причинность.</div></div>
-  <div id="insightsList"></div>
-  <div class="section-spacer"></div>
-  <div class="category-head"><h2>Experiments</h2><div class="sub">Проверяй одну гипотезу за раз.</div></div>
-  <div id="experimentsList"></div>
-  <button style="width:100%" onclick="openExperiment()">＋ Новый эксперимент</button>
-  <div class="section-spacer"></div>
-<div class="card">
-    <div class="label">Настройки целей</div>
+  <div class="category-head settings-page-head">
+    <div>
+      <h2>Настройки</h2>
+      <div class="sub settings-head-sub">Цели, оформление, резервные копии и служебные функции.</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="label">🎯 Настройки целей</div>
     <div class="field"><label>Дата отказа от сигарет</label><input id="smokeDate" type="date"></div>
     <div class="field"><label>Дата текущего периода без алкоголя</label><input id="alcoholDate" type="date"></div>
     <div class="field"><label>Белок, г/день</label><input id="proteinGoal" type="number"></div>
@@ -768,12 +854,12 @@ input,select,textarea{
     <div class="field"><label>Сон, ч/день</label><input id="sleepGoal" type="number" step="0.1"></div>
     <div class="field"><label>Английский, мин/неделю</label><input id="englishGoal" type="number"></div>
     <div class="field"><label>Тренировки, раз/неделю</label><input id="gymGoal" type="number"></div>
-    <button onclick="saveSettings()">Сохранить настройки</button>
+    <button style="width:100%" onclick="saveSettings()">Сохранить настройки</button>
   </div>
 
   <div class="section-spacer"></div>
   <div class="card">
-    <div class="label">🎨 Оформление</div>
+    <div class="label">🎨 Оформление и язык</div>
     <div class="row">
       <div>
         <div class="title">Тема приложения</div>
@@ -790,16 +876,14 @@ input,select,textarea{
     </div>
   </div>
 
-  <div class="section-spacer"></div><div class="card"><div class="label">🧰 Диагностика данных</div><div class="row"><span>Источник данных</span><strong id="dataSourceText">—</strong></div><div class="row"><span>Дней с записями</span><strong id="dataLogDaysText">0</strong></div><div class="small" id="dataSourcesDetails" style="margin-top:9px"></div></div>
-
   <div class="section-spacer"></div>
-  <div class="card">
+  <div class="card settings-backup-card">
     <div class="label">💾 Данные и резервная копия</div>
     <div class="small" style="margin-bottom:12px">
       Каждое сохранение дублируется локально: основная база + зеркало + IndexedDB snapshots + recovery cache.
       Внешний JSON-backup всё равно нужен перед удалением PWA или очисткой Safari.
     </div>
-    <div class="row"><span>Версия приложения</span><strong id="appVersionText">V6.5 GitHub</strong></div>
+    <div class="row"><span>Версия приложения</span><strong id="appVersionText">V6.6 GitHub</strong></div>
     <div class="row"><span>Версия структуры данных</span><strong id="schemaVersionText">2</strong></div>
     <div class="row"><span>Локальная защита</span><strong id="vaultStatusText">Проверяем…</strong></div>
     <div class="row"><span>Snapshots</span><strong id="vaultSnapshotText">—</strong></div>
@@ -814,7 +898,37 @@ input,select,textarea{
   </div>
 
   <div class="section-spacer"></div>
-  <button class="danger" style="width:100%" onclick="resetAll()">Сбросить все данные</button>
+  <details class="settings-details">
+    <summary>🧰 Диагностика данных</summary>
+    <div class="settings-details-body">
+      <div class="row"><span>Источник данных</span><strong id="dataSourceText">—</strong></div>
+      <div class="row"><span>Дней с записями</span><strong id="dataLogDaysText">0</strong></div>
+      <div class="row"><span>Дней употребления алкоголя</span><strong id="dataAlcoholDatesText">0</strong></div>
+      <div class="row"><span>Body Check-ins</span><strong id="dataBodyCheckinsText">0</strong></div>
+      <div class="small" id="dataSourcesDetails" style="margin-top:9px"></div>
+    </div>
+  </details>
+
+  <div class="section-spacer"></div>
+  <details class="settings-details">
+    <summary>⚗️ Расширенные настройки</summary>
+    <div class="settings-details-body">
+      <div class="category-head advanced-experiment-head">
+        <div>
+          <h2>Experiments</h2>
+          <div class="sub settings-head-sub">Проверяй одну гипотезу за раз.</div>
+        </div>
+      </div>
+      <div id="experimentsList"></div>
+      <button style="width:100%" onclick="openExperiment()">＋ Новый эксперимент</button>
+
+      <div class="advanced-danger-zone">
+        <div class="label">Опасная зона</div>
+        <div class="small">Сброс удаляет локальные данные приложения. Перед этим создай внешний backup.</div>
+        <button class="danger" style="width:100%;margin-top:10px" onclick="resetAll()">Сбросить все данные</button>
+      </div>
+    </div>
+  </details>
 </section>
 </div>
 
@@ -823,7 +937,7 @@ input,select,textarea{
 <button id="tabToday" class="tab active" onclick="show('today',this)"><span class="ico">⌂</span>Сегодня</button>
 <button id="tabEnglish" class="tab" onclick="show('english',this)"><span class="ico">A</span>English</button>
 <button id="tabProgress" class="tab" onclick="show('progress',this)"><span class="ico">▥</span>Прогресс</button>
-<button id="tabAnalytics" class="tab" onclick="show('analytics',this)"><span class="ico">◎</span>Insights</button>
+<button id="tabAnalytics" class="tab" onclick="show('analytics',this)"><span class="ico">⚙</span>Настройки</button>
 </div></div>
 
 
@@ -1045,7 +1159,7 @@ input,select,textarea{
 </div></div>
 
 <script>
-const APP_VERSION='6.5-github';
+const APP_VERSION='6.6-github';
 const DATA_KEY='my-life-tracker-data';
 const MIRROR_KEY='my-life-tracker-data-mirror-v1';
 const CURRENT_SCHEMA_VERSION=2;
@@ -1527,6 +1641,16 @@ function trUnit(tOrId){
 function trText(ru,en){ return (data.language||'ru')==='en'?en:ru; }
 
 const UI_EN = new Map([
+['Настройки','Settings'],
+['Цели, оформление, резервные копии и служебные функции.','Goals, appearance, backups and service tools.'],
+['🎯 Настройки целей','🎯 Goal settings'],
+['🎨 Оформление и язык','🎨 Appearance and language'],
+['Паттерны','Patterns'],
+['🧰 Диагностика данных','🧰 Data diagnostics'],
+['Дней употребления алкоголя','Alcohol drinking days'],
+['⚗️ Расширенные настройки','⚗️ Advanced settings'],
+['Опасная зона','Danger zone'],
+['Сброс удаляет локальные данные приложения. Перед этим создай внешний backup.','Reset deletes the app’s local data. Create an external backup first.'],
 ['Локальная защита','Local protection'],
 ['Последний внешний backup','Last external backup'],
 ['Проверяем…','Checking…'],
@@ -2959,7 +3083,27 @@ function updateStorageSafetyUI(){
   }
 }
 
-function renderSettings(){const set=(id,v)=>{const el=document.getElementById(id);if(el)el.value=v??''};set('smokeDate',data.smokeDate);set('alcoholDate',data.alcoholDate);set('proteinGoal',data.proteinGoal);set('stepsGoal',data.stepsGoal);set('outdoorsGoal',data.outdoorsGoal);set('sleepGoal',data.sleepGoal);set('englishGoal',data.englishGoal);set('gymGoal',data.gymGoal);const av=document.getElementById('appVersionText');if(av)av.textContent='V'+APP_VERSION;const sv=document.getElementById('schemaVersionText');if(sv)sv.textContent=String(data.schemaVersion||CURRENT_SCHEMA_VERSION);const d=window.__dataDiagnostic||{source:'—',sources:[]},ds=document.getElementById('dataSourceText'),dl=document.getElementById('dataLogDaysText'),dd=document.getElementById('dataSourcesDetails');if(ds)ds.textContent=d.source||'—';if(dl)dl.textContent=String(Object.keys(data.logs||{}).length);if(dd)dd.textContent=(d.sources||[]).map(x=>`${x.key}: ${x.logDays} ${trText('дней','days')}`).join(' · ');updateStorageSafetyUI()}
+function renderSettings(){
+ const set=(id,v)=>{const el=document.getElementById(id);if(el)el.value=v??''};
+ set('smokeDate',data.smokeDate);set('alcoholDate',data.alcoholDate);set('proteinGoal',data.proteinGoal);set('stepsGoal',data.stepsGoal);set('outdoorsGoal',data.outdoorsGoal);set('sleepGoal',data.sleepGoal);set('englishGoal',data.englishGoal);set('gymGoal',data.gymGoal);
+ const av=document.getElementById('appVersionText');if(av)av.textContent='V'+APP_VERSION;
+ const sv=document.getElementById('schemaVersionText');if(sv)sv.textContent=String(data.schemaVersion||CURRENT_SCHEMA_VERSION);
+
+ const d=window.__dataDiagnostic||{source:'—',sources:[]};
+ const ds=document.getElementById('dataSourceText');
+ const dl=document.getElementById('dataLogDaysText');
+ const da=document.getElementById('dataAlcoholDatesText');
+ const db=document.getElementById('dataBodyCheckinsText');
+ const dd=document.getElementById('dataSourcesDetails');
+
+ if(ds)ds.textContent=d.source||'—';
+ if(dl)dl.textContent=String(Object.keys(data.logs||{}).length);
+ if(da)da.textContent=String(Object.values(data.alcoholHistory||{}).filter(Boolean).length);
+ if(db)db.textContent=String(Object.values(data.bodyMeasurements||{}).filter(row=>row&&typeof row==='object'&&Object.values(row).some(v=>Number(v)>0)).length);
+ if(dd)dd.textContent=(d.sources||[]).map(x=>`${x.key}: ${x.logDays} ${trText('дней','days')}`).join(' · ');
+
+ updateStorageSafetyUI();
+}
 function render(){applyTheme();for(const job of [renderToday,renderEnglish,renderProgress,renderAnalytics,renderSettings]){try{job()}catch(e){console.error('Render error in '+job.name,e)}}try{translateDOM()}catch(e){console.error('Translation error',e)}}
 if('serviceWorker'in navigator){addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(()=>{}))}
 render();
