@@ -390,3 +390,40 @@ DATA SAFETY
 - logs, alcoholHistory, bodyMeasurements, motivationSeen, experiments and goals are untouched.
 - V6 redundant storage and backup logic remain untouched.
 - V6.7 is still reserved for Weekly Review.
+
+
+V6.6.2 — INTERNAL STRUCTURE CLEANUP
+
+This is a maintenance release before V6.7 Weekly Review.
+
+INTERNAL NAMES NOW MATCH THE UI
+- section id: analytics -> settings
+- bottom tab id: tabAnalytics -> tabSettings
+- renderAnalytics() -> renderPatterns()
+- Progress owns Patterns.
+- Settings owns Experiments. renderPatterns() no longer triggers renderExperiments().
+
+REMOVED RETIRED / ORPHANED CODE
+- retired Health renderer and Health-only helper/CSS code
+- orphaned Add Tracker modal and its functions (the fixed Today layout had no route to it)
+- retired sobriety checkbox function
+- unused weeklyOverall(), todayScore(), bodyDelta(), duplicate English total helpers
+- dead global-header language reference
+- obsolete header / old hero-pill / old quote-art / retired Health CSS
+- obsolete quote-bg.jpg and unreferenced duplicate icon files
+
+DATA SAFETY
+- schemaVersion remains 2
+- no persisted field is renamed or deleted
+- trackers data is preserved, including any historical/custom entries in backups/local storage
+- logs, alcoholHistory, bodyMeasurements, motivationSeen, experiments, goals, smokeDate and alcoholDate are unchanged
+- primary key, mirror key, IndexedDB vault and recovery Cache Storage are unchanged
+
+SERVICE WORKER FIX
+- old application caches beginning with my-rhythm-v are now cleaned up on activation
+- legacy life-tracker-app caches are also cleaned
+- IMPORTANT: my-rhythm-data-vault-v1 is intentionally preserved because it is a recovery-data cache, not an app asset cache
+
+V6.7 remains reserved for Weekly Review.
+
+Additional cleanup: removed three obsolete unreferenced manifest files. The active GitHub Pages manifest remains manifest-github.webmanifest.

@@ -1,4 +1,4 @@
-const CACHE='my-rhythm-v6.6.1-combined-today-github-pages';
+const CACHE='my-rhythm-v6.6.2-internal-cleanup-github-pages';
 const ASSETS=[
   './',
   './index.html',
@@ -7,8 +7,7 @@ const ASSETS=[
   './icon-192-v61.png',
   './icon-512-v61.png',
   './favicon-32-v61.png',
-  './aurora-bg.jpg',
-  './quote-bg.jpg'
+  './aurora-bg.jpg'
 ];
 
 self.addEventListener('install',event=>{
@@ -21,7 +20,7 @@ self.addEventListener('activate',event=>{
     caches.keys()
       .then(keys=>Promise.all(
         keys
-          .filter(k=>k.startsWith('life-tracker-app-') && k!==CACHE)
+          .filter(k=>(k.startsWith('my-rhythm-v') || k.startsWith('life-tracker-app-')) && k!==CACHE)
           .map(k=>caches.delete(k))
       ))
       .then(()=>self.clients.claim())
