@@ -316,3 +316,14 @@ The fallback can use:
 - 7-day average sleep
 
 V6 safe storage, Alcohol Calendar, Body, GitHub Pages paths, and Safari Home Screen icons are preserved.
+
+
+V6.5 — MOTIVATION PHRASE ON HOME CARD
+- The mountain motivation card now shows the actual motivation / medical fact directly.
+- Medical cards no longer show "Source · ..." on the Home screen.
+- The source remains available only inside the detail sheet after tapping the card.
+- Medical/milestone layout:
+    line 1: milestone title
+    line 2–3: actual fact / motivation phrase
+    footer: "Tap to learn more" or achievement label
+- Today metric grid and all other screens are unchanged.
