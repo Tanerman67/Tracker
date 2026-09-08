@@ -222,7 +222,7 @@ input,select,textarea{
 }
 
 
-/* V6.2 GitHub compact home */
+/* V6.3 GitHub compact home */
 .metric-card{
   min-height:98px;
   padding:12px 13px;
@@ -246,7 +246,7 @@ input,select,textarea{
 }
 
 
-/* V6.2 GitHub: smoke/alcohol cards are statistic-only and sit on top */
+/* V6.3 GitHub: smoke/alcohol cards are statistic-only and sit on top */
 .metric-static{cursor:default}
 .metric-static .metric-head{align-items:center}
 .metric-mini-stat{
@@ -267,7 +267,7 @@ input,select,textarea{
 }
 
 
-/* V6.2 GitHub Health actual-history view */
+/* V6.3 GitHub Health actual-history view */
 .health-data-card{padding:15px 16px}
 .health-data-card .goal-top{align-items:flex-start}
 .health-main{min-width:0;flex:1}
@@ -285,7 +285,7 @@ input,select,textarea{
 }
 
 
-/* V6.2 GitHub Steps input restored on Today */
+/* V6.3 GitHub Steps input restored on Today */
 .metric-wide{
   grid-column:1 / -1;
 }
@@ -305,7 +305,7 @@ input,select,textarea{
 }
 
 
-/* V6.2 GitHub — Weight card + exact 2×4 Today grid */
+/* V6.3 GitHub — Weight card + exact 2×4 Today grid */
 .metric-weight{
   cursor:pointer;
 }
@@ -341,7 +341,7 @@ input,select,textarea{
 }
 
 
-/* V6.2 GitHub — storage safety status */
+/* V6.3 GitHub — storage safety status */
 .storage-ok{color:#71ffd0}
 .storage-warn{color:#ffd27a}
 .backup-reminder{
@@ -363,7 +363,7 @@ input,select,textarea{
 }
 
 
-/* V6.2 GitHub Alcohol calendar */
+/* V6.3 GitHub Alcohol calendar */
 .metric-alcohol-clickable{cursor:pointer!important}
 .metric-alcohol-clickable:active{transform:scale(.985)}
 .alcohol-modal{display:none;position:fixed;inset:0;z-index:120;overflow:auto;background:radial-gradient(circle at 10% -5%,rgba(44,223,167,.18),transparent 27%),radial-gradient(circle at 100% 7%,rgba(107,102,255,.22),transparent 31%),linear-gradient(180deg,rgba(4,13,22,.99),rgba(5,9,18,.995));-webkit-overflow-scrolling:touch}
@@ -401,6 +401,155 @@ input,select,textarea{
 .alcohol-help{margin-top:12px}.alcohol-help .small{margin-top:7px;line-height:1.45}
 @media(min-width:620px){.alcohol-year-grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
 @media(max-width:390px){.alcohol-summary-grid{grid-template-columns:1fr 1fr}.alcohol-summary-card:first-child{grid-column:1/-1}.alcohol-year-grid{gap:8px}.alcohol-month-card{padding:9px 7px}.alcohol-day{font-size:8.5px;border-radius:8px}}
+
+
+/* V6.3 Body — full-screen Body Check-in without changing Today layout */
+.metric-weight{cursor:pointer!important}
+.metric-weight:active{transform:scale(.985)}
+
+.body-modal{
+  display:none;position:fixed;inset:0;z-index:121;overflow:auto;
+  background:
+    radial-gradient(circle at 8% -4%,rgba(44,223,167,.18),transparent 28%),
+    radial-gradient(circle at 102% 4%,rgba(107,102,255,.23),transparent 32%),
+    linear-gradient(180deg,rgba(4,13,22,.995),rgba(5,9,18,.998));
+  -webkit-overflow-scrolling:touch;
+}
+.body-modal.show{display:block}
+.body-page{
+  max-width:760px;margin:auto;min-height:100%;
+  padding:calc(14px + env(safe-area-inset-top)) 14px calc(34px + env(safe-area-inset-bottom));
+}
+.body-topbar{
+  display:grid;grid-template-columns:48px 1fr 48px;gap:11px;align-items:center;
+  position:sticky;top:0;z-index:5;margin:-4px -2px 12px;padding:8px 2px 10px;
+  background:linear-gradient(180deg,rgba(5,14,24,.96),rgba(5,14,24,.78),transparent);
+  backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px)
+}
+.body-back,.body-add-top{
+  width:44px;height:44px;border-radius:50%;padding:0;display:grid;place-items:center;
+  background:linear-gradient(180deg,rgba(27,42,70,.78),rgba(13,24,42,.94));
+  border:1px solid rgba(107,102,255,.19);color:#e8f8ff;
+}
+.body-back{font-size:30px;line-height:1}.body-add-top{font-size:25px}
+.body-title{font-size:24px;font-weight:850}.body-subtitle{font-size:12px;color:var(--muted);margin-top:2px}
+
+.body-summary-grid{display:grid;grid-template-columns:1.2fr 1fr 1fr;gap:9px;margin-bottom:12px}
+.body-summary-card{
+  min-height:94px;padding:12px;border-radius:18px;
+  border:1px solid rgba(107,102,255,.15);
+  background:
+    radial-gradient(circle at 0 0,rgba(44,223,167,.10),transparent 45%),
+    radial-gradient(circle at 100% 0,rgba(107,102,255,.14),transparent 45%),
+    linear-gradient(180deg,rgba(13,34,43,.88),rgba(10,20,34,.94));
+  box-shadow:0 12px 30px rgba(0,0,0,.15);
+}
+.body-summary-main{border-color:rgba(61,239,189,.18)}
+.body-summary-label{font-size:10.5px;line-height:1.2;color:var(--muted)}
+.body-summary-value{font-size:23px;font-weight:850;margin-top:8px;color:#8fffe0;white-space:nowrap}
+.body-summary-date{font-size:17px;white-space:normal}
+.body-summary-delta{font-size:10.5px;color:#8eaac0;margin-top:6px;line-height:1.25}
+.body-summary-delta.good{color:#72ffd3}.body-summary-delta.neutral{color:#9fb5c7}
+
+.body-new-checkin{
+  width:100%;display:flex;align-items:center;justify-content:center;gap:11px;
+  padding:14px 16px;margin-bottom:17px;border-radius:18px;
+  color:#efffff;background:
+    radial-gradient(circle at 0% 50%,rgba(44,223,167,.19),transparent 44%),
+    radial-gradient(circle at 100% 50%,rgba(107,102,255,.22),transparent 44%),
+    linear-gradient(180deg,rgba(16,55,51,.92),rgba(20,29,57,.94));
+  border:1px solid rgba(87,255,205,.21);
+  box-shadow:0 10px 28px rgba(0,0,0,.19),0 0 19px rgba(44,223,167,.07);
+}
+.body-new-checkin>span:first-child{
+  width:34px;height:34px;border-radius:12px;display:grid;place-items:center;font-size:23px;
+  background:rgba(54,237,180,.10);border:1px solid rgba(91,255,209,.17)
+}
+.body-new-checkin strong{display:block;font-size:14px}.body-new-checkin small{display:block;color:#9db7c9;font-size:10.5px;margin-top:2px;font-weight:550}
+
+.body-section-head,.body-history-head{display:flex;align-items:end;justify-content:space-between;margin:4px 2px 9px}
+.body-section-title{font-size:17px;font-weight:820}.body-section-sub{font-size:10.5px;color:var(--muted);margin-top:2px}
+
+.body-metric-tabs{
+  display:flex;gap:7px;overflow-x:auto;padding:2px 1px 9px;margin-bottom:1px;
+  scrollbar-width:none;-webkit-overflow-scrolling:touch;
+}
+.body-metric-tabs::-webkit-scrollbar{display:none}
+.body-metric-tab{
+  flex:0 0 auto;min-height:37px;padding:8px 11px;border-radius:13px;
+  background:rgba(15,30,47,.78);border:1px solid rgba(110,140,190,.12);
+  color:#8fa9bc;box-shadow:none;font-size:11px;
+}
+.body-metric-tab.active{
+  color:#f0ffff;border-color:rgba(75,252,199,.18);
+  background:linear-gradient(135deg,rgba(33,159,121,.31),rgba(74,69,181,.34));
+  box-shadow:0 0 15px rgba(44,223,167,.06)
+}
+
+.body-chart-card{
+  border-radius:20px;padding:14px;margin-bottom:16px;
+  border:1px solid rgba(105,137,206,.14);
+  background:linear-gradient(180deg,rgba(10,28,40,.88),rgba(8,17,30,.95));
+  box-shadow:0 12px 30px rgba(0,0,0,.15)
+}
+.body-chart-head{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;margin-bottom:8px}
+.body-chart-title{font-size:16px;font-weight:810}.body-chart-range{font-size:10.5px;color:var(--muted);margin-top:3px}
+.body-chart-change{font-size:13px;font-weight:780;color:#8fffe0;text-align:right;white-space:nowrap}
+.body-chart-host{height:185px;position:relative}
+.body-chart-empty{height:100%;display:grid;place-items:center;color:#718b9e;font-size:12px;text-align:center;padding:16px}
+.body-svg{width:100%;height:100%;overflow:visible}
+.body-grid-line{stroke:rgba(150,180,210,.10);stroke-width:1}
+.body-line{fill:none;stroke:url(#bodyLineGradient);stroke-width:3;stroke-linecap:round;stroke-linejoin:round;filter:drop-shadow(0 0 5px rgba(66,226,187,.22))}
+.body-area{fill:url(#bodyAreaGradient)}
+.body-point{fill:#0c1725;stroke:#7affdb;stroke-width:2}
+.body-axis-label{fill:#6d879a;font-size:9px;font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display",sans-serif}
+
+.body-history-list{display:grid;gap:8px}
+.body-history-row{
+  display:grid;grid-template-columns:1fr auto;gap:12px;align-items:center;
+  padding:13px 14px;border-radius:17px;cursor:pointer;
+  border:1px solid rgba(105,137,206,.11);
+  background:linear-gradient(180deg,rgba(12,29,42,.80),rgba(8,18,30,.90));
+}
+.body-history-row:active{transform:scale(.99)}
+.body-history-date{font-size:13px;font-weight:730}.body-history-meta{font-size:10.5px;color:var(--muted);margin-top:3px}
+.body-history-value{font-size:16px;font-weight:820;color:#dffcff;white-space:nowrap;text-align:right}
+.body-history-delta{font-size:10px;color:#81a0b5;margin-top:3px;text-align:right}
+.body-history-empty{padding:22px;text-align:center;color:#718a9d;font-size:12px;border:1px dashed rgba(120,150,190,.12);border-radius:17px}
+.body-help{margin-top:13px}.body-help .small{margin-top:7px;line-height:1.45}
+
+.body-checkin-modal{
+  display:none;position:fixed;inset:0;z-index:140;align-items:flex-end;justify-content:center;
+  background:rgba(1,5,10,.72);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
+}
+.body-checkin-modal.show{display:flex}
+.body-checkin-sheet{
+  width:min(680px,100%);max-height:92vh;overflow:auto;position:relative;
+  border-radius:28px 28px 0 0;padding:21px 16px calc(18px + env(safe-area-inset-bottom));
+  background:
+    radial-gradient(circle at 0 0,rgba(44,223,167,.12),transparent 34%),
+    radial-gradient(circle at 100% 0,rgba(107,102,255,.16),transparent 37%),
+    linear-gradient(180deg,rgba(14,31,43,.99),rgba(7,15,26,.995));
+  border:1px solid rgba(103,139,205,.15);border-bottom:0;
+  box-shadow:0 -18px 55px rgba(0,0,0,.42)
+}
+.body-checkin-sheet h3{margin:2px 48px 16px 2px}
+.body-checkin-grid{display:grid;grid-template-columns:1fr 1fr;gap:0 10px}
+.body-checkin-note{margin:2px 2px 12px;line-height:1.4}
+.body-save-btn{width:100%;margin-top:3px}
+.body-delete-btn{width:100%;margin-top:9px}
+
+@media(max-width:430px){
+  .body-summary-grid{grid-template-columns:1fr 1fr}
+  .body-summary-main{grid-column:1/-1;min-height:82px}
+  .body-summary-card{min-height:82px}
+  .body-summary-value{font-size:21px}
+  .body-summary-date{font-size:15px}
+  .body-chart-host{height:165px}
+}
+@media(max-width:350px){
+  .body-checkin-grid{grid-template-columns:1fr}
+}
 
 </style>
 </head>
@@ -504,7 +653,7 @@ input,select,textarea{
       Каждое сохранение дублируется локально: основная база + зеркало + IndexedDB snapshots + recovery cache.
       Внешний JSON-backup всё равно нужен перед удалением PWA или очисткой Safari.
     </div>
-    <div class="row"><span>Версия приложения</span><strong id="appVersionText">V6.2 GitHub</strong></div>
+    <div class="row"><span>Версия приложения</span><strong id="appVersionText">V6.3 GitHub</strong></div>
     <div class="row"><span>Версия структуры данных</span><strong id="schemaVersionText">2</strong></div>
     <div class="row"><span>Локальная защита</span><strong id="vaultStatusText">Проверяем…</strong></div>
     <div class="row"><span>Snapshots</span><strong id="vaultSnapshotText">—</strong></div>
@@ -531,6 +680,122 @@ input,select,textarea{
 <button id="tabAnalytics" class="tab" onclick="show('analytics',this)"><span class="ico">◎</span>Insights</button>
 </div></div>
 
+
+
+<div id="bodyModal" class="body-modal">
+  <div class="body-page">
+    <div class="body-topbar">
+      <button class="body-back" onclick="closeBody()">‹</button>
+      <div>
+        <div class="body-title" id="bodyTitle">Body</div>
+        <div class="body-subtitle" id="bodySubtitle">Замеры и динамика</div>
+      </div>
+      <button class="body-add-top" onclick="openBodyCheckin()">＋</button>
+    </div>
+
+    <div class="body-summary-grid">
+      <div class="body-summary-card body-summary-main">
+        <div class="body-summary-label" id="bodyWeightLabel">Текущий вес</div>
+        <div class="body-summary-value" id="bodyLatestWeight">—</div>
+        <div class="body-summary-delta" id="bodyWeightDelta">—</div>
+      </div>
+      <div class="body-summary-card">
+        <div class="body-summary-label" id="bodyLastCheckinLabel">Последний замер</div>
+        <div class="body-summary-value body-summary-date" id="bodyLastCheckin">—</div>
+        <div class="body-summary-delta" id="bodyLastCheckinFields">—</div>
+      </div>
+      <div class="body-summary-card">
+        <div class="body-summary-label" id="bodyWaistLabel">Талия</div>
+        <div class="body-summary-value" id="bodyLatestWaist">—</div>
+        <div class="body-summary-delta" id="bodyWaistDelta">—</div>
+      </div>
+    </div>
+
+    <button class="body-new-checkin" onclick="openBodyCheckin()">
+      <span>＋</span>
+      <span>
+        <strong id="bodyNewCheckinTitle">Новый замер</strong>
+        <small id="bodyNewCheckinSub">Вес + 5 измерений тела</small>
+      </span>
+    </button>
+
+    <div class="body-section-head">
+      <div>
+        <div class="body-section-title" id="bodyDynamicsTitle">Динамика</div>
+        <div class="body-section-sub" id="bodyDynamicsSub">Выбери показатель</div>
+      </div>
+    </div>
+
+    <div class="body-metric-tabs" id="bodyMetricTabs"></div>
+
+    <div class="body-chart-card">
+      <div class="body-chart-head">
+        <div>
+          <div class="body-chart-title" id="bodyChartTitle">Талия</div>
+          <div class="body-chart-range" id="bodyChartRange">—</div>
+        </div>
+        <div class="body-chart-change" id="bodyChartChange">—</div>
+      </div>
+      <div id="bodyChartHost" class="body-chart-host"></div>
+    </div>
+
+    <div class="body-history-head">
+      <div>
+        <div class="body-section-title" id="bodyHistoryTitle">История</div>
+        <div class="body-section-sub" id="bodyHistorySub">Нажми на запись, чтобы изменить её</div>
+      </div>
+    </div>
+    <div id="bodyHistoryList" class="body-history-list"></div>
+
+    <div class="body-help card">
+      <div class="title" id="bodyHelpTitle">Для сравнимых замеров</div>
+      <div class="small" id="bodyHelpText">Старайся измеряться примерно в одинаковых условиях и в одинаковых местах тела. Поля можно оставлять пустыми.</div>
+    </div>
+  </div>
+</div>
+
+<div id="bodyCheckinModal" class="body-checkin-modal">
+  <div class="body-checkin-sheet">
+    <button class="close" onclick="closeBodyCheckin()">✕</button>
+    <h3 id="bodyCheckinTitle">Body Check-in</h3>
+
+    <div class="field">
+      <label id="bodyDateLabel">Дата</label>
+      <input id="bodyDateInput" type="date">
+    </div>
+
+    <div class="body-checkin-grid">
+      <div class="field">
+        <label id="bodyWeightInputLabel">⚖️ Вес, кг</label>
+        <input id="bodyWeightInput" type="number" step="0.1" inputmode="decimal">
+      </div>
+      <div class="field">
+        <label id="bodyChestInputLabel">Грудь, см</label>
+        <input id="bodyChestInput" type="number" step="0.1" inputmode="decimal">
+      </div>
+      <div class="field">
+        <label id="bodyWaistInputLabel">Талия, см</label>
+        <input id="bodyWaistInput" type="number" step="0.1" inputmode="decimal">
+      </div>
+      <div class="field">
+        <label id="bodyAbdomenInputLabel">Живот, см</label>
+        <input id="bodyAbdomenInput" type="number" step="0.1" inputmode="decimal">
+      </div>
+      <div class="field">
+        <label id="bodyHipsInputLabel">Бёдра, см</label>
+        <input id="bodyHipsInput" type="number" step="0.1" inputmode="decimal">
+      </div>
+      <div class="field">
+        <label id="bodyThighInputLabel">Бедро, см</label>
+        <input id="bodyThighInput" type="number" step="0.1" inputmode="decimal">
+      </div>
+    </div>
+
+    <div class="small body-checkin-note" id="bodyCheckinNote">Можно заполнить только те показатели, которые измерил сегодня.</div>
+    <button class="body-save-btn" onclick="saveBodyCheckin()" id="bodySaveBtn">Сохранить замер</button>
+    <button class="danger body-delete-btn" onclick="deleteBodyCheckin()" id="bodyDeleteBtn" style="display:none">Удалить замер</button>
+  </div>
+</div>
 
 <div id="alcoholModal" class="alcohol-modal">
   <div class="alcohol-page">
@@ -615,7 +880,7 @@ input,select,textarea{
 </div></div>
 
 <script>
-const APP_VERSION='6.2-github';
+const APP_VERSION='6.3-github';
 const DATA_KEY='my-life-tracker-data';
 const MIRROR_KEY='my-life-tracker-data-mirror-v1';
 const CURRENT_SCHEMA_VERSION=2;
@@ -641,6 +906,7 @@ const defaults={
  smokeDate:'2025-06-08',alcoholDate:'2026-08-31',
  alcoholTrackingStart:'2025-01-01',
  alcoholHistory:{"2025-01-01":true,"2025-01-02":true,"2025-01-03":true,"2025-01-04":true,"2025-01-05":true,"2025-01-06":true,"2025-01-07":true,"2025-01-11":true,"2025-01-12":true,"2025-01-15":true,"2025-01-18":true,"2025-01-19":true,"2025-01-22":true,"2025-01-25":true,"2025-01-26":true,"2025-01-29":true,"2025-02-01":true,"2025-02-02":true,"2025-02-05":true,"2025-02-08":true,"2025-02-09":true,"2025-02-12":true,"2025-02-15":true,"2025-02-16":true,"2025-02-19":true,"2025-02-22":true,"2025-02-23":true,"2025-02-26":true,"2025-03-01":true,"2025-03-02":true,"2025-03-05":true,"2025-03-08":true,"2025-03-09":true,"2025-03-12":true,"2025-03-15":true,"2025-03-16":true,"2025-03-19":true,"2025-03-22":true,"2025-03-23":true,"2025-03-26":true,"2025-03-29":true,"2025-03-30":true,"2025-04-02":true,"2025-04-05":true,"2025-04-06":true,"2025-04-09":true,"2025-04-12":true,"2025-04-13":true,"2025-04-16":true,"2025-04-19":true,"2025-04-20":true,"2025-04-23":true,"2025-04-26":true,"2025-04-27":true,"2025-04-30":true,"2025-05-01":true,"2025-05-03":true,"2025-05-06":true,"2025-05-08":true,"2025-05-10":true,"2025-05-12":true,"2025-05-14":true,"2025-05-16":true,"2025-05-21":true,"2025-05-24":true,"2025-05-25":true,"2025-05-28":true,"2025-05-31":true,"2025-06-01":true,"2025-06-05":true,"2025-06-07":true,"2025-06-08":true,"2025-06-09":true,"2025-06-10":true,"2025-06-11":true,"2025-12-19":true,"2025-12-21":true,"2025-12-25":true,"2025-12-26":true,"2025-12-27":true,"2025-12-29":true,"2025-12-31":true,"2026-01-03":true,"2026-01-04":true,"2026-01-06":true,"2026-01-25":true,"2026-02-15":true,"2026-02-28":true,"2026-03-21":true,"2026-04-13":true,"2026-04-15":true,"2026-07-05":true,"2026-07-07":true,"2026-07-08":true,"2026-07-09":true,"2026-07-10":true,"2026-07-11":true,"2026-07-25":true,"2026-07-26":true,"2026-07-27":true,"2026-07-28":true,"2026-07-29":true,"2026-08-21":true,"2026-08-22":true,"2026-08-29":true,"2026-08-30":true},
+ bodyMeasurements:{"2026-01-09":{"chest":104,"waist":96,"abdomen":103,"hips":108},"2026-01-23":{"chest":102,"waist":93,"abdomen":101,"hips":106},"2026-02-11":{"chest":99,"waist":91,"abdomen":100,"hips":106},"2026-02-20":{"chest":99,"waist":92,"abdomen":98,"hips":106},"2026-03-07":{"chest":101,"waist":91,"abdomen":99,"hips":108},"2026-03-18":{"chest":99,"waist":92,"abdomen":99,"hips":108},"2026-04-10":{"chest":98,"waist":90,"abdomen":99,"hips":106},"2026-06-12":{"chest":99,"waist":90,"abdomen":98,"hips":107},"2026-06-28":{"chest":102,"waist":90,"abdomen":98,"hips":106}},
  proteinGoal:120,stepsGoal:7000,outdoorsGoal:60,sleepGoal:7.5,englishGoal:240,gymGoal:3,
  trackers:defaultTrackers,logs:{},theme:'dark',language:'ru',experiments:[],
  lastExternalBackupAt:''
@@ -723,6 +989,7 @@ function migrateData(raw){
     experiments:Array.isArray(d.experiments) ? d.experiments : [],
     alcoholTrackingStart:d.alcoholTrackingStart||defaults.alcoholTrackingStart,
     alcoholHistory:(d.alcoholHistory && typeof d.alcoholHistory==='object') ? d.alcoholHistory : structuredClone(defaults.alcoholHistory),
+    bodyMeasurements:(d.bodyMeasurements && typeof d.bodyMeasurements==='object') ? d.bodyMeasurements : structuredClone(defaults.bodyMeasurements),
     lastExternalBackupAt:d.lastExternalBackupAt||''
   };
 
@@ -1490,6 +1757,337 @@ function toggleSobrietyCheck(kind){
 }
 
 
+
+let bodySelectedMetric='waist';
+let bodyEditingDate='';
+
+const BODY_METRICS=[
+  {id:'weight',icon:'⚖️',ru:'Вес',en:'Weight',unitRu:'кг',unitEn:'kg'},
+  {id:'chest',icon:'◯',ru:'Грудь',en:'Chest',unitRu:'см',unitEn:'cm'},
+  {id:'waist',icon:'⌁',ru:'Талия',en:'Waist',unitRu:'см',unitEn:'cm'},
+  {id:'abdomen',icon:'◌',ru:'Живот',en:'Abdomen',unitRu:'см',unitEn:'cm'},
+  {id:'hips',icon:'◒',ru:'Бёдра',en:'Hips',unitRu:'см',unitEn:'cm'},
+  {id:'thigh',icon:'◐',ru:'Бедро',en:'Thigh',unitRu:'см',unitEn:'cm'}
+];
+
+function bodyMetricDef(id){return BODY_METRICS.find(x=>x.id===id)||BODY_METRICS[0]}
+function bodyMetricName(id){const m=bodyMetricDef(id);return (data.language||'ru')==='en'?m.en:m.ru}
+function bodyMetricUnit(id){const m=bodyMetricDef(id);return (data.language||'ru')==='en'?m.unitEn:m.unitRu}
+
+function bodyStore(){
+  if(!data.bodyMeasurements||typeof data.bodyMeasurements!=='object')data.bodyMeasurements={};
+  return data.bodyMeasurements;
+}
+
+function bodyEntries(metricId){
+  const out=[];
+  if(metricId==='weight'){
+    for(const date of Object.keys(data.logs||{}).sort()){
+      const v=Number(data.logs?.[date]?.weight);
+      if(Number.isFinite(v)&&v>0)out.push({date,value:v});
+    }
+  }else{
+    for(const date of Object.keys(bodyStore()).sort()){
+      const v=Number(bodyStore()?.[date]?.[metricId]);
+      if(Number.isFinite(v)&&v>0)out.push({date,value:v});
+    }
+  }
+  return out;
+}
+
+function bodyLatest(metricId){
+  const rows=bodyEntries(metricId);
+  return rows.length?rows[rows.length-1]:null;
+}
+function bodyPrevious(metricId){
+  const rows=bodyEntries(metricId);
+  return rows.length>1?rows[rows.length-2]:null;
+}
+function bodyDelta(metricId){
+  const a=bodyLatest(metricId),b=bodyPrevious(metricId);
+  if(!a||!b)return null;
+  return Math.round((a.value-b.value)*10)/10;
+}
+function bodyFirst(metricId){
+  const rows=bodyEntries(metricId);
+  return rows.length?rows[0]:null;
+}
+function bodyFormatNumber(v){
+  if(v===null||v===undefined||v==='')return '—';
+  const n=Number(v);
+  if(!Number.isFinite(n))return '—';
+  return Number.isInteger(n)?String(n):String(Math.round(n*10)/10);
+}
+function bodyFormatDelta(v,unit=''){
+  if(v===null||v===undefined)return '—';
+  if(v===0)return `0${unit?' '+unit:''}`;
+  return `${v>0?'+':'−'}${bodyFormatNumber(Math.abs(v))}${unit?' '+unit:''}`;
+}
+function bodyFriendlyDate(dateKey,short=false){
+  if(!dateKey)return '—';
+  const d=new Date(dateKey+'T12:00:00');
+  const locale=(data.language||'ru')==='en'?'en-NZ':'ru-RU';
+  return d.toLocaleDateString(locale,short?{day:'numeric',month:'short'}:{day:'numeric',month:'short',year:'numeric'});
+}
+function bodyLatestCheckinDate(){
+  const dates=Object.keys(bodyStore()).filter(d=>{
+    const row=bodyStore()[d];
+    return row&&typeof row==='object'&&Object.values(row).some(v=>Number(v)>0);
+  }).sort();
+  return dates.length?dates[dates.length-1]:'';
+}
+function bodyFieldCount(dateKey){
+  const row=bodyStore()?.[dateKey]||{};
+  return ['chest','waist','abdomen','hips','thigh'].filter(k=>Number(row[k])>0).length;
+}
+
+function openBody(){
+  document.getElementById('bodyModal')?.classList.add('show');
+  document.body.style.overflow='hidden';
+  renderBody();
+}
+function closeBody(){
+  document.getElementById('bodyModal')?.classList.remove('show');
+  document.body.style.overflow='';
+}
+function setBodyMetric(id){
+  bodySelectedMetric=id;
+  renderBody();
+}
+
+function openBodyCheckin(dateKey=''){
+  bodyEditingDate=dateKey||'';
+  const date=dateKey||localDate();
+  document.getElementById('bodyDateInput').value=date;
+
+  const row=bodyStore()?.[date]||{};
+  const log=data.logs?.[date]||{};
+
+  document.getElementById('bodyWeightInput').value=log.weight??'';
+  document.getElementById('bodyChestInput').value=row.chest??'';
+  document.getElementById('bodyWaistInput').value=row.waist??'';
+  document.getElementById('bodyAbdomenInput').value=row.abdomen??'';
+  document.getElementById('bodyHipsInput').value=row.hips??'';
+  document.getElementById('bodyThighInput').value=row.thigh??'';
+
+  const exists=!!dateKey && (
+    Object.keys(row).length>0 ||
+    (log.weight!==undefined&&log.weight!==null&&log.weight!=='')
+  );
+
+  const del=document.getElementById('bodyDeleteBtn');
+  if(del)del.style.display=exists?'block':'none';
+
+  translateBodyCheckin();
+  document.getElementById('bodyCheckinModal')?.classList.add('show');
+}
+function closeBodyCheckin(){
+  document.getElementById('bodyCheckinModal')?.classList.remove('show');
+  bodyEditingDate='';
+}
+
+function numberOrNull(id){
+  const raw=document.getElementById(id)?.value?.trim();
+  if(raw===''||raw===undefined)return null;
+  const n=Number(raw);
+  return Number.isFinite(n)&&n>0?n:null;
+}
+
+function saveBodyCheckin(){
+  const date=document.getElementById('bodyDateInput')?.value;
+  if(!date)return alert(trText('Выбери дату.','Choose a date.'));
+  if(date>localDate())return alert(trText('Нельзя записать будущую дату.','Future dates cannot be logged.'));
+
+  const vals={
+    weight:numberOrNull('bodyWeightInput'),
+    chest:numberOrNull('bodyChestInput'),
+    waist:numberOrNull('bodyWaistInput'),
+    abdomen:numberOrNull('bodyAbdomenInput'),
+    hips:numberOrNull('bodyHipsInput'),
+    thigh:numberOrNull('bodyThighInput')
+  };
+
+  if(!data.logs[date])data.logs[date]={};
+  if(vals.weight!==null)data.logs[date].weight=vals.weight;
+  else delete data.logs[date].weight;
+  if(Object.keys(data.logs[date]).length===0)delete data.logs[date];
+
+  const row={};
+  for(const key of ['chest','waist','abdomen','hips','thigh']){
+    if(vals[key]!==null)row[key]=vals[key];
+  }
+  if(Object.keys(row).length)bodyStore()[date]=row;
+  else delete bodyStore()[date];
+
+  persistData({renderAfter:true,makeSnapshot:true});
+  closeBodyCheckin();
+  renderBody();
+}
+
+function deleteBodyCheckin(){
+  const date=bodyEditingDate||document.getElementById('bodyDateInput')?.value;
+  if(!date)return;
+  const ok=confirm(trText(`Удалить Body Check-in за ${bodyFriendlyDate(date)}?`,`Delete Body Check-in for ${bodyFriendlyDate(date)}?`));
+  if(!ok)return;
+
+  if(data.bodyMeasurements)delete data.bodyMeasurements[date];
+  if(data.logs?.[date]){
+    delete data.logs[date].weight;
+    if(Object.keys(data.logs[date]).length===0)delete data.logs[date];
+  }
+
+  persistData({renderAfter:true,makeSnapshot:true});
+  closeBodyCheckin();
+  renderBody();
+}
+
+function translateBodyCheckin(){
+  const set=(id,ru,en)=>{const el=document.getElementById(id);if(el)el.textContent=trText(ru,en)};
+  set('bodyCheckinTitle','Body Check-in','Body Check-in');
+  set('bodyDateLabel','Дата','Date');
+  set('bodyWeightInputLabel','⚖️ Вес, кг','⚖️ Weight, kg');
+  set('bodyChestInputLabel','Грудь, см','Chest, cm');
+  set('bodyWaistInputLabel','Талия, см','Waist, cm');
+  set('bodyAbdomenInputLabel','Живот, см','Abdomen, cm');
+  set('bodyHipsInputLabel','Бёдра, см','Hips, cm');
+  set('bodyThighInputLabel','Бедро, см','Thigh, cm');
+  set('bodyCheckinNote','Можно заполнить только те показатели, которые измерил сегодня.','Fill only the measurements you took today.');
+  set('bodySaveBtn','Сохранить замер','Save check-in');
+  set('bodyDeleteBtn','Удалить замер','Delete check-in');
+}
+
+function bodyChartSVG(rows){
+  if(rows.length<2){
+    return `<div class="body-chart-empty">${trText('Для графика нужно минимум два замера.','At least two measurements are needed for a chart.')}</div>`;
+  }
+
+  const W=620,H=180,padL=34,padR=14,padT=14,padB=27;
+  const vals=rows.map(x=>x.value);
+  let min=Math.min(...vals),max=Math.max(...vals);
+  if(min===max){min-=1;max+=1}
+  const margin=Math.max((max-min)*.16,.7);
+  min-=margin;max+=margin;
+
+  const x=i=>padL+(W-padL-padR)*(rows.length===1?0.5:i/(rows.length-1));
+  const y=v=>padT+(H-padT-padB)*(1-(v-min)/(max-min));
+
+  const pts=rows.map((r,i)=>[x(i),y(r.value)]);
+  const line=pts.map((p,i)=>(i?'L':'M')+p[0].toFixed(1)+','+p[1].toFixed(1)).join(' ');
+  const area=`${line} L ${pts[pts.length-1][0].toFixed(1)},${(H-padB).toFixed(1)} L ${pts[0][0].toFixed(1)},${(H-padB).toFixed(1)} Z`;
+
+  const grid=[0,.5,1].map(t=>{
+    const yy=padT+(H-padT-padB)*t;
+    const value=max-(max-min)*t;
+    return `<line class="body-grid-line" x1="${padL}" y1="${yy}" x2="${W-padR}" y2="${yy}"></line>
+            <text class="body-axis-label" x="2" y="${yy+3}">${bodyFormatNumber(value)}</text>`;
+  }).join('');
+
+  const labelIdx=[0,Math.floor((rows.length-1)/2),rows.length-1].filter((v,i,a)=>a.indexOf(v)===i);
+  const labels=labelIdx.map(i=>`<text class="body-axis-label" text-anchor="${i===0?'start':(i===rows.length-1?'end':'middle')}" x="${x(i)}" y="${H-5}">${bodyFriendlyDate(rows[i].date,true)}</text>`).join('');
+  const circles=pts.map((pt,i)=>`<circle class="body-point" cx="${pt[0]}" cy="${pt[1]}" r="${i===pts.length-1?4.5:3.2}"></circle>`).join('');
+
+  return `<svg class="body-svg" viewBox="0 0 ${W} ${H}" preserveAspectRatio="none">
+    <defs>
+      <linearGradient id="bodyLineGradient" x1="0" x2="1"><stop offset="0" stop-color="#2cdfa7"/><stop offset="1" stop-color="#7770ff"/></linearGradient>
+      <linearGradient id="bodyAreaGradient" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2cdfa7" stop-opacity=".17"/><stop offset="1" stop-color="#6b66ff" stop-opacity=".015"/></linearGradient>
+    </defs>
+    ${grid}
+    <path class="body-area" d="${area}"></path>
+    <path class="body-line" d="${line}"></path>
+    ${circles}
+    ${labels}
+  </svg>`;
+}
+
+function renderBody(){
+  const modal=document.getElementById('bodyModal');
+  if(!modal)return;
+
+  const set=(id,text)=>{const el=document.getElementById(id);if(el)el.textContent=text};
+
+  set('bodyTitle','Body');
+  set('bodySubtitle',trText('Замеры и динамика','Measurements & trends'));
+  set('bodyWeightLabel',trText('Текущий вес','Current weight'));
+  set('bodyLastCheckinLabel',trText('Последний замер','Last check-in'));
+  set('bodyWaistLabel',trText('Талия','Waist'));
+  set('bodyNewCheckinTitle',trText('Новый замер','New check-in'));
+  set('bodyNewCheckinSub',trText('Вес + 5 измерений тела','Weight + 5 body measurements'));
+  set('bodyDynamicsTitle',trText('Динамика','Trend'));
+  set('bodyDynamicsSub',trText('Выбери показатель','Choose a metric'));
+  set('bodyHistoryTitle',trText('История','History'));
+  set('bodyHistorySub',trText('Нажми на запись, чтобы изменить её','Tap an entry to edit it'));
+  set('bodyHelpTitle',trText('Для сравнимых замеров','For comparable measurements'));
+  set('bodyHelpText',trText('Старайся измеряться примерно в одинаковых условиях и в одинаковых местах тела. Поля можно оставлять пустыми.','Try to measure under similar conditions and at the same body landmarks. Fields may be left blank.'));
+
+  const weight=bodyLatest('weight'),weightPrev=bodyPrevious('weight');
+  set('bodyLatestWeight',weight?`${bodyFormatNumber(weight.value)} ${bodyMetricUnit('weight')}`:'—');
+  const wd=weight&&weightPrev?Math.round((weight.value-weightPrev.value)*10)/10:null;
+  const wde=document.getElementById('bodyWeightDelta');
+  if(wde){
+    wde.textContent=wd===null?trText('Пока нет сравнения','No comparison yet'):`${bodyFormatDelta(wd,bodyMetricUnit('weight'))} ${trText('к предыдущему','vs previous')}`;
+    wde.className='body-summary-delta '+(wd!==null&&wd<0?'good':'neutral');
+  }
+
+  const lastDate=bodyLatestCheckinDate();
+  set('bodyLastCheckin',lastDate?bodyFriendlyDate(lastDate):'—');
+  set('bodyLastCheckinFields',lastDate?`${bodyFieldCount(lastDate)} / 5 ${trText('замеров','measurements')}`:trText('Нет данных','No data'));
+
+  const waist=bodyLatest('waist'),waistPrev=bodyPrevious('waist');
+  set('bodyLatestWaist',waist?`${bodyFormatNumber(waist.value)} ${bodyMetricUnit('waist')}`:'—');
+  const wad=waist&&waistPrev?Math.round((waist.value-waistPrev.value)*10)/10:null;
+  const wae=document.getElementById('bodyWaistDelta');
+  if(wae){
+    wae.textContent=wad===null?trText('Пока нет сравнения','No comparison yet'):`${bodyFormatDelta(wad,bodyMetricUnit('waist'))} ${trText('к предыдущему','vs previous')}`;
+    wae.className='body-summary-delta '+(wad!==null&&wad<0?'good':'neutral');
+  }
+
+  const tabs=document.getElementById('bodyMetricTabs');
+  if(tabs){
+    tabs.innerHTML=BODY_METRICS.map(m=>`<button class="body-metric-tab ${bodySelectedMetric===m.id?'active':''}" onclick="setBodyMetric('${m.id}')">${m.icon} ${(data.language||'ru')==='en'?m.en:m.ru}</button>`).join('');
+  }
+
+  const metric=bodyMetricDef(bodySelectedMetric);
+  const rows=bodyEntries(bodySelectedMetric);
+  set('bodyChartTitle',`${metric.icon} ${bodyMetricName(bodySelectedMetric)}`);
+
+  const first=rows.length?rows[0]:null,last=rows.length?rows[rows.length-1]:null;
+  set('bodyChartRange',rows.length?`${bodyFriendlyDate(first.date,true)} → ${bodyFriendlyDate(last.date,true)} · ${rows.length} ${trText('точек','points')}`:trText('Нет данных','No data'));
+
+  const totalChange=first&&last&&rows.length>1?Math.round((last.value-first.value)*10)/10:null;
+  const changeEl=document.getElementById('bodyChartChange');
+  if(changeEl){
+    changeEl.textContent=totalChange===null?'—':`${bodyFormatDelta(totalChange,bodyMetricUnit(bodySelectedMetric))} ${trText('с начала','from start')}`;
+    changeEl.className='body-chart-change';
+  }
+
+  const chart=document.getElementById('bodyChartHost');
+  if(chart)chart.innerHTML=bodyChartSVG(rows);
+
+  const list=document.getElementById('bodyHistoryList');
+  if(list){
+    if(!rows.length){
+      list.innerHTML=`<div class="body-history-empty">${trText('Для этого показателя ещё нет замеров.','No measurements for this metric yet.')}</div>`;
+    }else{
+      const desc=[...rows].reverse();
+      list.innerHTML=desc.map((r,revIndex)=>{
+        const originalIndex=rows.length-1-revIndex;
+        const prev=originalIndex>0?rows[originalIndex-1]:null;
+        const d=prev?Math.round((r.value-prev.value)*10)/10:null;
+        return `<div class="body-history-row" onclick="openBodyCheckin('${r.date}')">
+          <div>
+            <div class="body-history-date">${bodyFriendlyDate(r.date)}</div>
+            <div class="body-history-meta">${bodySelectedMetric==='weight'?trText('Вес','Weight'):trText('Body Check-in','Body Check-in')}</div>
+          </div>
+          <div>
+            <div class="body-history-value">${bodyFormatNumber(r.value)} ${bodyMetricUnit(bodySelectedMetric)}</div>
+            <div class="body-history-delta">${d===null?trText('Первая запись','First entry'):bodyFormatDelta(d,bodyMetricUnit(bodySelectedMetric))}</div>
+          </div>
+        </div>`;
+      }).join('');
+    }
+  }
+}
+
 let alcoholViewMode='year';
 let alcoholViewYear=new Date().getFullYear();
 let alcoholViewMonth=new Date().getMonth();
@@ -1640,7 +2238,7 @@ function renderToday(){
      const shown=hasToday?Number(todayWeight):(latest?Number(latest.value):null);
      const status=hasToday?trText('Сегодня','Today'):(latest?dateLabel(latest.date):trText('Нет данных','No data'));
      el.innerHTML=`<div class="metric-head"><div class="metric-left"><div class="metric-emoji">${c.emoji}</div><div><div class="metric-name">${title}</div><div class="metric-stat metric-weight-value">${shown!=null?shown+' '+trText('кг','kg'):'—'}</div></div></div><div class="metric-weight-status">${status}</div></div><div class="metric-weight-line"></div>`;
-     el.onclick=()=>openEntry('weight');
+     el.onclick=openBody;
    } else {
      const t=tracker(c.id),current=c.id==='gym'?(val('gym')===true?1:0):(Number(val(c.id))||0),goal=c.id==='gym'?1:Number(goalFor(c.id)||0),unit=c.id==='gym'?trText('раз','x'):(c.id==='steps'?trText('шагов','steps'):trUnit(t)),percent=goal?Math.min(100,Math.round(current/goal*100)):(current>0?100:0);
      el.innerHTML=`<div class="metric-head"><div class="metric-left"><div class="metric-emoji">${c.emoji}</div><div><div class="metric-name">${title}</div><div class="metric-stat">${current} / ${goal}${unit?' '+unit:''}</div></div></div><div class="metric-ring" style="--p:${percent}"></div></div><div class="metric-bar"><span style="width:${percent}%"></span></div>`;
@@ -1816,7 +2414,12 @@ function render(){applyTheme();for(const job of [renderToday,renderEnglish,rende
 if('serviceWorker'in navigator){addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(()=>{}))}
 render();
 recoverFromVaults().catch(err=>{console.warn('Vault recovery failed',err);updateStorageSafetyUI()})
-addEventListener('keydown',e=>{if(e.key==='Escape'&&document.getElementById('alcoholModal')?.classList.contains('show'))closeAlcohol()})
+addEventListener('keydown',e=>{
+  if(e.key!=='Escape')return;
+  if(document.getElementById('bodyCheckinModal')?.classList.contains('show'))return closeBodyCheckin();
+  if(document.getElementById('bodyModal')?.classList.contains('show'))return closeBody();
+  if(document.getElementById('alcoholModal')?.classList.contains('show'))return closeAlcohol();
+})
 </script>
 </body>
 </html>

@@ -228,3 +228,43 @@ V6.2 — ALCOHOL HISTORY CALENDAR
   Latest drinking day: 2026-08-30
   Current alcohol-free period begins: 2026-08-31
 - V6 safe storage and Safari Home Screen icon setup are preserved.
+
+
+V6.3 — BODY CHECK-IN (GitHub Pages)
+
+MAIN SCREEN
+- No visual/layout changes to Today.
+- Weight card stays in the same position and style.
+- Only its tap action changed: Weight now opens the Body screen.
+
+BODY SCREEN
+- Current weight + change vs previous weight.
+- Last body-measurement check-in.
+- Latest waist + change vs previous waist measurement.
+- New Body Check-in form:
+  Weight, Chest, Waist, Abdomen, Hips, Thigh.
+- Any fields may be left blank.
+- Existing date can be opened again and edited.
+- A check-in can be deleted.
+- Metric tabs:
+  Weight / Chest / Waist / Abdomen / Hips / Thigh.
+- Each metric has a trend chart, total change, and history list.
+- Weight continues to use the existing daily logs field "weight",
+  so Today, Progress, Body, backup and recovery remain consistent.
+- Body circumference data is stored in additive field "bodyMeasurements".
+
+PRELOADED BODY HISTORY FROM USER SCREENSHOTS
+2026-01-09  Chest 104 / Waist 96 / Abdomen 103 / Hips 108
+2026-01-23  Chest 102 / Waist 93 / Abdomen 101 / Hips 106
+2026-02-11  Chest 99  / Waist 91 / Abdomen 100 / Hips 106
+2026-02-20  Chest 99  / Waist 92 / Abdomen 98  / Hips 106
+2026-03-07  Chest 101 / Waist 91 / Abdomen 99  / Hips 108
+2026-03-18  Chest 99  / Waist 92 / Abdomen 99  / Hips 108
+2026-04-10  Chest 98  / Waist 90 / Abdomen 99  / Hips 106
+2026-06-12  Chest 99  / Waist 90 / Abdomen 98  / Hips 107
+2026-06-28  Chest 102 / Waist 90 / Abdomen 98  / Hips 106
+
+No historical Thigh values were invented. Thigh starts with the first new measurement.
+
+V6 safe redundant storage, Alcohol Calendar, GitHub Pages-relative paths,
+and Safari Home Screen icons are preserved.
