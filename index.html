@@ -222,7 +222,7 @@ input,select,textarea{
 }
 
 
-/* V6.6 GitHub compact home */
+/* V6.6.1 GitHub compact home */
 .metric-card{
   min-height:98px;
   padding:12px 13px;
@@ -246,7 +246,7 @@ input,select,textarea{
 }
 
 
-/* V6.6 GitHub: smoke/alcohol cards are statistic-only and sit on top */
+/* V6.6.1 GitHub: smoke/alcohol cards are statistic-only and sit on top */
 .metric-static{cursor:default}
 .metric-static .metric-head{align-items:center}
 .metric-mini-stat{
@@ -267,7 +267,7 @@ input,select,textarea{
 }
 
 
-/* V6.6 GitHub Health actual-history view */
+/* V6.6.1 GitHub Health actual-history view */
 .health-data-card{padding:15px 16px}
 .health-data-card .goal-top{align-items:flex-start}
 .health-main{min-width:0;flex:1}
@@ -285,7 +285,7 @@ input,select,textarea{
 }
 
 
-/* V6.6 GitHub Steps input restored on Today */
+/* V6.6.1 GitHub Steps input restored on Today */
 .metric-wide{
   grid-column:1 / -1;
 }
@@ -305,7 +305,7 @@ input,select,textarea{
 }
 
 
-/* V6.6 GitHub — Weight card + exact 2×4 Today grid */
+/* V6.6.1 GitHub — Weight card + exact 2×4 Today grid */
 .metric-weight{
   cursor:pointer;
 }
@@ -341,7 +341,7 @@ input,select,textarea{
 }
 
 
-/* V6.6 GitHub — storage safety status */
+/* V6.6.1 GitHub — storage safety status */
 .storage-ok{color:#71ffd0}
 .storage-warn{color:#ffd27a}
 .backup-reminder{
@@ -363,7 +363,7 @@ input,select,textarea{
 }
 
 
-/* V6.6 GitHub Alcohol calendar */
+/* V6.6.1 GitHub Alcohol calendar */
 .metric-alcohol-clickable{cursor:pointer!important}
 .metric-alcohol-clickable:active{transform:scale(.985)}
 .alcohol-modal{display:none;position:fixed;inset:0;z-index:120;overflow:auto;background:radial-gradient(circle at 10% -5%,rgba(44,223,167,.18),transparent 27%),radial-gradient(circle at 100% 7%,rgba(107,102,255,.22),transparent 31%),linear-gradient(180deg,rgba(4,13,22,.99),rgba(5,9,18,.995));-webkit-overflow-scrolling:touch}
@@ -770,20 +770,170 @@ input,select,textarea{
   #today .hero-pill{max-width:190px;padding:10px 12px;font-size:11.5px}
 }
 
+
+/* V6.6.1 — merge Today/date and Motivation into one top card */
+#today .home-stack{gap:12px}
+
+.today-combined-hero{
+  position:relative;
+  overflow:hidden;
+  min-height:150px;
+  padding:16px 17px 15px;
+  cursor:pointer;
+  background:
+    radial-gradient(circle at 94% 8%,rgba(101,92,255,.28),transparent 36%),
+    radial-gradient(circle at 2% 92%,rgba(38,220,165,.12),transparent 42%),
+    linear-gradient(135deg,rgba(9,54,79,.97),rgba(35,38,118,.96));
+  border-color:rgba(97,201,224,.27);
+  box-shadow:0 14px 36px rgba(0,0,0,.24),inset 0 1px 0 rgba(255,255,255,.035);
+}
+.today-combined-hero.milestone{
+  border-color:rgba(78,245,192,.34);
+  box-shadow:0 14px 38px rgba(0,0,0,.25),0 0 24px rgba(44,223,167,.07),inset 0 1px 0 rgba(255,255,255,.035);
+}
+.today-combined-hero.medical{border-color:rgba(133,122,255,.36)}
+
+.today-combined-top{
+  position:relative;
+  z-index:3;
+  display:flex;
+  align-items:flex-start;
+  justify-content:space-between;
+  gap:12px;
+}
+.today-combined-hero .hero-title{
+  font-size:27px;
+  line-height:1;
+  margin:0;
+}
+.today-combined-hero .hero-date{
+  margin-top:5px;
+  font-size:11px;
+  color:#91b2c8;
+}
+.today-motivation-icon{
+  flex:0 0 auto;
+  width:37px;
+  height:37px;
+  display:grid;
+  place-items:center;
+  border-radius:13px;
+  font-size:23px;
+  background:rgba(4,18,29,.48);
+  border:1px solid rgba(119,218,226,.15);
+  backdrop-filter:blur(8px);
+  -webkit-backdrop-filter:blur(8px);
+}
+.today-motivation-body{
+  position:relative;
+  z-index:3;
+  width:min(82%,560px);
+  margin-top:15px;
+}
+.today-combined-hero .motivation-kicker{margin-bottom:6px}
+.today-combined-hero .quote-text{
+  position:relative;
+  z-index:3;
+  max-width:none;
+  font-size:15px;
+  line-height:1.28;
+}
+.today-combined-hero .motivation-card-title{
+  font-size:15px;
+  line-height:1.15;
+  margin-bottom:4px;
+}
+.today-combined-hero .motivation-card-fact{
+  max-width:none;
+  font-size:11.5px;
+  line-height:1.34;
+  -webkit-line-clamp:2;
+}
+.today-combined-hero .quote-sub{
+  margin-top:7px;
+  font-size:10px;
+  color:#86a7bc;
+}
+.today-hero-art{
+  position:absolute;
+  inset:0;
+  z-index:1;
+  pointer-events:none;
+  opacity:.35;
+}
+.today-hero-moon{
+  position:absolute;
+  right:52px;
+  top:24px;
+  width:52px;
+  height:52px;
+  border-radius:50%;
+  background:radial-gradient(circle at 36% 34%,rgba(229,239,201,.82),rgba(151,174,165,.42) 48%,rgba(117,116,210,.10) 72%,transparent 73%);
+  box-shadow:0 0 22px rgba(169,181,231,.16);
+}
+.today-hero-mountains{
+  position:absolute;
+  left:35%;
+  right:-8%;
+  bottom:-7px;
+  height:70px;
+  background:
+    linear-gradient(145deg,transparent 0 34%,rgba(6,32,45,.72) 34% 52%,transparent 52%) 0 100%/145px 78px repeat-x,
+    linear-gradient(215deg,transparent 0 38%,rgba(5,25,39,.78) 38% 55%,transparent 55%) 50px 100%/160px 82px repeat-x;
+  filter:drop-shadow(0 -2px 8px rgba(0,0,0,.18));
+}
+#today #todayGrid{margin-top:0}
+
+@media(max-width:430px){
+  #today .today-combined-hero{
+    min-height:142px;
+    padding:15px 15px 14px;
+  }
+  #today .today-combined-hero .hero-title{font-size:26px}
+  #today .today-motivation-body{
+    width:88%;
+    margin-top:13px;
+  }
+  #today .today-combined-hero .motivation-card-title{font-size:14px}
+  #today .today-combined-hero .motivation-card-fact{font-size:11px}
+  #today .today-hero-moon{
+    right:38px;
+    top:23px;
+    width:47px;
+    height:47px;
+  }
+}
+
 </style>
 </head>
 <body>
 <div class="app">
-<section id="today" class="section active"><div class="home-stack"><div class="hero card"><div class="hero-row"><div><div class="hero-title">Сегодня</div><div class="hero-date" id="heroDate"></div></div><div class="hero-pill"><span class="hero-star">✦</span><span id="heroTip">Маленькие шаги меняют большие жизни</span></div></div></div><div id="todayGrid" class="metric-grid"></div><div id="motivationCard" class="quote-card card motivation-card" onclick="openMotivationDetail()">
-  <div class="quote-left" id="motivationIcon">🌱</div>
-  <div class="motivation-copy">
-    <div class="motivation-kicker" id="motivationKicker"></div>
-    <div class="quote-text" id="motivationText">Дисциплина сегодня — свобода завтра.</div>
-    <div class="quote-sub" id="motivationSub">Мой ритм</div>
-  </div>
-  <div class="quote-art"><div class="moon"></div><div class="mount"></div></div>
-</div></div></section>
+<section id="today" class="section active">
+  <div class="home-stack">
+    <div id="motivationCard" class="hero card motivation-card today-combined-hero" onclick="openMotivationDetail()">
+      <div class="today-combined-top">
+        <div>
+          <div class="hero-title">Сегодня</div>
+          <div class="hero-date" id="heroDate"></div>
+        </div>
+        <div class="today-motivation-icon" id="motivationIcon">🌱</div>
+      </div>
 
+      <div class="today-motivation-body">
+        <div class="motivation-kicker" id="motivationKicker"></div>
+        <div class="quote-text" id="motivationText">Дисциплина сегодня — свобода завтра.</div>
+        <div class="quote-sub" id="motivationSub">My Rhythm</div>
+      </div>
+
+      <div class="today-hero-art" aria-hidden="true">
+        <div class="today-hero-moon"></div>
+        <div class="today-hero-mountains"></div>
+      </div>
+    </div>
+
+    <div id="todayGrid" class="metric-grid"></div>
+  </div>
+</section>
 
 <section id="english" class="section">
   <div class="category-head">
@@ -883,7 +1033,7 @@ input,select,textarea{
       Каждое сохранение дублируется локально: основная база + зеркало + IndexedDB snapshots + recovery cache.
       Внешний JSON-backup всё равно нужен перед удалением PWA или очисткой Safari.
     </div>
-    <div class="row"><span>Версия приложения</span><strong id="appVersionText">V6.6 GitHub</strong></div>
+    <div class="row"><span>Версия приложения</span><strong id="appVersionText">V6.6.1 GitHub</strong></div>
     <div class="row"><span>Версия структуры данных</span><strong id="schemaVersionText">2</strong></div>
     <div class="row"><span>Локальная защита</span><strong id="vaultStatusText">Проверяем…</strong></div>
     <div class="row"><span>Snapshots</span><strong id="vaultSnapshotText">—</strong></div>
@@ -1159,7 +1309,7 @@ input,select,textarea{
 </div></div>
 
 <script>
-const APP_VERSION='6.6-github';
+const APP_VERSION='6.6.1-github';
 const DATA_KEY='my-life-tracker-data';
 const MIRROR_KEY='my-life-tracker-data-mirror-v1';
 const CURRENT_SCHEMA_VERSION=2;
@@ -1671,7 +1821,6 @@ const UI_EN = new Map([
 ['Нажми, чтобы отметить сегодня','Tap to check today'],
 
 ['Лучше, чем вчера','Better than yesterday'],
-['Маленькие шаги меняют большие жизни','Small steps change big lives'],
 ['Добавить занятие ＋','Add a session ＋'],
 ['Без сигарет','Smoke-free'],
 ['Без алкоголя','Alcohol-free'],
@@ -2876,9 +3025,8 @@ function renderToday(){
  enW=['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'],
  ruM=['января','февраля','марта','апреля','мая','июня','июля','августа','сентября','октября','ноября','декабря'],
  enM=['January','February','March','April','May','June','July','August','September','October','November','December'];
- const heroDateEl=document.getElementById('heroDate'),heroTipEl=document.getElementById('heroTip');
+ const heroDateEl=document.getElementById('heroDate');
  if(heroDateEl)heroDateEl.textContent=lang==='en'?`${enW[now.getDay()]}, ${now.getDate()} ${enM[now.getMonth()]}`:`${ruW[now.getDay()]}, ${now.getDate()} ${ruM[now.getMonth()]}`;
- if(heroTipEl)heroTipEl.textContent=trText('Маленькие шаги меняют большие жизни','Small steps change big lives');
 
  const cards=[
   {id:'smoke',kind:'special',emoji:'🚭',ru:'Без сигарет',en:'Smoke-free'},

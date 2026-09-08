@@ -365,3 +365,28 @@ These values are derived and are not stored separately.
 PUBLISHING
 Upload all files from this package to the GitHub Pages repository root.
 Do NOT upload personal backup JSON files to the public repository.
+
+
+V6.6.1 — COMBINED TODAY + MOTIVATION
+
+- Today/date and Motivation are now one top card.
+- The "Small steps change big lives" phrase is removed.
+- The separate Motivation card below the eight metric cards is removed.
+- The eight metric cards move up directly below the combined top card.
+- The combined card shows:
+  Today
+  weekday/date
+  current milestone / medical fact / personal progress / daily advice
+- Tapping the combined card still opens Motivation details and medical source links.
+
+MOTIVATION LOGIC IS UNCHANGED
+- Unseen milestones have priority and remain until marked as seen.
+- Personal progress appears when there is no unseen milestone.
+- Generic advice is deterministic for the date and changes daily.
+
+DATA SAFETY
+- schemaVersion remains 2.
+- No stored field was added, removed, renamed or migrated.
+- logs, alcoholHistory, bodyMeasurements, motivationSeen, experiments and goals are untouched.
+- V6 redundant storage and backup logic remain untouched.
+- V6.7 is still reserved for Weekly Review.

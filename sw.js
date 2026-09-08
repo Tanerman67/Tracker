@@ -1,4 +1,4 @@
-const CACHE='my-rhythm-v6.6-safe-reorg-github-pages';
+const CACHE='my-rhythm-v6.6.1-combined-today-github-pages';
 const ASSETS=[
   './',
   './index.html',
