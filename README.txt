@@ -511,3 +511,46 @@ DATA SAFETY
 - Trends is render-time only and writes nothing to storage.
 - No existing stored field is renamed, migrated or duplicated.
 - Weekly Review storage rules remain unchanged.
+
+
+V6.7.2 — ADAPTIVE TRENDS
+
+ALL TREND METRICS NOW USE RANGE-AWARE CHARTING
+
+7 DAYS
+- Daily values.
+- Every available data point can be shown.
+- Missing data remains missing; it is not converted to zero.
+
+30 DAYS
+- Daily values.
+- The chart is visually simplified: the line remains, but only the latest point is emphasized.
+- For metrics where missing days matter, line segments break across missing dates.
+
+3 MONTHS / 90 DAYS
+- Data is aggregated by calendar week (Monday–Sunday).
+- Weight: weekly average weight.
+- Sleep: weekly average across logged nights.
+- Steps: weekly average across logged days.
+- Protein: weekly average across logged days.
+- Outdoors: weekly average across logged days.
+- English: weekly total practice time.
+- Gym: weekly workout-session count.
+
+GAPS
+- Weight is treated as an intermittent measurement, so weight points may connect across dates without a weigh-in.
+- Sleep / Steps / Protein / Outdoors / English do not create fake daily values when data is missing.
+- Empty weekly buckets break the line in the 90-day view.
+
+ADAPTIVE Y-AXES
+- Weight: narrow dynamic scale around actual measurements; zero baseline is intentionally avoided.
+- Sleep: narrow dynamic scale with a minimum ~3-hour visual span; zero baseline is intentionally avoided.
+- Steps / Protein / Outdoors / English / Gym: zero baseline is retained because zero is meaningful for these metrics.
+- Goal reference lines remain where semantically appropriate.
+- 90-day English uses weekly English goal as its reference line.
+- 90-day Gym uses weekly workout goal as its reference line.
+
+DATA SAFETY
+- schemaVersion remains 2.
+- Adaptive Trends is render-only and writes nothing to storage.
+- No stored data field was renamed or migrated.

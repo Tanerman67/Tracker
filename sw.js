@@ -1,4 +1,4 @@
-const CACHE='my-rhythm-v6.7.1-progress-cleanup-github-pages';
+const CACHE='my-rhythm-v6.7.2-adaptive-trends-github-pages';
 const ASSETS=[
   './',
   './index.html',
