@@ -1,0 +1,1829 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#061319">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Мой ритм">
+
+<link rel="manifest" href="./manifest-github.webmanifest?v=622">
+<link rel="apple-touch-icon" sizes="180x180" href="./apple-touch-icon.png?v=622">
+<link rel="apple-touch-icon-precomposed" sizes="180x180" href="./apple-touch-icon.png?v=622">
+<link rel="icon" type="image/png" sizes="32x32" href="./favicon-32-v61.png?v=622">
+<link rel="icon" type="image/png" sizes="192x192" href="./icon-192-v61.png?v=622">
+<link rel="icon" type="image/png" sizes="512x512" href="./icon-512-v61.png?v=622">
+<meta name="apple-mobile-web-app-title" content="My Rhythm">
+
+<title>Мой ритм</title>
+<style>
+:root{
+  --bg:#06100f;--bg2:#091619;--card:#0c1a20;--card2:#10242a;--text:#f1fbfa;--muted:#8fa5ac;
+  --green:#27d99f;--green2:#12a77d;--indigo:#6b66ff;--cyan:#7cc9ff;
+  --soft:rgba(39,217,159,.10);--line:rgba(107,102,255,.17);--line2:rgba(255,255,255,.07);
+  --shadow:0 14px 34px rgba(0,0,0,.34),0 0 22px rgba(107,102,255,.05);
+  --tab-bg:rgba(7,17,25,.96);--input:#09151a;--danger:#ff8d78;
+}
+body.light{
+  --bg:#f4f7f5;--bg2:#edf3f0;--card:#fff;--card2:#f8fafb;--text:#17352c;--muted:#72837c;
+  --green:#138d6c;--green2:#2d936b;--indigo:#7168ff;--cyan:#4f96d8;
+  --soft:#e8f2ed;--line:rgba(113,104,255,.14);--line2:#e9efec;--shadow:0 8px 24px rgba(20,55,44,.08);
+  --tab-bg:rgba(255,255,255,.97);--input:#fff;--danger:#ad563d;
+}
+*{box-sizing:border-box}
+body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","Segoe UI",sans-serif;background:radial-gradient(circle at 50% -10%,rgba(25,245,166,.10),transparent 34%),linear-gradient(180deg,var(--bg2),var(--bg));color:var(--text);transition:background .25s,color .25s}
+.app{max-width:580px;margin:auto;min-height:100vh;padding-bottom:124px}
+header{padding:calc(18px + env(safe-area-inset-top)) 18px 10px}
+header h1{margin:0;font-size:30px} .sub{font-size:14px;color:var(--muted)}
+.section{display:none;padding:0 16px 22px}.section.active{display:block}
+.card{background:linear-gradient(180deg,var(--card2),var(--card));border:1px solid var(--line);border-radius:22px;padding:16px;box-shadow:var(--shadow)}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.full{grid-column:1/-1}
+.label{font-size:13px;color:var(--muted);margin-bottom:6px}.metric{font-size:34px;font-weight:850;line-height:1;color:var(--text);text-shadow:0 0 18px rgba(25,245,166,.10)}
+.progress{height:8px;background:rgba(255,255,255,.07);border-radius:999px;overflow:hidden;margin-top:10px}.progress span{display:block;height:100%;background:linear-gradient(90deg,var(--green),var(--indigo));box-shadow:0 0 14px rgba(25,245,166,.55);border-radius:999px}
+.row{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:12px 0;border-bottom:1px solid var(--line)}.row:last-child{border-bottom:0}
+.row .left{min-width:0}.title{font-weight:700}.small{font-size:12px;color:var(--muted)}
+button{border:0;border-radius:15px;background:linear-gradient(135deg,var(--green),var(--indigo));color:#032b1d;padding:13px 15px;font-weight:800;font-size:14px;box-shadow:0 6px 18px rgba(25,245,166,.14);-webkit-tap-highlight-color:transparent}
+button.secondary{background:var(--soft);color:var(--green);box-shadow:none}button.ghost{background:var(--card);color:var(--green);border:1px solid var(--line);box-shadow:none}
+button.danger{background:var(--card);color:var(--danger);border:1px solid rgba(255,142,115,.25);box-shadow:none}
+.quick{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.today-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.today-item{background:linear-gradient(180deg,var(--card2),var(--card));border:1px solid var(--line);border-radius:18px;padding:14px;box-shadow:var(--shadow);transition:transform .12s,border-color .12s}.today-item:active{transform:scale(.98);border-color:rgba(25,245,166,.45)}
+.today-value{font-size:21px;font-weight:800;margin-top:6px}
+.category-head{display:flex;align-items:end;justify-content:space-between;margin:8px 0 12px}
+.category-head h2{margin:0}.category-head .sub{max-width:58%;text-align:right}
+.tabs{position:fixed;left:12px;right:12px;bottom:calc(10px + env(safe-area-inset-bottom));z-index:20;background:transparent;pointer-events:none}
+.tabsin{max-width:560px;margin:auto;display:grid;grid-template-columns:repeat(4,1fr);gap:4px;padding:7px;border-radius:24px;background:var(--tab-bg);border:1px solid var(--line);box-shadow:0 18px 50px rgba(0,0,0,.38),0 0 24px rgba(25,245,166,.05);backdrop-filter:blur(18px);pointer-events:auto}
+.tab{background:transparent;color:var(--muted);padding:9px 3px 8px;min-height:58px;font-size:11px;border-radius:17px;box-shadow:none}
+.tab.active{background:linear-gradient(180deg,rgba(45,215,160,.16),rgba(108,99,255,.08));color:var(--green);border:1px solid rgba(25,245,166,.20);box-shadow:0 0 18px rgba(25,245,166,.06)}
+.ico{display:block;font-size:23px;margin-bottom:3px;line-height:1}
+.chip{display:inline-block;padding:6px 9px;border-radius:999px;background:var(--soft);color:var(--green);font-size:12px;margin:3px}
+.barlist{display:grid;gap:12px}.barline{display:grid;grid-template-columns:110px 1fr 56px;gap:8px;align-items:center}.bar{height:9px;background:rgba(255,255,255,.07);border-radius:999px;overflow:hidden}.bar span{display:block;height:100%;background:linear-gradient(90deg,var(--green),var(--indigo));box-shadow:0 0 10px rgba(25,245,166,.4);border-radius:999px}
+input,select{width:100%;padding:13px 14px;border:1px solid var(--line);border-radius:14px;background:var(--input);color:var(--text);font-size:16px;outline:none}input:focus,select:focus{border-color:rgba(25,245,166,.55);box-shadow:0 0 0 3px rgba(25,245,166,.08)}
+.field{margin-bottom:12px}.field label{display:block;font-size:13px;color:var(--muted);margin-bottom:5px}
+.modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.35);z-index:50;align-items:flex-end}.modal.show{display:flex}
+.sheet{width:100%;max-width:580px;margin:auto;background:var(--card);color:var(--text);border:1px solid var(--line);border-radius:24px 24px 0 0;padding:18px 18px calc(20px + env(safe-area-inset-bottom))}
+.close{float:right;background:var(--soft);color:var(--green);padding:8px 11px;box-shadow:none}
+.week{display:grid;grid-template-columns:repeat(7,1fr);gap:6px}.day{aspect-ratio:1;border-radius:50%;background:rgba(255,255,255,.06);display:flex;align-items:center;justify-content:center;font-size:11px}.day.good{background:var(--green);color:#032b1d;box-shadow:0 0 14px rgba(25,245,166,.28)}
+.insight{background:linear-gradient(135deg,rgba(25,245,166,.09),rgba(25,245,166,.03));border:1px solid var(--line);border-radius:16px;padding:13px;line-height:1.45;font-size:14px}
+.section-spacer{height:12px}
+
+.score-wrap{display:flex;align-items:center;gap:16px}.score-ring{--p:0;width:110px;height:110px;min-width:110px;border-radius:50%;display:grid;place-items:center;background:conic-gradient(var(--green) calc(var(--p)*1%),rgba(255,255,255,.07) 0);position:relative}.score-ring:after{content:"";position:absolute;inset:10px;border-radius:50%;background:var(--card)}.score-ring .inside{position:relative;z-index:1;text-align:center}.score-ring .n{font-size:29px;font-weight:850}.score-ring .t{font-size:11px;color:var(--muted)}
+.metric-sm{font-size:24px;font-weight:820}.goal-card{margin-bottom:10px}.goal-top{display:flex;align-items:flex-start;justify-content:space-between;gap:10px}.goal-big{font-size:22px;font-weight:820}.range-tabs{display:flex;gap:7px;margin-bottom:10px}.range-tabs button{padding:8px 11px;font-size:12px}.completion-line{display:grid;grid-template-columns:120px 1fr 48px;gap:8px;align-items:center;padding:8px 0}.mini-bar{height:8px;background:rgba(255,255,255,.07);border-radius:99px;overflow:hidden}.mini-bar span{display:block;height:100%;background:linear-gradient(90deg,var(--green),var(--indigo));border-radius:99px}
+.chart{height:145px;display:flex;align-items:flex-end;gap:4px;padding-top:8px}.chart-col{flex:1;height:100%;display:flex;align-items:flex-end}.chart-bar{width:100%;min-height:2px;background:linear-gradient(180deg,var(--green),var(--green2));border-radius:5px 5px 2px 2px;box-shadow:0 0 10px rgba(25,245,166,.12)}.chart-labels{display:flex;gap:4px;margin-top:5px}.chart-labels span{flex:1;text-align:center;font-size:9px;color:var(--muted);overflow:hidden}
+.calendar-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}.calendar-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:6px}.dow{text-align:center;color:var(--muted);font-size:10px}.cday{aspect-ratio:1;border-radius:12px;background:rgba(255,255,255,.035);border:1px solid rgba(255,255,255,.06);display:flex;align-items:center;justify-content:center;font-size:11px;position:relative}.cday.mid{border-color:rgba(87,232,255,.24);color:#57e8ff}.cday.good{border-color:rgba(25,245,166,.38);background:rgba(25,245,166,.10);color:var(--green)}.cday .dot{position:absolute;bottom:4px;width:4px;height:4px;border-radius:50%;background:var(--green)}
+.insight-card{background:linear-gradient(135deg,rgba(25,245,166,.09),rgba(25,245,166,.025));border:1px solid var(--line);border-radius:17px;padding:13px;margin-bottom:10px;line-height:1.42;font-size:13px}.insight-card strong{color:var(--green)}.confidence{font-size:11px;color:var(--muted);margin-top:7px}.experiment{border:1px solid var(--line);border-radius:18px;padding:13px;margin-bottom:10px;background:rgba(255,255,255,.025)}.exp-head{display:flex;justify-content:space-between;gap:8px}.exp-status{font-size:11px;padding:5px 7px;border-radius:99px;background:var(--soft);color:var(--green)}textarea{width:100%;min-height:78px;padding:13px 14px;border:1px solid var(--line);border-radius:14px;background:var(--input);color:var(--text);font-size:16px;outline:none;resize:vertical}
+@media(max-width:390px){.score-ring{width:100px;height:100px;min-width:100px}.completion-line{grid-template-columns:105px 1fr 44px}}
+
+.topbar{display:flex;align-items:center;justify-content:space-between;gap:12px}.brand{display:flex;align-items:center;gap:13px}.brand-icon{width:56px;height:56px;border-radius:17px;display:grid;place-items:center;font-size:28px;background:linear-gradient(180deg,rgba(20,59,55,.86),rgba(14,31,40,.94));border:1px solid rgba(72,255,199,.20);box-shadow:0 0 20px rgba(39,217,159,.11)}.brand h1{margin:0;font-size:30px;line-height:1}.top-actions{display:flex;gap:8px}.top-icon,.top-mini{background:linear-gradient(180deg,rgba(28,42,72,.72),rgba(14,24,43,.92));border:1px solid rgba(107,102,255,.18);color:#e3f3ff;box-shadow:0 9px 22px rgba(0,0,0,.18)}.top-icon{width:46px;height:46px;padding:0;border-radius:50%;display:grid;place-items:center;font-size:20px}.top-mini{min-width:44px;height:46px;padding:0 10px;border-radius:15px;font-size:12px}.home-stack{display:grid;gap:13px}.hero{padding:16px;background:radial-gradient(circle at 100% 0%,rgba(107,102,255,.22),transparent 34%),radial-gradient(circle at 0% 0%,rgba(39,217,159,.14),transparent 36%),linear-gradient(180deg,rgba(17,36,50,.92),rgba(14,24,39,.97))}.hero-row{display:grid;grid-template-columns:1fr auto;gap:12px;align-items:start}.hero-title{font-size:26px;font-weight:830;line-height:1}.hero-date{margin-top:7px;font-size:13px;color:var(--muted)}.hero-pill{max-width:215px;padding:11px 14px;border-radius:18px;display:flex;gap:8px;align-items:flex-start;background:linear-gradient(180deg,rgba(55,64,128,.34),rgba(42,49,111,.27));border:1px solid rgba(123,133,255,.18);font-size:12.5px;color:#dce5ff;line-height:1.25}.hero-star{font-size:17px;color:#c6bcff}.metric-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.metric-card{position:relative;overflow:hidden;min-height:116px;border-radius:20px;padding:14px;background:radial-gradient(circle at 0% 0%,rgba(39,217,159,.12),transparent 39%),radial-gradient(circle at 100% 0%,rgba(107,102,255,.16),transparent 40%),linear-gradient(180deg,rgba(16,41,48,.94),rgba(13,21,37,.97));border:1px solid rgba(107,102,255,.16);box-shadow:var(--shadow)}.metric-head{display:flex;align-items:flex-start;justify-content:space-between;gap:10px}.metric-left{display:flex;gap:10px}.metric-emoji{font-size:29px;line-height:1}.metric-name{font-size:14px;font-weight:760}.metric-stat{margin-top:5px;font-size:16px;color:#9edcff}.metric-goal{margin-top:3px;font-size:12px;color:var(--muted)}.metric-ring{--p:0;width:35px;height:35px;border-radius:50%;position:relative;flex:0 0 auto;background:conic-gradient(#8fffe0 calc(var(--p)*1%),rgba(255,255,255,.12) 0)}.metric-ring:after{content:'';position:absolute;inset:4px;border-radius:50%;background:#0d1727}.metric-bar{height:8px;border-radius:99px;background:rgba(255,255,255,.08);overflow:hidden;margin-top:13px}.metric-bar span{display:block;height:100%;border-radius:99px;background:linear-gradient(90deg,#2cdfa7,#6b66ff);box-shadow:0 0 11px rgba(44,223,167,.20)}.metric-special .metric-stat{color:#61ffca}.quick-box{padding:16px;background:radial-gradient(circle at 0% 0%,rgba(39,217,159,.10),transparent 35%),linear-gradient(180deg,rgba(16,33,35,.94),rgba(13,21,37,.97))}.quick-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:12px}.quick-link{padding:8px 12px;font-size:13px;white-space:nowrap}.quick-grid button{min-height:58px;border-radius:18px;background:radial-gradient(circle at 0% 50%,rgba(39,217,159,.15),transparent 48%),radial-gradient(circle at 100% 50%,rgba(107,102,255,.18),transparent 48%),linear-gradient(180deg,rgba(17,51,50,.91),rgba(15,28,43,.96));border:1px solid rgba(107,102,255,.17)}.quote-card{display:grid;grid-template-columns:auto 1fr 132px;gap:14px;align-items:center;overflow:hidden;min-height:110px;background:radial-gradient(circle at 100% 0%,rgba(107,102,255,.28),transparent 34%),linear-gradient(180deg,rgba(18,28,68,.90),rgba(12,21,48,.96))}.quote-left{font-size:30px}.quote-text{font-size:18px;font-weight:760;line-height:1.22}.quote-sub{margin-top:9px;font-size:13px;color:#8da7c9}.quote-art{position:relative;justify-self:end;width:128px;height:72px;border-radius:18px;overflow:hidden;background:linear-gradient(180deg,rgba(96,96,194,.45),rgba(20,32,78,.65))}.moon{position:absolute;right:20px;top:10px;width:22px;height:22px;border-radius:50%;background:radial-gradient(circle at 35% 35%,rgba(255,255,255,.95),rgba(220,228,255,.55) 50%,rgba(255,255,255,.1) 70%)}.mount{position:absolute;inset:0;background:linear-gradient(180deg,transparent 0 62%,rgba(7,17,42,.94) 62%),linear-gradient(135deg,transparent 0 60%,rgba(19,60,73,.95) 60% 70%,transparent 70%),linear-gradient(225deg,transparent 0 57%,rgba(58,73,137,.95) 57% 69%,transparent 69%)}.tabsin{background:linear-gradient(180deg,rgba(9,20,29,.98),rgba(9,16,24,.98));border:1px solid rgba(107,102,255,.16)}.tab{min-height:62px}.tab.active{background:linear-gradient(180deg,rgba(39,217,159,.12),rgba(107,102,255,.08));border-color:rgba(87,255,201,.16)}@media(max-width:430px){.brand h1{font-size:28px}.brand-icon{width:52px;height:52px}.top-icon{width:43px;height:43px}.top-mini{height:43px;min-width:40px}.hero-row{grid-template-columns:1fr}.hero-pill{max-width:none}.quote-card{grid-template-columns:1fr}.quote-art{width:100%;justify-self:stretch}}
+
+/* ===== V5 neon glass visual system ===== */
+html{background:#040d14}
+body{
+  position:relative;
+  min-height:100vh;
+  background:#040d14 url('aurora-bg.jpg') center top / cover fixed no-repeat;
+  color:var(--text);
+  overflow-x:hidden;
+}
+body::before{
+  content:"";position:fixed;inset:0;z-index:-2;pointer-events:none;
+  background:
+    radial-gradient(circle at 8% 15%,rgba(22,236,176,.14),transparent 28%),
+    radial-gradient(circle at 92% 24%,rgba(92,83,255,.17),transparent 30%),
+    linear-gradient(180deg,rgba(1,10,14,.18),rgba(2,8,16,.58) 58%,rgba(4,8,20,.72));
+}
+body::after{
+  content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;
+  backdrop-filter:saturate(112%);
+}
+body.light{background-image:url('aurora-bg.jpg')}
+.app{position:relative}
+header{padding-top:calc(22px + env(safe-area-inset-top));padding-bottom:16px}
+.topbar{
+  padding:15px 14px;border-radius:26px;
+  background:linear-gradient(135deg,rgba(6,39,38,.46),rgba(14,20,55,.42));
+  border:1px solid rgba(104,255,213,.16);
+  box-shadow:0 18px 46px rgba(0,0,0,.22),inset 0 1px rgba(255,255,255,.035);
+  backdrop-filter:blur(22px) saturate(135%);-webkit-backdrop-filter:blur(22px) saturate(135%);
+}
+.brand-icon{
+  width:60px;height:60px;border-radius:19px;
+  background:linear-gradient(145deg,rgba(15,113,84,.48),rgba(31,40,95,.46));
+  border:1px solid rgba(78,255,201,.48);
+  box-shadow:0 0 25px rgba(34,239,175,.20),inset 0 0 24px rgba(34,239,175,.10);
+}
+.brand h1{font-size:30px;text-shadow:0 2px 16px rgba(0,0,0,.35)}
+.top-icon,.top-mini{
+  color:#dfe9ff;
+  background:linear-gradient(155deg,rgba(26,54,81,.66),rgba(33,31,88,.58));
+  border:1px solid rgba(122,135,255,.30);
+  box-shadow:0 12px 24px rgba(0,0,0,.20),inset 0 1px rgba(255,255,255,.06);
+  backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);
+}
+button{
+  transition:transform .12s ease,filter .12s ease,border-color .12s ease,box-shadow .12s ease;
+  touch-action:manipulation;
+}
+button:active,.metric-card:active,.today-item:active{transform:translateY(2px) scale(.985);filter:brightness(.93)}
+.card,.goal-card,.sheet,.insight-card,.experiment{
+  background:linear-gradient(145deg,rgba(8,47,44,.47),rgba(17,23,58,.52));
+  border:1px solid rgba(103,133,255,.20);
+  box-shadow:0 18px 44px rgba(0,0,0,.28),inset 0 1px rgba(255,255,255,.035);
+  backdrop-filter:blur(23px) saturate(135%);-webkit-backdrop-filter:blur(23px) saturate(135%);
+}
+.hero{
+  background:
+    radial-gradient(circle at 0 0,rgba(27,225,165,.12),transparent 38%),
+    radial-gradient(circle at 100% 0,rgba(105,87,255,.25),transparent 42%),
+    linear-gradient(145deg,rgba(5,54,49,.55),rgba(23,27,76,.58));
+  border-color:rgba(97,145,255,.28);
+}
+.hero-title{font-size:28px}
+.hero-pill{background:linear-gradient(145deg,rgba(43,57,119,.44),rgba(31,43,96,.36));border-color:rgba(132,137,255,.28)}
+.metric-grid{gap:12px}
+.metric-card{
+  min-height:132px;
+  border-radius:22px;
+  background:
+    radial-gradient(circle at -5% -5%,rgba(34,235,174,.16),transparent 40%),
+    radial-gradient(circle at 105% 0,rgba(101,88,255,.19),transparent 42%),
+    linear-gradient(145deg,rgba(7,57,51,.54),rgba(17,24,64,.58));
+  border:1px solid rgba(85,228,194,.20);
+  box-shadow:0 18px 38px rgba(0,0,0,.24),inset 0 1px rgba(255,255,255,.04);
+  backdrop-filter:blur(22px) saturate(140%);-webkit-backdrop-filter:blur(22px) saturate(140%);
+  cursor:pointer;
+}
+.metric-card:nth-child(2n){border-color:rgba(120,119,255,.27)}
+.metric-emoji{font-size:31px;filter:drop-shadow(0 0 9px rgba(255,255,255,.16))}
+.metric-name{font-size:15px}
+.metric-stat{font-size:17px;color:#8debd4}
+.metric-goal{font-size:11px;color:#91a9bd}
+.metric-ring{width:38px;height:38px;background:conic-gradient(#53f9c4 calc(var(--p)*1%),rgba(132,145,255,.21) 0);box-shadow:0 0 14px rgba(78,246,192,.08)}
+.metric-ring:after{background:rgba(9,20,40,.88)}
+.metric-ring.checked{background:linear-gradient(145deg,#20efad,#43d8ff);box-shadow:0 0 20px rgba(36,242,176,.28)}
+.metric-ring.checked:after{inset:5px;background:linear-gradient(145deg,rgba(10,68,55,.88),rgba(16,47,73,.88))}
+.metric-ring .checkmark{position:absolute;z-index:2;inset:0;display:grid;place-items:center;color:#72ffd3;font-size:18px;font-weight:900}
+.metric-bar{height:9px;background:rgba(25,72,91,.62)}
+.metric-bar span{background:linear-gradient(90deg,#19eeb0,#55e5cf 55%,#756bff);box-shadow:0 0 16px rgba(31,237,175,.25)}
+.quick-box{
+  background:linear-gradient(145deg,rgba(5,56,47,.48),rgba(19,24,66,.54));
+  border-color:rgba(75,255,199,.19)
+}
+.quick-grid button{
+  min-height:62px;
+  color:#effffb;
+  background:
+    radial-gradient(circle at 0 50%,rgba(32,234,172,.17),transparent 48%),
+    radial-gradient(circle at 100% 50%,rgba(100,85,255,.22),transparent 50%),
+    linear-gradient(145deg,rgba(8,77,63,.70),rgba(23,34,79,.72));
+  border:1px solid rgba(83,255,205,.27);
+  box-shadow:0 12px 22px rgba(0,0,0,.17),inset 0 1px rgba(255,255,255,.05),0 0 13px rgba(44,234,178,.04);
+}
+.quick-grid button:nth-child(even){border-color:rgba(125,120,255,.32)}
+.quick-link{color:#aeb9ff;background:rgba(22,32,68,.40);border-color:rgba(126,126,255,.22)}
+.quote-card{
+  min-height:142px;
+  background:
+    linear-gradient(90deg,rgba(4,28,31,.82),rgba(10,21,56,.30)),
+    url('quote-bg.jpg') center / cover no-repeat;
+  border-color:rgba(84,238,201,.23);
+  box-shadow:0 20px 45px rgba(0,0,0,.26),0 0 22px rgba(88,82,255,.06);
+}
+.quote-art{display:none}
+.quote-text{text-shadow:0 2px 14px rgba(0,0,0,.85);font-size:20px}
+.quote-sub{text-shadow:0 2px 10px rgba(0,0,0,.85)}
+.tabs{bottom:calc(12px + env(safe-area-inset-bottom))}
+.tabsin{
+  padding:8px;
+  border-radius:27px;
+  background:linear-gradient(145deg,rgba(4,40,36,.72),rgba(19,24,64,.72));
+  border:1px solid rgba(97,120,255,.25);
+  box-shadow:0 20px 55px rgba(0,0,0,.40),0 0 24px rgba(38,221,165,.07);
+  backdrop-filter:blur(25px) saturate(145%);-webkit-backdrop-filter:blur(25px) saturate(145%);
+}
+.tab{border:1px solid transparent;color:#9db1ce}
+.tab.active{
+  color:#5bffd0;
+  background:linear-gradient(145deg,rgba(17,112,85,.46),rgba(34,36,100,.46));
+  border-color:rgba(76,255,202,.22);
+  box-shadow:inset 0 1px rgba(255,255,255,.04),0 0 18px rgba(35,235,174,.09);
+}
+.progress,.mini-bar,.bar{background:rgba(21,64,84,.46)}
+.progress span,.mini-bar span,.bar span{background:linear-gradient(90deg,#20e9ac,#7269ff)}
+input,select,textarea{
+  background:rgba(6,21,31,.70);border-color:rgba(110,111,255,.20);backdrop-filter:blur(12px);
+}
+.modal{background:rgba(0,7,16,.62);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)}
+@media(max-width:430px){
+  .metric-card{min-height:124px;padding:13px}
+  .metric-stat{font-size:15px}
+  .quote-card{min-height:128px}
+}
+
+
+/* V6.2 GitHub compact home */
+.metric-card{
+  min-height:98px;
+  padding:12px 13px;
+}
+.metric-emoji{font-size:27px}
+.metric-name{font-size:14px}
+.metric-stat{margin-top:4px;font-size:15px}
+.metric-bar{margin-top:10px;height:7px}
+.metric-ring{width:33px;height:33px}
+.home-stack{gap:12px}
+.quote-card{margin-top:0}
+@media(max-width:430px){
+  .metric-grid{gap:10px}
+  .metric-card{min-height:94px;padding:11px 12px;border-radius:18px}
+  .metric-left{gap:8px}
+  .metric-emoji{font-size:25px}
+  .metric-name{font-size:13.5px}
+  .metric-stat{font-size:14px}
+  .metric-ring{width:31px;height:31px}
+  .metric-bar{height:6px;margin-top:9px}
+}
+
+
+/* V6.2 GitHub: smoke/alcohol cards are statistic-only and sit on top */
+.metric-static{cursor:default}
+.metric-static .metric-head{align-items:center}
+.metric-mini-stat{
+  flex:0 0 auto;
+  padding:7px 10px;
+  border-radius:14px;
+  font-size:11px;
+  color:#b7d3ff;
+  background:linear-gradient(180deg,rgba(50,63,120,.28),rgba(34,40,90,.24));
+  border:1px solid rgba(107,102,255,.16);
+  line-height:1;
+}
+.metric-static .metric-bar span{
+  background:linear-gradient(90deg,#30e5ae,#69c7ff);
+}
+@media(max-width:430px){
+  .metric-mini-stat{padding:6px 9px;font-size:10.5px}
+}
+
+
+/* V6.2 GitHub Health actual-history view */
+.health-data-card{padding:15px 16px}
+.health-data-card .goal-top{align-items:flex-start}
+.health-main{min-width:0;flex:1}
+.health-value-line{margin-top:9px;display:flex;align-items:baseline;gap:8px;flex-wrap:wrap}
+.health-date-label{color:var(--muted);font-size:12px}
+.health-current-value{font-size:16px;color:#a7e7ff;white-space:nowrap}
+.health-average{margin-top:7px}
+.health-goal-days{margin-top:8px}
+.health-actions{margin-top:10px}
+.health-log-btn{padding:9px 12px}
+@media(max-width:430px){
+  .health-data-card{padding:13px 14px}
+  .health-value-line{gap:6px}
+  .health-current-value{font-size:15px}
+}
+
+
+/* V6.2 GitHub Steps input restored on Today */
+.metric-wide{
+  grid-column:1 / -1;
+}
+.metric-wide .metric-head{
+  align-items:center;
+}
+.metric-wide .metric-left{
+  align-items:center;
+}
+.metric-wide .metric-stat{
+  white-space:nowrap;
+}
+@media(max-width:430px){
+  .metric-wide{
+    min-height:88px;
+  }
+}
+
+
+/* V6.2 GitHub — Weight card + exact 2×4 Today grid */
+.metric-weight{
+  cursor:pointer;
+}
+.metric-weight .metric-head{
+  align-items:center;
+}
+.metric-weight-value{
+  white-space:nowrap;
+  color:#9edcff;
+}
+.metric-weight-status{
+  flex:0 0 auto;
+  padding:6px 8px;
+  border-radius:12px;
+  font-size:10.5px;
+  color:#b7d3ff;
+  background:linear-gradient(180deg,rgba(50,63,120,.25),rgba(34,40,90,.20));
+  border:1px solid rgba(107,102,255,.14);
+  white-space:nowrap;
+}
+.metric-weight-line{
+  height:6px;
+  border-radius:99px;
+  margin-top:12px;
+  background:linear-gradient(90deg,rgba(44,223,167,.55),rgba(107,102,255,.55));
+  box-shadow:0 0 10px rgba(44,223,167,.10);
+}
+@media(max-width:430px){
+  .metric-weight-status{
+    padding:5px 7px;
+    font-size:9.5px;
+  }
+}
+
+
+/* V6.2 GitHub — storage safety status */
+.storage-ok{color:#71ffd0}
+.storage-warn{color:#ffd27a}
+.backup-reminder{
+  margin-top:10px;
+  padding:10px 11px;
+  border-radius:13px;
+  font-size:11.5px;
+  line-height:1.45;
+}
+.backup-reminder.warn{
+  color:#ffd798;
+  border:1px solid rgba(255,194,99,.18);
+  background:rgba(102,65,15,.16);
+}
+.backup-reminder.ok{
+  color:#7fffd4;
+  border:1px solid rgba(44,223,167,.18);
+  background:rgba(44,223,167,.07);
+}
+
+
+/* V6.2 GitHub Alcohol calendar */
+.metric-alcohol-clickable{cursor:pointer!important}
+.metric-alcohol-clickable:active{transform:scale(.985)}
+.alcohol-modal{display:none;position:fixed;inset:0;z-index:120;overflow:auto;background:radial-gradient(circle at 10% -5%,rgba(44,223,167,.18),transparent 27%),radial-gradient(circle at 100% 7%,rgba(107,102,255,.22),transparent 31%),linear-gradient(180deg,rgba(4,13,22,.99),rgba(5,9,18,.995));-webkit-overflow-scrolling:touch}
+.alcohol-modal.show{display:block}
+.alcohol-page{max-width:760px;margin:auto;min-height:100%;padding:calc(14px + env(safe-area-inset-top)) 14px calc(32px + env(safe-area-inset-bottom))}
+.alcohol-topbar{display:grid;grid-template-columns:48px 1fr auto;gap:11px;align-items:center;position:sticky;top:0;z-index:4;margin:-4px -2px 12px;padding:8px 2px 10px;background:linear-gradient(180deg,rgba(5,14,24,.96),rgba(5,14,24,.76),transparent);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px)}
+.alcohol-back{width:44px;height:44px;border-radius:50%;padding:0;font-size:30px;line-height:1;display:grid;place-items:center}
+.alcohol-title{font-size:24px;font-weight:850}.alcohol-subtitle{font-size:12px;color:var(--muted);margin-top:2px}
+.alcohol-streak-badge{min-width:65px;height:44px;border-radius:16px;display:flex;align-items:center;justify-content:center;gap:7px;border:1px solid rgba(73,255,203,.18);background:linear-gradient(135deg,rgba(31,110,87,.32),rgba(67,62,153,.31));box-shadow:0 0 22px rgba(44,223,167,.08)}
+.alcohol-streak-badge strong{font-size:16px;color:#83ffd7}
+.alcohol-summary-grid{display:grid;grid-template-columns:1.2fr 1fr 1fr;gap:9px;margin-bottom:12px}
+.alcohol-summary-card{min-height:84px;padding:12px;border-radius:18px;border:1px solid rgba(107,102,255,.15);background:radial-gradient(circle at 0 0,rgba(44,223,167,.10),transparent 44%),radial-gradient(circle at 100% 0,rgba(107,102,255,.14),transparent 45%),linear-gradient(180deg,rgba(13,34,43,.88),rgba(10,20,34,.94));box-shadow:0 12px 30px rgba(0,0,0,.15)}
+.alcohol-summary-label{font-size:10.5px;line-height:1.25;color:var(--muted)}
+.alcohol-summary-value{font-size:24px;font-weight:850;margin-top:7px;color:#86fbd8;white-space:nowrap}.alcohol-summary-value small{font-size:11px;color:#a6c3d7;font-weight:650}
+.glass-control{display:grid;grid-template-columns:1fr auto;align-items:center;gap:10px;padding:7px;border-radius:20px;border:1px solid rgba(108,151,255,.15);background:linear-gradient(180deg,rgba(18,34,53,.80),rgba(10,20,35,.88));backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px)}
+.alcohol-segment{display:grid;grid-template-columns:1fr 1fr;padding:3px;border-radius:15px;background:rgba(1,7,13,.40)}
+.alcohol-segment button{min-height:38px;border-radius:12px;border:0;background:transparent;box-shadow:none;padding:7px 12px;color:#92aabc}
+.alcohol-segment button.active{color:#ecffff;background:linear-gradient(135deg,rgba(34,204,152,.35),rgba(80,75,201,.38));border:1px solid rgba(81,255,204,.16);box-shadow:0 0 17px rgba(44,223,167,.08)}
+.alcohol-year-nav{display:flex;align-items:center;gap:6px}.alcohol-year-nav button{width:34px;height:34px;border-radius:12px;padding:0}.alcohol-year-nav strong{min-width:42px;text-align:center}
+.alcohol-legend{display:flex;gap:13px;flex-wrap:wrap;margin:12px 3px 9px;font-size:10.5px;color:#92aabd}.alcohol-legend>span{display:flex;align-items:center;gap:5px}
+.legend-dot{width:9px;height:9px;border-radius:50%;display:inline-block}.legend-dot.sober{background:#35dbaa;box-shadow:0 0 9px rgba(53,219,170,.35)}.legend-dot.drank{background:#7a70ff;box-shadow:0 0 9px rgba(122,112,255,.45)}.legend-dot.future{background:#253547}
+.alcohol-year-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.alcohol-month-card{border-radius:19px;padding:11px 9px 10px;border:1px solid rgba(105,137,206,.12);background:linear-gradient(180deg,rgba(10,27,39,.84),rgba(8,17,29,.93));box-shadow:0 10px 28px rgba(0,0,0,.14)}
+.alcohol-month-title{font-size:14px;font-weight:790;margin:0 3px 8px;color:#e8f7ff}
+.alcohol-weekdays,.alcohol-days-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:3px}
+.alcohol-weekdays span{font-size:8px;text-align:center;color:#5e7689;padding-bottom:2px}
+.alcohol-day{aspect-ratio:1/1;min-width:0;padding:0;border:1px solid transparent;border-radius:9px;font-size:9.5px;font-weight:720;display:grid;place-items:center;box-shadow:none;position:relative;color:#9fb3c3;background:rgba(22,36,49,.46)}
+.alcohol-day.empty{visibility:hidden}
+.alcohol-day.sober{color:#e9fff8;border-color:rgba(76,255,203,.12);background:linear-gradient(145deg,rgba(30,171,128,.72),rgba(39,125,113,.70));box-shadow:inset 0 1px 0 rgba(255,255,255,.08)}
+.alcohol-day.drank{color:#f7f3ff;border-color:rgba(178,150,255,.38);background:radial-gradient(circle at 25% 20%,rgba(178,142,255,.35),transparent 38%),linear-gradient(145deg,rgba(86,67,204,.95),rgba(72,45,151,.95));box-shadow:0 0 11px rgba(107,102,255,.22),inset 0 1px 0 rgba(255,255,255,.10)}
+.alcohol-day.future{color:#435669;background:rgba(12,25,37,.45)}.alcohol-day.untracked{color:#35495b;background:rgba(10,20,30,.30)}
+.alcohol-day.today{outline:1.5px solid #6df8dd;outline-offset:1px}.alcohol-day:not(.future):not(.untracked):not(.empty):active{transform:scale(.88)}
+.alcohol-month-view{max-width:480px;margin:0 auto}.alcohol-month-view .alcohol-month-card{padding:15px 13px 16px}.alcohol-month-view .alcohol-month-title{font-size:20px;margin-bottom:12px}.alcohol-month-view .alcohol-weekdays span{font-size:10px}.alcohol-month-view .alcohol-days-grid{gap:6px}.alcohol-month-view .alcohol-day{border-radius:13px;font-size:13px}
+.alcohol-month-switch{display:flex;align-items:center;justify-content:space-between;margin:0 0 10px}.alcohol-month-switch button{width:40px;height:38px;padding:0;border-radius:13px}.alcohol-month-switch strong{font-size:16px}
+.alcohol-help{margin-top:12px}.alcohol-help .small{margin-top:7px;line-height:1.45}
+@media(min-width:620px){.alcohol-year-grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media(max-width:390px){.alcohol-summary-grid{grid-template-columns:1fr 1fr}.alcohol-summary-card:first-child{grid-column:1/-1}.alcohol-year-grid{gap:8px}.alcohol-month-card{padding:9px 7px}.alcohol-day{font-size:8.5px;border-radius:8px}}
+
+</style>
+</head>
+<body>
+<div class="app">
+<header><div class="topbar"><div class="brand"><div class="brand-icon">🌱</div><div><h1>Мой ритм</h1><div class="sub">Лучше, чем вчера</div></div></div><div class="top-actions"><button id="topLanguageBtn" class="top-mini ghost" onclick="toggleLanguage()">RU</button><button class="top-icon ghost" onclick="show('progress',document.getElementById('tabProgress'))">⌕</button><button class="top-icon ghost" onclick="show('analytics',document.getElementById('tabAnalytics'))">⚙</button></div></div></header>
+
+<section id="today" class="section active"><div class="home-stack"><div class="hero card"><div class="hero-row"><div><div class="hero-title">Сегодня</div><div class="hero-date" id="heroDate"></div></div><div class="hero-pill"><span class="hero-star">✦</span><span id="heroTip">Маленькие шаги меняют большие жизни</span></div></div></div><div id="todayGrid" class="metric-grid"></div><div class="quote-card card"><div class="quote-left">🌱</div><div><div class="quote-text">Дисциплина сегодня — свобода завтра.</div><div class="quote-sub">Мой ритм</div></div><div class="quote-art"><div class="moon"></div><div class="mount"></div></div></div></div></section>
+
+
+<section id="english" class="section">
+  <div class="category-head">
+    <h2>Английский</h2><div class="sub">Отдельный мини-трекер внутри приложения.</div>
+  </div>
+
+  <div class="grid">
+    <div class="card">
+      <div class="label">Сегодня</div>
+      <div class="metric" id="engToday">0</div><div>мин</div>
+    </div>
+    <div class="card">
+      <div class="label">Эта неделя</div>
+      <div class="metric" id="engWeek">0</div><div id="engWeekGoal">/ 240 мин</div>
+    </div>
+
+    <div class="card full"><div class="label">Completion rate</div><div class="row"><span>Дней с английским</span><strong id="engCompletion">0%</strong></div><div class="progress"><span id="engCompletionBar"></span></div></div>
+
+    <div class="card full">
+      <div class="label">Добавить занятие</div>
+      <div class="quick">
+        <button onclick="openEnglish('english_chatgpt')">🤖 ChatGPT</button>
+        <button onclick="openEnglish('english_native')">🗣️ Native teacher</button>
+        <button onclick="openEnglish('english_russian')">📘 Russian teacher</button>
+        <button onclick="openEnglish('english_watching')">🎬 Смотреть</button>
+              </div>
+    </div>
+
+    <div class="card full">
+      <div class="label">Неделя по типам занятий</div>
+      <div id="englishBars" class="barlist"></div>
+    </div>
+  </div>
+</section>
+
+<section id="progress" class="section">
+  <div class="category-head"><h2>Прогресс</h2><div class="sub">7 и 30 дней: completion, график и календарь.</div></div>
+  <div class="range-tabs"><button class="secondary" id="range7Btn" onclick="setRange(7)">7 дней</button><button class="ghost" id="range30Btn" onclick="setRange(30)">30 дней</button></div>
+  <div class="card"><div class="label">Completion rate</div><div id="completionRows"></div></div>
+  <div class="section-spacer"></div>
+  <div class="card"><div class="label">Активность по дням</div><div class="chart" id="activityChart"></div><div class="chart-labels" id="activityLabels"></div></div>
+  <div class="section-spacer"></div>
+  <div class="card"><div class="calendar-head"><button class="ghost" onclick="moveMonth(-1)">‹</button><strong id="calendarTitle"></strong><button class="ghost" onclick="moveMonth(1)">›</button></div><div class="calendar-grid" id="calendarGrid"></div></div>
+</section>
+
+<section id="analytics" class="section">
+  <div class="category-head"><h2>Insights</h2><div class="sub">Связи между привычками. Не причинность.</div></div>
+  <div id="insightsList"></div>
+  <div class="section-spacer"></div>
+  <div class="category-head"><h2>Experiments</h2><div class="sub">Проверяй одну гипотезу за раз.</div></div>
+  <div id="experimentsList"></div>
+  <button style="width:100%" onclick="openExperiment()">＋ Новый эксперимент</button>
+  <div class="section-spacer"></div>
+<div class="card">
+    <div class="label">Настройки целей</div>
+    <div class="field"><label>Дата отказа от сигарет</label><input id="smokeDate" type="date"></div>
+    <div class="field"><label>Дата текущего периода без алкоголя</label><input id="alcoholDate" type="date"></div>
+    <div class="field"><label>Белок, г/день</label><input id="proteinGoal" type="number"></div>
+    <div class="field"><label>Шаги / день</label><input id="stepsGoal" type="number"></div>
+    <div class="field"><label>Время на улице, мин/день</label><input id="outdoorsGoal" type="number"></div>
+    <div class="field"><label>Сон, ч/день</label><input id="sleepGoal" type="number" step="0.1"></div>
+    <div class="field"><label>Английский, мин/неделю</label><input id="englishGoal" type="number"></div>
+    <div class="field"><label>Тренировки, раз/неделю</label><input id="gymGoal" type="number"></div>
+    <button onclick="saveSettings()">Сохранить настройки</button>
+  </div>
+
+  <div class="section-spacer"></div>
+  <div class="card">
+    <div class="label">🎨 Оформление</div>
+    <div class="row">
+      <div>
+        <div class="title">Тема приложения</div>
+        <div class="small">По умолчанию — тёмная неоновая</div>
+      </div>
+      <button class="secondary" id="themeToggleBtn" onclick="toggleTheme()">Dark</button>
+    </div>
+    <div class="row">
+      <div>
+        <div class="title">Язык интерфейса</div>
+        <div class="small">Русский / English</div>
+      </div>
+      <button class="secondary" id="languageToggleBtn" onclick="toggleLanguage()">Русский</button>
+    </div>
+  </div>
+
+  <div class="section-spacer"></div><div class="card"><div class="label">🧰 Диагностика данных</div><div class="row"><span>Источник данных</span><strong id="dataSourceText">—</strong></div><div class="row"><span>Дней с записями</span><strong id="dataLogDaysText">0</strong></div><div class="small" id="dataSourcesDetails" style="margin-top:9px"></div></div>
+
+  <div class="section-spacer"></div>
+  <div class="card">
+    <div class="label">💾 Данные и резервная копия</div>
+    <div class="small" style="margin-bottom:12px">
+      Каждое сохранение дублируется локально: основная база + зеркало + IndexedDB snapshots + recovery cache.
+      Внешний JSON-backup всё равно нужен перед удалением PWA или очисткой Safari.
+    </div>
+    <div class="row"><span>Версия приложения</span><strong id="appVersionText">V6.2 GitHub</strong></div>
+    <div class="row"><span>Версия структуры данных</span><strong id="schemaVersionText">2</strong></div>
+    <div class="row"><span>Локальная защита</span><strong id="vaultStatusText">Проверяем…</strong></div>
+    <div class="row"><span>Snapshots</span><strong id="vaultSnapshotText">—</strong></div>
+    <div class="row"><span>Последний внешний backup</span><strong id="lastBackupText">Никогда</strong></div>
+    <div id="backupReminder" class="backup-reminder"></div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px">
+      <button onclick="exportBackup()">↓ Экспорт backup</button>
+      <button class="secondary" onclick="document.getElementById('backupFile').click()">↑ Импорт backup</button>
+    </div>
+    <input id="backupFile" type="file" accept=".json,application/json" style="display:none" onchange="importBackupFile(event)">
+    <div class="small" id="backupStatus" style="margin-top:10px"></div>
+  </div>
+
+  <div class="section-spacer"></div>
+  <button class="danger" style="width:100%" onclick="resetAll()">Сбросить все данные</button>
+</section>
+</div>
+
+<div class="tabs">
+<div class="tabsin">
+<button id="tabToday" class="tab active" onclick="show('today',this)"><span class="ico">⌂</span>Сегодня</button>
+<button id="tabEnglish" class="tab" onclick="show('english',this)"><span class="ico">A</span>English</button>
+<button id="tabProgress" class="tab" onclick="show('progress',this)"><span class="ico">▥</span>Прогресс</button>
+<button id="tabAnalytics" class="tab" onclick="show('analytics',this)"><span class="ico">◎</span>Insights</button>
+</div></div>
+
+
+<div id="alcoholModal" class="alcohol-modal">
+  <div class="alcohol-page">
+    <div class="alcohol-topbar">
+      <button class="alcohol-back" onclick="closeAlcohol()">‹</button>
+      <div>
+        <div class="alcohol-title" id="alcoholTitle">Алкоголь</div>
+        <div class="alcohol-subtitle" id="alcoholSubtitle">История и календарь</div>
+      </div>
+      <div class="alcohol-streak-badge"><span>🍷</span><strong id="alcoholHeaderStreak">0</strong></div>
+    </div>
+
+    <div class="alcohol-summary-grid">
+      <div class="alcohol-summary-card">
+        <div class="alcohol-summary-label" id="alcoholCurrentLabel">Текущая серия</div>
+        <div class="alcohol-summary-value"><span id="alcoholCurrentStreak">0</span> <small id="alcoholDaysUnit1">дней</small></div>
+      </div>
+      <div class="alcohol-summary-card">
+        <div class="alcohol-summary-label" id="alcoholSoberYearLabel">Без алкоголя в году</div>
+        <div class="alcohol-summary-value"><span id="alcoholSoberYear">0</span><small>%</small></div>
+      </div>
+      <div class="alcohol-summary-card">
+        <div class="alcohol-summary-label" id="alcoholDrinkDaysLabel">Дней с алкоголем</div>
+        <div class="alcohol-summary-value"><span id="alcoholDrinkDaysYear">0</span></div>
+      </div>
+    </div>
+
+    <div class="alcohol-controls glass-control">
+      <div class="alcohol-segment">
+        <button id="alcoholMonthModeBtn" onclick="setAlcoholMode('month')">Месяц</button>
+        <button id="alcoholYearModeBtn" class="active" onclick="setAlcoholMode('year')">Год</button>
+      </div>
+      <div class="alcohol-year-nav">
+        <button onclick="changeAlcoholYear(-1)">‹</button>
+        <strong id="alcoholYearLabel">2026</strong>
+        <button onclick="changeAlcoholYear(1)">›</button>
+      </div>
+    </div>
+
+    <div class="alcohol-legend">
+      <span><i class="legend-dot sober"></i><span id="alcoholLegendSober">Не пил</span></span>
+      <span><i class="legend-dot drank"></i><span id="alcoholLegendDrank">Пил</span></span>
+      <span><i class="legend-dot future"></i><span id="alcoholLegendFuture">Будущий день</span></span>
+    </div>
+
+    <div id="alcoholCalendarHost"></div>
+
+    <div class="alcohol-help card">
+      <div class="title" id="alcoholHelpTitle">Как это работает</div>
+      <div class="small" id="alcoholHelpText">Нажми на прошедший день, чтобы отметить или снять факт употребления алкоголя. Если день не отмечен, он автоматически считается днём без алкоголя.</div>
+    </div>
+  </div>
+</div>
+
+<div id="entryModal" class="modal"><div class="sheet">
+  <button class="close" onclick="closeModal('entryModal')">✕</button>
+  <h3 id="entryTitle">Запись</h3>
+  <div class="field"><label id="entryLabel">Значение</label><input id="entryValue" type="number" step="0.1"></div>
+  <button style="width:100%" onclick="saveEntry()">Сохранить</button>
+</div></div>
+
+<div id="addModal" class="modal"><div class="sheet">
+  <button class="close" onclick="closeModal('addModal')">✕</button>
+  <h3>Новый трекер</h3>
+  <div class="field"><label>Название</label><input id="newName" placeholder="Например: Кофеин"></div>
+  <div class="field"><label>Иконка</label><input id="newIcon" placeholder="☕"></div>
+  <div class="field"><label>Тип</label><select id="newType"><option value="number">Число</option><option value="boolean">Да / нет</option></select></div>
+  <div class="field"><label>Единица</label><input id="newUnit" placeholder="мин, г, мл..."></div>
+  <div class="field"><label>Дневная цель</label><input id="newGoal" type="number"></div>
+  <button style="width:100%" onclick="addTracker()">Добавить</button>
+</div></div>
+
+
+<div id="experimentModal" class="modal"><div class="sheet">
+  <button class="close" onclick="closeModal('experimentModal')">✕</button><h3>Новый эксперимент</h3>
+  <div class="field"><label>Название</label><input id="expName" placeholder="Например: 30 дней на улице"></div>
+  <div class="field"><label>Что измеряем</label><select id="expMetric"><option value="outdoors">☀️ Время на улице</option><option value="sleep">😴 Сон</option><option value="protein">🥩 Белок</option><option value="steps">🚶 Шаги</option><option value="english_general">🇬🇧 Английский</option><option value="gym">🏋️ Тренировки</option></select></div>
+  <div class="field"><label>Цель</label><input id="expTarget" type="number" placeholder="60"></div>
+  <div class="field"><label>Длительность, дней</label><input id="expDays" type="number" value="30"></div>
+  <div class="field"><label>Гипотеза</label><textarea id="expHypothesis" placeholder="Например: если я буду гулять ≥60 минут, сон и концентрация будут лучше."></textarea></div>
+  <button style="width:100%" onclick="saveExperiment()">Начать эксперимент</button>
+</div></div>
+
+<script>
+const APP_VERSION='6.2-github';
+const DATA_KEY='my-life-tracker-data';
+const MIRROR_KEY='my-life-tracker-data-mirror-v1';
+const CURRENT_SCHEMA_VERSION=2;
+const LEGACY_KEYS=['life-tracker-v3','life-tracker-v2','cleaner-stronger-v1'];
+
+const VAULT_DB='my-rhythm-vault-v1';
+const VAULT_DB_VERSION=1;
+const VAULT_CACHE='my-rhythm-data-vault-v1';
+const VAULT_CACHE_URL='./__my_rhythm_data_vault_v1__.json';
+const MAX_VAULT_SNAPSHOTS=100;
+
+const defaultTrackers=[
+{id:'protein',name:'Белок',icon:'🥩',type:'number',unit:'г',goal:120,category:'health'},
+{id:'steps',name:'Шаги',icon:'🚶',type:'number',unit:'',goal:7000,category:'health'},
+{id:'outdoors',name:'Время на улице',icon:'☀️',type:'number',unit:'мин',goal:60,category:'health'},
+{id:'sleep',name:'Сон',icon:'😴',type:'number',unit:'ч',goal:7.5,category:'health'},
+{id:'weight',name:'Вес',icon:'⚖️',type:'number',unit:'кг',goal:null,category:'health'},
+{id:'gym',name:'Тренировка',icon:'🏋️',type:'boolean',unit:'',goal:1,category:'health'},
+{id:'english_general',name:'Английский',icon:'🇬🇧',type:'number',unit:'мин',goal:35,category:'development'}
+];
+const defaults={
+ schemaVersion:CURRENT_SCHEMA_VERSION,
+ smokeDate:'2025-06-08',alcoholDate:'2026-08-31',
+ alcoholTrackingStart:'2025-01-01',
+ alcoholHistory:{"2025-01-01":true,"2025-01-02":true,"2025-01-03":true,"2025-01-04":true,"2025-01-05":true,"2025-01-06":true,"2025-01-07":true,"2025-01-11":true,"2025-01-12":true,"2025-01-15":true,"2025-01-18":true,"2025-01-19":true,"2025-01-22":true,"2025-01-25":true,"2025-01-26":true,"2025-01-29":true,"2025-02-01":true,"2025-02-02":true,"2025-02-05":true,"2025-02-08":true,"2025-02-09":true,"2025-02-12":true,"2025-02-15":true,"2025-02-16":true,"2025-02-19":true,"2025-02-22":true,"2025-02-23":true,"2025-02-26":true,"2025-03-01":true,"2025-03-02":true,"2025-03-05":true,"2025-03-08":true,"2025-03-09":true,"2025-03-12":true,"2025-03-15":true,"2025-03-16":true,"2025-03-19":true,"2025-03-22":true,"2025-03-23":true,"2025-03-26":true,"2025-03-29":true,"2025-03-30":true,"2025-04-02":true,"2025-04-05":true,"2025-04-06":true,"2025-04-09":true,"2025-04-12":true,"2025-04-13":true,"2025-04-16":true,"2025-04-19":true,"2025-04-20":true,"2025-04-23":true,"2025-04-26":true,"2025-04-27":true,"2025-04-30":true,"2025-05-01":true,"2025-05-03":true,"2025-05-06":true,"2025-05-08":true,"2025-05-10":true,"2025-05-12":true,"2025-05-14":true,"2025-05-16":true,"2025-05-21":true,"2025-05-24":true,"2025-05-25":true,"2025-05-28":true,"2025-05-31":true,"2025-06-01":true,"2025-06-05":true,"2025-06-07":true,"2025-06-08":true,"2025-06-09":true,"2025-06-10":true,"2025-06-11":true,"2025-12-19":true,"2025-12-21":true,"2025-12-25":true,"2025-12-26":true,"2025-12-27":true,"2025-12-29":true,"2025-12-31":true,"2026-01-03":true,"2026-01-04":true,"2026-01-06":true,"2026-01-25":true,"2026-02-15":true,"2026-02-28":true,"2026-03-21":true,"2026-04-13":true,"2026-04-15":true,"2026-07-05":true,"2026-07-07":true,"2026-07-08":true,"2026-07-09":true,"2026-07-10":true,"2026-07-11":true,"2026-07-25":true,"2026-07-26":true,"2026-07-27":true,"2026-07-28":true,"2026-07-29":true,"2026-08-21":true,"2026-08-22":true,"2026-08-29":true,"2026-08-30":true},
+ proteinGoal:120,stepsGoal:7000,outdoorsGoal:60,sleepGoal:7.5,englishGoal:240,gymGoal:3,
+ trackers:defaultTrackers,logs:{},theme:'dark',language:'ru',experiments:[],
+ lastExternalBackupAt:''
+};
+
+function storageGet(key){try{return window.localStorage.getItem(key)}catch(e){return null}}
+function storageSet(key,value){try{window.localStorage.setItem(key,value);return true}catch(e){return false}}
+function storageRemove(key){try{window.localStorage.removeItem(key);return true}catch(e){return false}}
+function storageKeys(){try{return Array.from({length:window.localStorage.length},(_,i)=>window.localStorage.key(i)).filter(Boolean)}catch(e){return []}}
+
+function dataStats(d){
+  const logs=(d&&d.logs&&typeof d.logs==='object')?d.logs:{};
+  const days=Object.keys(logs).filter(k=>/^\d{4}-\d{2}-\d{2}$/.test(k)).sort();
+  let entries=0;
+  for(const day of days){
+    const row=logs[day];
+    if(row&&typeof row==='object'){
+      entries+=Object.values(row).filter(v=>v!==undefined&&v!==null&&v!=='').length;
+    }
+  }
+  const meta=d&&d._storageMeta&&typeof d._storageMeta==='object'?d._storageMeta:{};
+  return {
+    logDays:days.length,
+    entries,
+    latest:days.length?days[days.length-1]:'',
+    revision:Number(meta.revision||0),
+    savedAt:Date.parse(meta.savedAt||'')||0
+  };
+}
+
+function candidateBetter(a,b){
+  if(!a)return false;
+  if(!b)return true;
+  const A=dataStats(a.data),B=dataStats(b.data);
+  if(A.logDays!==B.logDays)return A.logDays>B.logDays;
+  if(A.entries!==B.entries)return A.entries>B.entries;
+  if(A.latest!==B.latest)return A.latest>B.latest;
+  if(A.revision!==B.revision)return A.revision>B.revision;
+  if(A.savedAt!==B.savedAt)return A.savedAt>B.savedAt;
+  return !!a.primary && !b.primary;
+}
+
+function bestCandidate(items){
+  let best=null;
+  for(const item of items||[]){
+    if(item&&item.data&&candidateBetter(item,best))best=item;
+  }
+  return best;
+}
+
+function migrateData(raw){
+  let d = raw && typeof raw === 'object' ? structuredClone(raw) : {};
+  let version = Number(d.schemaVersion || 0);
+
+  if(version < 1){
+    d = {
+      ...defaults,
+      ...d,
+      schemaVersion:1,
+      logs:(d.logs && typeof d.logs==='object') ? d.logs : {},
+      trackers:Array.isArray(d.trackers) ? d.trackers : structuredClone(defaultTrackers)
+    };
+    version = 1;
+  }
+
+  if(version < 2){
+    d.experiments=Array.isArray(d.experiments)?d.experiments:[];
+    d.sleepGoal=Number(d.sleepGoal||7.5);
+    d.gymGoal=Number(d.gymGoal||3);
+    d.schemaVersion=2;
+    version=2;
+  }
+
+  d = {
+    ...defaults,
+    ...d,
+    schemaVersion:CURRENT_SCHEMA_VERSION,
+    logs:(d.logs && typeof d.logs==='object') ? d.logs : {},
+    trackers:Array.isArray(d.trackers) ? d.trackers : structuredClone(defaultTrackers),
+    experiments:Array.isArray(d.experiments) ? d.experiments : [],
+    alcoholTrackingStart:d.alcoholTrackingStart||defaults.alcoholTrackingStart,
+    alcoholHistory:(d.alcoholHistory && typeof d.alcoholHistory==='object') ? d.alcoholHistory : structuredClone(defaults.alcoholHistory),
+    lastExternalBackupAt:d.lastExternalBackupAt||''
+  };
+
+  for(const base of defaultTrackers){
+    if(!d.trackers.some(t=>t.id===base.id))d.trackers.push(structuredClone(base));
+  }
+  d.trackers=d.trackers.filter(t=>t.id!=='mood' && t.id!=='water');
+  return d;
+}
+
+function parseCandidate(key,raw,primary=false){
+  if(!raw)return null;
+  try{
+    const obj=JSON.parse(raw);
+    if(!obj||typeof obj!=='object')return null;
+    return {key,data:migrateData(obj),primary};
+  }catch(e){
+    return null;
+  }
+}
+
+function writeLocalCopies(payload){
+  const raw=JSON.stringify(payload);
+  const primary=storageSet(DATA_KEY,raw);
+  const mirror=storageSet(MIRROR_KEY,raw);
+  window.__vaultHealth=window.__vaultHealth||{};
+  window.__vaultHealth.primary=primary;
+  window.__vaultHealth.mirror=mirror;
+  return {primary,mirror};
+}
+
+function loadData(){
+  const found=[];
+  const primary=parseCandidate(DATA_KEY,storageGet(DATA_KEY),true);
+  if(primary)found.push(primary);
+
+  const mirror=parseCandidate(MIRROR_KEY,storageGet(MIRROR_KEY),false);
+  if(mirror)found.push(mirror);
+
+  for(const key of LEGACY_KEYS){
+    const c=parseCandidate(key,storageGet(key),false);
+    if(c)found.push(c);
+  }
+
+  for(const key of storageKeys()){
+    if(key===DATA_KEY||key===MIRROR_KEY||LEGACY_KEYS.includes(key)||found.some(x=>x.key===key))continue;
+    if(!/life|tracker|cleaner|rhythm|ритм/i.test(key))continue;
+    const c=parseCandidate(key,storageGet(key),false);
+    if(c)found.push(c);
+  }
+
+  if(!found.length){
+    window.__dataDiagnostic={source:'defaults',sources:[]};
+    return migrateData(defaults);
+  }
+
+  const chosen=bestCandidate(found);
+  const result=migrateData(chosen.data);
+  writeLocalCopies(result);
+  window.__dataDiagnostic={
+    source:chosen.key,
+    sources:found.map(x=>({key:x.key,...dataStats(x.data)}))
+  };
+  return result;
+}
+
+// ---------- IndexedDB vault ----------
+let __vaultDbPromise=null;
+
+function openVaultDB(){
+  if(!('indexedDB' in window))return Promise.reject(new Error('IndexedDB unavailable'));
+  if(__vaultDbPromise)return __vaultDbPromise;
+
+  __vaultDbPromise=new Promise((resolve,reject)=>{
+    const req=indexedDB.open(VAULT_DB,VAULT_DB_VERSION);
+    req.onupgradeneeded=()=>{
+      const db=req.result;
+      if(!db.objectStoreNames.contains('current'))db.createObjectStore('current');
+      if(!db.objectStoreNames.contains('snapshots'))db.createObjectStore('snapshots',{keyPath:'id'});
+    };
+    req.onsuccess=()=>resolve(req.result);
+    req.onerror=()=>reject(req.error||new Error('IndexedDB open error'));
+  });
+
+  return __vaultDbPromise;
+}
+
+function txDone(tx){
+  return new Promise((resolve,reject)=>{
+    tx.oncomplete=()=>resolve();
+    tx.onerror=()=>reject(tx.error||new Error('IndexedDB transaction error'));
+    tx.onabort=()=>reject(tx.error||new Error('IndexedDB transaction aborted'));
+  });
+}
+
+async function vaultReadCurrent(){
+  const db=await openVaultDB();
+  return await new Promise((resolve,reject)=>{
+    const tx=db.transaction('current','readonly');
+    const req=tx.objectStore('current').get('data');
+    req.onsuccess=()=>resolve(req.result||null);
+    req.onerror=()=>reject(req.error);
+  });
+}
+
+async function vaultReadSnapshots(){
+  const db=await openVaultDB();
+  return await new Promise((resolve,reject)=>{
+    const tx=db.transaction('snapshots','readonly');
+    const req=tx.objectStore('snapshots').getAll();
+    req.onsuccess=()=>resolve(Array.isArray(req.result)?req.result:[]);
+    req.onerror=()=>reject(req.error);
+  });
+}
+
+async function trimVaultSnapshots(){
+  const db=await openVaultDB();
+  const rows=await vaultReadSnapshots();
+  if(rows.length<=MAX_VAULT_SNAPSHOTS)return;
+  rows.sort((a,b)=>(a.savedAt||'').localeCompare(b.savedAt||''));
+  const remove=rows.slice(0,rows.length-MAX_VAULT_SNAPSHOTS);
+  if(!remove.length)return;
+  const tx=db.transaction('snapshots','readwrite');
+  const store=tx.objectStore('snapshots');
+  remove.forEach(x=>store.delete(x.id));
+  await txDone(tx);
+}
+
+async function vaultWriteIndexedDB(payload,makeSnapshot=true){
+  const db=await openVaultDB();
+  const now=new Date().toISOString();
+  const tx=db.transaction(['current','snapshots'],'readwrite');
+  tx.objectStore('current').put({savedAt:now,data:structuredClone(payload)},'data');
+  if(makeSnapshot){
+    tx.objectStore('snapshots').put({
+      id:`${Date.now()}-${Math.random().toString(36).slice(2,8)}`,
+      savedAt:now,
+      data:structuredClone(payload)
+    });
+  }
+  await txDone(tx);
+  if(makeSnapshot)await trimVaultSnapshots();
+  return true;
+}
+
+// ---------- CacheStorage vault ----------
+async function vaultWriteCache(payload){
+  if(!('caches' in window))throw new Error('CacheStorage unavailable');
+  const cache=await caches.open(VAULT_CACHE);
+  const body=JSON.stringify({savedAt:new Date().toISOString(),data:payload});
+  const req=new Request(new URL(VAULT_CACHE_URL,location.href).href);
+  await cache.put(req,new Response(body,{headers:{'Content-Type':'application/json','Cache-Control':'no-store'}}));
+  return true;
+}
+
+async function vaultReadCache(){
+  if(!('caches' in window))return null;
+  const cache=await caches.open(VAULT_CACHE);
+  const req=new Request(new URL(VAULT_CACHE_URL,location.href).href);
+  const res=await cache.match(req);
+  if(!res)return null;
+  try{return await res.json()}catch(e){return null}
+}
+
+async function vaultSnapshotCount(){
+  try{return (await vaultReadSnapshots()).length}catch(e){return 0}
+}
+
+async function writeVaultCopies(payload,makeSnapshot=true){
+  const settled=await Promise.allSettled([
+    vaultWriteIndexedDB(payload,makeSnapshot),
+    vaultWriteCache(payload)
+  ]);
+
+  const idb=settled[0].status==='fulfilled';
+  const cache=settled[1].status==='fulfilled';
+
+  window.__vaultHealth={
+    ...(window.__vaultHealth||{}),
+    primary:!!storageGet(DATA_KEY),
+    mirror:!!storageGet(MIRROR_KEY),
+    idb,
+    cache,
+    snapshots:await vaultSnapshotCount()
+  };
+  updateStorageSafetyUI();
+}
+
+function stampCurrentData(){
+  const previous=data&&data._storageMeta&&typeof data._storageMeta==='object'?data._storageMeta:{};
+  data._storageMeta={
+    revision:Number(previous.revision||0)+1,
+    savedAt:new Date().toISOString(),
+    appVersion:APP_VERSION
+  };
+}
+
+function persistData({renderAfter=true,makeSnapshot=true}={}){
+  data.schemaVersion=CURRENT_SCHEMA_VERSION;
+  stampCurrentData();
+  writeLocalCopies(data);
+  if(renderAfter)render();
+  writeVaultCopies(structuredClone(data),makeSnapshot).catch(err=>{
+    console.warn('Vault write failed',err);
+    updateStorageSafetyUI();
+  });
+}
+
+async function recoverFromVaults(){
+  const candidates=[{key:'memory/local',data:migrateData(data),primary:true}];
+
+  try{
+    const current=await vaultReadCurrent();
+    if(current&&current.data)candidates.push({key:'IndexedDB current',data:migrateData(current.data),primary:false});
+  }catch(e){
+    console.warn('IndexedDB current read failed',e);
+  }
+
+  try{
+    const snaps=await vaultReadSnapshots();
+    for(const s of snaps){
+      if(s&&s.data)candidates.push({key:`IndexedDB snapshot ${s.savedAt||s.id}`,data:migrateData(s.data),primary:false});
+    }
+  }catch(e){
+    console.warn('IndexedDB snapshots read failed',e);
+  }
+
+  try{
+    const cached=await vaultReadCache();
+    if(cached&&cached.data)candidates.push({key:'CacheStorage vault',data:migrateData(cached.data),primary:false});
+  }catch(e){
+    console.warn('Cache vault read failed',e);
+  }
+
+  const best=bestCandidate(candidates);
+  const memory=candidates[0];
+
+  if(best&&best.key!==memory.key&&candidateBetter(best,memory)){
+    data=migrateData(best.data);
+    writeLocalCopies(data);
+    window.__dataDiagnostic={
+      source:best.key,
+      sources:candidates.map(x=>({key:x.key,...dataStats(x.data)}))
+    };
+    render();
+  }
+
+  await writeVaultCopies(structuredClone(data),false);
+}
+
+async function clearVaultCopies(){
+  storageRemove(DATA_KEY);
+  storageRemove(MIRROR_KEY);
+  LEGACY_KEYS.forEach(k=>storageRemove(k));
+
+  try{
+    const db=await openVaultDB();
+    const tx=db.transaction(['current','snapshots'],'readwrite');
+    tx.objectStore('current').clear();
+    tx.objectStore('snapshots').clear();
+    await txDone(tx);
+  }catch(e){}
+
+  try{
+    if('caches' in window)await caches.delete(VAULT_CACHE);
+  }catch(e){}
+}
+
+let data=loadData();
+data.trackers=(data.trackers||[]).filter(t=>t.id!=='mood' && t.id!=='water');
+let activeTracker=null,addCategory='health',rangeDays=7,calendarDate=new Date();
+
+const englishTypes=[
+['english_chatgpt','🤖','ChatGPT'],
+['english_native','🗣️','Native teacher'],
+['english_russian','📘','Russian teacher'],
+['english_watching','🎬','Watching']
+];
+
+function localDate(d=new Date()){return new Date(d.getTime()-d.getTimezoneOffset()*60000).toISOString().slice(0,10)}
+function daysSince(s){
+ if(!s)return 0;const a=new Date(s+'T00:00:00'),b=new Date();
+ return Math.max(0,Math.floor((Date.UTC(b.getFullYear(),b.getMonth(),b.getDate())-Date.UTC(a.getFullYear(),a.getMonth(),a.getDate()))/86400000))
+}
+function dates(n){let arr=[];for(let i=n-1;i>=0;i--){let d=new Date();d.setDate(d.getDate()-i);arr.push(localDate(d))}return arr}
+function val(id,d=localDate()){return data.logs[d]?.[id]}
+function sum(id,n=7){return dates(n).reduce((s,d)=>s+(Number(data.logs[d]?.[id])||0),0)}
+function avg(id,n=7){let xs=dates(n).map(d=>Number(data.logs[d]?.[id])).filter(v=>v>0);return xs.length?xs.reduce((a,b)=>a+b,0)/xs.length:0}
+
+function latestEntry(id){
+  const keys=Object.keys(data.logs||{}).sort().reverse();
+  for(const d of keys){
+    const v=data.logs[d]?.[id];
+    if(v!==undefined && v!==null && v!=='') return {date:d,value:v};
+  }
+  return null;
+}
+function dateLabel(d){
+  if(!d)return '';
+  const today=localDate();
+  const yd=new Date(); yd.setDate(yd.getDate()-1);
+  const yesterday=localDate(yd);
+  if(d===today)return trText('Сегодня','Today');
+  if(d===yesterday)return trText('Вчера','Yesterday');
+  const dt=new Date(d+'T00:00:00');
+  return (data.language||'ru')==='en'
+    ? dt.toLocaleDateString('en-NZ',{day:'numeric',month:'short'})
+    : dt.toLocaleDateString('ru-RU',{day:'numeric',month:'short'});
+}
+function healthUnit(id,t){
+  if(id==='steps') return trText('шагов','steps');
+  return trUnit(t);
+}
+function loggedAverage(id,n=7){
+  const xs=dates(n).map(d=>Number(data.logs[d]?.[id])).filter(v=>Number.isFinite(v)&&v>0);
+  return xs.length?xs.reduce((a,b)=>a+b,0)/xs.length:0;
+}
+function goalDaysCount(id,n=7){
+  return dates(n).filter(d=>dailyComplete(id,d)).length;
+}
+function boolCount(id,n=7){return dates(n).filter(d=>data.logs[d]?.[id]===true).length}
+function pct(v,g){return !g?0:Math.min(100,Math.max(0,Math.round(v/g*100)))}
+function save(){persistData({renderAfter:true,makeSnapshot:true})}
+function ensureDay(d=localDate()){data.logs[d]=data.logs[d]||{};return data.logs[d]}
+
+function tracker(id){return data.trackers.find(t=>t.id===id)||defaultTrackers.find(t=>t.id===id)}
+function goalFor(id){return ({protein:data.proteinGoal,steps:data.stepsGoal,outdoors:data.outdoorsGoal,sleep:data.sleepGoal,gym:data.gymGoal,english_general:data.englishGoal})[id] ?? tracker(id)?.goal}
+function englishTotalN(n=7){const detailed=englishTypes.reduce((s,[id])=>s+sum(id,n),0);return detailed||sum('english_general',n)}
+function englishTodayN(){const detailed=englishTypes.reduce((s,[id])=>s+(Number(val(id))||0),0);return detailed||Number(val('english_general'))||0}
+function dailyComplete(id,d=localDate()){
+ const t=tracker(id);if(!t)return false;const v=data.logs[d]?.[id];if(t.type==='boolean')return v===true;
+ const g=goalFor(id);if(!g)return v!==undefined&&v!==null&&v!=='';return Number(v)>=Number(g)
+}
+function completion(id,n=7){
+ if(id==='gym')return pct(boolCount('gym',n),Math.max(1,data.gymGoal*(n/7)));
+ if(id==='english_general')return pct(englishTotalN(n),Math.max(1,data.englishGoal*(n/7)));
+ return pct(dates(n).filter(d=>dailyComplete(id,d)).length,n)
+}
+function weeklyOverall(){const ids=['protein','steps','outdoors','sleep','english_general','gym'];return Math.round(ids.reduce((a,id)=>a+completion(id,7),0)/ids.length)}
+function todayScore(){const ids=['protein','steps','outdoors','sleep','english_general','gym'];let earned=0;for(const id of ids){if(id==='english_general'){earned+=Math.min(1,englishTodayN()/Math.max(1,data.englishGoal/7));continue}if(id==='gym'){earned+=val('gym')===true?1:0;continue}const g=goalFor(id),v=Number(val(id))||0;earned+=g?Math.min(1,v/g):(v>0?1:0)}return Math.round(earned/ids.length*100)}
+
+
+
+const TRACKER_I18N = {
+  protein:{ru:'Белок',en:'Protein',unitRu:'г',unitEn:'g'},
+  steps:{ru:'Шаги',en:'Steps',unitRu:'',unitEn:''},
+  outdoors:{ru:'Время на улице',en:'Time outdoors',unitRu:'мин',unitEn:'min'},
+  sleep:{ru:'Сон',en:'Sleep',unitRu:'ч',unitEn:'h'},
+  weight:{ru:'Вес',en:'Weight',unitRu:'кг',unitEn:'kg'},
+  gym:{ru:'Тренировка',en:'Workout',unitRu:'',unitEn:''},
+  english_general:{ru:'Английский',en:'English',unitRu:'мин',unitEn:'min'}
+};
+
+function trTrackerName(t){
+  const lang=data.language||'ru';
+  const d=TRACKER_I18N[t?.id];
+  if(d) return lang==='en'?d.en:d.ru;
+  return t?.name||'';
+}
+function trUnit(tOrId){
+  const lang=data.language||'ru';
+  const id=typeof tOrId==='string'?tOrId:tOrId?.id;
+  const d=TRACKER_I18N[id];
+  if(d) return lang==='en'?d.unitEn:d.unitRu;
+  const t=typeof tOrId==='string'?tracker(tOrId):tOrId;
+  return t?.unit||'';
+}
+function trText(ru,en){ return (data.language||'ru')==='en'?en:ru; }
+
+const UI_EN = new Map([
+['Локальная защита','Local protection'],
+['Последний внешний backup','Last external backup'],
+['Проверяем…','Checking…'],
+['Никогда','Never'],
+['локальных копий','local copies'],
+['Backup создан. Сохрани файл в Files/iCloud Drive.','Backup created. Keep the file in Files/iCloud Drive.'],
+
+['Вчера','Yesterday'],
+['Нет записей','No entries'],
+['За 7 дней','Last 7 days'],
+['Среднее за 7 дней','7-day average'],
+['Нет данных за последние 7 дней','No data in the last 7 days'],
+['Цель достигнута','Goal reached'],
+['Записать сегодня','Log today'],
+['шагов','steps'],
+
+['Сегодня отмечено ✓','Checked today ✓'],
+['Нажми, чтобы отметить сегодня','Tap to check today'],
+
+['Лучше, чем вчера','Better than yesterday'],
+['Маленькие шаги меняют большие жизни','Small steps change big lives'],
+['Добавить занятие ＋','Add a session ＋'],
+['Без сигарет','Smoke-free'],
+['Без алкоголя','Alcohol-free'],
+['Дисциплина сегодня — свобода завтра.','Discipline today — freedom tomorrow.'],
+
+['🥩 Белок','🥩 Protein'],
+['🚶 Шаги','🚶 Steps'],
+['☀️ Время на улице','☀️ Time outdoors'],
+['☀️ Улица','☀️ Outdoors'],
+['😴 Сон','😴 Sleep'],
+['⚖️ Вес','⚖️ Weight'],
+['🏋️ Тренировка','🏋️ Workout'],
+['🇬🇧 Английский','🇬🇧 English'],
+
+['Мой ритм','My Rhythm'],
+['Consistency > streak. Смотри на тренд, а не на один день.','Consistency > streak. Focus on the trend, not one day.'],
+['сегодня','today'],
+['Today Dashboard','Today Dashboard'],
+['Начни день','Start your day'],
+['Заполни несколько ключевых показателей.','Log a few key metrics.'],
+['🚭 Без сигарет','🚭 Smoke-free'],
+['🍷 Без алкоголя','🍷 Alcohol-free'],
+['дней','days'],
+['Ключевые показатели','Key metrics'],
+['Быстрый ввод','Quick entry'],
+['🥩 Белок','🥩 Protein'],
+['☀️ Улица','☀️ Outdoors'],
+['🏋️ Тренировка','🏋️ Workout'],
+['Здоровье','Health'],
+['Дневные и недельные цели без наказания за один пропуск.','Daily and weekly goals without punishing one missed day.'],
+['＋ Добавить свой трекер','＋ Add custom tracker'],
+['Английский','English'],
+['Отдельный мини-трекер внутри приложения.','A dedicated mini-tracker inside the app.'],
+['Сегодня','Today'],
+['Эта неделя','This week'],
+['мин','min'],
+['Дней с английским','Days with English'],
+['Добавить занятие','Add a session'],
+['🎬 Смотреть','🎬 Watching'],
+['Неделя по типам занятий','Week by activity type'],
+['Прогресс','Progress'],
+['7 и 30 дней: completion, график и календарь.','7 and 30 days: completion, chart and calendar.'],
+['7 дней','7 days'],
+['30 дней','30 days'],
+['Активность по дням','Daily activity'],
+['Связи между привычками. Не причинность.','Relationships between habits. Not causation.'],
+['Проверяй одну гипотезу за раз.','Test one hypothesis at a time.'],
+['＋ Новый эксперимент','＋ New experiment'],
+['Настройки целей','Goal settings'],
+['Дата отказа от сигарет','Smoke-free start date'],
+['Дата текущего периода без алкоголя','Current alcohol-free period start'],
+['Белок, г/день','Protein, g/day'],
+['Шаги / день','Steps / day'],
+['Время на улице, мин/день','Time outdoors, min/day'],
+['Сон, ч/день','Sleep, h/day'],
+['Английский, мин/неделю','English, min/week'],
+['Тренировки, раз/неделю','Workouts / week'],
+['Сохранить настройки','Save settings'],
+['🎨 Оформление','🎨 Appearance'],
+['Тема приложения','App theme'],
+['По умолчанию — тёмная неоновая','Default — dark neon'],
+['Язык интерфейса','Interface language'],
+['Русский / English','Russian / English'],
+['Русский','Russian'],
+['💾 Данные и резервная копия','💾 Data and backup'],
+['Данные приложения хранятся отдельно от версии интерфейса. Обновления V4, V5 и дальше используют ту же базу.','Your data is stored separately from the interface version. V4, V5 and later use the same database.'],
+['Версия приложения','App version'],
+['Версия структуры данных','Data schema version'],
+['↓ Экспорт backup','↓ Export backup'],
+['↑ Импорт backup','↑ Import backup'],
+['Сбросить все данные','Reset all data'],
+['Главная','Home'],
+['Здоровье','Health'],
+['Прогресс','Progress'],
+['Запись','Entry'],
+['Значение','Value'],
+['Сохранить','Save'],
+['Новый трекер','New tracker'],
+['Название','Name'],
+['Например: Кофеин','For example: Caffeine'],
+['Иконка','Icon'],
+['Тип','Type'],
+['Число','Number'],
+['Да / нет','Yes / no'],
+['Единица','Unit'],
+['мин, г, мл...','min, g, ml...'],
+['Дневная цель','Daily goal'],
+['Добавить','Add'],
+['Длительность, дней','Duration, days'],
+['Гипотеза','Hypothesis'],
+['Начать эксперимент','Start experiment'],
+['Белок','Protein'],
+['Шаги','Steps'],
+['Время на улице','Time outdoors'],
+['Сон','Sleep'],
+['Вес','Weight'],
+['Вода','Water'],
+['Тренировка','Workout'],
+['Английский','English'],
+['г','g'],
+['ч','h'],
+['кг','kg'],
+['л','L'],
+['Выполнено','Done'],
+['Не отмечено','Not logged'],
+['Записать','Log'],
+['цель','goal'],
+['Неделя','Week'],
+['Очень хороший день','Great day'],
+['Хороший темп','Good pace'],
+['День в процессе','Day in progress'],
+['Начни с малого','Start small'],
+['Главное — устойчивость, а не идеальный день.','Consistency matters more than a perfect day.'],
+['Заполни 2–3 важных показателя — уже достаточно.','Logging 2–3 important metrics is already enough.'],
+['Пока мало данных.','Not enough data yet.'],
+['Без гипотезы','No hypothesis'],
+['Активен','Active'],
+['Завершён','Completed'],
+['Завершить','Finish'],
+['Возобновить','Resume'],
+['Удалить','Delete'],
+['Цель','Goal'],
+['Январь','January'],['Февраль','February'],['Март','March'],['Апрель','April'],
+['Май','May'],['Июнь','June'],['Июль','July'],['Август','August'],
+['Сентябрь','September'],['Октябрь','October'],['Ноябрь','November'],['Декабрь','December'],
+['Пн','Mon'],['Вт','Tue'],['Ср','Wed'],['Чт','Thu'],['Пт','Fri'],['Сб','Sat'],['Вс','Sun']
+]);
+
+function translatePhraseRUtoEN(text){
+  if(UI_EN.has(text)) return UI_EN.get(text);
+  let s=text;
+
+  const exact={
+    'Белок':'Protein','Шаги':'Steps','Время на улице':'Time outdoors','Улица':'Outdoors',
+    'Сон':'Sleep','Вес':'Weight','Тренировка':'Workout','Английский':'English',
+    'Сегодня':'Today','Эта неделя':'This week','Неделя':'Week',
+    'Дневная цель':'Daily goal','Недельная цель':'Weekly goal','Без дневной цели':'No daily goal',
+    'Выполнено':'Done','Не отмечено':'Not logged','Без цели':'No goal',
+    'Активен':'Active','Завершён':'Completed','Завершить':'Finish','Возобновить':'Resume',
+    'Удалить':'Delete','Записать':'Log','Добавить':'Add'
+  };
+  if(exact[s]) return exact[s];
+
+  s=s.replace(/^Сегодня · /,'Today · ');
+  s=s.replace(/^Недельная цель · /,'Weekly goal · ');
+  s=s.replace(/^Дневная цель · /,'Daily goal · ');
+  s=s.replace(/^Цель: /,'Goal: ');
+  s=s.replace(/^цель: /,'goal: ');
+  s=s.replace(/^Неделя (\d+)%$/,'Week $1%');
+  s=s.replace(/^Completion rate за (\d+) дней$/,'Completion rate for $1 days');
+  s=s.replace(/^Данных: (\d+) дней · корреляция, не доказательство причины$/,
+              'Data: $1 days · correlation, not proof of causation');
+
+  s=s.replace(/(\d+(?:[.,]\d+)?)\s*дней\b/g,'$1 days');
+  s=s.replace(/(\d+(?:[.,]\d+)?)\s*дня\b/g,'$1 days');
+  s=s.replace(/(\d+(?:[.,]\d+)?)\s*день\b/g,'$1 day');
+  s=s.replace(/(\d+(?:[.,]\d+)?)\s*мин\b/g,'$1 min');
+  s=s.replace(/(\d+(?:[.,]\d+)?)\s*ч\b/g,'$1 h');
+  s=s.replace(/(\d+(?:[.,]\d+)?)\s*г\b/g,'$1 g');
+  s=s.replace(/(\d+(?:[.,]\d+)?)\s*кг\b/g,'$1 kg');
+
+  s=s.replace('Главное — устойчивость, а не идеальный день.',
+              'Consistency matters more than a perfect day.');
+  s=s.replace('Заполни 2–3 важных показателя — уже достаточно.',
+              'Logging 2–3 important metrics is already enough.');
+  s=s.replace('Заполни несколько ключевых показателей.',
+              'Log a few key metrics.');
+  s=s.replace('Для первых сравнений желательно хотя бы 8–14 заполненных дней, для более устойчивых выводов — около месяца.',
+              'For initial comparisons, aim for at least 8–14 logged days; around a month gives more stable insights.');
+  s=s.replace('Будем показывать связи, а не утверждать причинность.',
+              'The app shows relationships, not claims of causation.');
+  s=s.replace('Пример: «30 дней проводить ≥60 минут на улице» и потом сравнить сон и английский.',
+              'Example: “Spend ≥60 minutes outdoors for 30 days” and then compare sleep and English.');
+
+  s=s.replace(/^В дни с ≥(.+) мин на улице английского в среднем (.+) мин против (.+) мин\.$/,
+              'On days with ≥$1 min outdoors, English averaged $2 min vs $3 min.');
+  s=s.replace(/^При сне ≥(.+) ч английского в среднем (.+) мин против (.+) мин\.$/,
+              'With ≥$1 h of sleep, English averaged $2 min vs $3 min.');
+  s=s.replace(/^В дни с ≥(.+) мин на улице сон в среднем (.+) ч против (.+) ч\.$/,
+              'On days with ≥$1 min outdoors, sleep averaged $2 h vs $3 h.');
+
+  s=s.replace(/Белок/g,'Protein')
+     .replace(/Шаги/g,'Steps')
+     .replace(/Время на улице/g,'Time outdoors')
+     .replace(/Сон/g,'Sleep')
+     .replace(/Вес/g,'Weight')
+     .replace(/Тренировка/g,'Workout')
+     .replace(/Английский/g,'English');
+
+  return s;
+}
+
+function translateDOM(){
+  const lang=data.language||'ru';
+  document.documentElement.lang=lang;
+
+  const walker=document.createTreeWalker(document.body,NodeFilter.SHOW_TEXT);
+  const nodes=[];
+  while(walker.nextNode()){
+    const node=walker.currentNode;
+    if(!node.parentElement) continue;
+    const tag=node.parentElement.tagName;
+    if(tag==='SCRIPT'||tag==='STYLE') continue;
+    nodes.push(node);
+  }
+
+  nodes.forEach(node=>{
+    if(node._ruText===undefined) node._ruText=node.nodeValue;
+    node.nodeValue=lang==='en'?translatePhraseRUtoEN(node._ruText):node._ruText;
+  });
+
+  document.querySelectorAll('input[placeholder],textarea[placeholder]').forEach(el=>{
+    if(el._ruPlaceholder===undefined) el._ruPlaceholder=el.getAttribute('placeholder')||'';
+    el.setAttribute('placeholder',lang==='en'?translatePhraseRUtoEN(el._ruPlaceholder):el._ruPlaceholder);
+  });
+
+  const lb=document.getElementById('languageToggleBtn');
+  if(lb) lb.textContent=lang==='en'?'English':'Русский';
+  const top=document.getElementById('topLanguageBtn');if(top)top.textContent=lang==='en'?'EN':'RU';
+
+  // Browser title.
+  document.title=lang==='en'?'My Rhythm':'Мой ритм';
+}
+
+function toggleLanguage(){
+  data.language=(data.language||'ru')==='ru'?'en':'ru';
+  save();
+}
+
+function applyTheme(){
+  const theme=data.theme||'dark';
+  document.body.classList.toggle('light',theme==='light');
+  const btn=document.getElementById('themeToggleBtn');
+  if(btn) btn.textContent=theme==='dark'?'Dark':'Light';
+}
+function toggleTheme(){
+  data.theme=(data.theme||'dark')==='dark'?'light':'dark';
+  save();
+}
+function show(id,btn){
+ document.querySelectorAll('.section').forEach(x=>x.classList.remove('active'));document.getElementById(id).classList.add('active');
+ document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));btn.classList.add('active')
+}
+function openEntry(id){activeTracker=tracker(id);if(!activeTracker){alert(trText('Трекер не найден.','Tracker not found.'));return}const unit=trUnit(activeTracker);document.getElementById('entryTitle').textContent=activeTracker.icon+' '+trTrackerName(activeTracker);document.getElementById('entryLabel').textContent=trText('Значение','Value')+(unit?' ('+unit+')':'');document.getElementById('entryValue').value=val(id)??'';document.getElementById('entryModal').classList.add('show');setTimeout(()=>document.getElementById('entryValue').focus(),80)}
+function openEnglish(id){const type=englishTypes.find(x=>x[0]===id);if(!type)return;activeTracker={id,name:type[2],icon:type[1],type:'number',unit:'мин',category:'english'};document.getElementById('entryTitle').textContent=type[1]+' '+type[2];document.getElementById('entryLabel').textContent=trText('Минуты','Minutes');document.getElementById('entryValue').value=val(id)??'';document.getElementById('entryModal').classList.add('show');setTimeout(()=>document.getElementById('entryValue').focus(),80)}
+function saveEntry(){
+ if(!activeTracker)return;
+ const input=document.getElementById('entryValue');
+ ensureDay()[activeTracker.id]=Number(input?.value||0);
+ if(activeTracker.id.startsWith('english_') && activeTracker.id!=='english_general'){
+   const total=englishTypes.reduce((s,[id])=>s+(Number(val(id))||0),0);
+   ensureDay().english_general=total;
+ }
+ closeModal('entryModal');save()
+}
+function toggleBool(id){ensureDay()[id]=!ensureDay()[id];save()}
+function closeModal(id){document.getElementById(id).classList.remove('show')}
+function openAddTracker(cat){addCategory=cat;document.getElementById('addModal')?.classList.add('show')}
+function addTracker(){
+ const nameEl=document.getElementById('newName'),iconEl=document.getElementById('newIcon'),typeEl=document.getElementById('newType'),unitEl=document.getElementById('newUnit'),goalEl=document.getElementById('newGoal');
+ const name=(nameEl?.value||'').trim();if(!name)return;
+ data.trackers.push({id:'custom_'+Date.now(),name,icon:(iconEl?.value||'').trim()||'•',type:typeEl?.value||'number',unit:(unitEl?.value||'').trim(),goal:goalEl?.value?Number(goalEl.value):null,category:addCategory});
+ if(nameEl)nameEl.value='';if(iconEl)iconEl.value='';if(unitEl)unitEl.value='';if(goalEl)goalEl.value='';
+ closeModal('addModal');save()
+}
+function removeTracker(id){
+ if(['protein','steps','outdoors','sleep','weight','water','mood','gym','english_general'].includes(id)) return alert('Это базовый трекер. Его можно не заполнять, но он остаётся в структуре.');
+ if(confirm((data.language||'ru')==='en'?'Delete this tracker?':'Удалить этот трекер?')){data.trackers=data.trackers.filter(t=>t.id!==id);save()}
+}
+function saveSettings(){const gv=id=>document.getElementById(id)?.value;data.smokeDate=gv('smokeDate')||'';data.alcoholDate=Object.keys(alcoholHistory()).length?alcoholCurrentStreakStart():(gv('alcoholDate')||'');data.proteinGoal=Number(gv('proteinGoal')||120);data.stepsGoal=Number(gv('stepsGoal')||7000);data.outdoorsGoal=Number(gv('outdoorsGoal')||60);data.sleepGoal=Number(gv('sleepGoal')||7.5);data.englishGoal=Number(gv('englishGoal')||240);data.gymGoal=Number(gv('gymGoal')||3);const map={protein:data.proteinGoal,steps:data.stepsGoal,outdoors:data.outdoorsGoal,sleep:data.sleepGoal};Object.entries(map).forEach(([id,g])=>{const t=tracker(id);if(t)t.goal=g});save()}
+function exportBackup(){
+  const now=new Date();
+  const stamp=now.toISOString().slice(0,10);
+
+  data.lastExternalBackupAt=now.toISOString();
+  persistData({renderAfter:false,makeSnapshot:true});
+
+  const backup={
+    format:'my-life-tracker-backup',
+    formatVersion:1,
+    exportedAt:now.toISOString(),
+    appVersion:APP_VERSION,
+    schemaVersion:CURRENT_SCHEMA_VERSION,
+    data:migrateData(data)
+  };
+
+  const blob=new Blob([JSON.stringify(backup,null,2)],{type:'application/json'});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');
+  a.href=url;
+  a.download=`my-life-tracker-backup-${stamp}.json`;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  setTimeout(()=>URL.revokeObjectURL(url),1000);
+
+  const el=document.getElementById('backupStatus');
+  if(el)el.textContent=trText('Backup создан. Сохрани файл в Files/iCloud Drive.','Backup created. Keep the file in Files/iCloud Drive.');
+  updateStorageSafetyUI();
+}
+
+function validateBackupObject(obj){
+  if(!obj || typeof obj!=='object') throw new Error('Некорректный JSON.');
+  if(obj.format==='my-life-tracker-backup' && obj.data){
+    return migrateData(obj.data);
+  }
+  // Also accept a raw database export for resilience.
+  if(obj.logs || obj.trackers || obj.schemaVersion!==undefined){
+    return migrateData(obj);
+  }
+  throw new Error('Файл не похож на backup приложения «Мой ритм».');
+}
+
+function importBackupFile(event){
+  const file=event.target.files && event.target.files[0];
+  if(!file) return;
+  const reader=new FileReader();
+  reader.onload=()=>{
+    try{
+      const parsed=JSON.parse(reader.result);
+      const imported=validateBackupObject(parsed);
+      const hasCurrent=Object.keys(data.logs||{}).length>0;
+      const message=hasCurrent
+        ? 'Импорт заменит текущие записи данными из backup. Продолжить?'
+        : 'Импортировать данные из backup?';
+      if(!confirm(message)) return;
+      data=imported;
+      save();
+      const el=document.getElementById('backupStatus');
+      if(el) el.textContent='Backup успешно импортирован ✅';
+      alert('Данные восстановлены.');
+    }catch(err){
+      alert('Не удалось импортировать backup: '+err.message);
+    }finally{
+      event.target.value='';
+    }
+  };
+  reader.onerror=()=>alert('Не удалось прочитать файл.');
+  reader.readAsText(file);
+}
+
+async function resetAll(){
+  const first=confirm(
+    (data.language||'ru')==='en'
+      ? 'Delete all app data? This will also erase local recovery copies.'
+      : 'Удалить все данные приложения? Будут удалены и локальные recovery-копии.'
+  );
+  if(!first)return;
+
+  const second=confirm(
+    (data.language||'ru')==='en'
+      ? 'Final confirmation. Continue only if you already have an external backup.'
+      : 'Последнее подтверждение. Продолжай только если у тебя уже есть внешний backup.'
+  );
+  if(!second)return;
+
+  await clearVaultCopies();
+  location.reload();
+}
+
+
+function toggleSobrietyCheck(kind){
+  const isSmoke=kind==='smoke';
+  const dateKey=isSmoke?'smokeDate':'alcoholDate';
+  const logKey=isSmoke?'smoke_free':'alcohol_free';
+  if(!data[dateKey]){
+    show('analytics',document.getElementById('tabAnalytics'));
+    setTimeout(()=>document.getElementById(isSmoke?'smokeDate':'alcoholDate')?.scrollIntoView({behavior:'smooth',block:'center'}),80);
+    return;
+  }
+  const day=ensureDay();
+  day[logKey]=!day[logKey];
+  save();
+}
+
+
+let alcoholViewMode='year';
+let alcoholViewYear=new Date().getFullYear();
+let alcoholViewMonth=new Date().getMonth();
+const ALCOHOL_MONTHS_RU=['Январь','Февраль','Март','Апрель','Май','Июнь','Июль','Август','Сентябрь','Октябрь','Ноябрь','Декабрь'];
+const ALCOHOL_MONTHS_EN=['January','February','March','April','May','June','July','August','September','October','November','December'];
+const ALCOHOL_WEEK_RU=['Пн','Вт','Ср','Чт','Пт','Сб','Вс'];
+const ALCOHOL_WEEK_EN=['Mo','Tu','We','Th','Fr','Sa','Su'];
+
+function alcoholHistory(){
+  if(!data.alcoholHistory||typeof data.alcoholHistory!=='object')data.alcoholHistory={};
+  return data.alcoholHistory;
+}
+function alcoholIsDrink(dateKey){return !!alcoholHistory()[dateKey]}
+function alcoholDateKey(year,monthIndex,day){return `${year}-${String(monthIndex+1).padStart(2,'0')}-${String(day).padStart(2,'0')}`}
+function alcoholParseLocal(dateKey){const [y,m,d]=dateKey.split('-').map(Number);return new Date(y,m-1,d,12)}
+function alcoholTodayKey(){return localDate()}
+function alcoholTrackingStart(){return data.alcoholTrackingStart||'2025-01-01'}
+function alcoholIsTrackedPast(dateKey){return dateKey>=alcoholTrackingStart()&&dateKey<=alcoholTodayKey()}
+function alcoholLatestDrink(onOrBefore=alcoholTodayKey()){return Object.keys(alcoholHistory()).filter(k=>alcoholHistory()[k]&&k<=onOrBefore).sort().pop()||''}
+
+function alcoholCurrentStreakStart(){
+  const today=alcoholTodayKey();
+  if(alcoholIsDrink(today))return '';
+  const lastDrink=alcoholLatestDrink(today);
+  if(!lastDrink)return alcoholTrackingStart();
+  const d=alcoholParseLocal(lastDrink);d.setDate(d.getDate()+1);return localDate(d);
+}
+function alcoholCurrentStreakDays(){
+  const today=alcoholTodayKey();
+  if(alcoholIsDrink(today))return 0;
+  const startKey=alcoholCurrentStreakStart();
+  if(!startKey||startKey>today)return 0;
+  return Math.max(0,Math.floor((alcoholParseLocal(today)-alcoholParseLocal(startKey))/86400000));
+}
+function alcoholYearStats(year){
+  const now=new Date(),currentYear=now.getFullYear(),trackStart=alcoholTrackingStart();
+  const effectiveStart=`${year}-01-01`<trackStart?trackStart:`${year}-01-01`;
+  let end;
+  if(year<currentYear)end=new Date(year,11,31,12);
+  else if(year===currentYear)end=new Date(now.getFullYear(),now.getMonth(),now.getDate(),12);
+  else return {tracked:0,drink:0,sober:0,pct:0};
+  const start=alcoholParseLocal(effectiveStart);
+  if(start>end)return {tracked:0,drink:0,sober:0,pct:0};
+  const tracked=Math.floor((end-start)/86400000)+1;
+  const endKey=localDate(end);
+  const drink=Object.keys(alcoholHistory()).filter(k=>k.startsWith(year+'-')&&alcoholHistory()[k]&&k>=effectiveStart&&k<=endKey).length;
+  const sober=Math.max(0,tracked-drink);
+  return {tracked,drink,sober,pct:tracked?Math.round(sober/tracked*100):0};
+}
+function syncAlcoholDerivedDate(){data.alcoholDate=alcoholCurrentStreakStart()}
+
+function openAlcohol(){
+  alcoholViewYear=new Date().getFullYear();
+  alcoholViewMonth=new Date().getMonth();
+  alcoholViewMode='year';
+  document.getElementById('alcoholModal')?.classList.add('show');
+  document.body.style.overflow='hidden';
+  renderAlcoholCalendar();
+}
+function closeAlcohol(){document.getElementById('alcoholModal')?.classList.remove('show');document.body.style.overflow=''}
+function setAlcoholMode(mode){alcoholViewMode=mode==='month'?'month':'year';renderAlcoholCalendar()}
+function changeAlcoholYear(delta){alcoholViewYear+=delta;renderAlcoholCalendar()}
+function changeAlcoholMonth(delta){alcoholViewMonth+=delta;if(alcoholViewMonth<0){alcoholViewMonth=11;alcoholViewYear--}if(alcoholViewMonth>11){alcoholViewMonth=0;alcoholViewYear++}renderAlcoholCalendar()}
+
+function toggleAlcoholDay(dateKey){
+  if(!alcoholIsTrackedPast(dateKey))return;
+  const hist=alcoholHistory();
+  if(hist[dateKey])delete hist[dateKey];else hist[dateKey]=true;
+  syncAlcoholDerivedDate();
+  persistData({renderAfter:true,makeSnapshot:true});
+  renderAlcoholCalendar();
+}
+function alcoholDayClass(dateKey){
+  if(dateKey<alcoholTrackingStart())return 'untracked';
+  if(dateKey>alcoholTodayKey())return 'future';
+  return alcoholIsDrink(dateKey)?'drank':'sober';
+}
+function alcoholMonthHTML(year,monthIndex){
+  const lang=data.language||'ru',months=lang==='en'?ALCOHOL_MONTHS_EN:ALCOHOL_MONTHS_RU,week=lang==='en'?ALCOHOL_WEEK_EN:ALCOHOL_WEEK_RU;
+  const first=new Date(year,monthIndex,1,12),daysInMonth=new Date(year,monthIndex+1,0,12).getDate(),offset=(first.getDay()+6)%7;
+  let days='';
+  for(let i=0;i<offset;i++)days+='<button class="alcohol-day empty" tabindex="-1"></button>';
+  for(let day=1;day<=daysInMonth;day++){
+    const key=alcoholDateKey(year,monthIndex,day),cls=alcoholDayClass(key),today=key===alcoholTodayKey()?' today':'',disabled=(cls==='future'||cls==='untracked')?' disabled':'';
+    const aria=alcoholIsDrink(key)?trText('Пил алкоголь','Drank alcohol'):(cls==='sober'?trText('Без алкоголя','Alcohol-free'):'');
+    days+=`<button class="alcohol-day ${cls}${today}"${disabled} onclick="toggleAlcoholDay('${key}')" aria-label="${day} ${months[monthIndex]} ${year}. ${aria}">${day}</button>`;
+  }
+  return `<div class="alcohol-month-card"><div class="alcohol-month-title">${months[monthIndex]}</div><div class="alcohol-weekdays">${week.map(x=>`<span>${x}</span>`).join('')}</div><div class="alcohol-days-grid">${days}</div></div>`;
+}
+function renderAlcoholCalendar(){
+  if(!document.getElementById('alcoholModal'))return;
+  const lang=data.language||'ru',months=lang==='en'?ALCOHOL_MONTHS_EN:ALCOHOL_MONTHS_RU,streak=alcoholCurrentStreakDays(),stats=alcoholYearStats(alcoholViewYear);
+  const setText=(id,text)=>{const el=document.getElementById(id);if(el)el.textContent=text};
+  setText('alcoholTitle',trText('Алкоголь','Alcohol'));setText('alcoholSubtitle',trText('История и календарь','History & calendar'));
+  setText('alcoholCurrentLabel',trText('Текущая серия','Current streak'));setText('alcoholSoberYearLabel',trText('Без алкоголя в году','Alcohol-free this year'));setText('alcoholDrinkDaysLabel',trText('Дней с алкоголем','Drinking days'));
+  setText('alcoholDaysUnit1',trText('дней','days'));setText('alcoholLegendSober',trText('Не пил','Alcohol-free'));setText('alcoholLegendDrank',trText('Пил','Drank'));setText('alcoholLegendFuture',trText('Будущий день','Future'));
+  setText('alcoholHelpTitle',trText('Как это работает','How it works'));setText('alcoholHelpText',trText('Нажми на прошедший день, чтобы отметить или снять факт употребления алкоголя. Если день не отмечен, он автоматически считается днём без алкоголя.','Tap a past day to mark or unmark alcohol use. If a day is not marked, it is automatically treated as alcohol-free.'));
+  const mb=document.getElementById('alcoholMonthModeBtn'),yb=document.getElementById('alcoholYearModeBtn');
+  if(mb){mb.textContent=trText('Месяц','Month');mb.classList.toggle('active',alcoholViewMode==='month')}
+  if(yb){yb.textContent=trText('Год','Year');yb.classList.toggle('active',alcoholViewMode==='year')}
+  setText('alcoholHeaderStreak',streak);setText('alcoholCurrentStreak',streak);setText('alcoholSoberYear',stats.pct);setText('alcoholDrinkDaysYear',stats.drink);setText('alcoholYearLabel',alcoholViewYear);
+  const host=document.getElementById('alcoholCalendarHost');if(!host)return;
+  if(alcoholViewMode==='year'){
+    host.innerHTML=`<div class="alcohol-year-grid">${Array.from({length:12},(_,m)=>alcoholMonthHTML(alcoholViewYear,m)).join('')}</div>`;
+  }else{
+    host.innerHTML=`<div class="alcohol-month-view"><div class="alcohol-month-switch"><button onclick="changeAlcoholMonth(-1)">‹</button><strong>${months[alcoholViewMonth]} ${alcoholViewYear}</strong><button onclick="changeAlcoholMonth(1)">›</button></div>${alcoholMonthHTML(alcoholViewYear,alcoholViewMonth)}</div>`;
+  }
+}
+
+function renderToday(){
+ const now=new Date(),lang=data.language||'ru',
+ ruW=['Воскресенье','Понедельник','Вторник','Среда','Четверг','Пятница','Суббота'],
+ enW=['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'],
+ ruM=['января','февраля','марта','апреля','мая','июня','июля','августа','сентября','октября','ноября','декабря'],
+ enM=['January','February','March','April','May','June','July','August','September','October','November','December'];
+ const heroDateEl=document.getElementById('heroDate'),heroTipEl=document.getElementById('heroTip');
+ if(heroDateEl)heroDateEl.textContent=lang==='en'?`${enW[now.getDay()]}, ${now.getDate()} ${enM[now.getMonth()]}`:`${ruW[now.getDay()]}, ${now.getDate()} ${ruM[now.getMonth()]}`;
+ if(heroTipEl)heroTipEl.textContent=trText('Маленькие шаги меняют большие жизни','Small steps change big lives');
+
+ const cards=[
+  {id:'smoke',kind:'special',emoji:'🚭',ru:'Без сигарет',en:'Smoke-free'},
+  {id:'alcohol',kind:'special',emoji:'🍷',ru:'Без алкоголя',en:'Alcohol-free'},
+  {id:'weight',kind:'weight',emoji:'⚖️',ru:'Вес',en:'Weight'},
+  {id:'protein',kind:'metric',emoji:'🥩',ru:'Белок',en:'Protein'},
+  {id:'outdoors',kind:'metric',emoji:'☀️',ru:'Улица',en:'Outdoors'},
+  {id:'steps',kind:'metric',emoji:'🚶',ru:'Шаги',en:'Steps'},
+  {id:'gym',kind:'metric',emoji:'🏋️',ru:'Тренировка',en:'Workout'},
+  {id:'sleep',kind:'metric',emoji:'🛏️',ru:'Сон',en:'Sleep'}
+ ];
+ const grid=document.getElementById('todayGrid');if(!grid)return;grid.innerHTML='';
+ for(const c of cards){
+   const el=document.createElement('div');el.className='metric-card'+(c.kind==='special'?' metric-special':'')+(c.kind==='weight'?' metric-weight':'');
+   const title=lang==='en'?c.en:c.ru;
+   if(c.kind==='special'){
+     const isSmoke=c.id==='smoke';
+     const has=isSmoke?!!data.smokeDate:true;
+     const days=isSmoke?(has?daysSince(data.smokeDate):0):alcoholCurrentStreakDays();
+     const shown=has?days:'—';
+     const percent=has?Math.min(100,pct(days,30)):0;
+     el.classList.add('metric-static');
+     if(!isSmoke)el.classList.add('metric-alcohol-clickable');
+     el.innerHTML=`<div class="metric-head"><div class="metric-left"><div class="metric-emoji">${c.emoji}</div><div><div class="metric-name">${title}</div><div class="metric-stat metric-days">${shown}${has?' '+trText('дней','days'):''}</div></div></div></div><div class="metric-bar"><span style="width:${percent}%"></span></div>`;
+     if(!isSmoke)el.onclick=openAlcohol;
+   } else if(c.kind==='weight'){
+     const todayWeight=val('weight');
+     const latest=latestEntry('weight');
+     const hasToday=todayWeight!==undefined&&todayWeight!==null&&todayWeight!=='';
+     const shown=hasToday?Number(todayWeight):(latest?Number(latest.value):null);
+     const status=hasToday?trText('Сегодня','Today'):(latest?dateLabel(latest.date):trText('Нет данных','No data'));
+     el.innerHTML=`<div class="metric-head"><div class="metric-left"><div class="metric-emoji">${c.emoji}</div><div><div class="metric-name">${title}</div><div class="metric-stat metric-weight-value">${shown!=null?shown+' '+trText('кг','kg'):'—'}</div></div></div><div class="metric-weight-status">${status}</div></div><div class="metric-weight-line"></div>`;
+     el.onclick=()=>openEntry('weight');
+   } else {
+     const t=tracker(c.id),current=c.id==='gym'?(val('gym')===true?1:0):(Number(val(c.id))||0),goal=c.id==='gym'?1:Number(goalFor(c.id)||0),unit=c.id==='gym'?trText('раз','x'):(c.id==='steps'?trText('шагов','steps'):trUnit(t)),percent=goal?Math.min(100,Math.round(current/goal*100)):(current>0?100:0);
+     el.innerHTML=`<div class="metric-head"><div class="metric-left"><div class="metric-emoji">${c.emoji}</div><div><div class="metric-name">${title}</div><div class="metric-stat">${current} / ${goal}${unit?' '+unit:''}</div></div></div><div class="metric-ring" style="--p:${percent}"></div></div><div class="metric-bar"><span style="width:${percent}%"></span></div>`;
+     el.onclick=()=>c.id==='gym'?toggleBool('gym'):openEntry(c.id);
+   }
+   grid.appendChild(el);
+ }
+}
+function renderHealth(){
+ const host=document.getElementById('healthGoals');
+ if(!host)return;
+ host.innerHTML='';
+
+ data.trackers.filter(t=>t.category==='health'&&t.id!=='mood'&&t.id!=='water').forEach(t=>{
+   const id=t.id, unit=healthUnit(id,t), goal=Number(goalFor(id)||0);
+   const todayValue=val(id), latest=latestEntry(id);
+   let label=trText('Нет записей','No entries'), valueText='—', progress=0, averageText='', goalText='';
+
+   if(t.type==='boolean'){
+     const weekly=boolCount(id,7), weeklyGoal=id==='gym'?Number(data.gymGoal||3):1;
+     if(todayValue===true){label=trText('Сегодня','Today');valueText=trText('Выполнено','Done')}
+     else if(latest){label=dateLabel(latest.date);valueText=trText('Выполнено','Done')}
+     progress=pct(weekly,weeklyGoal);
+     averageText=`${trText('За 7 дней','Last 7 days')}: ${weekly} / ${weeklyGoal}`;
+   }else{
+     const source=(todayValue!==undefined&&todayValue!==null&&todayValue!=='')
+       ? {date:localDate(),value:Number(todayValue)}
+       : (latest?{date:latest.date,value:Number(latest.value)}:null);
+
+     if(source){
+       label=dateLabel(source.date);
+       const current=Number(source.value)||0;
+       valueText=`${current}${goal?' / '+goal:''}${unit?' '+unit:''}`;
+       progress=goal?pct(current,goal):(current>0?100:0);
+     }
+
+     const av=loggedAverage(id,7);
+     if(av>0){
+       const rounded=(id==='sleep'||id==='weight')?Math.round(av*10)/10:Math.round(av);
+       averageText=`${trText('Среднее за 7 дней','7-day average')}: ${rounded}${unit?' '+unit:''}`;
+     }else{
+       averageText=trText('Нет данных за последние 7 дней','No data in the last 7 days');
+     }
+
+     if(goal){
+       const achieved=goalDaysCount(id,7);
+       goalText=`${trText('Цель достигнута','Goal reached')}: ${achieved} / 7 ${trText('дней','days')}`;
+     }
+   }
+
+   const el=document.createElement('div');
+   el.className='card goal-card health-data-card';
+   el.innerHTML=`
+     <div class="goal-top">
+       <div class="health-main">
+         <div class="title">${t.icon} ${trTrackerName(t)}</div>
+         <div class="health-value-line">
+           <span class="health-date-label">${label}</span>
+           <strong class="health-current-value">${valueText}</strong>
+         </div>
+         <div class="small health-average">${averageText}</div>
+       </div>
+       <div class="goal-big">${progress}%</div>
+     </div>
+     <div class="progress"><span style="width:${progress}%"></span></div>
+     ${goalText?`<div class="small health-goal-days">${goalText}</div>`:''}
+     <div class="health-actions"><button class="secondary health-log-btn">${trText('Записать сегодня','Log today')}</button></div>
+   `;
+   const btn=el.querySelector('.health-log-btn');
+   if(btn)btn.onclick=()=>t.type==='boolean'?toggleBool(id):openEntry(id);
+   host.appendChild(el);
+ });
+}
+function englishTotalToday(){return englishTypes.reduce((s,[id])=>s+(Number(val(id))||0),0) || Number(val('english_general'))||0}
+function englishTotalWeek(){return englishTypes.reduce((s,[id])=>s+sum(id),0) || sum('english_general')}
+function renderEnglish(){
+ const todayEl=document.getElementById('engToday'),weekEl=document.getElementById('engWeek'),goalEl=document.getElementById('engWeekGoal'),completionEl=document.getElementById('engCompletion'),completionBar=document.getElementById('engCompletionBar'),bars=document.getElementById('englishBars');
+ if(todayEl)todayEl.textContent=Math.round(englishTodayN());
+ if(weekEl)weekEl.textContent=Math.round(englishTotalN(7));
+ if(goalEl)goalEl.textContent='/ '+data.englishGoal+' '+trText('мин','min');
+ const c=completion('english_general',7);
+ if(completionEl)completionEl.textContent=c+'%';
+ if(completionBar)completionBar.style.width=c+'%';
+ if(!bars)return;bars.innerHTML='';
+ const total=Math.max(1,englishTotalN(7));
+ englishTypes.forEach(([id,ico,name])=>{const v=sum(id),el=document.createElement('div');el.className='barline';el.innerHTML=`<span>${ico} ${name}</span><div class="bar"><span style="width:${Math.min(100,v/total*100)}%"></span></div><strong>${Math.round(v)}</strong>`;bars.appendChild(el)})
+}
+function setRange(n){
+ rangeDays=n;
+ const b7=document.getElementById('range7Btn'),b30=document.getElementById('range30Btn');
+ if(b7)b7.className=n===7?'secondary':'ghost';if(b30)b30.className=n===30?'secondary':'ghost';
+ renderProgress()
+}
+function renderProgress(){const ids=['protein','steps','outdoors','sleep','english_general','gym'],host=document.getElementById('completionRows');host.innerHTML='';ids.forEach(id=>{const t=tracker(id),c=completion(id,rangeDays),r=document.createElement('div');r.className='completion-line';r.innerHTML=`<span>${t.icon} ${trTrackerName(t)}</span><div class="mini-bar"><span style="width:${c}%"></span></div><strong>${c}%</strong>`;host.appendChild(r)});renderActivityChart();renderCalendar()}
+function renderActivityChart(){
+ const chart=document.getElementById('activityChart'),labels=document.getElementById('activityLabels');if(!chart||!labels)return;
+ const ds=dates(rangeDays);chart.innerHTML='';labels.innerHTML='';
+ ds.forEach((d,i)=>{let count=0;['protein','steps','outdoors','sleep'].forEach(id=>{if(dailyComplete(id,d))count++});if((data.logs[d]?.english_general||0)>0)count++;if(data.logs[d]?.gym===true)count++;const h=Math.max(3,Math.round(count/6*100)),c=document.createElement('div');c.className='chart-col';c.innerHTML=`<div class="chart-bar" style="height:${h}%"></div>`;chart.appendChild(c);const sp=document.createElement('span'),dt=new Date(d+'T00:00:00');sp.textContent=rangeDays===7?['Вс','Пн','Вт','Ср','Чт','Пт','Сб'][dt.getDay()]:(i%5===0?String(dt.getDate()):'');labels.appendChild(sp)})
+}
+function moveMonth(n){calendarDate=new Date(calendarDate.getFullYear(),calendarDate.getMonth()+n,1);renderCalendar()}
+function renderCalendar(){const ruM=['Январь','Февраль','Март','Апрель','Май','Июнь','Июль','Август','Сентябрь','Октябрь','Ноябрь','Декабрь'],enM=['January','February','March','April','May','June','July','August','September','October','November','December'],ruD=['Пн','Вт','Ср','Чт','Пт','Сб','Вс'],enD=['Mon','Tue','Wed','Thu','Fri','Sat','Sun'],y=calendarDate.getFullYear(),m=calendarDate.getMonth(),lang=data.language||'ru';document.getElementById('calendarTitle').textContent=(lang==='en'?enM:ruM)[m]+' '+y;const grid=document.getElementById('calendarGrid');grid.innerHTML=(lang==='en'?enD:ruD).map(x=>`<div class="dow">${x}</div>`).join('');const first=(new Date(y,m,1).getDay()+6)%7,total=new Date(y,m+1,0).getDate();for(let i=0;i<first;i++)grid.innerHTML+='<div></div>';for(let day=1;day<=total;day++){const d=`${y}-${String(m+1).padStart(2,'0')}-${String(day).padStart(2,'0')}`,filled=Object.keys(data.logs[d]||{}).filter(k=>data.logs[d][k]!==false&&data.logs[d][k]!==undefined).length,cls=filled>=5?'good':filled>=2?'mid':'';grid.innerHTML+=`<div class="cday ${cls}">${day}${filled>=5?'<span class="dot"></span>':''}</div>`}}
+
+function simpleRelation(factor,outcome,threshold,n=30){const rows=dates(n).map(d=>({f:Number(data.logs[d]?.[factor]),o:Number(data.logs[d]?.[outcome])})).filter(x=>Number.isFinite(x.f)&&x.f>=0&&Number.isFinite(x.o)&&x.o>0);if(rows.length<8)return null;const hi=rows.filter(x=>x.f>=threshold).map(x=>x.o),lo=rows.filter(x=>x.f<threshold).map(x=>x.o);if(hi.length<3||lo.length<3)return null;const mean=a=>a.reduce((s,x)=>s+x,0)/a.length;return{n:rows.length,hi:mean(hi),lo:mean(lo)}}
+function renderAnalytics(){
+ const insightsHost=document.getElementById('insightsList');if(!insightsHost)return;
+ insightsHost.innerHTML='';
+ const arr=[];
+ const c=simpleRelation('outdoors','english_general',data.outdoorsGoal,30);
+ const d=simpleRelation('sleep','english_general',data.sleepGoal,30);
+ const e=simpleRelation('outdoors','sleep',data.outdoorsGoal,30);
+ if(c)arr.push(['🇬🇧','Улица ↔ English',`В дни с ≥${data.outdoorsGoal} мин на улице английского в среднем ${Math.round(c.hi)} мин против ${Math.round(c.lo)} мин.`,c.n]);
+ if(d)arr.push(['😴','Сон ↔ English',`При сне ≥${data.sleepGoal} ч английского в среднем ${Math.round(d.hi)} мин против ${Math.round(d.lo)} мин.`,d.n]);
+ if(e)arr.push(['☀️','Улица ↔ сон',`В дни с ≥${data.outdoorsGoal} мин на улице сон в среднем ${e.hi.toFixed(1)} ч против ${e.lo.toFixed(1)} ч.`,e.n]);
+ if(!arr.length)insightsHost.innerHTML='<div class="insight-card"><strong>Пока мало данных.</strong><br>Для первых сравнений желательно хотя бы 8–14 заполненных дней, для более устойчивых выводов — около месяца.<div class="confidence">Будем показывать связи, а не утверждать причинность.</div></div>';
+ else arr.forEach(i=>insightsHost.innerHTML+=`<div class="insight-card"><strong>${i[0]} ${i[1]}</strong><br>${i[2]}<div class="confidence">Данных: ${i[3]} дней · корреляция, не доказательство причины</div></div>`);
+ renderExperiments()
+}
+function openExperiment(){document.getElementById('experimentModal')?.classList.add('show')}
+function saveExperiment(){
+ const nameEl=document.getElementById('expName'),metricEl=document.getElementById('expMetric'),targetEl=document.getElementById('expTarget'),daysEl=document.getElementById('expDays'),hypEl=document.getElementById('expHypothesis');
+ const name=(nameEl?.value||'').trim();if(!name)return;
+ data.experiments.push({id:'exp_'+Date.now(),name,metric:metricEl?.value||'outdoors',target:Number(targetEl?.value||0),days:Number(daysEl?.value||30),start:localDate(),hypothesis:(hypEl?.value||'').trim(),status:'active'});
+ if(nameEl)nameEl.value='';if(targetEl)targetEl.value='';if(daysEl)daysEl.value='30';if(hypEl)hypEl.value='';
+ closeModal('experimentModal');save()
+}
+function expProgress(e){const a=new Date(e.start+'T00:00:00'),now=new Date(),elapsed=Math.max(0,Math.floor((now-a)/86400000)+1);return Math.min(100,pct(elapsed,e.days))}
+function renderExperiments(){const host=document.getElementById('experimentsList');if(!host)return;host.innerHTML='';if(!data.experiments.length){host.innerHTML='<div class="insight-card">Пример: «30 дней проводить ≥60 минут на улице» и потом сравнить сон и английский.</div>';return}data.experiments.forEach(e=>{const t=tracker(e.metric),p=expProgress(e),el=document.createElement('div');el.className='experiment';el.innerHTML=`<div class="exp-head"><div><div class="title">${t?.icon||'🧪'} ${e.name}</div><div class="small">${e.hypothesis||'Без гипотезы'}</div></div><span class="exp-status">${e.status==='active'?'Активен':'Завершён'}</span></div><div class="progress"><span style="width:${p}%"></span></div><div class="small" style="margin-top:7px">Цель: ${e.target||'—'} ${t?.unit||''} · ${e.days} дней · ${p}%</div><div style="margin-top:9px"><button class="secondary" style="padding:8px 10px">${e.status==='active'?'Завершить':'Возобновить'}</button> <button class="ghost" style="padding:8px 10px">Удалить</button></div>`;const bs=el.querySelectorAll('button');bs[0].onclick=()=>{e.status=e.status==='active'?'done':'active';save()};bs[1].onclick=()=>{if(confirm((data.language||'ru')==='en'?'Delete this experiment?':'Удалить эксперимент?')){data.experiments=data.experiments.filter(x=>x.id!==e.id);save()}};host.appendChild(el)})}
+
+function formatBackupDate(value){
+  if(!value)return trText('Никогда','Never');
+  const d=new Date(value);
+  if(Number.isNaN(d.getTime()))return trText('Никогда','Never');
+  return d.toLocaleDateString((data.language||'ru')==='en'?'en-NZ':'ru-RU',{
+    day:'numeric',month:'short',year:'numeric'
+  });
+}
+
+function updateStorageSafetyUI(){
+  const h=window.__vaultHealth||{};
+  const flags=[h.primary,h.mirror,h.idb,h.cache];
+  const copies=flags.filter(Boolean).length;
+
+  const status=document.getElementById('vaultStatusText');
+  const snaps=document.getElementById('vaultSnapshotText');
+  const last=document.getElementById('lastBackupText');
+  const reminder=document.getElementById('backupReminder');
+
+  if(status){
+    status.textContent=copies
+      ? `${copies}/4 ${trText('локальных копий','local copies')}`
+      : trText('Проверяем…','Checking…');
+    status.className=copies>=3?'storage-ok':(copies?'storage-warn':'');
+  }
+
+  if(snaps)snaps.textContent=h.snapshots!==undefined?String(h.snapshots):'—';
+  if(last)last.textContent=formatBackupDate(data.lastExternalBackupAt);
+
+  if(reminder){
+    let old=true;
+    if(data.lastExternalBackupAt){
+      const ms=Date.now()-Date.parse(data.lastExternalBackupAt);
+      old=!Number.isFinite(ms)||ms>7*86400000;
+    }
+    reminder.textContent=old
+      ? trText('⚠️ Внешнего backup нет или он старше 7 дней. Локальные копии не переживут удаление PWA/очистку Safari.','⚠️ No recent external backup. Local copies may not survive deleting the PWA or clearing Safari data.')
+      : trText('✓ Внешний backup свежий.','✓ External backup is recent.');
+    reminder.className='backup-reminder '+(old?'warn':'ok');
+  }
+}
+
+function renderSettings(){const set=(id,v)=>{const el=document.getElementById(id);if(el)el.value=v??''};set('smokeDate',data.smokeDate);set('alcoholDate',data.alcoholDate);set('proteinGoal',data.proteinGoal);set('stepsGoal',data.stepsGoal);set('outdoorsGoal',data.outdoorsGoal);set('sleepGoal',data.sleepGoal);set('englishGoal',data.englishGoal);set('gymGoal',data.gymGoal);const av=document.getElementById('appVersionText');if(av)av.textContent='V'+APP_VERSION;const sv=document.getElementById('schemaVersionText');if(sv)sv.textContent=String(data.schemaVersion||CURRENT_SCHEMA_VERSION);const d=window.__dataDiagnostic||{source:'—',sources:[]},ds=document.getElementById('dataSourceText'),dl=document.getElementById('dataLogDaysText'),dd=document.getElementById('dataSourcesDetails');if(ds)ds.textContent=d.source||'—';if(dl)dl.textContent=String(Object.keys(data.logs||{}).length);if(dd)dd.textContent=(d.sources||[]).map(x=>`${x.key}: ${x.logDays} ${trText('дней','days')}`).join(' · ');updateStorageSafetyUI()}
+function render(){applyTheme();for(const job of [renderToday,renderEnglish,renderProgress,renderAnalytics,renderSettings]){try{job()}catch(e){console.error('Render error in '+job.name,e)}}try{translateDOM()}catch(e){console.error('Translation error',e)}}
+if('serviceWorker'in navigator){addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(()=>{}))}
+render();
+recoverFromVaults().catch(err=>{console.warn('Vault recovery failed',err);updateStorageSafetyUI()})
+addEventListener('keydown',e=>{if(e.key==='Escape'&&document.getElementById('alcoholModal')?.classList.contains('show'))closeAlcohol()})
+</script>
+</body>
+</html>
+<style>
+.metric-days{
+  white-space:nowrap;
+  word-break:keep-all;
+  overflow-wrap:normal;
+}
+</style>

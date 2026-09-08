@@ -1,0 +1,24 @@
+{
+  "id": "/?my-rhythm-pwa=v61",
+  "name": "My Rhythm — Life Tracker",
+  "short_name": "My Rhythm",
+  "start_url": "/?source=pwa-v61",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#061018",
+  "theme_color": "#07131d",
+  "icons": [
+    {
+      "src": "/icon-192-v61.png?v=61",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icon-512-v61.png?v=61",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ]
+}
