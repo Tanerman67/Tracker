@@ -195,7 +195,7 @@ input,select,textarea{
 }
 
 
-/* V6.8.2 GitHub compact home */
+/* V6.8.3 GitHub compact home */
 .metric-card{
   min-height:98px;
   padding:12px 13px;
@@ -218,7 +218,7 @@ input,select,textarea{
 }
 
 
-/* V6.8.2 GitHub: smoke/alcohol cards are statistic-only and sit on top */
+/* V6.8.3 GitHub: smoke/alcohol cards are statistic-only and sit on top */
 .metric-static{cursor:default}
 .metric-static .metric-head{align-items:center}
 .metric-mini-stat{
@@ -239,7 +239,7 @@ input,select,textarea{
 }
 
 
-/* V6.8.2 GitHub Steps input restored on Today */
+/* V6.8.3 GitHub Steps input restored on Today */
 .metric-wide{
   grid-column:1 / -1;
 }
@@ -259,7 +259,7 @@ input,select,textarea{
 }
 
 
-/* V6.8.2 GitHub — Weight card + exact 2×4 Today grid */
+/* V6.8.3 GitHub — Weight card + exact 2×4 Today grid */
 .metric-weight{
   cursor:pointer;
 }
@@ -295,7 +295,7 @@ input,select,textarea{
 }
 
 
-/* V6.8.2 GitHub — storage safety status */
+/* V6.8.3 GitHub — storage safety status */
 .storage-ok{color:#71ffd0}
 .storage-warn{color:#ffd27a}
 .backup-reminder{
@@ -317,7 +317,7 @@ input,select,textarea{
 }
 
 
-/* V6.8.2 GitHub Alcohol calendar */
+/* V6.8.3 GitHub Alcohol calendar */
 .metric-alcohol-clickable{cursor:pointer!important}
 .metric-alcohol-clickable:active{transform:scale(.985)}
 .alcohol-modal{display:none;position:fixed;inset:0;z-index:120;overflow:auto;background:radial-gradient(circle at 10% -5%,rgba(44,223,167,.18),transparent 27%),radial-gradient(circle at 100% 7%,rgba(107,102,255,.22),transparent 31%),linear-gradient(180deg,rgba(4,13,22,.99),rgba(5,9,18,.995));-webkit-overflow-scrolling:touch}
@@ -1855,6 +1855,199 @@ input,select,textarea{font-size:16px}
   .english-focus-card{padding-left:13px;padding-right:13px}
 }
 
+
+/* ==========================================================
+   V6.8.3 — Active Recall + Practice
+   ========================================================== */
+.english-review-think{
+  margin-top:12px;
+  padding:10px 11px;
+  border-radius:13px;
+  background:rgba(8,26,40,.52);
+  color:#91a9b9;
+  font-size:12.5px;
+  line-height:1.45;
+}
+.english-reveal-answer{
+  width:100%;
+  margin-top:13px;
+  padding:12px;
+  color:#8fffe0;
+  background:linear-gradient(135deg,rgba(31,148,113,.20),rgba(89,78,190,.18));
+  border:1px solid rgba(74,235,188,.27);
+}
+.english-review-revealed{
+  margin-top:12px;
+  display:grid;
+  gap:8px;
+  animation:englishReveal .18s ease-out;
+}
+@keyframes englishReveal{
+  from{opacity:0;transform:translateY(4px)}
+  to{opacity:1;transform:translateY(0)}
+}
+.review-answer-label{
+  display:block;
+  margin-bottom:4px;
+  color:#78e9c8;
+  font-size:10px;
+  font-weight:800;
+  text-transform:uppercase;
+  letter-spacing:.05em;
+}
+.english-review-rating-hint{
+  text-align:center;
+  color:#8199aa;
+  font-size:11.5px;
+}
+.english-review-buttons button{
+  display:grid;
+  justify-items:center;
+  gap:2px;
+  min-width:0;
+}
+.english-review-buttons button strong{font-size:12px}
+.english-review-buttons button span{
+  font-size:9.5px;
+  opacity:.72;
+  white-space:nowrap;
+}
+
+/* Practice Engine */
+.english-practice-session{display:grid;gap:11px}
+.english-practice-progress{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:10px;
+  color:#8ba3b4;
+  font-size:11.5px;
+}
+.english-practice-progress span:first-child{
+  min-width:0;
+  overflow:hidden;
+  white-space:nowrap;
+  text-overflow:ellipsis;
+}
+.english-practice-progress span:last-child{flex:0 0 auto}
+.english-practice-card{
+  padding:16px;
+  border-radius:22px;
+  background:
+    radial-gradient(circle at 100% 0,rgba(108,99,255,.15),transparent 40%),
+    linear-gradient(145deg,rgba(7,43,49,.84),rgba(18,23,64,.86));
+  border:1px solid rgba(73,229,188,.20);
+}
+.english-practice-label{
+  color:#7f9cad;
+  font-size:11px;
+  font-weight:750;
+}
+.english-practice-question{
+  margin-top:9px;
+  color:#f1fffb;
+  font-size:20px;
+  line-height:1.35;
+  font-weight:850;
+}
+.english-practice-options{
+  display:grid;
+  gap:8px;
+  margin-top:15px;
+}
+.english-practice-options button{
+  width:100%;
+  min-width:0;
+  padding:12px 13px;
+  text-align:left;
+  color:#dcecf2;
+  background:rgba(8,27,43,.66);
+  border:1px solid rgba(103,133,202,.18);
+  box-shadow:none;
+  font-size:13px;
+  line-height:1.35;
+}
+.english-practice-options button.correct{
+  color:#8fffdc;
+  background:rgba(30,144,106,.19);
+  border-color:rgba(72,238,183,.42);
+}
+.english-practice-options button.wrong{
+  color:#ff9baa;
+  background:rgba(176,50,74,.17);
+  border-color:rgba(255,94,118,.35);
+}
+.english-practice-options button.muted{opacity:.52}
+.english-practice-options button:disabled{cursor:default}
+.english-practice-feedback{
+  display:grid;
+  gap:5px;
+  margin-top:13px;
+  padding:11px 12px;
+  border-radius:14px;
+  font-size:12px;
+  line-height:1.45;
+}
+.english-practice-feedback.correct{
+  color:#baf8e5;
+  background:rgba(22,128,95,.16);
+  border:1px solid rgba(65,223,174,.22);
+}
+.english-practice-feedback.wrong{
+  color:#f1c6cd;
+  background:rgba(150,50,71,.13);
+  border:1px solid rgba(239,91,117,.18);
+}
+.english-practice-feedback strong{font-size:13px}
+.english-practice-next{
+  width:100%;
+  margin-top:10px;
+  padding:12px;
+}
+.english-practice-finish{
+  display:grid;
+  justify-items:center;
+  gap:7px;
+  padding:24px 16px;
+  text-align:center;
+  border-radius:22px;
+  background:linear-gradient(145deg,rgba(7,43,49,.80),rgba(18,23,64,.83));
+  border:1px solid rgba(73,229,188,.20);
+}
+.english-practice-score{
+  color:#effffb;
+  font-size:34px;
+  line-height:1;
+  font-weight:900;
+}
+.english-practice-percent{
+  color:#73eac9;
+  font-size:14px;
+  font-weight:800;
+}
+.english-practice-finish strong{
+  margin-top:4px;
+  max-width:330px;
+  color:#aebfca;
+  font-size:13px;
+  line-height:1.45;
+}
+.english-practice-finish-actions{
+  width:100%;
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:8px;
+  margin-top:10px;
+}
+.english-detail-actions.single{grid-template-columns:1fr 1fr}
+
+@media(max-width:360px){
+  .english-practice-question{font-size:18px}
+  .english-practice-options button{font-size:12.5px}
+  .english-review-buttons{gap:5px}
+  .english-review-buttons button{padding-left:3px;padding-right:3px}
+}
+
 </style>
 </head>
 <body>
@@ -2101,7 +2294,7 @@ input,select,textarea{font-size:16px}
       Каждое сохранение дублируется локально: основная база + зеркало + IndexedDB snapshots + recovery cache.
       Внешний JSON-backup всё равно нужен перед удалением PWA или очисткой Safari.
     </div>
-    <div class="row"><span>Версия приложения</span><strong id="appVersionText">V6.8.2 GitHub</strong></div>
+    <div class="row"><span>Версия приложения</span><strong id="appVersionText">V6.8.3 GitHub</strong></div>
     <div class="row"><span>Версия структуры данных</span><strong id="schemaVersionText">2</strong></div>
     <div class="row"><span>Локальная защита</span><strong id="vaultStatusText">Проверяем…</strong></div>
     <div class="row"><span>Snapshots</span><strong id="vaultSnapshotText">—</strong></div>
@@ -2433,7 +2626,7 @@ input,select,textarea{font-size:16px}
 </div></div>
 
 <script>
-const APP_VERSION='6.8.2-github';
+const APP_VERSION='6.8.3-github';
 const DATA_KEY='my-life-tracker-data';
 const MIRROR_KEY='my-life-tracker-data-mirror-v1';
 const CURRENT_SCHEMA_VERSION=2;
@@ -2999,6 +3192,164 @@ const ENGLISH_FOCUS_IDS=[
   'grammar_passive'
 ];
 
+const ENGLISH_PRACTICE_BANK={
+  grammar_gerund_inf:[
+    {
+      q:'How about ___ to the gym after work?',
+      options:['go','going','to go','went'],
+      answer:1,
+      ru:'После How about используется форма V-ing.',
+      en:'After “How about”, use the -ing form.'
+    },
+    {
+      q:'She mentioned ___ him at the conference.',
+      options:['meet','meeting','to meet','met'],
+      answer:1,
+      ru:'После mention обычно используется V-ing.',
+      en:'“Mention” is normally followed by the -ing form.'
+    },
+    {
+      q:'I decided ___ earlier tomorrow.',
+      options:['leaving','leave','to leave','left'],
+      answer:2,
+      ru:'После decide обычно используется to + infinitive.',
+      en:'“Decide” is normally followed by to + infinitive.'
+    },
+    {
+      q:'I really enjoy ___ in English.',
+      options:['speak','speaking','to spoke','spoke'],
+      answer:1,
+      ru:'После enjoy используется V-ing.',
+      en:'“Enjoy” is followed by the -ing form.'
+    },
+    {
+      q:'We agreed ___ at 6 p.m.',
+      options:['meeting','meet','to meet','met'],
+      answer:2,
+      ru:'После agree используется to + infinitive.',
+      en:'“Agree” is followed by to + infinitive.'
+    }
+  ],
+  grammar_pp_ppc:[
+    {
+      q:'I ___ the report, so you can read the final version now.',
+      options:['have finished','have been finishing','am finishing','finished since morning'],
+      answer:0,
+      ru:'Здесь важен завершённый результат — готовый отчёт.',
+      en:'The completed result matters here: the report is finished.'
+    },
+    {
+      q:'My hands are covered in paint because I ___.',
+      options:['have painted the wall twice','have been painting the wall','painted the wall since two hours','have been painted the wall'],
+      answer:1,
+      ru:'Видимый результат длительного недавнего процесса → Present Perfect Continuous.',
+      en:'Visible evidence of a recent ongoing activity points to Present Perfect Continuous.'
+    },
+    {
+      q:'I ___ three chapters today.',
+      options:['have read','have been read','have been reading three chapters','am read'],
+      answer:0,
+      ru:'Количество завершённых единиц подчёркивает результат.',
+      en:'A completed quantity emphasizes result, so Present Perfect fits.'
+    },
+    {
+      q:'He ___ for forty minutes, and he is still outside.',
+      options:['has waited yesterday','has been waiting','has wait','was waiting since'],
+      answer:1,
+      ru:'Длительность продолжающегося действия → Present Perfect Continuous.',
+      en:'Duration of an activity that is still continuing calls for Present Perfect Continuous.'
+    },
+    {
+      q:'I ___ the email already.',
+      options:['have already sent','have already been sending','am already sent','have send already'],
+      answer:0,
+      ru:'Already + завершённый результат → Present Perfect.',
+      en:'“Already” with a completed result naturally uses Present Perfect.'
+    }
+  ],
+  grammar_mixed_cond:[
+    {
+      q:'If I had gone to bed earlier, I ___ so tired now.',
+      options:["wouldn't be","wouldn't have been","won't be","am not"],
+      answer:0,
+      ru:'Прошлая причина влияет на настоящее: had + V3 → would + V1.',
+      en:'A past cause affects the present: had + past participle → would + base verb.'
+    },
+    {
+      q:'If she were more organized, she ___ yesterday’s deadline.',
+      options:["wouldn't miss","wouldn't have missed","won't have missed","hadn't missed"],
+      answer:1,
+      ru:'Настоящее качество связано с прошлым результатом: Past → would have + V3.',
+      en:'A present condition is linked to a past result: Past → would have + past participle.'
+    },
+    {
+      q:'If we had saved more money, we ___ the trip now.',
+      options:['could afford','could have afforded yesterday only','can afforded','would afforded'],
+      answer:0,
+      ru:'Прошлое решение влияет на нынешнюю возможность.',
+      en:'A past action affects a present possibility.'
+    },
+    {
+      q:'If he spoke English more confidently, he ___ the job last year.',
+      options:['might get','might have got','will have got','had got'],
+      answer:1,
+      ru:'Настоящая характеристика связывается с возможным прошлым результатом.',
+      en:'A present characteristic is linked to a possible past result.'
+    },
+    {
+      q:"If I hadn't moved to New Zealand, I ___ in Auckland now.",
+      options:["wouldn't be living","wouldn't have lived","won't live","hadn't lived"],
+      answer:0,
+      ru:'Прошлое событие определяет нынешнюю ситуацию.',
+      en:'A past event determines the present situation.'
+    }
+  ],
+  grammar_passive:[
+    {
+      q:'The request ___ yesterday.',
+      options:['sent','was sent','has send','was sending by itself'],
+      answer:1,
+      ru:'Past Simple Passive = was/were + V3.',
+      en:'Past Simple Passive = was/were + past participle.'
+    },
+    {
+      q:'The file ___, so we need to restore it from backup.',
+      options:['has been deleted','has deleted','was deleting','is delete'],
+      answer:0,
+      ru:'Present Perfect Passive = has/have been + V3.',
+      en:'Present Perfect Passive = has/have been + past participle.'
+    },
+    {
+      q:'The tickets ___ by email tomorrow.',
+      options:['will send','will be sent','are sending','will sent'],
+      answer:1,
+      ru:'Future Simple Passive = will be + V3.',
+      en:'Future Simple Passive = will be + past participle.'
+    },
+    {
+      q:'English ___ in New Zealand.',
+      options:['speaks','is spoken','is speaking by people only now','spoken'],
+      answer:1,
+      ru:'Для общего факта в пассиве: Present Simple Passive = am/is/are + V3.',
+      en:'For a general fact, Present Simple Passive = am/is/are + past participle.'
+    },
+    {
+      q:'The problem ___ right now.',
+      options:['is being investigated','is investigated yesterday','has investigating','being investigate'],
+      answer:0,
+      ru:'Процесс прямо сейчас → Present Continuous Passive = am/is/are being + V3.',
+      en:'An action in progress now uses Present Continuous Passive = am/is/are being + past participle.'
+    }
+  ]
+};
+
+function englishPracticeQuestions(id){
+  return ENGLISH_PRACTICE_BANK[id]||[];
+}
+function englishHasPractice(id){
+  return englishPracticeQuestions(id).length>0;
+}
+
 let englishLearningView='words';
 let englishLearningParent='words';
 let englishLearningItemId='';
@@ -3006,6 +3357,13 @@ let englishWordFilter='all';
 let englishWordSearch='';
 let englishReviewQueueIds=[];
 let englishReviewInitialTotal=0;
+let englishReviewAnswerShown=false;
+
+let englishPracticeItemId='';
+let englishPracticeIndex=0;
+let englishPracticeScore=0;
+let englishPracticeAnswered=false;
+let englishPracticeSelected=-1;
 
 function englishLearningStore(){
   if(!data.englishLearning || typeof data.englishLearning!=='object'){
@@ -3104,6 +3462,7 @@ function openEnglishLearning(view='words',itemId=''){
   if(view==='review'){
     englishReviewQueueIds=englishDueItems().map(x=>x.id);
     englishReviewInitialTotal=englishReviewQueueIds.length;
+    englishReviewAnswerShown=false;
   }
   document.getElementById('englishLearningModal')?.classList.add('show');
   document.body.style.overflow='hidden';
@@ -3115,6 +3474,12 @@ function closeEnglishLearning(){
   englishLearningItemId='';
 }
 function englishLearningBack(){
+  if(englishLearningView==='practice'){
+    englishLearningView='detail';
+    englishLearningItemId=englishPracticeItemId;
+    renderEnglishLearning();
+    return;
+  }
   if(englishLearningView==='detail'){
     englishLearningView=englishLearningParent||'words';
     englishLearningItemId='';
@@ -3216,11 +3581,11 @@ function renderEnglishMistakesView(){
 function renderEnglishDetailView(item){
   if(!item)return `<div class="english-review-empty"><strong>${trText('Элемент не найден','Item not found')}</strong></div>`;
   const isMistake=item.kind==='mistake';
-  const isGrammar=item.kind==='grammar';
   const meaning=englishItemPrimaryText(item);
   const rule=englishItemRuleText(item);
   const example=englishItemExample(item);
   const state=englishReviewState(item.id);
+  const canPractice=item.kind==='grammar'&&englishHasPractice(item.id);
 
   return `<div class="english-detail-card">
     <div class="english-detail-type">${englishKindLabel(item.kind)} ${item.level?`· ${escapeHTML(item.level)}`:''}</div>
@@ -3231,8 +3596,10 @@ function renderEnglishDetailView(item){
     ${rule?`<div class="english-detail-section"><div class="label">${trText('Правило','Rule')}</div><div class="english-detail-example">${escapeHTML(rule)}</div></div>`:''}
     ${example?`<div class="english-detail-section"><div class="label">${trText('Пример','Example')}</div><div class="english-detail-example">${escapeHTML(example)}</div></div>`:''}
     <div class="english-detail-section"><div class="label">${trText('Повторение','Review')}</div><div class="small">${state?.nextReview?`${trText('Следующее','Next')}: ${bodyFriendlyDate(state.nextReview)}`:trText('Ещё не повторялось','Not reviewed yet')}</div></div>
-    <div class="english-detail-actions">
-      <button class="secondary" onclick="quickEnglishReview('${item.id}','hard')">${trText('Нужно повторить','Need practice')}</button>
+    <div class="english-detail-actions ${canPractice?'':'single'}">
+      ${canPractice
+        ?`<button class="secondary" onclick="openEnglishPractice('${item.id}')">${trText('Нужна практика','Need practice')}</button>`
+        :`<button class="secondary" onclick="quickEnglishReview('${item.id}','hard')">${trText('Повторить позже','Review later')}</button>`}
       <button onclick="quickEnglishReview('${item.id}','know')">${trText('Понятно','Got it')}</button>
     </div>
     ${englishItemIsCustom(item)?`<button class="danger" style="width:100%;margin-top:8px" onclick="deleteEnglishCustomItem('${item.id}')">${trText('Удалить','Delete')}</button>`:''}
@@ -3269,12 +3636,62 @@ function quickEnglishReview(id,result){
   englishRateItem(id,result);
   renderEnglishLearning();
 }
+function revealEnglishReviewAnswer(){
+  englishReviewAnswerShown=true;
+  renderEnglishLearning();
+}
 function rateEnglishReview(result){
   if(!englishReviewQueueIds.length)return;
   const id=englishReviewQueueIds.shift();
   englishRateItem(id,result);
   if(result==='again')englishReviewQueueIds.push(id);
+  englishReviewAnswerShown=false;
   renderEnglishLearning();
+}
+function englishReviewFront(item){
+  if(item.kind==='mistake'){
+    return {
+      main:item.title,
+      prompt:trText('Исправь предложение в голове, затем открой ответ.','Correct the sentence in your head, then reveal the answer.')
+    };
+  }
+  if(item.kind==='grammar'){
+    return {
+      main:item.title,
+      prompt:trText('Вспомни правило, формулу и один пример.','Recall the rule, formula, and one example.')
+    };
+  }
+  return {
+    main:item.title,
+    prompt:trText('Вспомни значение и попробуй составить пример.','Recall the meaning and try to make an example.')
+  };
+}
+function englishReviewAnswerHTML(item){
+  if(item.kind==='mistake'){
+    const rule=englishItemRuleText(item);
+    return `
+      <div class="english-review-revealed">
+        <div class="english-review-answer"><span class="review-answer-label">${trText('Правильно','Correct')}</span>${escapeHTML(item.correct||'')}</div>
+        ${rule?`<div class="english-review-example">${escapeHTML(rule)}</div>`:''}
+      </div>`;
+  }
+  if(item.kind==='grammar'){
+    const rule=englishItemRuleText(item);
+    const example=englishItemExample(item);
+    return `
+      <div class="english-review-revealed">
+        ${item.formula?`<div class="english-review-answer"><span class="review-answer-label">${trText('Формула','Formula')}</span>${escapeHTML(item.formula)}</div>`:''}
+        ${rule?`<div class="english-review-example">${escapeHTML(rule)}</div>`:''}
+        ${example?`<div class="english-review-example">${escapeHTML(example)}</div>`:''}
+      </div>`;
+  }
+  const meaning=englishItemPrimaryText(item);
+  const example=englishItemExample(item);
+  return `
+    <div class="english-review-revealed">
+      ${meaning?`<div class="english-review-answer"><span class="review-answer-label">${trText('Значение','Meaning')}</span>${escapeHTML(meaning)}</div>`:''}
+      ${example?`<div class="english-review-example">${escapeHTML(example)}</div>`:''}
+    </div>`;
 }
 function renderEnglishReviewView(){
   if(!englishReviewQueueIds.length){
@@ -3283,29 +3700,132 @@ function renderEnglishReviewView(){
   const item=englishItemById(englishReviewQueueIds[0]);
   if(!item){
     englishReviewQueueIds.shift();
+    englishReviewAnswerShown=false;
     return renderEnglishReviewView();
   }
 
   const done=Math.max(0,englishReviewInitialTotal-englishReviewQueueIds.length);
-  const main=item.kind==='mistake'?(item.correct||''):item.title;
-  const answer=item.kind==='mistake'
-    ?`${trText('Ошибка','Wrong')}: ${item.title}`
-    :englishItemPrimaryText(item);
-  const extra=englishItemRuleText(item)||englishItemExample(item);
+  const front=englishReviewFront(item);
 
   return `<div class="english-review-session">
     <div class="english-review-progress"><span>${trText('Повторение','Review')}</span><span>${Math.min(done+1,Math.max(1,englishReviewInitialTotal))} / ${Math.max(1,englishReviewInitialTotal)}</span></div>
     <div class="english-review-card">
       <div class="english-review-kind">${englishKindLabel(item.kind)} ${item.level?`· ${escapeHTML(item.level)}`:''}</div>
-      <div class="english-review-main">${escapeHTML(main)}</div>
+      <div class="english-review-main">${escapeHTML(front.main)}</div>
       ${item.ipa?`<div class="english-detail-ipa">${escapeHTML(item.ipa)}</div>`:''}
-      ${answer?`<div class="english-review-answer">${escapeHTML(answer)}</div>`:''}
-      ${extra?`<div class="english-review-example">${escapeHTML(extra)}</div>`:''}
+      <div class="english-review-think">${escapeHTML(front.prompt)}</div>
+      ${englishReviewAnswerShown?englishReviewAnswerHTML(item):`
+        <button class="english-reveal-answer" onclick="revealEnglishReviewAnswer()">${trText('Показать ответ','Show answer')}</button>
+      `}
     </div>
-    <div class="english-review-buttons">
-      <button class="again" onclick="rateEnglishReview('again')">${trText('Снова','Again')}</button>
-      <button class="hard" onclick="rateEnglishReview('hard')">${trText('Сложно','Hard')}</button>
-      <button class="know" onclick="rateEnglishReview('know')">${trText('Знаю','Know')}</button>
+    ${englishReviewAnswerShown?`
+      <div class="english-review-rating-hint">${trText('Насколько легко ты вспомнил ответ?','How easily did you recall it?')}</div>
+      <div class="english-review-buttons">
+        <button class="again" onclick="rateEnglishReview('again')"><strong>${trText('Снова','Again')}</strong><span>${trText('Сегодня','Today')}</span></button>
+        <button class="hard" onclick="rateEnglishReview('hard')"><strong>${trText('Сложно','Hard')}</strong><span>2 ${trText('дня','days')}</span></button>
+        <button class="know" onclick="rateEnglishReview('know')"><strong>${trText('Знаю','Know')}</strong><span>3+ ${trText('дня','days')}</span></button>
+      </div>
+    `:''}
+  </div>`;
+}
+
+function openEnglishPractice(id){
+  if(!englishHasPractice(id))return;
+  englishPracticeItemId=id;
+  englishPracticeIndex=0;
+  englishPracticeScore=0;
+  englishPracticeAnswered=false;
+  englishPracticeSelected=-1;
+  englishLearningView='practice';
+  englishLearningItemId=id;
+  renderEnglishLearning();
+}
+function answerEnglishPractice(optionIndex){
+  if(englishPracticeAnswered)return;
+  const questions=englishPracticeQuestions(englishPracticeItemId);
+  const q=questions[englishPracticeIndex];
+  if(!q)return;
+  englishPracticeSelected=Number(optionIndex);
+  englishPracticeAnswered=true;
+  if(englishPracticeSelected===q.answer)englishPracticeScore++;
+  renderEnglishLearning();
+}
+function nextEnglishPractice(){
+  const questions=englishPracticeQuestions(englishPracticeItemId);
+  if(!questions.length)return;
+  if(englishPracticeIndex<questions.length-1){
+    englishPracticeIndex++;
+    englishPracticeAnswered=false;
+    englishPracticeSelected=-1;
+  }else{
+    englishPracticeIndex=questions.length;
+  }
+  renderEnglishLearning();
+}
+function restartEnglishPractice(){
+  englishPracticeIndex=0;
+  englishPracticeScore=0;
+  englishPracticeAnswered=false;
+  englishPracticeSelected=-1;
+  renderEnglishLearning();
+}
+function finishEnglishPractice(){
+  englishLearningView='detail';
+  englishLearningItemId=englishPracticeItemId;
+  renderEnglishLearning();
+}
+function renderEnglishPracticeView(){
+  const item=englishItemById(englishPracticeItemId);
+  const questions=englishPracticeQuestions(englishPracticeItemId);
+  if(!item||!questions.length){
+    return `<div class="english-review-empty"><strong>${trText('Практика пока недоступна','Practice is not available yet')}</strong></div>`;
+  }
+
+  if(englishPracticeIndex>=questions.length){
+    const pct=Math.round(englishPracticeScore/questions.length*100);
+    const message=englishPracticeScore>=4
+      ?trText('Отлично. Правило уже довольно уверенно используется.','Great. You are using this rule quite confidently.')
+      :trText('Эту тему стоит ещё немного потренировать.','This topic needs a little more practice.');
+    return `<div class="english-practice-finish">
+      <div class="english-practice-score">${englishPracticeScore} / ${questions.length}</div>
+      <div class="english-practice-percent">${pct}%</div>
+      <strong>${escapeHTML(message)}</strong>
+      <div class="english-practice-finish-actions">
+        <button class="secondary" onclick="restartEnglishPractice()">${trText('Пройти ещё раз','Practice again')}</button>
+        <button onclick="finishEnglishPractice()">${trText('Назад к правилу','Back to rule')}</button>
+      </div>
+    </div>`;
+  }
+
+  const q=questions[englishPracticeIndex];
+  const explanation=(data.language||'ru')==='en'?q.en:q.ru;
+
+  return `<div class="english-practice-session">
+    <div class="english-practice-progress">
+      <span>${escapeHTML(englishCompactTitle(item))}</span>
+      <span>${englishPracticeIndex+1} / ${questions.length}</span>
+    </div>
+    <div class="english-practice-card">
+      <div class="english-practice-label">${trText('Выбери правильный вариант','Choose the correct option')}</div>
+      <div class="english-practice-question">${escapeHTML(q.q)}</div>
+      <div class="english-practice-options">
+        ${q.options.map((option,index)=>{
+          let cls='';
+          if(englishPracticeAnswered){
+            if(index===q.answer)cls='correct';
+            else if(index===englishPracticeSelected)cls='wrong';
+            else cls='muted';
+          }
+          return `<button class="${cls}" onclick="answerEnglishPractice(${index})" ${englishPracticeAnswered?'disabled':''}>${escapeHTML(option)}</button>`;
+        }).join('')}
+      </div>
+      ${englishPracticeAnswered?`
+        <div class="english-practice-feedback ${englishPracticeSelected===q.answer?'correct':'wrong'}">
+          <strong>${englishPracticeSelected===q.answer?trText('Верно','Correct'):trText('Не совсем','Not quite')}</strong>
+          <span>${escapeHTML(explanation)}</span>
+        </div>
+        <button class="english-practice-next" onclick="nextEnglishPractice()">${englishPracticeIndex===questions.length-1?trText('Результат','See result'):trText('Следующий вопрос','Next question')} →</button>
+      `:''}
     </div>
   </div>`;
 }
@@ -3340,6 +3860,12 @@ function renderEnglishLearning(){
     if(subtitle)subtitle.textContent=`${englishReviewQueueIds.length} ${trText('осталось','remaining')}`;
     if(add)add.style.visibility='hidden';
     content=renderEnglishReviewView();
+  }else if(englishLearningView==='practice'){
+    const item=englishItemById(englishPracticeItemId);
+    if(title)title.textContent=trText('Практика','Practice');
+    if(subtitle)subtitle.textContent=item?englishCompactTitle(item):'';
+    if(add)add.style.visibility='hidden';
+    content=renderEnglishPracticeView();
   }else{
     const item=englishItemById(englishLearningItemId);
     if(title)title.textContent=item?.title||'English';

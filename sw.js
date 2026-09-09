@@ -1,4 +1,4 @@
-const CACHE='my-rhythm-v6.8.2-layout-resilience-github-pages';
+const CACHE='my-rhythm-v6.8.3-active-recall-practice-github-pages';
 const ASSETS=[
   './',
   './index.html',

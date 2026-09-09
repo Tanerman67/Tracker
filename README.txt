@@ -765,3 +765,46 @@ V6.8.2 — LAYOUT RESILIENCE
 - Horizontal selector strips are contained and cannot widen the document.
 - Tested in headless Chromium at 320/375/390/430 CSS px in EN and RU.
 - schemaVersion remains 2.
+
+
+V6.8.3 — ACTIVE RECALL + PRACTICE
+
+ACTIVE RECALL IN REVIEW QUEUE
+- Answers are hidden initially.
+- Word/Phrase:
+  front = English term (+ IPA); translation/example hidden.
+- Grammar:
+  front = topic title; rule/formula/example hidden.
+- Mistake:
+  front = the incorrect sentence; correction/rule hidden.
+- User taps Show answer before rating recall.
+- Rating buttons explain their schedule:
+  Again = Today
+  Hard = 2 days
+  Know = 3+ days according to spaced-review stage.
+
+PRACTICE ENGINE
+Need practice no longer silently marks a grammar item Hard.
+For Current Focus topics it opens a 5-question practice session:
+- Gerunds & Infinitives
+- Present Perfect vs Present Perfect Continuous
+- Mixed Conditionals
+- Passive Voice
+
+Each question has:
+- 4 choices
+- immediate correct/wrong state
+- short explanation
+- progress indicator
+- final score
+- Practice again / Back to rule
+
+PRACTICE STATE
+Practice progress is transient UI state.
+It does NOT modify user logs or spaced-review state automatically.
+The user still controls review status through Got it / Review Queue.
+
+DATA SAFETY
+- schemaVersion remains 2.
+- No data migration.
+- No stored data field added.
