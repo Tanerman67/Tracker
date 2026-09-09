@@ -649,3 +649,95 @@ DATA SAFETY
 - No storage key changed.
 - No user data field changed.
 - No backup/import format changed.
+
+
+V6.8 — ENGLISH LEARNING HUB
+
+PURPOSE
+English is no longer only a study-time tracker. The page now answers:
+- What am I learning?
+- What should I review today?
+- Which grammar areas are weak?
+- Which real mistakes should come back for practice?
+
+DASHBOARD
+- B1 → B2 path
+- Review coverage (explicitly NOT a CEFR score)
+- Today to review
+- Compact weekly study-time chart
+- Words & Phrases
+- Grammar Rules
+- My Mistakes
+- Review Queue
+- Current Focus
+- Existing session logging remains available
+
+DRILL-DOWN NAVIGATION
+English → Words & Phrases → item detail
+English → Grammar Rules → rule detail
+English → My Mistakes → mistake detail
+English → Review Queue → review session
+
+SEEDED CURRICULUM
+The initial curriculum includes previously discussed/studied areas:
+- Present Perfect vs Past Simple
+- Present Perfect vs Present Perfect Continuous
+- Past Continuous / Past Perfect
+- Future forms
+- First / Second / Third / Mixed Conditionals
+- unless / otherwise
+- wish / if only / regret
+- Passive Voice
+- Reported Speech
+- Gerunds & Infinitives
+- Modal verbs
+- Articles
+- Relative clauses
+- for / since
+- Linking words & logic
+- complex “What I like most is + -ing”
+- next to vs in front of
+- question tags
+- used to / be used to / get used to
+- word formation
+- paraphrasing
+- implied meaning & abstract discussion
+
+VOCABULARY
+Seeded from previous learning conversations, including phrasal verbs,
+collocations and words the user explicitly asked about.
+
+MY MISTAKES
+Contains concrete recurring errors from prior practice such as:
+- didn’t recognized → didn’t recognize
+- seen → saw in Past Simple
+- had forget → had forgotten
+- failed an exam vs fallen
+- turn off vs odd
+
+SPACED REVIEW
+Each learning item can be rated:
+- Again: due again today
+- Hard: review in 2 days
+- Know: progressive intervals 3 / 7 / 14 / 30 / 60 / 120 days
+
+DATA ARCHITECTURE
+Existing daily logs remain unchanged.
+New data is stored separately:
+englishLearning = {
+  customItems: [],
+  review: {},
+  favorites: {}
+}
+
+Seed curriculum is defined in application code, not duplicated into storage.
+Only user-created items and review state are persisted.
+
+BACKWARDS COMPATIBILITY
+- schemaVersion remains 2.
+- migrateData adds englishLearning safely if an older backup does not contain it.
+- Old backups still import.
+- New backups preserve englishLearning automatically.
+
+OTHER PAGES
+Today / Progress / Body / Alcohol / Settings logic was intentionally left unchanged.

@@ -1,4 +1,4 @@
-const CACHE='my-rhythm-v6.7.4.1-hotfix-github-pages';
+const CACHE='my-rhythm-v6.8-english-learning-hub-github-pages';
 const ASSETS=[
   './',
   './index.html',
