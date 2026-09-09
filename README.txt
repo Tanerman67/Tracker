@@ -597,3 +597,33 @@ DATA SAFETY
 - schemaVersion remains 2.
 - Trends are computed at render time.
 - No stored data field is renamed, migrated, duplicated, or deleted.
+
+
+V6.7.4 — SHARED CHARTS + CLEANUP
+
+- Motivation milestone button:
+  RU "Понятно" / EN "Got it".
+- Progress structure is now:
+  Weekly Review → Trends → Calendar.
+- Patterns UI and old comparison code were removed.
+- Progress Y-axis uses content-driven width instead of a fixed 49–52 px column.
+- Settings date inputs are constrained with border-box/min-width:0 to fix iOS overflow.
+
+SHARED CHART ENGINE
+- Progress and Body both render through sharedChartHTML().
+- Shared logic owns axes, line/area geometry, bars, tap targets, selection and labels.
+- Progress/Body keep only metric-specific data preparation.
+
+BODY
+- Ranges: 7d / 30d / 3m / 1y / All time.
+- 7/30d: individual measurements.
+- 3m: weekly averages.
+- 1y: 12 monthly averages.
+- All time: quarterly averages.
+- Tappable points show exact value or aggregated period value.
+- Applies to Weight / Chest / Waist / Abdomen / Hips / Thigh.
+
+DATA
+- schemaVersion remains 2.
+- No migration.
+- logs, bodyMeasurements, alcoholHistory, motivationSeen, goals and experiments are unchanged.

@@ -58,7 +58,7 @@ button.danger{background:var(--card);color:var(--danger);border:1px solid rgba(2
 .ico{display:block;font-size:23px;margin-bottom:3px;line-height:1}
 .chip{display:inline-block;padding:6px 9px;border-radius:999px;background:var(--soft);color:var(--green);font-size:12px;margin:3px}
 .barlist{display:grid;gap:12px}.barline{display:grid;grid-template-columns:110px 1fr 56px;gap:8px;align-items:center}.bar{height:9px;background:rgba(255,255,255,.07);border-radius:999px;overflow:hidden}.bar span{display:block;height:100%;background:linear-gradient(90deg,var(--green),var(--indigo));box-shadow:0 0 10px rgba(25,245,166,.4);border-radius:999px}
-input,select{width:100%;padding:13px 14px;border:1px solid var(--line);border-radius:14px;background:var(--input);color:var(--text);font-size:16px;outline:none}input:focus,select:focus{border-color:rgba(25,245,166,.55);box-shadow:0 0 0 3px rgba(25,245,166,.08)}
+input,select{width:100%;max-width:100%;min-width:0;box-sizing:border-box;padding:13px 14px;border:1px solid var(--line);border-radius:14px;background:var(--input);color:var(--text);font-size:16px;outline:none}input:focus,select:focus{border-color:rgba(25,245,166,.55);box-shadow:0 0 0 3px rgba(25,245,166,.08)}
 .field{margin-bottom:12px}.field label{display:block;font-size:13px;color:var(--muted);margin-bottom:5px}
 .modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.35);z-index:50;align-items:flex-end}.modal.show{display:flex}
 .sheet{width:100%;max-width:580px;margin:auto;background:var(--card);color:var(--text);border:1px solid var(--line);border-radius:24px 24px 0 0;padding:18px 18px calc(20px + env(safe-area-inset-bottom))}
@@ -195,7 +195,7 @@ input,select,textarea{
 }
 
 
-/* V6.7.3 GitHub compact home */
+/* V6.7.4 GitHub compact home */
 .metric-card{
   min-height:98px;
   padding:12px 13px;
@@ -218,7 +218,7 @@ input,select,textarea{
 }
 
 
-/* V6.7.3 GitHub: smoke/alcohol cards are statistic-only and sit on top */
+/* V6.7.4 GitHub: smoke/alcohol cards are statistic-only and sit on top */
 .metric-static{cursor:default}
 .metric-static .metric-head{align-items:center}
 .metric-mini-stat{
@@ -239,7 +239,7 @@ input,select,textarea{
 }
 
 
-/* V6.7.3 GitHub Steps input restored on Today */
+/* V6.7.4 GitHub Steps input restored on Today */
 .metric-wide{
   grid-column:1 / -1;
 }
@@ -259,7 +259,7 @@ input,select,textarea{
 }
 
 
-/* V6.7.3 GitHub — Weight card + exact 2×4 Today grid */
+/* V6.7.4 GitHub — Weight card + exact 2×4 Today grid */
 .metric-weight{
   cursor:pointer;
 }
@@ -295,7 +295,7 @@ input,select,textarea{
 }
 
 
-/* V6.7.3 GitHub — storage safety status */
+/* V6.7.4 GitHub — storage safety status */
 .storage-ok{color:#71ffd0}
 .storage-warn{color:#ffd27a}
 .backup-reminder{
@@ -317,7 +317,7 @@ input,select,textarea{
 }
 
 
-/* V6.7.3 GitHub Alcohol calendar */
+/* V6.7.4 GitHub Alcohol calendar */
 .metric-alcohol-clickable{cursor:pointer!important}
 .metric-alcohol-clickable:active{transform:scale(.985)}
 .alcohol-modal{display:none;position:fixed;inset:0;z-index:120;overflow:auto;background:radial-gradient(circle at 10% -5%,rgba(44,223,167,.18),transparent 27%),radial-gradient(circle at 100% 7%,rgba(107,102,255,.22),transparent 31%),linear-gradient(180deg,rgba(4,13,22,.99),rgba(5,9,18,.995));-webkit-overflow-scrolling:touch}
@@ -449,15 +449,15 @@ input,select,textarea{
 .body-chart-head{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;margin-bottom:8px}
 .body-chart-title{font-size:16px;font-weight:810}.body-chart-range{font-size:10.5px;color:var(--muted);margin-top:3px}
 .body-chart-change{font-size:13px;font-weight:780;color:#8fffe0;text-align:right;white-space:nowrap}
-.body-chart-host{height:185px;position:relative}
+.body-chart-host{height:228px;position:relative}
 .body-chart-empty{height:100%;display:grid;place-items:center;color:#718b9e;font-size:12px;text-align:center;padding:16px}
-.body-svg{width:100%;height:100%;overflow:visible}
-.body-grid-line{stroke:rgba(150,180,210,.10);stroke-width:1}
-.body-line{fill:none;stroke:url(#bodyLineGradient);stroke-width:3;stroke-linecap:round;stroke-linejoin:round;filter:drop-shadow(0 0 5px rgba(66,226,187,.22))}
-.body-area{fill:url(#bodyAreaGradient)}
-.body-point{fill:#0c1725;stroke:#7affdb;stroke-width:2}
-.body-axis-label{fill:#6d879a;font-size:9px;font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display",sans-serif}
-
+.body-chart-note{min-height:14px;margin-top:5px;color:#748e9f;font-size:9.5px;line-height:1.35}
+.body-range-tabs{
+  display:flex;gap:7px;overflow-x:auto;scrollbar-width:none;
+  -webkit-overflow-scrolling:touch;margin:0 0 9px;
+}
+.body-range-tabs::-webkit-scrollbar{display:none}
+.body-range-tabs button{flex:0 0 auto;padding:8px 11px;font-size:11px}
 .body-history-list{display:grid;gap:8px}
 .body-history-row{
   display:grid;grid-template-columns:1fr auto;gap:12px;align-items:center;
@@ -499,7 +499,7 @@ input,select,textarea{
   .body-summary-card{min-height:82px}
   .body-summary-value{font-size:21px}
   .body-summary-date{font-size:15px}
-  .body-chart-host{height:165px}
+  .body-chart-host{height:214px}
 }
 @media(max-width:350px){
   .body-checkin-grid{grid-template-columns:1fr}
@@ -661,12 +661,9 @@ input,select,textarea{
 #settings > .category-head:first-child h2{
   font-size:25px;
 }
-.progress-patterns-head{
-  align-items:flex-start;
-  margin-top:2px;
-}
-.progress-patterns-head h2{font-size:20px}
-.progress-patterns-head .sub{max-width:62%}
+
+
+
 .settings-page-head{display:block;margin-bottom:12px}
 .settings-page-head .settings-head-sub{
   margin-top:4px;
@@ -997,7 +994,7 @@ input,select,textarea{
 }
 
 
-/* V6.7.1 — Progress cleanup: Weekly Review → Trends → Calendar → Patterns */
+/* Progress layout: Weekly Review → Trends → Calendar */
 .progress-trends-head,
 .progress-calendar-head{
   align-items:flex-end;
@@ -1183,7 +1180,7 @@ input,select,textarea{
 }
 .trend-chart-shell{
   display:grid;
-  grid-template-columns:52px minmax(0,1fr);
+  grid-template-columns:max-content minmax(0,1fr);
   grid-template-rows:minmax(0,1fr) 34px;
   column-gap:8px;
   row-gap:3px;
@@ -1344,12 +1341,32 @@ input,select,textarea{
 @media(max-width:430px){
   .trend-chart-host{height:214px}
   .trend-chart-shell{
-    grid-template-columns:49px minmax(0,1fr);
+    grid-template-columns:max-content minmax(0,1fr);
     grid-template-rows:minmax(0,1fr) 33px;
     column-gap:7px;
   }
   .trend-y-axis{font-size:11px}
   .trend-x-axis{font-size:10.5px}
+}
+
+
+/* V6.7.4 — iOS date alignment */
+.settings-goals-card{min-width:0;overflow:hidden}
+.settings-goals-card .field{min-width:0;width:100%}
+.settings-goals-card input{
+  display:block;width:100%;max-width:100%;min-width:0;box-sizing:border-box;
+}
+.settings-goals-card input[type="date"]{
+  -webkit-appearance:none;appearance:none;text-align:left;
+}
+
+
+/* V6.7.4 — compact shared axes */
+.trend-y-axis{min-width:30px;max-width:46px;padding-right:1px}
+.trend-chart-shell{column-gap:5px}
+@media(max-width:430px){
+  .trend-y-axis{min-width:29px;max-width:43px}
+  .trend-chart-shell{column-gap:4px}
 }
 
 </style>
@@ -1493,12 +1510,6 @@ input,select,textarea{
   </div>
   <div class="card"><div class="calendar-head"><button class="ghost" onclick="moveMonth(-1)">‹</button><strong id="calendarTitle"></strong><button class="ghost" onclick="moveMonth(1)">›</button></div><div class="calendar-grid" id="calendarGrid"></div></div>
 
-  <div class="section-spacer"></div>
-  <div class="category-head progress-patterns-head">
-    <h2>Паттерны</h2>
-    <div class="sub">Связи между привычками. Не причинность.</div>
-  </div>
-  <div id="insightsList"></div>
 </section>
 
 <section id="settings" class="section">
@@ -1509,7 +1520,7 @@ input,select,textarea{
     </div>
   </div>
 
-  <div class="card">
+  <div class="card settings-goals-card">
     <div class="label">🎯 Настройки целей</div>
     <div class="field"><label>Дата отказа от сигарет</label><input id="smokeDate" type="date"></div>
     <div class="field"><label>Дата текущего периода без алкоголя</label><input id="alcoholDate" type="date"></div>
@@ -1548,7 +1559,7 @@ input,select,textarea{
       Каждое сохранение дублируется локально: основная база + зеркало + IndexedDB snapshots + recovery cache.
       Внешний JSON-backup всё равно нужен перед удалением PWA или очисткой Safari.
     </div>
-    <div class="row"><span>Версия приложения</span><strong id="appVersionText">V6.7.3 GitHub</strong></div>
+    <div class="row"><span>Версия приложения</span><strong id="appVersionText">V6.7.4 GitHub</strong></div>
     <div class="row"><span>Версия структуры данных</span><strong id="schemaVersionText">2</strong></div>
     <div class="row"><span>Локальная защита</span><strong id="vaultStatusText">Проверяем…</strong></div>
     <div class="row"><span>Snapshots</span><strong id="vaultSnapshotText">—</strong></div>
@@ -1672,6 +1683,14 @@ input,select,textarea{
 
     <div class="body-metric-tabs" id="bodyMetricTabs"></div>
 
+    <div class="body-range-tabs">
+      <button class="ghost" id="bodyRange7Btn" onclick="setBodyRange(7)">7 дней</button>
+      <button class="ghost" id="bodyRange30Btn" onclick="setBodyRange(30)">30 дней</button>
+      <button class="ghost" id="bodyRange90Btn" onclick="setBodyRange(90)">3 месяца</button>
+      <button class="ghost" id="bodyRange365Btn" onclick="setBodyRange(365)">1 год</button>
+      <button class="secondary" id="bodyRangeAllBtn" onclick="setBodyRange('all')">Всё время</button>
+    </div>
+
     <div class="body-chart-card">
       <div class="body-chart-head">
         <div>
@@ -1681,6 +1700,12 @@ input,select,textarea{
         <div class="body-chart-change" id="bodyChartChange">—</div>
       </div>
       <div id="bodyChartHost" class="body-chart-host"></div>
+      <div class="body-chart-note" id="bodyChartNote"></div>
+      <div class="trend-point-detail" id="bodyPointDetail" hidden>
+        <div class="trend-point-detail-period" id="bodyPointDetailPeriod"></div>
+        <div class="trend-point-detail-value" id="bodyPointDetailValue"></div>
+        <div class="trend-point-detail-meta" id="bodyPointDetailMeta"></div>
+      </div>
     </div>
 
     <div class="body-history-head">
@@ -1813,7 +1838,7 @@ input,select,textarea{
 </div></div>
 
 <script>
-const APP_VERSION='6.7.3-github';
+const APP_VERSION='6.7.4-github';
 const DATA_KEY='my-life-tracker-data';
 const MIRROR_KEY='my-life-tracker-data-mirror-v1';
 const CURRENT_SCHEMA_VERSION=2;
@@ -2366,7 +2391,6 @@ const UI_EN = new Map([
 ['Прогресс','Progress'],
 ['7 дней','7 days'],
 ['30 дней','30 days'],
-['Связи между привычками. Не причинность.','Relationships between habits. Not causation.'],
 ['Проверяй одну гипотезу за раз.','Test one hypothesis at a time.'],
 ['＋ Новый эксперимент','＋ New experiment'],
 ['Настройки целей','Goal settings'],
@@ -2674,6 +2698,8 @@ async function resetAll(){
 
 
 let bodySelectedMetric='waist';
+let bodyRangeDays='all';
+let bodySelectedPoint=null;
 let bodyEditingDate='';
 
 const BODY_METRICS=[
@@ -2762,6 +2788,13 @@ function closeBody(){
 }
 function setBodyMetric(id){
   bodySelectedMetric=id;
+  bodySelectedPoint=null;
+  renderBody();
+}
+function setBodyRange(range){
+  if(![7,30,90,365,'all'].includes(range))range='all';
+  bodyRangeDays=range;
+  bodySelectedPoint=null;
   renderBody();
 }
 
@@ -2866,47 +2899,149 @@ function translateBodyCheckin(){
   set('bodyDeleteBtn','Удалить замер','Delete check-in');
 }
 
-function bodyChartSVG(rows){
-  if(rows.length<2){
-    return `<div class="body-chart-empty">${trText('Для графика нужно минимум два замера.','At least two measurements are needed for a chart.')}</div>`;
+
+function bodyMetricRawSeries(metricId){
+  const today=localDate();
+  let start;
+
+  if(bodyRangeDays==='all'){
+    const rows=bodyEntries(metricId);
+    if(!rows.length)return [];
+    start=rows[0].date;
+  }else{
+    start=trendAddDays(today,-(Number(bodyRangeDays)-1));
   }
 
-  const W=620,H=180,padL=34,padR=14,padT=14,padB=27;
-  const vals=rows.map(x=>x.value);
+  const out=[];
+  let index=0;
+  for(let d=start;;d=trendAddDays(d,1)){
+    let value=null;
+    if(metricId==='weight'){
+      const n=Number(data.logs?.[d]?.weight);
+      if(Number.isFinite(n)&&n>0)value=n;
+    }else{
+      const n=Number(bodyStore()?.[d]?.[metricId]);
+      if(Number.isFinite(n)&&n>0)value=n;
+    }
+    out.push({date:d,startDate:d,endDate:d,index,bucket:'day',value,logged:value!==null?1:0});
+    if(d>=today)break;
+    index++;
+  }
+  return out;
+}
+function bodyAggregate(metricId,daily,mode){
+  if(!daily.length)return [];
+
+  let starts=[],bucket='day';
+  if(mode==='week'){
+    bucket='week';
+    const first=trendMonday(daily[0].date),last=trendMonday(daily[daily.length-1].date);
+    for(let s=first;;s=trendAddDays(s,7)){starts.push(s);if(s===last)break}
+  }else if(mode==='month'){
+    bucket='month';
+    starts=trendLast12MonthStarts();
+  }else if(mode==='quarter'){
+    bucket='quarter';
+    const first=trendQuarterStart(daily[0].date),last=trendQuarterStart(daily[daily.length-1].date);
+    for(let s=first;;s=trendAddMonths(s,3)){starts.push(s);if(s===last)break}
+  }else{
+    return daily;
+  }
+
+  return starts.map((startDate,index)=>{
+    const endDate=bucket==='week'
+      ?trendAddDays(startDate,6)
+      :(bucket==='month'?trendMonthEnd(startDate):trendQuarterEnd(startDate));
+
+    const vals=daily
+      .filter(r=>r.date>=startDate&&r.date<=endDate&&r.value!==null)
+      .map(r=>Number(r.value));
+
+    return {
+      date:startDate,startDate,endDate,index,bucket,
+      value:vals.length?vals.reduce((s,v)=>s+v,0)/vals.length:null,
+      logged:vals.length
+    };
+  });
+}
+function bodyChartSeries(metricId,daily){
+  if(bodyRangeDays===90)return bodyAggregate(metricId,daily,'week');
+  if(bodyRangeDays===365)return bodyAggregate(metricId,daily,'month');
+  if(bodyRangeDays==='all')return bodyAggregate(metricId,daily,'quarter');
+  return daily;
+}
+function bodyScale(metricId,series){
+  const vals=series.filter(r=>r.value!==null).map(r=>Number(r.value));
+  if(!vals.length)return {min:0,max:1};
+
   let min=Math.min(...vals),max=Math.max(...vals);
-  if(min===max){min-=1;max+=1}
-  const margin=Math.max((max-min)*.16,.7);
-  min-=margin;max+=margin;
+  const span=Math.max(metricId==='weight'?4:5,max-min);
+  const center=(min+max)/2;
+  min=Math.max(0,Math.floor((center-span/2-.4)*2)/2);
+  max=Math.ceil((center+span/2+.4)*2)/2;
+  return {min,max};
+}
+function bodyPeriodLabel(row){
+  if(row.bucket==='week')return `${bodyFriendlyDate(row.startDate,true)} – ${bodyFriendlyDate(row.endDate,true)}`;
+  if(row.bucket==='month')return trendFormatMonth(row.startDate);
+  if(row.bucket==='quarter')return trendQuarterLabel(row.startDate,true);
+  return bodyFriendlyDate(row.date);
+}
+function bodyXLabel(row){
+  if(row.bucket==='month')return trendFormatMonthShort(row.startDate);
+  if(row.bucket==='quarter')return trendQuarterLabel(row.startDate,true);
+  if(row.bucket==='week')return bodyFriendlyDate(row.startDate,true);
+  return bodyFriendlyDate(row.date,true);
+}
+function bodyChartNoteText(){
+  if(bodyRangeDays===7)return trText('7 дней: отдельные замеры. Нажми на точку.','7 days: individual measurements. Tap a point.');
+  if(bodyRangeDays===30)return trText('30 дней: отдельные замеры. Нажми на точку.','30 days: individual measurements. Tap a point.');
+  if(bodyRangeDays===90)return trText('3 месяца: одна точка = среднее за календарную неделю.','3 months: one point = calendar-week average.');
+  if(bodyRangeDays===365)return trText('1 год: 12 точек = средние значения по месяцам.','1 year: 12 points = monthly averages.');
+  return trText('Всё время: одна точка = среднее значение за квартал.','All time: one point = quarterly average.');
+}
+function bodyChartHTML(metricId,series){
+  return sharedChartHTML({
+    series,
+    scale:bodyScale(metricId,series),
+    goal:null,
+    selectedIndex:bodySelectedPoint,
+    onSelectName:'selectBodyPoint',
+    connectAcrossMissing:true,
+    bars:false,
+    emptyText:trText(
+      'Для графика нужно минимум два замера в выбранном периоде.',
+      'At least two measurements are needed in the selected range.'
+    ),
+    formatY:(v)=>bodyFormatNumber(v),
+    periodLabel:(row)=>bodyPeriodLabel(row),
+    formatX:(row)=>bodyXLabel(row)
+  });
+}
+function selectBodyPoint(index){
+  const daily=bodyMetricRawSeries(bodySelectedMetric);
+  const series=bodyChartSeries(bodySelectedMetric,daily);
+  const row=series[Number(index)];
+  if(!row||row.value===null)return;
 
-  const x=i=>padL+(W-padL-padR)*(rows.length===1?0.5:i/(rows.length-1));
-  const y=v=>padT+(H-padT-padB)*(1-(v-min)/(max-min));
+  bodySelectedPoint=Number(index);
+  const detail=document.getElementById('bodyPointDetail');
+  const period=document.getElementById('bodyPointDetailPeriod');
+  const value=document.getElementById('bodyPointDetailValue');
+  const meta=document.getElementById('bodyPointDetailMeta');
 
-  const pts=rows.map((r,i)=>[x(i),y(r.value)]);
-  const line=pts.map((p,i)=>(i?'L':'M')+p[0].toFixed(1)+','+p[1].toFixed(1)).join(' ');
-  const area=`${line} L ${pts[pts.length-1][0].toFixed(1)},${(H-padB).toFixed(1)} L ${pts[0][0].toFixed(1)},${(H-padB).toFixed(1)} Z`;
+  if(detail)detail.hidden=false;
+  if(period)period.textContent=bodyPeriodLabel(row);
+  if(value)value.textContent=`${bodyFormatNumber(row.value)} ${bodyMetricUnit(bodySelectedMetric)}`;
+  if(meta){
+    meta.textContent=row.bucket==='day'
+      ?trText('Точный замер','Exact measurement')
+      :`${trText('Среднее по','Average across')} ${row.logged||0} ${trText('замерам','measurements')}`;
+  }
 
-  const grid=[0,.5,1].map(t=>{
-    const yy=padT+(H-padT-padB)*t;
-    const value=max-(max-min)*t;
-    return `<line class="body-grid-line" x1="${padL}" y1="${yy}" x2="${W-padR}" y2="${yy}"></line>
-            <text class="body-axis-label" x="2" y="${yy+3}">${bodyFormatNumber(value)}</text>`;
-  }).join('');
-
-  const labelIdx=[0,Math.floor((rows.length-1)/2),rows.length-1].filter((v,i,a)=>a.indexOf(v)===i);
-  const labels=labelIdx.map(i=>`<text class="body-axis-label" text-anchor="${i===0?'start':(i===rows.length-1?'end':'middle')}" x="${x(i)}" y="${H-5}">${bodyFriendlyDate(rows[i].date,true)}</text>`).join('');
-  const circles=pts.map((pt,i)=>`<circle class="body-point" cx="${pt[0]}" cy="${pt[1]}" r="${i===pts.length-1?4.5:3.2}"></circle>`).join('');
-
-  return `<svg class="body-svg" viewBox="0 0 ${W} ${H}" preserveAspectRatio="none">
-    <defs>
-      <linearGradient id="bodyLineGradient" x1="0" x2="1"><stop offset="0" stop-color="#2cdfa7"/><stop offset="1" stop-color="#7770ff"/></linearGradient>
-      <linearGradient id="bodyAreaGradient" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2cdfa7" stop-opacity=".17"/><stop offset="1" stop-color="#6b66ff" stop-opacity=".015"/></linearGradient>
-    </defs>
-    ${grid}
-    <path class="body-area" d="${area}"></path>
-    <path class="body-line" d="${line}"></path>
-    ${circles}
-    ${labels}
-  </svg>`;
+  document.querySelectorAll('#bodyChartHost .trend-hit').forEach(el=>{
+    el.classList.toggle('selected',Number(el.dataset.index)===bodySelectedPoint);
+  });
 }
 
 function renderBody(){
@@ -2958,20 +3093,57 @@ function renderBody(){
 
   const metric=bodyMetricDef(bodySelectedMetric);
   const rows=bodyEntries(bodySelectedMetric);
+  const dailySeries=bodyMetricRawSeries(bodySelectedMetric);
+  const chartSeries=bodyChartSeries(bodySelectedMetric,dailySeries);
+  const visibleRows=dailySeries.filter(r=>r.value!==null);
+
   set('bodyChartTitle',`${metric.icon} ${bodyMetricName(bodySelectedMetric)}`);
 
-  const first=rows.length?rows[0]:null,last=rows.length?rows[rows.length-1]:null;
-  set('bodyChartRange',rows.length?`${bodyFriendlyDate(first.date,true)} → ${bodyFriendlyDate(last.date,true)} · ${rows.length} ${trText('точек','points')}`:trText('Нет данных','No data'));
+  const first=visibleRows.length?visibleRows[0]:null;
+  const last=visibleRows.length?visibleRows[visibleRows.length-1]:null;
+  set(
+    'bodyChartRange',
+    visibleRows.length
+      ?`${bodyFriendlyDate(first.date,true)} → ${bodyFriendlyDate(last.date,true)} · ${visibleRows.length} ${trText('замеров','measurements')}`
+      :trText('Нет данных','No data')
+  );
 
-  const totalChange=first&&last&&rows.length>1?Math.round((last.value-first.value)*10)/10:null;
+  const totalChange=first&&last&&visibleRows.length>1
+    ?Math.round((last.value-first.value)*10)/10
+    :null;
   const changeEl=document.getElementById('bodyChartChange');
   if(changeEl){
-    changeEl.textContent=totalChange===null?'—':`${bodyFormatDelta(totalChange,bodyMetricUnit(bodySelectedMetric))} ${trText('с начала','from start')}`;
+    changeEl.textContent=totalChange===null?'—':`${bodyFormatDelta(totalChange,bodyMetricUnit(bodySelectedMetric))} ${trText('за период','over range')}`;
     changeEl.className='body-chart-change';
   }
 
+  [
+    ['bodyRange7Btn',7],
+    ['bodyRange30Btn',30],
+    ['bodyRange90Btn',90],
+    ['bodyRange365Btn',365],
+    ['bodyRangeAllBtn','all']
+  ].forEach(([id,value])=>{
+    const el=document.getElementById(id);
+    if(el)el.className=bodyRangeDays===value?'secondary':'ghost';
+  });
+
   const chart=document.getElementById('bodyChartHost');
-  if(chart)chart.innerHTML=bodyChartSVG(rows);
+  if(chart)chart.innerHTML=bodyChartHTML(bodySelectedMetric,chartSeries);
+
+  const note=document.getElementById('bodyChartNote');
+  if(note)note.textContent=bodyChartNoteText();
+
+  const detail=document.getElementById('bodyPointDetail');
+  if(detail&&bodySelectedPoint===null)detail.hidden=true;
+  if(bodySelectedPoint!==null){
+    const selected=chartSeries[bodySelectedPoint];
+    if(selected&&selected.value!==null)selectBodyPoint(bodySelectedPoint);
+    else{
+      bodySelectedPoint=null;
+      if(detail)detail.hidden=true;
+    }
+  }
 
   const list=document.getElementById('bodyHistoryList');
   if(list){
@@ -3466,7 +3638,7 @@ function openMotivationDetail(){
 
   const ack=document.getElementById('motivationAckBtn');
   if(ack)ack.textContent=(m.kind==='milestone'||m.kind==='medical')
-    ?trText('Отметить как просмотренное','Mark as seen')
+    ?trText('Понятно','Got it')
     :trText('Закрыть','Close');
 
   document.getElementById('motivationModal')?.classList.add('show');
@@ -4120,6 +4292,142 @@ function renderWeeklyReview(){
 // V6.7_WEEKLY_REVIEW_END
 
 
+
+// V6.7.4_SHARED_CHART_ENGINE_START
+function sharedChartHTML(cfg){
+  const {
+    series,scale,formatY,formatX,periodLabel,
+    selectedIndex=null,onSelectName,goal=null,
+    connectAcrossMissing=false,bars=false,emptyText=''
+  }=cfg;
+
+  const recorded=series.filter(r=>r.value!==null&&r.value!==undefined);
+  if(!bars&&recorded.length<2)return `<div class="trend-empty">${emptyText}</div>`;
+  if(bars&&!series.length)return `<div class="trend-empty">${emptyText}</div>`;
+
+  const W=1000,H=360,padT=15,padB=12;
+  const n=Math.max(1,series.length-1);
+  const x=index=>series.length<=1?W/2:W*(index/n);
+  const min=scale.min,max=scale.max;
+  const y=v=>padT+(H-padT-padB)*(1-(v-min)/(max-min));
+
+  const grid=[0,.5,1].map(t=>{
+    const yy=padT+(H-padT-padB)*t;
+    return `<line class="trend-grid-line" x1="0" y1="${yy}" x2="${W}" y2="${yy}"></line>`;
+  }).join('');
+
+  const goalLine=(goal!==null&&goal!==undefined&&goal>=min&&goal<=max)
+    ?`<line class="trend-goal-line" x1="0" y1="${y(goal)}" x2="${W}" y2="${y(goal)}"></line>`
+    :'';
+
+  let geometry='',hits='';
+
+  if(bars){
+    const base=y(Math.max(0,min));
+    const barSpace=W/Math.max(1,series.length);
+    const barW=Math.max(8,Math.min(60,barSpace*.56));
+
+    geometry=series.map(r=>{
+      if(r.value===null||r.value===undefined||r.value===0)return '';
+      const xx=x(r.index)-barW/2,yy=y(r.value),hh=Math.max(3,base-yy);
+      return `<rect class="trend-bar" x="${xx.toFixed(1)}" y="${yy.toFixed(1)}"
+        width="${barW.toFixed(1)}" height="${hh.toFixed(1)}" rx="7"></rect>`;
+    }).join('');
+
+    hits=series.map(r=>{
+      if(r.value===null||r.value===undefined||r.value===0)return '';
+      const left=series.length<=1?50:(r.index/n)*100;
+      const top=(y(r.value)/H)*100;
+      const bottom=(1-y(Math.max(0,min))/H)*100;
+      const height=Math.max(18,100-top-bottom);
+      return `<button class="trend-bar-hit ${selectedIndex===r.index?'selected':''}"
+        data-index="${r.index}" aria-label="${periodLabel(r)}"
+        onclick="${onSelectName}(${r.index})"
+        style="left:${left}%;top:${top}%;height:${height}%"></button>`;
+    }).join('');
+  }else{
+    const segments=[];
+    if(connectAcrossMissing){
+      const all=series.filter(r=>r.value!==null&&r.value!==undefined)
+        .map(r=>({...r,px:x(r.index),py:y(r.value)}));
+      if(all.length)segments.push(all);
+    }else{
+      let current=[];
+      for(const row of series){
+        if(row.value===null||row.value===undefined){
+          if(current.length){segments.push(current);current=[]}
+          continue;
+        }
+        current.push({...row,px:x(row.index),py:y(row.value)});
+      }
+      if(current.length)segments.push(current);
+    }
+
+    const lines=[],areas=[];
+    for(const segment of segments){
+      if(segment.length<2)continue;
+      const line=segment.map((p,i)=>(i?'L':'M')+p.px.toFixed(1)+','+p.py.toFixed(1)).join(' ');
+      lines.push(`<path class="trend-line" d="${line}"></path>`);
+      const area=`${line} L ${segment[segment.length-1].px.toFixed(1)},${y(min).toFixed(1)}
+        L ${segment[0].px.toFixed(1)},${y(min).toFixed(1)} Z`;
+      areas.push(`<path class="trend-area" d="${area}"></path>`);
+    }
+    geometry=areas.join('')+lines.join('');
+
+    const pts=recorded.map((r,i)=>({
+      ...r,
+      px:series.length<=1?50:(r.index/n)*100,
+      py:(y(r.value)/H)*100,
+      latest:i===recorded.length-1
+    }));
+    hits=pts.map(p=>`<button
+      class="trend-hit ${p.latest?'latest':''} ${selectedIndex===p.index?'selected':''}"
+      data-index="${p.index}" aria-label="${periodLabel(p)} ${formatY(p.value)}"
+      onclick="${onSelectName}(${p.index})"
+      style="left:${p.px}%;top:${p.py}%"></button>`).join('');
+  }
+
+  const rawIndices=series.length>=7
+    ?[0,Math.round((series.length-1)/3),Math.round((series.length-1)*2/3),series.length-1]
+    :[0,Math.floor((series.length-1)/2),series.length-1];
+  const idxs=rawIndices.filter((v,i,a)=>v>=0&&a.indexOf(v)===i);
+
+  const xLabels=idxs.map((idx,pos)=>{
+    const row=series[idx];
+    return `<span class="trend-x-label ${pos===0?'first':(pos===idxs.length-1?'last':'')}"
+      style="left:${series.length<=1?50:(idx/(series.length-1))*100}%">${formatX(row)}</span>`;
+  }).join('');
+
+  const yLabels=[max,(min+max)/2,min].map(v=>`<span>${formatY(v)}</span>`).join('');
+
+  return `<div class="trend-chart-shell">
+    <div class="trend-y-axis">${yLabels}</div>
+    <div class="trend-plot">
+      <svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="none" aria-hidden="true">
+        <defs>
+          <linearGradient id="trendLineGradient" x1="0" x2="1">
+            <stop offset="0" stop-color="#2cdfa7"/>
+            <stop offset="1" stop-color="#7770ff"/>
+          </linearGradient>
+          <linearGradient id="trendAreaGradient" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0" stop-color="#2cdfa7" stop-opacity=".14"/>
+            <stop offset="1" stop-color="#6b66ff" stop-opacity=".012"/>
+          </linearGradient>
+          <linearGradient id="trendBarGradient" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0" stop-color="#78ffda"/>
+            <stop offset="1" stop-color="#6d68ff"/>
+          </linearGradient>
+        </defs>
+        ${grid}${goalLine}${geometry}
+      </svg>
+      ${hits}
+    </div>
+    <div></div>
+    <div class="trend-x-axis">${xLabels}</div>
+  </div>`;
+}
+// V6.7.4_SHARED_CHART_ENGINE_END
+
 // V6.7.3_TRENDS_START
 const TREND_METRICS=[
   {id:'weight',icon:'⚖️',ru:'Вес',en:'Weight',unitRu:'кг',unitEn:'kg',kind:'line'},
@@ -4658,123 +4966,27 @@ function selectTrendPoint(index){
   });
 }
 function trendChartHTML(id,series){
-  const recorded=series.filter(r=>r.value!==null);
-
-  if(id!=='gym' && recorded.length<2){
-    return `<div class="trend-empty">${trText(
+  return sharedChartHTML({
+    series,
+    scale:trendScale(id,series),
+    goal:trendGoalForChart(id),
+    selectedIndex:trendSelectedPoint,
+    onSelectName:'selectTrendPoint',
+    connectAcrossMissing:id==='weight',
+    bars:id==='gym',
+    emptyText:trText(
       'Для графика нужно минимум две записи за выбранный период.',
       'At least two entries are needed for a chart in this range.'
-    )}</div>`;
-  }
-
-  const W=1000,H=360,padT=15,padB=12;
-  const n=Math.max(1,series.length-1);
-  const x=index=>series.length<=1?W/2:W*(index/n);
-
-  const scale=trendScale(id,series);
-  const min=scale.min,max=scale.max;
-  const y=v=>padT+(H-padT-padB)*(1-(v-min)/(max-min));
-
-  const grid=[0,.5,1].map(t=>{
-    const yy=padT+(H-padT-padB)*t;
-    return `<line class="trend-grid-line" x1="0" y1="${yy}" x2="${W}" y2="${yy}"></line>`;
-  }).join('');
-
-  const goal=trendGoalForChart(id);
-  const goalLine=(goal!==null && goal>=min && goal<=max)
-    ?`<line class="trend-goal-line" x1="0" y1="${y(goal)}" x2="${W}" y2="${y(goal)}"></line>`
-    :'';
-
-  let geometry='';
-  let hits='';
-
-  if(id==='gym'){
-    const base=y(0);
-    const barSpace=W/Math.max(1,series.length);
-    const barW=Math.max(8,Math.min(60,barSpace*.56));
-
-    geometry=series.map(r=>{
-      if(!r.value)return '';
-      const xx=x(r.index)-barW/2;
-      const yy=y(r.value);
-      const hh=Math.max(3,base-yy);
-      return `<rect class="trend-bar" x="${xx.toFixed(1)}" y="${yy.toFixed(1)}"
-        width="${barW.toFixed(1)}" height="${hh.toFixed(1)}" rx="7"></rect>`;
-    }).join('');
-
-    hits=series.map(r=>{
-      if(!r.value)return '';
-      const left=series.length<=1?50:(r.index/n)*100;
-      const top=(y(r.value)/H)*100;
-      const bottom=(1-y(0)/H)*100;
-      const height=Math.max(18,100-top-bottom);
-      return `<button class="trend-bar-hit ${trendSelectedPoint===r.index?'selected':''}"
-        data-index="${r.index}" aria-label="${trendPeriodLabel(r)}"
-        onclick="selectTrendPoint(${r.index})"
-        style="left:${left}%;top:${top}%;height:${height}%"></button>`;
-    }).join('');
-  }else{
-    const segments=trendLineSegments(id,series,x,y);
-    const linePaths=[];
-    const areaPaths=[];
-
-    for(const segment of segments){
-      if(segment.length<2)continue;
-      const line=segment.map((p,i)=>(i?'L':'M')+p.x.toFixed(1)+','+p.y.toFixed(1)).join(' ');
-      linePaths.push(`<path class="trend-line" d="${line}"></path>`);
-      const area=`${line} L ${segment[segment.length-1].x.toFixed(1)},${y(min).toFixed(1)}
-        L ${segment[0].x.toFixed(1)},${y(min).toFixed(1)} Z`;
-      areaPaths.push(`<path class="trend-area" d="${area}"></path>`);
+    ),
+    formatY:(v)=>trendFormatNumber(v,id),
+    periodLabel:(row)=>trendPeriodLabel(row),
+    formatX:(row)=>{
+      if(row.bucket==='month')return trendFormatMonthShort(row.startDate);
+      if(row.bucket==='quarter')return trendQuarterLabel(row.startDate,true);
+      if(row.bucket==='week')return trendFormatDate(row.startDate);
+      return trendFormatDate(row.date);
     }
-
-    geometry=areaPaths.join('')+linePaths.join('');
-
-    const pts=recorded.map((r,i)=>({
-      ...r,
-      px:series.length<=1?50:(r.index/n)*100,
-      py:(y(r.value)/H)*100,
-      latest:i===recorded.length-1
-    }));
-
-    hits=pts.map(p=>`<button
-      class="trend-hit ${p.latest?'latest':''} ${trendSelectedPoint===p.index?'selected':''}"
-      data-index="${p.index}"
-      aria-label="${trendPeriodLabel(p)} ${trendFormatNumber(p.value,id)}"
-      onclick="selectTrendPoint(${p.index})"
-      style="left:${p.px}%;top:${p.py}%"></button>`).join('');
-  }
-
-  const axes=trendAxisLabels(id,series,scale);
-  const yLabels=axes.y.map(v=>`<span>${v}</span>`).join('');
-  const xLabels=axes.x.map(l=>`<span class="trend-x-label ${l.cls}" style="left:${l.pct}%">${l.label}</span>`).join('');
-
-  return `<div class="trend-chart-shell">
-    <div class="trend-y-axis">${yLabels}</div>
-    <div class="trend-plot">
-      <svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="none" aria-hidden="true">
-        <defs>
-          <linearGradient id="trendLineGradient" x1="0" x2="1">
-            <stop offset="0" stop-color="#2cdfa7"/>
-            <stop offset="1" stop-color="#7770ff"/>
-          </linearGradient>
-          <linearGradient id="trendAreaGradient" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0" stop-color="#2cdfa7" stop-opacity=".14"/>
-            <stop offset="1" stop-color="#6b66ff" stop-opacity=".012"/>
-          </linearGradient>
-          <linearGradient id="trendBarGradient" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0" stop-color="#78ffda"/>
-            <stop offset="1" stop-color="#6d68ff"/>
-          </linearGradient>
-        </defs>
-        ${grid}
-        ${goalLine}
-        ${geometry}
-      </svg>
-      ${hits}
-    </div>
-    <div></div>
-    <div class="trend-x-axis">${xLabels}</div>
-  </div>`;
+  });
 }
 function renderTrends(){
   const host=document.getElementById('trendChartHost');
@@ -4840,20 +5052,6 @@ function renderProgress(){renderWeeklyReview();renderTrends();renderCalendar()}
 function moveMonth(n){calendarDate=new Date(calendarDate.getFullYear(),calendarDate.getMonth()+n,1);renderCalendar()}
 function renderCalendar(){const ruM=['Январь','Февраль','Март','Апрель','Май','Июнь','Июль','Август','Сентябрь','Октябрь','Ноябрь','Декабрь'],enM=['January','February','March','April','May','June','July','August','September','October','November','December'],ruD=['Пн','Вт','Ср','Чт','Пт','Сб','Вс'],enD=['Mon','Tue','Wed','Thu','Fri','Sat','Sun'],y=calendarDate.getFullYear(),m=calendarDate.getMonth(),lang=data.language||'ru';document.getElementById('calendarTitle').textContent=(lang==='en'?enM:ruM)[m]+' '+y;const grid=document.getElementById('calendarGrid');grid.innerHTML=(lang==='en'?enD:ruD).map(x=>`<div class="dow">${x}</div>`).join('');const first=(new Date(y,m,1).getDay()+6)%7,total=new Date(y,m+1,0).getDate();for(let i=0;i<first;i++)grid.innerHTML+='<div></div>';for(let day=1;day<=total;day++){const d=`${y}-${String(m+1).padStart(2,'0')}-${String(day).padStart(2,'0')}`,filled=Object.keys(data.logs[d]||{}).filter(k=>data.logs[d][k]!==false&&data.logs[d][k]!==undefined).length,cls=filled>=5?'good':filled>=2?'mid':'';grid.innerHTML+=`<div class="cday ${cls}">${day}${filled>=5?'<span class="dot"></span>':''}</div>`}}
 
-function simpleRelation(factor,outcome,threshold,n=30){const rows=dates(n).map(d=>({f:Number(data.logs[d]?.[factor]),o:Number(data.logs[d]?.[outcome])})).filter(x=>Number.isFinite(x.f)&&x.f>=0&&Number.isFinite(x.o)&&x.o>0);if(rows.length<8)return null;const hi=rows.filter(x=>x.f>=threshold).map(x=>x.o),lo=rows.filter(x=>x.f<threshold).map(x=>x.o);if(hi.length<3||lo.length<3)return null;const mean=a=>a.reduce((s,x)=>s+x,0)/a.length;return{n:rows.length,hi:mean(hi),lo:mean(lo)}}
-function renderPatterns(){
- const insightsHost=document.getElementById('insightsList');if(!insightsHost)return;
- insightsHost.innerHTML='';
- const arr=[];
- const c=simpleRelation('outdoors','english_general',data.outdoorsGoal,30);
- const d=simpleRelation('sleep','english_general',data.sleepGoal,30);
- const e=simpleRelation('outdoors','sleep',data.outdoorsGoal,30);
- if(c)arr.push(['🇬🇧','Улица ↔ English',`В дни с ≥${data.outdoorsGoal} мин на улице английского в среднем ${Math.round(c.hi)} мин против ${Math.round(c.lo)} мин.`,c.n]);
- if(d)arr.push(['😴','Сон ↔ English',`При сне ≥${data.sleepGoal} ч английского в среднем ${Math.round(d.hi)} мин против ${Math.round(d.lo)} мин.`,d.n]);
- if(e)arr.push(['☀️','Улица ↔ сон',`В дни с ≥${data.outdoorsGoal} мин на улице сон в среднем ${e.hi.toFixed(1)} ч против ${e.lo.toFixed(1)} ч.`,e.n]);
- if(!arr.length)insightsHost.innerHTML='<div class="insight-card"><strong>Пока мало данных.</strong><br>Для первых сравнений желательно хотя бы 8–14 заполненных дней, для более устойчивых выводов — около месяца.<div class="confidence">Будем показывать связи, а не утверждать причинность.</div></div>';
- else arr.forEach(i=>insightsHost.innerHTML+=`<div class="insight-card"><strong>${i[0]} ${i[1]}</strong><br>${i[2]}<div class="confidence">Данных: ${i[3]} дней · корреляция, не доказательство причины</div></div>`);
-}
 function openExperiment(){document.getElementById('experimentModal')?.classList.add('show')}
 function saveExperiment(){
  const nameEl=document.getElementById('expName'),metricEl=document.getElementById('expMetric'),targetEl=document.getElementById('expTarget'),daysEl=document.getElementById('expDays'),hypEl=document.getElementById('expHypothesis');
