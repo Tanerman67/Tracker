@@ -752,3 +752,16 @@ V6.8.1 — UNIFIED TYPOGRAPHY
 - Buttons and form controls use the same Apple system font stack.
 - No application/data/review logic changed.
 - schemaVersion remains 2.
+
+
+V6.8.2 — LAYOUT RESILIENCE
+
+- Current Focus remains single-line and equal-height.
+- Canonical title remains Present Perfect vs Present Perfect Continuous.
+- Compact dashboard title is Present Perfect vs PPC.
+- englishCompactTitle() separates display naming from learning content.
+- Current Focus uses minmax(0, 1fr) + fixed action column.
+- Unified V6.8.1 typography is retained.
+- Horizontal selector strips are contained and cannot widen the document.
+- Tested in headless Chromium at 320/375/390/430 CSS px in EN and RU.
+- schemaVersion remains 2.

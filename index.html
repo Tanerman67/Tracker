@@ -195,7 +195,7 @@ input,select,textarea{
 }
 
 
-/* V6.8.1 GitHub compact home */
+/* V6.8.2 GitHub compact home */
 .metric-card{
   min-height:98px;
   padding:12px 13px;
@@ -218,7 +218,7 @@ input,select,textarea{
 }
 
 
-/* V6.8.1 GitHub: smoke/alcohol cards are statistic-only and sit on top */
+/* V6.8.2 GitHub: smoke/alcohol cards are statistic-only and sit on top */
 .metric-static{cursor:default}
 .metric-static .metric-head{align-items:center}
 .metric-mini-stat{
@@ -239,7 +239,7 @@ input,select,textarea{
 }
 
 
-/* V6.8.1 GitHub Steps input restored on Today */
+/* V6.8.2 GitHub Steps input restored on Today */
 .metric-wide{
   grid-column:1 / -1;
 }
@@ -259,7 +259,7 @@ input,select,textarea{
 }
 
 
-/* V6.8.1 GitHub — Weight card + exact 2×4 Today grid */
+/* V6.8.2 GitHub — Weight card + exact 2×4 Today grid */
 .metric-weight{
   cursor:pointer;
 }
@@ -295,7 +295,7 @@ input,select,textarea{
 }
 
 
-/* V6.8.1 GitHub — storage safety status */
+/* V6.8.2 GitHub — storage safety status */
 .storage-ok{color:#71ffd0}
 .storage-warn{color:#ffd27a}
 .backup-reminder{
@@ -317,7 +317,7 @@ input,select,textarea{
 }
 
 
-/* V6.8.1 GitHub Alcohol calendar */
+/* V6.8.2 GitHub Alcohol calendar */
 .metric-alcohol-clickable{cursor:pointer!important}
 .metric-alcohol-clickable:active{transform:scale(.985)}
 .alcohol-modal{display:none;position:fixed;inset:0;z-index:120;overflow:auto;background:radial-gradient(circle at 10% -5%,rgba(44,223,167,.18),transparent 27%),radial-gradient(circle at 100% 7%,rgba(107,102,255,.22),transparent 31%),linear-gradient(180deg,rgba(4,13,22,.99),rgba(5,9,18,.995));-webkit-overflow-scrolling:touch}
@@ -1816,6 +1816,45 @@ input,select,textarea{font-size:16px}
   .english-week-day span{font-size:10px}
 }
 
+
+/* ==========================================================
+   V6.8.2 — Layout Resilience
+   ========================================================== */
+.english-focus-list{min-width:0;width:100%}
+.english-focus-row{
+  display:grid;
+  grid-template-columns:minmax(0,1fr) auto;
+  align-items:center;
+  width:100%;max-width:100%;min-width:0;
+  min-height:54px;gap:12px;overflow:hidden;
+}
+.english-focus-row span:first-child{
+  display:block;min-width:0;max-width:100%;overflow:hidden;
+  text-overflow:clip;white-space:nowrap;
+}
+.english-focus-tag{
+  min-width:max-content;max-width:100%;white-space:nowrap;justify-self:end;
+}
+.english-focus-card,.english-review-banner,.english-week-card,.english-session-card,
+.english-hub-card,.english-item-card,.english-curriculum-card,.weekly-review-card,
+.trend-card,.body-chart-card{min-width:0}
+.english-review-banner > div:first-child,.english-week-head > div,
+.english-focus-head > div,.english-session-head > div,.english-item-status > *,
+.english-curriculum-top > *{min-width:0}
+.english-review-action,.english-focus-sub,.english-focus-tag,.weekly-review-status,
+.trend-change,.body-chart-change{flex-shrink:0;white-space:nowrap}
+.trend-range-tabs,.trend-metric-tabs,.body-range-tabs,.body-metric-tabs,.english-filter-tabs{
+  width:100%;max-width:100%;min-width:0;overflow-x:auto;overflow-y:hidden;
+  overscroll-behavior-x:contain;
+}
+.category-head,.progress-trends-head,.progress-calendar-head,.body-chart-head,
+.english-page-head,.english-hero-top,.english-week-head,.english-session-head{min-width:0}
+@media(max-width:360px){
+  .english-focus-row{min-height:52px;gap:9px;padding-left:9px;padding-right:9px}
+  .english-focus-tag{font-size:11px}
+  .english-focus-card{padding-left:13px;padding-right:13px}
+}
+
 </style>
 </head>
 <body>
@@ -2062,7 +2101,7 @@ input,select,textarea{font-size:16px}
       Каждое сохранение дублируется локально: основная база + зеркало + IndexedDB snapshots + recovery cache.
       Внешний JSON-backup всё равно нужен перед удалением PWA или очисткой Safari.
     </div>
-    <div class="row"><span>Версия приложения</span><strong id="appVersionText">V6.8.1 GitHub</strong></div>
+    <div class="row"><span>Версия приложения</span><strong id="appVersionText">V6.8.2 GitHub</strong></div>
     <div class="row"><span>Версия структуры данных</span><strong id="schemaVersionText">2</strong></div>
     <div class="row"><span>Локальная защита</span><strong id="vaultStatusText">Проверяем…</strong></div>
     <div class="row"><span>Snapshots</span><strong id="vaultSnapshotText">—</strong></div>
@@ -2394,7 +2433,7 @@ input,select,textarea{font-size:16px}
 </div></div>
 
 <script>
-const APP_VERSION='6.8.1-github';
+const APP_VERSION='6.8.2-github';
 const DATA_KEY='my-life-tracker-data';
 const MIRROR_KEY='my-life-tracker-data-mirror-v1';
 const CURRENT_SCHEMA_VERSION=2;
@@ -2821,7 +2860,7 @@ const ENGLISH_GRAMMAR_SEEDS=[
    ruleEn:'Present Perfect connects a past event with now. Past Simple refers to a finished past time.',
    formula:'have/has + V3  ↔  V2 / did + base verb',
    examples:['I’ve lost my key.','I lost my key yesterday.'],initialDue:false},
-  {id:'grammar_pp_ppc',kind:'grammar',group:'grammar',level:'B1+',title:'Present Perfect vs Present Perfect Continuous',
+  {id:'grammar_pp_ppc',kind:'grammar',group:'grammar',level:'B1+',title:'Present Perfect vs Present Perfect Continuous',shortTitle:'Present Perfect vs PPC',
    ruleRu:'Present Perfect чаще подчёркивает результат, Present Perfect Continuous — длительность или продолжающийся процесс.',
    ruleEn:'Present Perfect often emphasizes a result; Present Perfect Continuous emphasizes duration or an ongoing activity.',
    formula:'have/has + V3  ↔  have/has been + V-ing',
@@ -2982,6 +3021,9 @@ function englishAllItems(){
   return [...ENGLISH_WORD_SEEDS,...ENGLISH_GRAMMAR_SEEDS,...ENGLISH_MISTAKE_SEEDS,...englishLearningStore().customItems];
 }
 function englishItemById(id){return englishAllItems().find(x=>x.id===id)||null}
+function englishCompactTitle(item){
+  return item?.shortTitle||item?.title||'';
+}
 function englishItemsByKind(kind){
   const all=englishAllItems();
   if(kind==='words')return all.filter(x=>['word','phrase','phrasal'].includes(x.kind));
@@ -4943,7 +4985,7 @@ function renderEnglish(){
       const status=englishIsDue(item)
         ?trText('Практика','Practice')
         :(state?.nextReview?bodyFriendlyDate(state.nextReview,true):trText('Повторить','Review'));
-      return `<button class="english-focus-row" onclick="englishLearningParent='grammar';openEnglishItem('${id}','grammar');document.getElementById('englishLearningModal')?.classList.add('show');document.body.style.overflow='hidden'"><span>${escapeHTML(item.title)}</span><span class="english-focus-tag">${status}</span></button>`;
+      return `<button class="english-focus-row" onclick="englishLearningParent='grammar';openEnglishItem('${id}','grammar');document.getElementById('englishLearningModal')?.classList.add('show');document.body.style.overflow='hidden'"><span>${escapeHTML(englishCompactTitle(item))}</span><span class="english-focus-tag">${status}</span></button>`;
     }).join('');
   }
 }
@@ -6253,7 +6295,7 @@ function renderTrends(){
   if(primary)primary.textContent=summary.primary;
   if(secondary)secondary.textContent=summary.secondary;
   if(change){
-    change.textContent=summary.change||trText('Выбери период и показатель','Choose range and metric');
+    change.textContent=summary.change||trText('Выбери показатель','Choose a metric');
     change.className='trend-change'+(summary.neutral?' neutral':'');
   }
   if(aggregation)aggregation.textContent=trendAggregationText(trendMetricId);
