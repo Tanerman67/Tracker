@@ -195,7 +195,7 @@ input,select,textarea{
 }
 
 
-/* V6.7.4 GitHub compact home */
+/* V6.7.4.1 GitHub compact home */
 .metric-card{
   min-height:98px;
   padding:12px 13px;
@@ -218,7 +218,7 @@ input,select,textarea{
 }
 
 
-/* V6.7.4 GitHub: smoke/alcohol cards are statistic-only and sit on top */
+/* V6.7.4.1 GitHub: smoke/alcohol cards are statistic-only and sit on top */
 .metric-static{cursor:default}
 .metric-static .metric-head{align-items:center}
 .metric-mini-stat{
@@ -239,7 +239,7 @@ input,select,textarea{
 }
 
 
-/* V6.7.4 GitHub Steps input restored on Today */
+/* V6.7.4.1 GitHub Steps input restored on Today */
 .metric-wide{
   grid-column:1 / -1;
 }
@@ -259,7 +259,7 @@ input,select,textarea{
 }
 
 
-/* V6.7.4 GitHub — Weight card + exact 2×4 Today grid */
+/* V6.7.4.1 GitHub — Weight card + exact 2×4 Today grid */
 .metric-weight{
   cursor:pointer;
 }
@@ -295,7 +295,7 @@ input,select,textarea{
 }
 
 
-/* V6.7.4 GitHub — storage safety status */
+/* V6.7.4.1 GitHub — storage safety status */
 .storage-ok{color:#71ffd0}
 .storage-warn{color:#ffd27a}
 .backup-reminder{
@@ -317,7 +317,7 @@ input,select,textarea{
 }
 
 
-/* V6.7.4 GitHub Alcohol calendar */
+/* V6.7.4.1 GitHub Alcohol calendar */
 .metric-alcohol-clickable{cursor:pointer!important}
 .metric-alcohol-clickable:active{transform:scale(.985)}
 .alcohol-modal{display:none;position:fixed;inset:0;z-index:120;overflow:auto;background:radial-gradient(circle at 10% -5%,rgba(44,223,167,.18),transparent 27%),radial-gradient(circle at 100% 7%,rgba(107,102,255,.22),transparent 31%),linear-gradient(180deg,rgba(4,13,22,.99),rgba(5,9,18,.995));-webkit-overflow-scrolling:touch}
@@ -1559,7 +1559,7 @@ input,select,textarea{
       Каждое сохранение дублируется локально: основная база + зеркало + IndexedDB snapshots + recovery cache.
       Внешний JSON-backup всё равно нужен перед удалением PWA или очисткой Safari.
     </div>
-    <div class="row"><span>Версия приложения</span><strong id="appVersionText">V6.7.4 GitHub</strong></div>
+    <div class="row"><span>Версия приложения</span><strong id="appVersionText">V6.7.4.1 GitHub</strong></div>
     <div class="row"><span>Версия структуры данных</span><strong id="schemaVersionText">2</strong></div>
     <div class="row"><span>Локальная защита</span><strong id="vaultStatusText">Проверяем…</strong></div>
     <div class="row"><span>Snapshots</span><strong id="vaultSnapshotText">—</strong></div>
@@ -1838,7 +1838,7 @@ input,select,textarea{
 </div></div>
 
 <script>
-const APP_VERSION='6.7.4-github';
+const APP_VERSION='6.7.4.1-github';
 const DATA_KEY='my-life-tracker-data';
 const MIRROR_KEY='my-life-tracker-data-mirror-v1';
 const CURRENT_SCHEMA_VERSION=2;
@@ -5127,7 +5127,7 @@ function renderSettings(){
  updateStorageSafetyUI();
  renderExperiments();
 }
-function render(){applyTheme();for(const job of [renderToday,renderEnglish,renderProgress,renderPatterns,renderSettings]){try{job()}catch(e){console.error('Render error in '+job.name,e)}}try{translateDOM()}catch(e){console.error('Translation error',e)}}
+function render(){applyTheme();for(const job of [renderToday,renderEnglish,renderProgress,renderSettings]){try{job()}catch(e){console.error('Render error in '+job.name,e)}}try{translateDOM()}catch(e){console.error('Translation error',e)}}
 if('serviceWorker'in navigator){addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(()=>{}))}
 render();
 recoverFromVaults().catch(err=>{console.warn('Vault recovery failed',err);updateStorageSafetyUI()})

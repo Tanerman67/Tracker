@@ -627,3 +627,25 @@ DATA
 - schemaVersion remains 2.
 - No migration.
 - logs, bodyMeasurements, alcoholHistory, motivationSeen, goals and experiments are unchanged.
+
+
+V6.7.4.1 — HOTFIX
+
+ROOT CAUSE
+V6.7.4 removed the old renderPatterns() function but accidentally left
+renderPatterns in the array of startup render jobs.
+
+Because JavaScript evaluates every identifier in:
+[renderToday, renderEnglish, renderProgress, renderPatterns, renderSettings]
+before entering the loop, the missing identifier caused a ReferenceError
+before renderToday() could execute.
+
+FIX
+Startup render pipeline is now:
+renderToday → renderEnglish → renderProgress → renderSettings
+
+DATA SAFETY
+- schemaVersion remains 2.
+- No storage key changed.
+- No user data field changed.
+- No backup/import format changed.
