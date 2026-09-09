@@ -195,7 +195,7 @@ input,select,textarea{
 }
 
 
-/* V6.8 GitHub compact home */
+/* V6.8.1 GitHub compact home */
 .metric-card{
   min-height:98px;
   padding:12px 13px;
@@ -218,7 +218,7 @@ input,select,textarea{
 }
 
 
-/* V6.8 GitHub: smoke/alcohol cards are statistic-only and sit on top */
+/* V6.8.1 GitHub: smoke/alcohol cards are statistic-only and sit on top */
 .metric-static{cursor:default}
 .metric-static .metric-head{align-items:center}
 .metric-mini-stat{
@@ -239,7 +239,7 @@ input,select,textarea{
 }
 
 
-/* V6.8 GitHub Steps input restored on Today */
+/* V6.8.1 GitHub Steps input restored on Today */
 .metric-wide{
   grid-column:1 / -1;
 }
@@ -259,7 +259,7 @@ input,select,textarea{
 }
 
 
-/* V6.8 GitHub — Weight card + exact 2×4 Today grid */
+/* V6.8.1 GitHub — Weight card + exact 2×4 Today grid */
 .metric-weight{
   cursor:pointer;
 }
@@ -295,7 +295,7 @@ input,select,textarea{
 }
 
 
-/* V6.8 GitHub — storage safety status */
+/* V6.8.1 GitHub — storage safety status */
 .storage-ok{color:#71ffd0}
 .storage-warn{color:#ffd27a}
 .backup-reminder{
@@ -317,7 +317,7 @@ input,select,textarea{
 }
 
 
-/* V6.8 GitHub Alcohol calendar */
+/* V6.8.1 GitHub Alcohol calendar */
 .metric-alcohol-clickable{cursor:pointer!important}
 .metric-alcohol-clickable:active{transform:scale(.985)}
 .alcohol-modal{display:none;position:fixed;inset:0;z-index:120;overflow:auto;background:radial-gradient(circle at 10% -5%,rgba(44,223,167,.18),transparent 27%),radial-gradient(circle at 100% 7%,rgba(107,102,255,.22),transparent 31%),linear-gradient(180deg,rgba(4,13,22,.99),rgba(5,9,18,.995));-webkit-overflow-scrolling:touch}
@@ -1635,6 +1635,187 @@ input,select,textarea{
   .english-learning-shell{padding-left:13px;padding-right:13px}
 }
 
+
+/* ==========================================================
+   V6.8.1 — Unified Typography
+   Today is the visual reference for the whole app.
+   ========================================================== */
+:root{
+  --type-caption:11.5px;
+  --type-small:12.5px;
+  --type-label:13px;
+  --type-body:14px;
+  --type-card-title:15px;
+  --type-page:29px;
+}
+
+body,
+button,
+input,
+select,
+textarea{
+  font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","SF Pro Text","Segoe UI",sans-serif;
+  -webkit-font-smoothing:antialiased;
+  text-rendering:optimizeLegibility;
+}
+
+body{font-size:16px}
+.sub{font-size:var(--type-body);line-height:1.38}
+.label{font-size:var(--type-label);line-height:1.3}
+.small{font-size:var(--type-small);line-height:1.4}
+.title{font-size:var(--type-card-title);line-height:1.3}
+.category-head h2,
+.english-page-head h2,
+.settings-page-head h2{font-size:var(--type-page);line-height:1.08}
+.tab{font-size:12px}
+.ico{font-size:24px}
+
+/* Progress */
+.weekly-review-period{font-size:21px}
+.weekly-review-scope{font-size:var(--type-small);line-height:1.4}
+.weekly-review-status{font-size:var(--type-caption)}
+.weekly-metric-head{font-size:var(--type-small)}
+.weekly-metric-icon{font-size:17px}
+.weekly-metric-value{font-size:19px}
+.weekly-metric-meta,
+.weekly-metric-delta{font-size:var(--type-caption);line-height:1.35}
+.weekly-insight-label{font-size:var(--type-caption)}
+.weekly-insight-title{font-size:14.5px;line-height:1.35}
+.weekly-insight-meta{font-size:var(--type-small);line-height:1.4}
+.progress-trends-head h2,
+.progress-calendar-head h2{font-size:24px}
+.progress-trends-head .sub,
+.progress-calendar-head .sub{font-size:var(--type-small);line-height:1.4}
+.trend-range-tabs button,
+.trend-metric-tab{font-size:var(--type-caption)}
+.trend-primary{font-size:22px}
+.trend-secondary{font-size:var(--type-small);line-height:1.4}
+.trend-change{font-size:var(--type-caption);line-height:1.35}
+.trend-aggregation-note{font-size:var(--type-caption);line-height:1.4}
+.trend-y-axis{font-size:12.5px;font-weight:680}
+.trend-x-axis{font-size:12px;font-weight:650}
+.trend-point-detail-period{font-size:var(--type-caption)}
+.trend-point-detail-value{font-size:19px}
+.trend-point-detail-meta{font-size:var(--type-caption);line-height:1.4}
+.calendar-head{font-size:var(--type-body)}
+.dow{font-size:var(--type-caption)}
+.cday{font-size:13px}
+
+/* English dashboard */
+.english-page-head h2{font-size:var(--type-page)}
+.english-page-head .sub{font-size:var(--type-body)}
+.english-level{font-size:29px}
+.english-coverage strong{font-size:17px}
+.english-coverage span{font-size:var(--type-caption)}
+.english-hero-note{font-size:var(--type-small);line-height:1.4}
+.english-review-kicker{font-size:13px}
+.english-review-counts{font-size:var(--type-small);line-height:1.35}
+.english-review-action{font-size:12.5px}
+.english-week-total{font-size:18px}
+.english-week-total span{font-size:var(--type-small)}
+.english-today-mini span{font-size:var(--type-caption)}
+.english-today-mini strong{font-size:14px}
+.english-week-day span{font-size:10.5px}
+.english-hub-card strong{font-size:15px;line-height:1.25}
+.english-hub-card>span:last-child{font-size:var(--type-caption);line-height:1.35}
+.english-focus-sub{font-size:var(--type-caption)}
+.english-focus-row span:first-child{font-size:12.5px}
+.english-focus-tag{font-size:var(--type-caption)}
+.english-session-head .small{font-size:var(--type-caption)}
+.english-session-buttons button{font-size:12px}
+
+/* English drill-down */
+.english-learning-heading strong{font-size:20px}
+.english-learning-heading span{font-size:var(--type-caption)}
+.english-filter-tabs button{font-size:var(--type-caption)}
+.english-search input{font-size:15px}
+.english-due-badge,
+.english-review-badge{font-size:10px}
+.english-item-title{font-size:18px}
+.english-item-ipa{font-size:var(--type-small)}
+.english-item-ru{font-size:13px;line-height:1.4}
+.english-item-example{font-size:12.5px;line-height:1.48}
+.english-item-chip{font-size:10px}
+.english-item-rule-preview{font-size:12px;line-height:1.45}
+.english-mistake-wrong,
+.english-mistake-correct{font-size:13px;line-height:1.42}
+.english-detail-type{font-size:var(--type-caption)}
+.english-detail-title{font-size:25px}
+.english-detail-ipa{font-size:13px}
+.english-detail-translation{font-size:15px;line-height:1.4}
+.english-detail-example{font-size:13px;line-height:1.5}
+.english-review-progress{font-size:var(--type-caption)}
+.english-review-kind{font-size:var(--type-caption)}
+.english-review-main{font-size:24px}
+.english-review-answer{font-size:14px;line-height:1.5}
+.english-review-example{font-size:13px;line-height:1.5}
+.english-review-buttons button{font-size:12px}
+.english-curriculum-title{font-size:14.5px}
+.english-curriculum-meta{font-size:10.5px}
+.english-curriculum-rule{font-size:12.5px;line-height:1.45}
+
+/* Settings */
+.settings-head-sub{font-size:var(--type-body)}
+.settings-details > summary{font-size:15px}
+.advanced-experiment-head h2{font-size:21px}
+.field label{font-size:var(--type-label)}
+input,select,textarea{font-size:16px}
+
+/* Body */
+.body-title{font-size:26px}
+.body-subtitle{font-size:var(--type-small)}
+.body-summary-label{font-size:var(--type-caption)}
+.body-summary-value{font-size:21px}
+.body-summary-meta{font-size:var(--type-caption)}
+.body-chart-title{font-size:15px}
+.body-chart-range{font-size:var(--type-caption)}
+.body-chart-change{font-size:var(--type-caption)}
+.body-chart-note{font-size:var(--type-caption);line-height:1.4}
+.body-metric-tab,
+.body-range-tabs button{font-size:var(--type-caption)}
+.body-history-date{font-size:13px}
+.body-history-values{font-size:var(--type-small);line-height:1.4}
+
+/* Alcohol */
+.alcohol-title{font-size:26px}
+.alcohol-subtitle{font-size:var(--type-small)}
+.alcohol-summary-label{font-size:var(--type-caption)}
+.alcohol-summary-value{font-size:20px}
+.alcohol-summary-meta{font-size:var(--type-caption)}
+.alcohol-view-tabs button{font-size:var(--type-caption)}
+.alcohol-weekday{font-size:var(--type-caption)}
+.alcohol-day{font-size:12px}
+
+/* Motivation */
+.motivation-kicker{font-size:10.5px}
+.motivation-detail-kicker{font-size:var(--type-caption)}
+.motivation-detail-title{font-size:23px}
+.motivation-detail-fact{font-size:14px;line-height:1.5}
+.motivation-detail-source{font-size:var(--type-small)}
+
+@media(max-width:430px){
+  :root{
+    --type-caption:11.5px;
+    --type-small:12.5px;
+    --type-label:13px;
+    --type-body:14px;
+  }
+  .category-head h2,
+  .english-page-head h2,
+  .settings-page-head h2{font-size:27px}
+  .weekly-review-period{font-size:20px}
+  .weekly-review-status{font-size:11.5px}
+  .weekly-metric-head{font-size:12px}
+  .weekly-metric-meta,
+  .weekly-metric-delta{font-size:11.5px}
+  .trend-primary{font-size:21px}
+  .trend-y-axis{font-size:12.5px}
+  .trend-x-axis{font-size:11.5px}
+  .english-hub-card strong{font-size:14.5px}
+  .english-hub-card>span:last-child{font-size:11.5px}
+  .english-week-day span{font-size:10px}
+}
+
 </style>
 </head>
 <body>
@@ -1881,7 +2062,7 @@ input,select,textarea{
       Каждое сохранение дублируется локально: основная база + зеркало + IndexedDB snapshots + recovery cache.
       Внешний JSON-backup всё равно нужен перед удалением PWA или очисткой Safari.
     </div>
-    <div class="row"><span>Версия приложения</span><strong id="appVersionText">V6.8 GitHub</strong></div>
+    <div class="row"><span>Версия приложения</span><strong id="appVersionText">V6.8.1 GitHub</strong></div>
     <div class="row"><span>Версия структуры данных</span><strong id="schemaVersionText">2</strong></div>
     <div class="row"><span>Локальная защита</span><strong id="vaultStatusText">Проверяем…</strong></div>
     <div class="row"><span>Snapshots</span><strong id="vaultSnapshotText">—</strong></div>
@@ -2213,7 +2394,7 @@ input,select,textarea{
 </div></div>
 
 <script>
-const APP_VERSION='6.8-github';
+const APP_VERSION='6.8.1-github';
 const DATA_KEY='my-life-tracker-data';
 const MIRROR_KEY='my-life-tracker-data-mirror-v1';
 const CURRENT_SCHEMA_VERSION=2;

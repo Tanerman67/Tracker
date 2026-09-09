@@ -741,3 +741,14 @@ BACKWARDS COMPATIBILITY
 
 OTHER PAGES
 Today / Progress / Body / Alcohol / Settings logic was intentionally left unchanged.
+
+
+V6.8.1 — UNIFIED TYPOGRAPHY
+
+- Today is the visual typography reference.
+- English and Progress small text has been enlarged.
+- Progress chart axes and secondary labels are more readable.
+- Settings, Body and Alcohol use the same typography scale.
+- Buttons and form controls use the same Apple system font stack.
+- No application/data/review logic changed.
+- schemaVersion remains 2.
