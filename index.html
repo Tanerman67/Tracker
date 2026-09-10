@@ -195,7 +195,7 @@ input,select,textarea{
 }
 
 
-/* V6.8.3 GitHub compact home */
+/* V6.8.4 GitHub compact home */
 .metric-card{
   min-height:98px;
   padding:12px 13px;
@@ -218,7 +218,7 @@ input,select,textarea{
 }
 
 
-/* V6.8.3 GitHub: smoke/alcohol cards are statistic-only and sit on top */
+/* V6.8.4 GitHub: smoke/alcohol cards are statistic-only and sit on top */
 .metric-static{cursor:default}
 .metric-static .metric-head{align-items:center}
 .metric-mini-stat{
@@ -239,7 +239,7 @@ input,select,textarea{
 }
 
 
-/* V6.8.3 GitHub Steps input restored on Today */
+/* V6.8.4 GitHub Steps input restored on Today */
 .metric-wide{
   grid-column:1 / -1;
 }
@@ -259,7 +259,7 @@ input,select,textarea{
 }
 
 
-/* V6.8.3 GitHub — Weight card + exact 2×4 Today grid */
+/* V6.8.4 GitHub — Weight card + exact 2×4 Today grid */
 .metric-weight{
   cursor:pointer;
 }
@@ -295,7 +295,7 @@ input,select,textarea{
 }
 
 
-/* V6.8.3 GitHub — storage safety status */
+/* V6.8.4 GitHub — storage safety status */
 .storage-ok{color:#71ffd0}
 .storage-warn{color:#ffd27a}
 .backup-reminder{
@@ -317,7 +317,7 @@ input,select,textarea{
 }
 
 
-/* V6.8.3 GitHub Alcohol calendar */
+/* V6.8.4 GitHub Alcohol calendar */
 .metric-alcohol-clickable{cursor:pointer!important}
 .metric-alcohol-clickable:active{transform:scale(.985)}
 .alcohol-modal{display:none;position:fixed;inset:0;z-index:120;overflow:auto;background:radial-gradient(circle at 10% -5%,rgba(44,223,167,.18),transparent 27%),radial-gradient(circle at 100% 7%,rgba(107,102,255,.22),transparent 31%),linear-gradient(180deg,rgba(4,13,22,.99),rgba(5,9,18,.995));-webkit-overflow-scrolling:touch}
@@ -2294,7 +2294,7 @@ input,select,textarea{font-size:16px}
       Каждое сохранение дублируется локально: основная база + зеркало + IndexedDB snapshots + recovery cache.
       Внешний JSON-backup всё равно нужен перед удалением PWA или очисткой Safari.
     </div>
-    <div class="row"><span>Версия приложения</span><strong id="appVersionText">V6.8.3 GitHub</strong></div>
+    <div class="row"><span>Версия приложения</span><strong id="appVersionText">V6.8.4 GitHub</strong></div>
     <div class="row"><span>Версия структуры данных</span><strong id="schemaVersionText">2</strong></div>
     <div class="row"><span>Локальная защита</span><strong id="vaultStatusText">Проверяем…</strong></div>
     <div class="row"><span>Snapshots</span><strong id="vaultSnapshotText">—</strong></div>
@@ -2626,7 +2626,7 @@ input,select,textarea{font-size:16px}
 </div></div>
 
 <script>
-const APP_VERSION='6.8.3-github';
+const APP_VERSION='6.8.4-github';
 const DATA_KEY='my-life-tracker-data';
 const MIRROR_KEY='my-life-tracker-data-mirror-v1';
 const CURRENT_SCHEMA_VERSION=2;
@@ -2656,7 +2656,7 @@ const defaults={
  proteinGoal:120,stepsGoal:7000,outdoorsGoal:60,sleepGoal:7.5,englishGoal:240,gymGoal:3,
  trackers:defaultTrackers,logs:{},theme:'dark',language:'ru',experiments:[],
  motivationSeen:{},
- englishLearning:{customItems:[],review:{},favorites:{}},
+ englishLearning:{customItems:[],review:{},favorites:{},dailyQueue:{date:'',itemIds:[],newItemIds:[]}},
  lastExternalBackupAt:''
 };
 
@@ -2742,7 +2742,12 @@ function migrateData(raw){
     englishLearning:{
       customItems:Array.isArray(d.englishLearning?.customItems) ? d.englishLearning.customItems : [],
       review:(d.englishLearning?.review && typeof d.englishLearning.review==='object') ? d.englishLearning.review : {},
-      favorites:(d.englishLearning?.favorites && typeof d.englishLearning.favorites==='object') ? d.englishLearning.favorites : {}
+      favorites:(d.englishLearning?.favorites && typeof d.englishLearning.favorites==='object') ? d.englishLearning.favorites : {},
+      dailyQueue:{
+        date:typeof d.englishLearning?.dailyQueue?.date==='string' ? d.englishLearning.dailyQueue.date : '',
+        itemIds:Array.isArray(d.englishLearning?.dailyQueue?.itemIds) ? d.englishLearning.dailyQueue.itemIds : [],
+        newItemIds:Array.isArray(d.englishLearning?.dailyQueue?.newItemIds) ? d.englishLearning.dailyQueue.newItemIds : []
+      }
     },
     lastExternalBackupAt:d.lastExternalBackupAt||''
   };
@@ -3367,11 +3372,17 @@ let englishPracticeSelected=-1;
 
 function englishLearningStore(){
   if(!data.englishLearning || typeof data.englishLearning!=='object'){
-    data.englishLearning={customItems:[],review:{},favorites:{}};
+    data.englishLearning={customItems:[],review:{},favorites:{},dailyQueue:{date:'',itemIds:[],newItemIds:[]}};
   }
   if(!Array.isArray(data.englishLearning.customItems))data.englishLearning.customItems=[];
   if(!data.englishLearning.review || typeof data.englishLearning.review!=='object')data.englishLearning.review={};
   if(!data.englishLearning.favorites || typeof data.englishLearning.favorites!=='object')data.englishLearning.favorites={};
+  if(!data.englishLearning.dailyQueue || typeof data.englishLearning.dailyQueue!=='object'){
+    data.englishLearning.dailyQueue={date:'',itemIds:[],newItemIds:[]};
+  }
+  if(typeof data.englishLearning.dailyQueue.date!=='string')data.englishLearning.dailyQueue.date='';
+  if(!Array.isArray(data.englishLearning.dailyQueue.itemIds))data.englishLearning.dailyQueue.itemIds=[];
+  if(!Array.isArray(data.englishLearning.dailyQueue.newItemIds))data.englishLearning.dailyQueue.newItemIds=[];
   return data.englishLearning;
 }
 
@@ -3389,19 +3400,158 @@ function englishItemsByKind(kind){
   if(kind==='mistakes')return all.filter(x=>x.kind==='mistake');
   return all;
 }
+const ENGLISH_DAILY_NEW_LIMIT=3;
+const ENGLISH_DAILY_MAX=10;
+
 function englishReviewState(id){return englishLearningStore().review[id]||null}
-function englishIsDue(item,dateKey=localDate()){
-  const state=englishReviewState(item.id);
-  if(state?.nextReview)return state.nextReview<=dateKey;
-  return !!item.initialDue;
+
+function englishItemCategory(item){
+  if(['word','phrase','phrasal'].includes(item?.kind))return 'words';
+  if(item?.kind==='grammar')return 'grammar';
+  if(item?.kind==='mistake')return 'mistakes';
+  return 'other';
 }
-function englishDueItems(){return englishAllItems().filter(item=>englishIsDue(item))}
+
+function englishIsScheduledDue(item,dateKey=localDate()){
+  const state=englishReviewState(item.id);
+  return !!(state?.nextReview && state.nextReview<=dateKey);
+}
+
+function englishQueueItemActive(item,dateKey=localDate()){
+  const state=englishReviewState(item.id);
+  if(!state?.lastReviewed)return true;
+  return !!(state.nextReview && state.nextReview<=dateKey);
+}
+
+function englishDailyNewPattern(dateKey){
+  const patterns=[
+    ['words','grammar','words'],
+    ['words','mistakes','grammar'],
+    ['grammar','words','mistakes'],
+    ['words','grammar','mistakes']
+  ];
+  const seed=Number(String(dateKey).replace(/-/g,''))||0;
+  return patterns[seed%patterns.length];
+}
+
+function englishPickNewItems(excludedIds,dateKey,limit){
+  if(limit<=0)return [];
+  const candidates=englishAllItems()
+    .filter(item=>{
+      if(excludedIds.has(item.id))return false;
+      return !englishReviewState(item.id)?.lastReviewed;
+    })
+    .sort((a,b)=>(a.initialDue?0:1)-(b.initialDue?0:1));
+
+  const groups={words:[],grammar:[],mistakes:[],other:[]};
+  candidates.forEach(item=>(groups[englishItemCategory(item)]||groups.other).push(item));
+
+  const picked=[];
+  const pickedIds=new Set();
+  for(const category of englishDailyNewPattern(dateKey)){
+    if(picked.length>=limit)break;
+    const next=(groups[category]||[]).find(item=>!pickedIds.has(item.id));
+    if(next){picked.push(next);pickedIds.add(next.id)}
+  }
+  for(const item of candidates){
+    if(picked.length>=limit)break;
+    if(pickedIds.has(item.id))continue;
+    picked.push(item);
+    pickedIds.add(item.id);
+  }
+  return picked;
+}
+
+function persistEnglishDailyQueueQuietly(){
+  data.schemaVersion=CURRENT_SCHEMA_VERSION;
+  writeLocalCopies(data);
+  writeVaultCopies(structuredClone(data),false).catch(err=>{
+    console.warn('Daily English queue vault write failed',err);
+  });
+}
+
+function ensureEnglishDailyQueue(dateKey=localDate(),{persist=false}={}){
+  const store=englishLearningStore();
+  const existing=store.dailyQueue||{date:'',itemIds:[],newItemIds:[]};
+
+  if(existing.date===dateKey && Array.isArray(existing.itemIds)){
+    if(persist)persistEnglishDailyQueueQuietly();
+    return existing;
+  }
+
+  const itemMap=new Map(englishAllItems().map(item=>[item.id,item]));
+  const selected=[];
+  const selectedIds=new Set();
+  const addId=id=>{
+    if(selected.length>=ENGLISH_DAILY_MAX || selectedIds.has(id) || !itemMap.has(id))return;
+    selected.push(id);
+    selectedIds.add(id);
+  };
+
+  // Carry unfinished cards from the last queue.
+  for(const id of (existing.itemIds||[])){
+    const item=itemMap.get(id);
+    if(item && englishQueueItemActive(item,dateKey))addId(id);
+  }
+
+  // Add scheduled/overdue reviews, oldest first.
+  englishAllItems()
+    .filter(item=>englishIsScheduledDue(item,dateKey))
+    .sort((a,b)=>{
+      const ad=englishReviewState(a.id)?.nextReview||'9999-12-31';
+      const bd=englishReviewState(b.id)?.nextReview||'9999-12-31';
+      return ad.localeCompare(bd);
+    })
+    .forEach(item=>addId(item.id));
+
+  // Add up to three unseen cards if the daily workload has room.
+  const newSlots=Math.max(0,Math.min(
+    ENGLISH_DAILY_NEW_LIMIT,
+    ENGLISH_DAILY_MAX-selected.length
+  ));
+  const newItems=englishPickNewItems(selectedIds,dateKey,newSlots);
+  newItems.forEach(item=>addId(item.id));
+
+  store.dailyQueue={date:dateKey,itemIds:selected,newItemIds:newItems.map(item=>item.id)};
+  if(persist)persistEnglishDailyQueueQuietly();
+  return store.dailyQueue;
+}
+
+function englishTodayQueueItems(dateKey=localDate()){
+  const queue=ensureEnglishDailyQueue(dateKey,{persist:false});
+  return (queue.itemIds||[])
+    .map(id=>englishItemById(id))
+    .filter(Boolean)
+    .filter(item=>englishQueueItemActive(item,dateKey));
+}
+
+function englishIsDue(item,dateKey=localDate()){
+  if(englishIsScheduledDue(item,dateKey))return true;
+  const queue=englishLearningStore().dailyQueue;
+  return !!(
+    queue?.date===dateKey &&
+    Array.isArray(queue.itemIds) &&
+    queue.itemIds.includes(item.id) &&
+    englishQueueItemActive(item,dateKey)
+  );
+}
+
+function englishDueItems(dateKey=localDate()){
+  return englishTodayQueueItems(dateKey);
+}
+
 function englishReviewCounts(){
-  const due=englishDueItems();
+  const due=englishTodayQueueItems(localDate());
+  const queue=englishLearningStore().dailyQueue;
+  const activeIds=new Set(due.map(x=>x.id));
+  const newCount=(queue?.date===localDate() && Array.isArray(queue.newItemIds))
+    ?queue.newItemIds.filter(id=>activeIds.has(id)).length
+    :0;
   return {
     words:due.filter(x=>['word','phrase','phrasal'].includes(x.kind)).length,
     grammar:due.filter(x=>x.kind==='grammar').length,
     mistakes:due.filter(x=>x.kind==='mistake').length,
+    newCount,
     total:due.length
   };
 }
@@ -3460,7 +3610,8 @@ function openEnglishLearning(view='words',itemId=''){
   englishLearningView=view;
   englishLearningItemId=itemId||'';
   if(view==='review'){
-    englishReviewQueueIds=englishDueItems().map(x=>x.id);
+    ensureEnglishDailyQueue(localDate(),{persist:true});
+    englishReviewQueueIds=englishDueItems(localDate()).map(x=>x.id);
     englishReviewInitialTotal=englishReviewQueueIds.length;
     englishReviewAnswerShown=false;
   }
@@ -5482,7 +5633,7 @@ function renderEnglish(){
   const counts=englishReviewCounts();
   setText(
     'englishReviewCounts',
-    `${counts.words} ${trText('слов/фраз','words')} · ${counts.grammar} ${trText('правил','rules')} · ${counts.mistakes} ${trText('ошибок','mistakes')}`
+    `${counts.words} ${trText('слов/фраз','words')} · ${counts.grammar} ${trText('правил','rules')} · ${counts.mistakes} ${trText('ошибок','mistakes')}${counts.newCount?` · ${counts.newCount} ${trText('новых','new')}`:''}`
   );
   setText('englishWordsCount',englishItemsByKind('words').length);
   setText('englishWordsDue',`${counts.words} ${trText('к повторению','due')}`);
@@ -6920,9 +7071,44 @@ function renderSettings(){
  renderExperiments();
 }
 function render(){applyTheme();for(const job of [renderToday,renderEnglish,renderProgress,renderSettings]){try{job()}catch(e){console.error('Render error in '+job.name,e)}}try{translateDOM()}catch(e){console.error('Translation error',e)}}
+
+let appActiveDate=localDate();
+function rebuildEnglishReviewQueueForToday(){
+  ensureEnglishDailyQueue(localDate(),{persist:true});
+  englishReviewQueueIds=englishDueItems(localDate()).map(x=>x.id);
+  englishReviewInitialTotal=englishReviewQueueIds.length;
+  englishReviewAnswerShown=false;
+}
+function checkAppDayRollover(){
+  const today=localDate();
+  if(today===appActiveDate)return false;
+  appActiveDate=today;
+  ensureEnglishDailyQueue(today,{persist:true});
+  render();
+  const learningModal=document.getElementById('englishLearningModal');
+  if(learningModal?.classList.contains('show')){
+    if(englishLearningView==='review')rebuildEnglishReviewQueueForToday();
+    renderEnglishLearning();
+  }
+  return true;
+}
+
 if('serviceWorker'in navigator){addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(()=>{}))}
 render();
-recoverFromVaults().catch(err=>{console.warn('Vault recovery failed',err);updateStorageSafetyUI()})
+recoverFromVaults()
+  .then(()=>{
+    ensureEnglishDailyQueue(localDate(),{persist:true});
+    appActiveDate=localDate();
+    render();
+  })
+  .catch(err=>{console.warn('Vault recovery failed',err);updateStorageSafetyUI()});
+
+addEventListener('focus',checkAppDayRollover);
+document.addEventListener('visibilitychange',()=>{
+  if(!document.hidden)checkAppDayRollover();
+});
+setInterval(checkAppDayRollover,60000);
+
 addEventListener('keydown',e=>{
   if(e.key!=='Escape')return;
   if(document.getElementById('englishAddModal')?.classList.contains('show'))return closeEnglishAdd();

@@ -808,3 +808,14 @@ DATA SAFETY
 - schemaVersion remains 2.
 - No data migration.
 - No stored data field added.
+
+
+V6.8.4 — DAILY REVIEW QUEUE + DAY ROLLOVER
+- scheduled/overdue reviews first
+- up to 3 new unseen cards/day
+- max 10 active cards/day
+- unfinished cards carry over
+- same-day queue does not endlessly refill
+- local day rollover checked every 60 sec, on focus and visibility
+- open Review Queue rebuilds automatically after rollover
+- additive dailyQueue field only; schemaVersion stays 2
