@@ -195,7 +195,7 @@ input,select,textarea{
 }
 
 
-/* V6.8.4 GitHub compact home */
+/* V6.9 GitHub compact home */
 .metric-card{
   min-height:98px;
   padding:12px 13px;
@@ -218,7 +218,7 @@ input,select,textarea{
 }
 
 
-/* V6.8.4 GitHub: smoke/alcohol cards are statistic-only and sit on top */
+/* V6.9 GitHub: smoke/alcohol cards are statistic-only and sit on top */
 .metric-static{cursor:default}
 .metric-static .metric-head{align-items:center}
 .metric-mini-stat{
@@ -239,7 +239,7 @@ input,select,textarea{
 }
 
 
-/* V6.8.4 GitHub Steps input restored on Today */
+/* V6.9 GitHub Steps input restored on Today */
 .metric-wide{
   grid-column:1 / -1;
 }
@@ -259,7 +259,7 @@ input,select,textarea{
 }
 
 
-/* V6.8.4 GitHub — Weight card + exact 2×4 Today grid */
+/* V6.9 GitHub — Weight card + exact 2×4 Today grid */
 .metric-weight{
   cursor:pointer;
 }
@@ -295,7 +295,7 @@ input,select,textarea{
 }
 
 
-/* V6.8.4 GitHub — storage safety status */
+/* V6.9 GitHub — storage safety status */
 .storage-ok{color:#71ffd0}
 .storage-warn{color:#ffd27a}
 .backup-reminder{
@@ -317,7 +317,7 @@ input,select,textarea{
 }
 
 
-/* V6.8.4 GitHub Alcohol calendar */
+/* V6.9 GitHub Alcohol calendar */
 .metric-alcohol-clickable{cursor:pointer!important}
 .metric-alcohol-clickable:active{transform:scale(.985)}
 .alcohol-modal{display:none;position:fixed;inset:0;z-index:120;overflow:auto;background:radial-gradient(circle at 10% -5%,rgba(44,223,167,.18),transparent 27%),radial-gradient(circle at 100% 7%,rgba(107,102,255,.22),transparent 31%),linear-gradient(180deg,rgba(4,13,22,.99),rgba(5,9,18,.995));-webkit-overflow-scrolling:touch}
@@ -2048,6 +2048,73 @@ input,select,textarea{font-size:16px}
   .english-review-buttons button{padding-left:3px;padding-right:3px}
 }
 
+
+/* ==========================================================
+   V6.9 — B2 Week 1 Study Plan
+   ========================================================== */
+.english-plan-banner{
+  position:relative;width:100%;margin-top:10px;padding:15px;
+  display:grid;grid-template-columns:minmax(0,1fr) auto;gap:9px 12px;
+  text-align:left;color:#eefeff;overflow:hidden;
+  background:radial-gradient(circle at 100% 0,rgba(107,102,255,.24),transparent 44%),linear-gradient(135deg,rgba(7,56,61,.86),rgba(24,30,82,.85));
+  border:1px solid rgba(99,124,255,.27);box-shadow:0 14px 34px rgba(0,0,0,.25);
+}
+.english-plan-main{min-width:0;display:grid;gap:3px}
+.english-plan-kicker{font-size:12px;font-weight:800;color:#7aebc9}
+.english-plan-main strong{font-size:15px;line-height:1.28;white-space:normal}
+.english-plan-main>span:last-child{font-size:11.5px;color:#8ca6b7}
+.english-plan-dashboard-progress{text-align:right;display:grid;align-content:start;gap:2px;white-space:nowrap}
+.english-plan-dashboard-progress strong{font-size:17px;color:#9dffe2}
+.english-plan-dashboard-progress span{font-size:10px;color:#849aac}
+.english-plan-progress{grid-column:1/-1;margin-top:2px}
+
+.english-plan-view,.english-plan-lesson-view{display:grid;gap:11px}
+.english-plan-summary-card,.english-plan-lesson-hero,.english-plan-section,.english-plan-success-card{
+  padding:15px;border-radius:20px;min-width:0;
+  background:linear-gradient(145deg,rgba(7,38,49,.84),rgba(16,23,60,.86));
+  border:1px solid rgba(93,126,221,.18)
+}
+.english-plan-view-title{margin-top:6px;font-size:23px;font-weight:900;line-height:1.2}
+.english-plan-methods{display:flex;gap:6px;flex-wrap:wrap;margin-top:11px}
+.english-plan-methods span,.english-plan-ref-chips span{
+  padding:6px 8px;border-radius:999px;font-size:10px;color:#9debd5;background:rgba(32,132,103,.14);border:1px solid rgba(62,217,171,.16)
+}
+.english-plan-summary-progress{margin-top:12px;display:flex;justify-content:space-between;align-items:center;gap:10px}
+.english-plan-summary-progress strong{font-size:16px}.english-plan-summary-progress span{font-size:11px;color:#8ba3b3}
+.english-plan-lessons{display:grid;gap:9px}
+.english-plan-lesson-card{
+  width:100%;min-width:0;padding:14px;text-align:left;color:#effbff;
+  background:linear-gradient(145deg,rgba(7,32,45,.82),rgba(15,21,53,.84));border:1px solid rgba(95,126,213,.18);box-shadow:none
+}
+.english-plan-lesson-card.completed{border-color:rgba(66,228,179,.28)}
+.english-plan-lesson-top{display:flex;justify-content:space-between;gap:8px;align-items:center;font-size:10.5px;color:#819bac}
+.english-plan-lesson-top em{font-style:normal;color:#74e8c7;white-space:nowrap}
+.english-plan-lesson-card>strong{display:block;margin-top:7px;font-size:15px;line-height:1.3}
+.english-plan-lesson-card p{margin:6px 0 0;font-size:12px;line-height:1.42;color:#a8bbc7}
+.english-plan-done{margin-top:8px;font-size:10.5px;color:#78eccb;font-weight:800}
+.english-plan-success-card>strong{font-size:15px}.english-plan-success-card ol{margin:10px 0 0;padding-left:20px;color:#a9bbc6;font-size:12px;line-height:1.5}.english-plan-success-card li+li{margin-top:5px}
+
+.english-plan-focus-text{margin-top:8px;color:#a9bcc8;font-size:13px;line-height:1.45}
+.english-plan-statuses{display:flex;gap:6px;margin-top:13px;overflow-x:auto;max-width:100%;scrollbar-width:none}.english-plan-statuses::-webkit-scrollbar{display:none}
+.english-plan-statuses button{flex:0 0 auto;padding:7px 9px;font-size:10.5px;color:#8da5b5;background:rgba(9,28,43,.66);border:1px solid rgba(95,126,213,.16);box-shadow:none}
+.english-plan-statuses button.active{color:#9ffff0;border-color:rgba(57,231,179,.3);background:rgba(27,137,105,.18)}
+.english-plan-section-head{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:10px}.english-plan-section-head strong{font-size:15px}.english-plan-section-head span{font-size:10.5px;color:#8199aa}
+.english-plan-blocks,.english-plan-rules,.english-plan-exercises,.english-plan-vocab{display:grid;gap:8px}
+.english-plan-block{display:grid;grid-template-columns:36px minmax(0,1fr);gap:9px;padding:9px 10px;border-radius:13px;background:rgba(6,24,38,.5)}
+.english-plan-block>b{display:grid;place-items:center;width:34px;height:34px;border-radius:11px;background:rgba(37,148,114,.17);color:#75eac8;font-size:11px}.english-plan-block>div{display:grid;gap:2px;min-width:0}.english-plan-block strong{font-size:12px}.english-plan-block span{font-size:11px;color:#94aab8;line-height:1.4}
+.english-plan-ref-chips{display:flex;gap:6px;flex-wrap:wrap}
+.english-plan-rule{padding:11px 12px;border-radius:14px;background:rgba(7,25,39,.55);border:1px solid rgba(92,120,193,.12)}.english-plan-rule>strong{font-size:12.5px;line-height:1.45}.english-plan-rule-example{margin-top:7px;padding-left:9px;border-left:2px solid rgba(73,226,183,.35);font-size:12px;color:#c8d8df;line-height:1.4}
+.english-plan-exercise{padding:12px;border-radius:16px;background:rgba(6,24,38,.55);border:1px solid rgba(92,120,193,.13)}
+.english-plan-exercise-head{display:flex;justify-content:space-between;gap:8px;align-items:center}.english-plan-exercise-head strong{font-size:12px;color:#7cedca}.english-plan-exercise-head span{font-size:10px;color:#778f9f;text-transform:capitalize}.english-plan-instruction{margin-top:5px;font-size:11.5px;color:#9eb1bd;line-height:1.42}
+.english-plan-exercise-item{margin-top:11px;padding-top:10px;border-top:1px solid rgba(255,255,255,.055)}.english-plan-prompt{font-size:13px;line-height:1.45;color:#e9f6f8}.english-plan-answer-input{margin-top:8px;min-height:46px;padding:9px 10px;font-size:13px}.english-plan-reveal{margin-top:8px;padding:8px 10px;font-size:10.5px;color:#80ecca;background:rgba(24,121,94,.14);border:1px solid rgba(53,211,164,.2);box-shadow:none}.english-plan-answer,.english-plan-target{margin-top:8px;padding:9px 10px;border-radius:12px;font-size:12px;line-height:1.4}.english-plan-answer{color:#dffaf2;background:rgba(25,128,98,.14)}.english-plan-target{color:#c0ccff;background:rgba(80,76,177,.14)}.english-plan-answer span,.english-plan-target span{display:block;margin-bottom:3px;font-size:9px;text-transform:uppercase;letter-spacing:.06em;color:#7f98a8}
+.english-plan-vocab-card{padding:12px;border-radius:15px;background:rgba(6,25,39,.55);border:1px solid rgba(89,119,197,.14)}.english-plan-vocab-top{display:flex;justify-content:space-between;gap:8px;align-items:center}.english-plan-vocab-top strong{font-size:16px}.english-plan-vocab-top span{padding:4px 6px;border-radius:999px;font-size:9px;color:#70e5c4;background:rgba(29,132,101,.16)}.english-plan-vocab-example{margin-top:7px;font-size:12px;line-height:1.43;color:#d3e0e5}.english-plan-translation{margin-top:8px;padding:9px 10px;border-radius:12px;color:#bff5e4;background:rgba(25,128,98,.13);font-size:12.5px}.english-word-reveal{display:block;width:max-content}
+.english-plan-finish{width:100%;padding:13px;font-size:13px}.english-plan-finish.completed{color:#70e6c6;background:rgba(28,119,94,.13)}
+
+@media(max-width:360px){
+  .english-plan-banner{padding:13px;gap:8px}.english-plan-main strong{font-size:14px}.english-plan-dashboard-progress strong{font-size:16px}
+  .english-plan-view-title{font-size:21px}.english-plan-statuses button{font-size:10px;padding:7px 8px}
+}
+
 </style>
 </head>
 <body>
@@ -2108,6 +2175,19 @@ input,select,textarea{font-size:16px}
       <div class="english-review-counts" id="englishReviewCounts">—</div>
     </div>
     <div class="english-review-action">▶ <span id="englishStartReviewText">Start review</span></div>
+  </button>
+
+  <button class="english-plan-banner" onclick="openEnglishWeekPlan()">
+    <div class="english-plan-main">
+      <div class="english-plan-kicker">🧭 <span id="englishPlanKicker">B2 · Week 1</span></div>
+      <strong id="englishPlanDashboardTitle">B2 ChatGPT Grammar Plan — Week 1</strong>
+      <span id="englishPlanDashboardMeta">4 lessons · 240 min</span>
+    </div>
+    <div class="english-plan-dashboard-progress">
+      <strong id="englishPlanDashboardCompleted">0 / 4</strong>
+      <span id="englishPlanDashboardCompletedLabel">completed</span>
+    </div>
+    <div class="progress english-plan-progress"><span id="englishPlanDashboardBar"></span></div>
   </button>
 
   <div class="english-week-card card">
@@ -2294,7 +2374,7 @@ input,select,textarea{font-size:16px}
       Каждое сохранение дублируется локально: основная база + зеркало + IndexedDB snapshots + recovery cache.
       Внешний JSON-backup всё равно нужен перед удалением PWA или очисткой Safari.
     </div>
-    <div class="row"><span>Версия приложения</span><strong id="appVersionText">V6.8.4 GitHub</strong></div>
+    <div class="row"><span>Версия приложения</span><strong id="appVersionText">V6.9 GitHub</strong></div>
     <div class="row"><span>Версия структуры данных</span><strong id="schemaVersionText">2</strong></div>
     <div class="row"><span>Локальная защита</span><strong id="vaultStatusText">Проверяем…</strong></div>
     <div class="row"><span>Snapshots</span><strong id="vaultSnapshotText">—</strong></div>
@@ -2626,7 +2706,7 @@ input,select,textarea{font-size:16px}
 </div></div>
 
 <script>
-const APP_VERSION='6.8.4-github';
+const APP_VERSION='6.9.1-github';
 const DATA_KEY='my-life-tracker-data';
 const MIRROR_KEY='my-life-tracker-data-mirror-v1';
 const CURRENT_SCHEMA_VERSION=2;
@@ -2656,7 +2736,7 @@ const defaults={
  proteinGoal:120,stepsGoal:7000,outdoorsGoal:60,sleepGoal:7.5,englishGoal:240,gymGoal:3,
  trackers:defaultTrackers,logs:{},theme:'dark',language:'ru',experiments:[],
  motivationSeen:{},
- englishLearning:{customItems:[],review:{},favorites:{},dailyQueue:{date:'',itemIds:[],newItemIds:[]}},
+ englishLearning:{customItems:[],review:{},favorites:{},dailyQueue:{date:'',itemIds:[],newItemIds:[]},studyPlans:{}},
  lastExternalBackupAt:''
 };
 
@@ -2689,11 +2769,13 @@ function candidateBetter(a,b){
   if(!a)return false;
   if(!b)return true;
   const A=dataStats(a.data),B=dataStats(b.data);
+  // Saved chronology preserves intentional deletions and backup imports.
+  // Legacy copies without metadata still fall back to record coverage.
+  if(A.savedAt!==B.savedAt)return A.savedAt>B.savedAt;
+  if(A.revision!==B.revision)return A.revision>B.revision;
   if(A.logDays!==B.logDays)return A.logDays>B.logDays;
   if(A.entries!==B.entries)return A.entries>B.entries;
   if(A.latest!==B.latest)return A.latest>B.latest;
-  if(A.revision!==B.revision)return A.revision>B.revision;
-  if(A.savedAt!==B.savedAt)return A.savedAt>B.savedAt;
   return !!a.primary && !b.primary;
 }
 
@@ -2747,7 +2829,8 @@ function migrateData(raw){
         date:typeof d.englishLearning?.dailyQueue?.date==='string' ? d.englishLearning.dailyQueue.date : '',
         itemIds:Array.isArray(d.englishLearning?.dailyQueue?.itemIds) ? d.englishLearning.dailyQueue.itemIds : [],
         newItemIds:Array.isArray(d.englishLearning?.dailyQueue?.newItemIds) ? d.englishLearning.dailyQueue.newItemIds : []
-      }
+      },
+      studyPlans:(d.englishLearning?.studyPlans && typeof d.englishLearning.studyPlans==='object') ? d.englishLearning.studyPlans : {}
     },
     lastExternalBackupAt:d.lastExternalBackupAt||''
   };
@@ -2941,7 +3024,7 @@ function stampCurrentData(){
   const previous=data&&data._storageMeta&&typeof data._storageMeta==='object'?data._storageMeta:{};
   data._storageMeta={
     revision:Number(previous.revision||0)+1,
-    savedAt:new Date().toISOString(),
+    savedAt:new Date(Math.max(Date.now(),(Date.parse(previous.savedAt)||0)+1)).toISOString(),
     appVersion:APP_VERSION
   };
 }
@@ -2983,6 +3066,8 @@ async function recoverFromVaults(){
     console.warn('Cache vault read failed',e);
   }
 
+  // A user may save while the asynchronous recovery reads are running.
+  candidates[0]={key:'memory/local',data:migrateData(data),primary:true};
   const best=bestCandidate(candidates);
   const memory=candidates[0];
 
@@ -3029,7 +3114,7 @@ const englishTypes=[
 ];
 
 const ENGLISH_WORD_SEEDS=[
-  {id:'word_figure_out',kind:'phrasal',level:'B1',title:'figure out',ipa:'/ˈfɪɡər aʊt/',ru:'разобраться, понять',example:'I need to figure out how this API works.',initialDue:true},
+  {id:'word_figure_out',kind:'phrasal',level:'B1',title:'figure out',ipa:'/ˈfɪɡər aʊt/',ru:'разобраться, понять',example:'I need to figure out how this API works.',initialDue:true,translationHidden:true,sourcePlan:'b2-chatgpt-week-1'},
   {id:'word_retrieve',kind:'word',level:'B2',title:'retrieve',ipa:'/rɪˈtriːv/',ru:'извлекать, получать обратно',example:'You can retrieve the file from the backup.',initialDue:true},
   {id:'word_particular',kind:'word',level:'B1',title:'particular',ipa:'/pərˈtɪkjələr/',ru:'особенный; конкретный',example:'I am looking for a particular kind of information.',initialDue:false},
   {id:'word_abandon',kind:'word',level:'B1+',title:'abandon',ipa:'/əˈbændən/',ru:'покидать, оставлять; отказываться от',example:'They had to abandon the plan.',initialDue:false},
@@ -3044,12 +3129,21 @@ const ENGLISH_WORD_SEEDS=[
   {id:'word_reluctant',kind:'word',level:'B2',title:'reluctant',ipa:'/rɪˈlʌktənt/',ru:'неохотный, испытывающий нежелание',example:'He was reluctant to ask for help.',initialDue:true},
   {id:'word_overwhelmed',kind:'word',level:'B2',title:'overwhelmed',ipa:'/ˌoʊvərˈwelmd/',ru:'перегруженный, подавленный количеством чего-либо',example:'I felt overwhelmed by the amount of new information.',initialDue:false},
   {id:'word_get_into',kind:'phrasal',level:'B1',title:'get into',ipa:'/ɡet ˈɪntuː/',ru:'увлечься; начать заниматься; попасть в',example:'I want to get into fitness again.',initialDue:false},
-  {id:'word_so_far',kind:'phrase',level:'B1',title:'so far',ipa:'/soʊ ˈfɑːr/',ru:'пока что, до настоящего момента',example:'So far, the new routine is working well.',initialDue:false},
-  {id:'word_keep_up',kind:'phrasal',level:'B1',title:'keep up',ipa:'/kiːp ʌp/',ru:'поддерживать темп; не отставать',example:'It is hard to keep up when people speak very fast.',initialDue:false},
+  {id:'word_so_far',kind:'phrase',level:'B1',title:'so far',ipa:'/soʊ ˈfɑːr/',ru:'пока что, до настоящего момента',example:'So far, the new routine is working well.',initialDue:false,translationHidden:true,sourcePlan:'b2-chatgpt-week-1'},
+  {id:'word_keep_up',kind:'phrasal',level:'B1',title:'keep up',ipa:'/kiːp ʌp/',ru:'поддерживать темп; не отставать',example:'It is hard to keep up when people speak very fast.',initialDue:false,translationHidden:true,sourcePlan:'b2-chatgpt-week-1'},
   {id:'word_motorway',kind:'word',level:'B1',title:'motorway',ipa:'/ˈmoʊtərweɪ/',ru:'автомагистраль',example:'Traffic was heavy on the motorway.',initialDue:false},
   {id:'word_stamina',kind:'word',level:'B2',title:'stamina',ipa:'/ˈstæmɪnə/',ru:'выносливость',example:'Regular exercise can improve your stamina.',initialDue:false},
   {id:'word_retreat',kind:'word',level:'B2',title:'retreat',ipa:'/rɪˈtriːt/',ru:'отступать; уединённое место / ретрит',example:'The group was forced to retreat.',initialDue:false},
-  {id:'word_chewing',kind:'word',level:'B1',title:'chewing',ipa:'/ˈtʃuːɪŋ/',ru:'жевание; жующий',example:'Chewing slowly can help you notice when you are full.',initialDue:false}
+  {id:'word_chewing',kind:'word',level:'B1',title:'chewing',ipa:'/ˈtʃuːɪŋ/',ru:'жевание; жующий',example:'Chewing slowly can help you notice when you are full.',initialDue:false},
+  {id:"word_give_it_a_go",kind:"phrase",title:"give it a go",ipa:"/ɡɪv ɪt ə ɡəʊ/",ru:"попробовать",example:"I’m not completely sure, but I’ll give it a go.",initialDue:false,translationHidden:true,sourcePlan:"b2-chatgpt-week-1",nzUsage:true},
+  {id:"word_make_progress",kind:"phrase",title:"make progress",ipa:"/meɪk ˈprəʊɡres/",ru:"добиваться прогресса",example:"I've been making progress with spontaneous speaking.",initialDue:false,translationHidden:true,sourcePlan:"b2-chatgpt-week-1"},
+  {id:"word_settle_in",kind:"phrasal",title:"settle in",ipa:"/ˈsetl ɪn/",ru:"обжиться; освоиться",example:"We've been settling into life in Auckland.",initialDue:false,translationHidden:true,sourcePlan:"b2-chatgpt-week-1",nzUsage:true},
+  {id:"word_unless",kind:"word",title:"unless",ipa:"/ənˈles/",ru:"если не; разве что",example:"You won't remember it unless you use it.",initialDue:false,translationHidden:true,sourcePlan:"b2-chatgpt-week-1"},
+  {id:"word_otherwise",kind:"word",title:"otherwise",ipa:"/ˈʌðəwaɪz/",ru:"иначе; в противном случае",example:"Practise aloud; otherwise, recognition will not become active speech.",initialDue:false,translationHidden:true,sourcePlan:"b2-chatgpt-week-1"},
+  {id:"word_sort_out",kind:"phrasal",title:"sort out",ipa:"/sɔːt aʊt/",ru:"разобраться; уладить",example:"I'll sort out the appointment tomorrow.",initialDue:false,translationHidden:true,sourcePlan:"b2-chatgpt-week-1",nzUsage:true},
+  {id:"word_catch_up",kind:"phrasal",title:"catch up",ipa:"/kætʃ ʌp/",ru:"пообщаться после перерыва; наверстать",example:"Let's catch up over coffee this weekend.",initialDue:false,translationHidden:true,sourcePlan:"b2-chatgpt-week-1",nzUsage:true},
+  {id:"word_pop_in",kind:"phrasal",title:"pop in",ipa:"/pɒp ɪn/",ru:"ненадолго зайти",example:"I'll pop into the dairy on my way home.",initialDue:false,translationHidden:true,sourcePlan:"b2-chatgpt-week-1",nzUsage:true},
+  {id:"word_head_off",kind:"phrasal",title:"head off",ipa:"/hed ɒf/",ru:"отправиться; выдвинуться",example:"We're heading off to the beach early.",initialDue:false,translationHidden:true,sourcePlan:"b2-chatgpt-week-1",nzUsage:true}
 ];
 
 const ENGLISH_GRAMMAR_SEEDS=[
@@ -3189,6 +3283,11 @@ const ENGLISH_MISTAKE_SEEDS=[
   {id:'mistake_turned_odd',kind:'mistake',level:'B1',title:"My phone turned odd because I hadn’t charged it the night before.",correct:"My phone turned off because I hadn’t charged it the night before.",ruleRu:'Turn off = выключиться. Odd = странный.',ruleEn:'Turn off means stop operating. Odd means strange.',initialDue:false},
   {id:'mistake_by_time',kind:'mistake',level:'B1',title:'By the time I had already left, they arrived.',correct:'By the time they arrived, I had already left.',ruleRu:'После by the time ставим событие-ориентир; более раннее действие выражаем Past Perfect.',ruleEn:'After by the time, place the reference event; use Past Perfect for the earlier action.',initialDue:false}
 ];
+
+
+const ENGLISH_WEEK_PLAN={"schemaVersion":1,"planId":"b2-chatgpt-week-1","title":{"en":"B2 ChatGPT Grammar Plan — Week 1","ru":"План грамматики B2 с ChatGPT — неделя 1"},"level":"B1 to B2","totalMinutes":240,"sessionsPerWeek":4,"translationDisplay":"hidden_until_tap","method":["targeted_diagnosis","active_recall","spaced_review","controlled_to_free_practice"],"sessions":[{"id":"session-1","durationMinutes":60,"topic":"Gerunds and infinitives","mainFocus":"Choose -ing or to + verb after common verbs and expressions.","blocks":[{"minutes":5,"type":"diagnostic","instruction":"Complete five sentences without checking the rule."},{"minutes":12,"type":"explanation","instruction":"Study the patterns and compare the examples."},{"minutes":18,"type":"controlled_practice","instruction":"Complete Exercises 1 and 2."},{"minutes":15,"type":"speaking","instruction":"Answer the prompts aloud using the target patterns."},{"minutes":10,"type":"review","instruction":"Correct mistakes and save three personal examples."}],"rules":[{"rule":"Use verb + -ing after enjoy, avoid, mention, suggest, finish and keep.","examples":["I enjoy speaking English.","She mentioned moving to Auckland."]},{"rule":"Use verb + to-infinitive after decide, hope, plan, want, need and promise.","examples":["I plan to apply for jobs.","We decided to stay in New Zealand."]},{"rule":"Use -ing after prepositions and expressions such as How about... ?","examples":["How about practising after dinner?","I'm interested in improving my pronunciation."]}],"exercises":[{"id":"1a","type":"fill_gap","instruction":"Use the correct form of the verb in brackets.","items":[{"prompt":"I avoid ___ English only in class. (speak)","answer":"speaking"},{"prompt":"We decided ___ a different course. (try)","answer":"to try"},{"prompt":"How about ___ the answer again? (explain)","answer":"explaining"},{"prompt":"He mentioned ___ late. (arrive)","answer":"arriving"},{"prompt":"I hope ___ more confidently soon. (speak)","answer":"to speak"}]},{"id":"1b","type":"personal_speaking","instruction":"Answer aloud in two or three sentences.","items":[{"prompt":"What do you enjoy doing in Auckland?","target":"enjoy + -ing"},{"prompt":"What do you plan to do when your English reaches B2?","target":"plan + to-infinitive"},{"prompt":"Suggest an English activity for tonight.","target":"How about + -ing"}]}],"vocabulary":[{"term":"figure out","ipa":"/ˈfɪɡə aʊt/","translationRu":"разобраться; понять","translationHidden":true,"example":"I’m trying to figure out which form sounds right."},{"term":"keep up","ipa":"/kiːp ʌp/","translationRu":"поддерживать темп; не отставать","translationHidden":true,"example":"It is easier to keep up when I study regularly."},{"term":"give it a go","ipa":"/ɡɪv ɪt ə ɡəʊ/","translationRu":"попробовать","translationHidden":true,"nzUsage":true,"example":"I’m not completely sure, but I’ll give it a go."}]},{"id":"session-2","durationMinutes":60,"topic":"Present Perfect vs Present Perfect Continuous","mainFocus":"Contrast completed results with duration or ongoing activity.","blocks":[{"minutes":8,"type":"spaced_review","instruction":"Recall Session 1 patterns and say three examples."},{"minutes":12,"type":"explanation","instruction":"Compare result, duration and repeated activity."},{"minutes":15,"type":"controlled_practice","instruction":"Complete Exercise 2a."},{"minutes":15,"type":"speaking","instruction":"Describe your life and English study using both tenses."},{"minutes":10,"type":"correction","instruction":"Ask ChatGPT for direct corrections and repeat each corrected sentence."}],"rules":[{"rule":"Use Present Perfect for a result, completed amount or life experience.","examples":["I've completed four lessons this week.","I've lived in three countries."]},{"rule":"Use Present Perfect Continuous for duration, an unfinished activity or visible recent activity.","examples":["I've been studying for two hours.","It's wet because it has been raining."]},{"rule":"Some state verbs normally use the simple form, not the continuous form.","examples":["I've known her for ten years.","I've wanted to improve my English for a long time."]}],"exercises":[{"id":"2a","type":"choose_tense","instruction":"Complete each sentence with the best tense.","items":[{"prompt":"I ___ three grammar exercises today. (finish)","answer":"have finished"},{"prompt":"I ___ English since breakfast. (study)","answer":"have been studying"},{"prompt":"How long ___ you ___ in Auckland? (live)","answer":"have you been living"},{"prompt":"I ___ that word several times this week. (use)","answer":"have used"},{"prompt":"She ___ him since university. (know)","answer":"has known"}]},{"id":"2b","type":"personal_speaking","instruction":"Speak for two minutes. Include at least two examples of each tense.","prompt":"What have you achieved since moving to New Zealand, and what have you been working on recently?"}],"vocabulary":[{"term":"so far","ipa":"/səʊ fɑː/","translationRu":"пока что; к настоящему моменту","translationHidden":true,"example":"I've studied for four hours so far this week."},{"term":"make progress","ipa":"/meɪk ˈprəʊɡres/","translationRu":"добиваться прогресса","translationHidden":true,"example":"I've been making progress with spontaneous speaking."},{"term":"settle in","ipa":"/ˈsetl ɪn/","translationRu":"обжиться; освоиться","translationHidden":true,"nzUsage":true,"example":"We've been settling into life in Auckland."}]},{"id":"session-3","durationMinutes":60,"topic":"Conditionals with unless and otherwise","mainFocus":"Express real and hypothetical consequences accurately.","blocks":[{"minutes":8,"type":"spaced_review","instruction":"Review two errors from Sessions 1 and 2."},{"minutes":12,"type":"explanation","instruction":"Compare first, second and third conditionals."},{"minutes":18,"type":"controlled_practice","instruction":"Complete Exercises 3a and 3b."},{"minutes":15,"type":"speaking","instruction":"Answer hypothetical questions without writing first."},{"minutes":7,"type":"review","instruction":"Build a three-card error review set."}],"rules":[{"rule":"First conditional: if/unless + present, will + base verb for a realistic future result.","examples":["If I practise daily, I'll improve.","I won't improve unless I speak regularly."]},{"rule":"Second conditional: if + past, would + base verb for a hypothetical present or future.","examples":["If I had more confidence, I would speak more."]},{"rule":"Third conditional: if + past perfect, would have + past participle for an unreal past.","examples":["If I had practised earlier, I would have felt calmer."]},{"rule":"Otherwise introduces the consequence if the previous action does not happen.","examples":["Write the phrase down; otherwise, you may forget it."]}],"exercises":[{"id":"3a","type":"rewrite","instruction":"Rewrite without changing the meaning.","items":[{"prompt":"If I don't practise speaking, I won't become confident. Use unless.","answer":"I won't become confident unless I practise speaking."},{"prompt":"Leave now, or you will miss the bus. Use otherwise.","answer":"Leave now; otherwise, you will miss the bus."},{"prompt":"I didn't prepare, so I felt nervous. Use the third conditional.","answer":"If I had prepared, I wouldn't have felt nervous."}]},{"id":"3b","type":"personal_speaking","instruction":"Answer aloud and explain why.","items":[{"prompt":"What will happen if you practise speaking every day?","target":"first conditional"},{"prompt":"What would you do if you got a job interview tomorrow?","target":"second conditional"},{"prompt":"What would have been different if you had started speaking practice earlier?","target":"third conditional"}]}],"vocabulary":[{"term":"unless","ipa":"/ənˈles/","translationRu":"если не; разве что","translationHidden":true,"example":"You won't remember it unless you use it."},{"term":"otherwise","ipa":"/ˈʌðəwaɪz/","translationRu":"иначе; в противном случае","translationHidden":true,"example":"Practise aloud; otherwise, recognition will not become active speech."},{"term":"sort out","ipa":"/sɔːt aʊt/","translationRu":"разобраться; уладить","translationHidden":true,"nzUsage":true,"example":"I'll sort out the appointment tomorrow."}]},{"id":"session-4","durationMinutes":60,"topic":"Integrated grammar for spontaneous speaking","mainFocus":"Retrieve this week's grammar quickly in realistic New Zealand situations.","blocks":[{"minutes":10,"type":"weekly_recall","instruction":"Explain the three grammar topics without looking at notes."},{"minutes":15,"type":"mixed_test","instruction":"Complete Exercise 4a."},{"minutes":20,"type":"role_play","instruction":"Role-play a job interview, café conversation and phone call with ChatGPT."},{"minutes":10,"type":"correction_loop","instruction":"Repeat corrected sentences, then change one detail in each."},{"minutes":5,"type":"reflection","instruction":"Mark each topic: Know, Hard or Again."}],"exercises":[{"id":"4a","type":"mixed_review","instruction":"Correct the errors. For the ongoing-activity item, rewrite it to emphasise duration.","items":[{"prompt":"I enjoy to speak with native speakers.","answer":"I enjoy speaking with native speakers."},{"prompt":"Emphasise the ongoing activity: I have studied for two hours and I am not finished yet.","answer":"I've been studying for two hours and I'm not finished yet."},{"prompt":"Unless I will practise, I won't improve.","answer":"Unless I practise, I won't improve."},{"prompt":"If I would have more confidence, I would apply now.","answer":"If I had more confidence, I would apply now."},{"prompt":"She mentioned to move to Wellington.","answer":"She mentioned moving to Wellington."}]},{"id":"4b","type":"role_play","instruction":"Speak immediately. Do not write a script.","items":[{"prompt":"A recruiter asks what you have been doing since moving to New Zealand.","target":"perfect tenses"},{"prompt":"A friend asks what you would do if you received two job offers.","target":"second conditional"},{"prompt":"Suggest a weekend activity in Auckland.","target":"suggest or How about + -ing"}]}],"vocabulary":[{"term":"catch up","ipa":"/kætʃ ʌp/","translationRu":"пообщаться после перерыва; наверстать","translationHidden":true,"nzUsage":true,"example":"Let's catch up over coffee this weekend."},{"term":"pop in","ipa":"/pɒp ɪn/","translationRu":"ненадолго зайти","translationHidden":true,"nzUsage":true,"example":"I'll pop into the dairy on my way home."},{"term":"head off","ipa":"/hed ɒf/","translationRu":"отправиться; выдвинуться","translationHidden":true,"nzUsage":true,"example":"We're heading off to the beach early."}]}],"weeklySuccessCriteria":["Complete all four sessions.","Score at least 80 percent on the mixed review after corrections.","Use six target structures during unscripted speaking.","Recall at least eight new expressions without revealing the translation.","Save no more than five recurring errors for next week's spaced review."],"appUiSuggestions":{"lessonStatusLabels":["New","Learning","Review","Confident"],"exerciseActions":["Check","Try again","Show rule"],"vocabularyActions":["Reveal translation","Play pronunciation","Add example"],"completionAction":"Finish lesson"}};
+const ENGLISH_WEEK_PLAN_GRAMMAR_REFS={"session-1":["grammar_gerund_inf"],"session-2":["grammar_pp_ppc"],"session-3":["grammar_cond_12","grammar_third_cond","grammar_unless_otherwise"],"session-4":["grammar_gerund_inf","grammar_pp_ppc","grammar_cond_12","grammar_third_cond","grammar_unless_otherwise"]};
+const ENGLISH_WEEK_PLAN_WORD_IDS={"session-1":["word_figure_out","word_keep_up","word_give_it_a_go"],"session-2":["word_so_far","word_make_progress","word_settle_in"],"session-3":["word_unless","word_otherwise","word_sort_out"],"session-4":["word_catch_up","word_pop_in","word_head_off"]};
 
 const ENGLISH_FOCUS_IDS=[
   'grammar_gerund_inf',
@@ -3369,6 +3468,11 @@ let englishPracticeIndex=0;
 let englishPracticeScore=0;
 let englishPracticeAnswered=false;
 let englishPracticeSelected=-1;
+let englishPlanSessionId='';
+let englishPlanTranslationReveals=new Set();
+let englishPlanAnswerReveals=new Set();
+let englishPlanDraftSaveTimer=null;
+let englishWordTranslationReveals=new Set();
 
 function englishLearningStore(){
   if(!data.englishLearning || typeof data.englishLearning!=='object'){
@@ -3383,7 +3487,215 @@ function englishLearningStore(){
   if(typeof data.englishLearning.dailyQueue.date!=='string')data.englishLearning.dailyQueue.date='';
   if(!Array.isArray(data.englishLearning.dailyQueue.itemIds))data.englishLearning.dailyQueue.itemIds=[];
   if(!Array.isArray(data.englishLearning.dailyQueue.newItemIds))data.englishLearning.dailyQueue.newItemIds=[];
+  if(!data.englishLearning.studyPlans || typeof data.englishLearning.studyPlans!=='object')data.englishLearning.studyPlans={};
   return data.englishLearning;
+}
+
+function englishStudyPlanProgress(planId=ENGLISH_WEEK_PLAN.planId){
+  const store=englishLearningStore();
+  if(!store.studyPlans[planId] || typeof store.studyPlans[planId]!=='object'){
+    store.studyPlans[planId]={lessons:{}};
+  }
+  if(!store.studyPlans[planId].lessons || typeof store.studyPlans[planId].lessons!=='object'){
+    store.studyPlans[planId].lessons={};
+  }
+  return store.studyPlans[planId];
+}
+function englishPlanLessonState(sessionId){
+  const planState=englishStudyPlanProgress();
+  if(!planState.lessons[sessionId] || typeof planState.lessons[sessionId]!=='object'){
+    planState.lessons[sessionId]={status:'New',startedAt:'',completedAt:''};
+  }
+  return planState.lessons[sessionId];
+}
+function englishPlanSession(sessionId){return ENGLISH_WEEK_PLAN.sessions.find(s=>s.id===sessionId)||null}
+function englishPlanCompletedCount(){
+  return ENGLISH_WEEK_PLAN.sessions.filter(s=>!!englishPlanLessonState(s.id).completedAt).length;
+}
+function englishPlanStatusLabel(status){
+  const ru={New:'Новое',Learning:'Изучаю',Review:'Повторение',Confident:'Уверенно'};
+  return (data.language||'ru')==='en'?status:(ru[status]||status);
+}
+function englishPlanMethodLabel(method){
+  const labels={
+    targeted_diagnosis:['Точечная диагностика','Targeted diagnosis'],
+    active_recall:['Активное вспоминание','Active recall'],
+    spaced_review:['Интервальное повторение','Spaced review'],
+    controlled_to_free_practice:['От контролируемой к свободной практике','Controlled → free practice']
+  };
+  const x=labels[method]||[method,method];
+  return trText(x[0],x[1]);
+}
+function englishPlanBlockLabel(type){
+  const map={
+    diagnostic:['Диагностика','Diagnostic'], explanation:['Разбор','Explanation'],
+    controlled_practice:['Упражнения','Controlled practice'], speaking:['Говорение','Speaking'],
+    review:['Повторение','Review'], spaced_review:['Интервальное повторение','Spaced review'],
+    correction:['Коррекция','Correction'], weekly_recall:['Недельное вспоминание','Weekly recall'],
+    mixed_test:['Смешанный тест','Mixed test'], role_play:['Ролевая практика','Role-play'],
+    correction_loop:['Цикл коррекции','Correction loop'], reflection:['Рефлексия','Reflection']
+  };
+  const x=map[type]||[type,type]; return trText(x[0],x[1]);
+}
+function openEnglishWeekPlan(){
+  englishLearningView='plan';
+  englishPlanSessionId='';
+  document.getElementById('englishLearningModal')?.classList.add('show');
+  document.body.style.overflow='hidden';
+  renderEnglishLearning();
+}
+function openEnglishPlanLesson(sessionId){
+  const session=englishPlanSession(sessionId); if(!session)return;
+  englishPlanSessionId=sessionId;
+  englishPlanAnswerReveals.clear();
+  englishPlanTranslationReveals.clear();
+  englishLearningView='lesson';
+  const state=englishPlanLessonState(sessionId);
+  if(!state.startedAt){state.startedAt=new Date().toISOString()}
+  if(!state.status || state.status==='New')state.status='Learning';
+  persistData({renderAfter:true,makeSnapshot:true});
+  renderEnglishLearning();
+}
+function setEnglishPlanLessonStatus(sessionId,status){
+  if(!ENGLISH_WEEK_PLAN.appUiSuggestions.lessonStatusLabels.includes(status))return;
+  const state=englishPlanLessonState(sessionId);
+  state.status=status;
+  if(status==='New'){state.startedAt='';state.completedAt=''}
+  if(status!=='New' && !state.startedAt)state.startedAt=new Date().toISOString();
+  persistData({renderAfter:true,makeSnapshot:true});
+  renderEnglishLearning();
+}
+function finishEnglishPlanLesson(sessionId){
+  const state=englishPlanLessonState(sessionId);
+  state.completedAt=state.completedAt||new Date().toISOString();
+  if(state.status!=='Confident')state.status='Review';
+  persistData({renderAfter:true,makeSnapshot:true});
+  renderEnglishLearning();
+}
+function englishPlanTranslationKey(sessionId,index){return `${sessionId}:vocab:${index}`}
+function toggleEnglishPlanTranslation(sessionId,index){
+  const key=englishPlanTranslationKey(sessionId,index);
+  if(englishPlanTranslationReveals.has(key))englishPlanTranslationReveals.delete(key);else englishPlanTranslationReveals.add(key);
+  renderEnglishLearning();
+}
+function englishPlanAnswerKey(sessionId,exerciseId,index){return `${sessionId}:${exerciseId}:${index}`}
+function saveEnglishPlanAnswer(sessionId,exerciseId,index,value){
+  const session=englishPlanSession(sessionId);
+  const exercise=session?.exercises?.find(x=>x.id===exerciseId);
+  if(!exercise?.items?.[index] || typeof exercise.items[index].answer!=='string')return;
+  const state=englishPlanLessonState(sessionId);
+  if(!state.answers || typeof state.answers!=='object')state.answers={};
+  state.answers[englishPlanAnswerKey(sessionId,exerciseId,index)]=String(value);
+  // Save locally on every edit, without rebuilding the focused input.
+  stampCurrentData();
+  writeLocalCopies(data);
+  clearTimeout(englishPlanDraftSaveTimer);
+  englishPlanDraftSaveTimer=setTimeout(flushEnglishPlanDraft,400);
+}
+function flushEnglishPlanDraft(){
+  if(englishPlanDraftSaveTimer===null)return;
+  clearTimeout(englishPlanDraftSaveTimer);
+  englishPlanDraftSaveTimer=null;
+  writeVaultCopies(structuredClone(data),false).catch(err=>console.warn('Lesson draft recovery write failed',err));
+}
+function toggleEnglishPlanAnswer(sessionId,exerciseId,index){
+  const key=englishPlanAnswerKey(sessionId,exerciseId,index);
+  if(englishPlanAnswerReveals.has(key))englishPlanAnswerReveals.delete(key);else englishPlanAnswerReveals.add(key);
+  renderEnglishLearning();
+}
+function toggleEnglishWordTranslation(id){
+  if(englishWordTranslationReveals.has(id))englishWordTranslationReveals.delete(id);else englishWordTranslationReveals.add(id);
+  renderEnglishLearning();
+}
+function renderEnglishPlanExercise(session,exercise){
+  const instruction=escapeHTML(exercise.instruction||'');
+  let body='';
+  if(Array.isArray(exercise.items)){
+    body=exercise.items.map((item,index)=>{
+      const hasAnswer=typeof item.answer==='string'&&item.answer.length>0;
+      const key=englishPlanAnswerKey(session.id,exercise.id,index);
+      const revealed=englishPlanAnswerReveals.has(key);
+      return `<div class="english-plan-exercise-item">
+        <div class="english-plan-prompt">${escapeHTML(item.prompt||'')}</div>
+        ${hasAnswer?`<textarea class="english-plan-answer-input" aria-label="${trText('Твой ответ','Your answer')}" oninput="saveEnglishPlanAnswer('${session.id}','${exercise.id}',${index},this.value)" placeholder="${trText('Твой ответ…','Your answer…')}">${escapeHTML(englishPlanLessonState(session.id).answers?.[key]||'')}</textarea>
+          <button class="english-plan-reveal" onclick="toggleEnglishPlanAnswer('${session.id}','${exercise.id}',${index})">${revealed?trText('Скрыть ответ','Hide answer'):trText('Показать ответ','Show answer')}</button>
+          ${revealed?`<div class="english-plan-answer"><span>${trText('Ответ','Answer')}</span>${escapeHTML(item.answer)}</div>`:''}`:''}
+        ${item.target?`<div class="english-plan-target"><span>${trText('Цель','Target')}</span>${escapeHTML(item.target)}</div>`:''}
+      </div>`;
+    }).join('');
+  }else if(exercise.prompt){
+    body=`<div class="english-plan-exercise-item"><div class="english-plan-prompt">${escapeHTML(exercise.prompt)}</div></div>`;
+  }
+  return `<div class="english-plan-exercise">
+    <div class="english-plan-exercise-head"><strong>${escapeHTML(exercise.id||'')}</strong><span>${escapeHTML(String(exercise.type||'').replaceAll('_',' '))}</span></div>
+    <div class="english-plan-instruction">${instruction}</div>${body}
+  </div>`;
+}
+function renderEnglishWeekPlanView(){
+  const completed=englishPlanCompletedCount();
+  const pct=Math.round(completed/ENGLISH_WEEK_PLAN.sessions.length*100);
+  const title=(data.language||'ru')==='en'?ENGLISH_WEEK_PLAN.title.en:ENGLISH_WEEK_PLAN.title.ru;
+  return `<div class="english-plan-view">
+    <div class="english-plan-summary-card">
+      <div class="english-detail-type">${escapeHTML(ENGLISH_WEEK_PLAN.level)} · ${ENGLISH_WEEK_PLAN.totalMinutes} ${trText('мин','min')}</div>
+      <div class="english-plan-view-title">${escapeHTML(title)}</div>
+      <div class="english-plan-methods">${ENGLISH_WEEK_PLAN.method.map(m=>`<span>${escapeHTML(englishPlanMethodLabel(m))}</span>`).join('')}</div>
+      <div class="english-plan-summary-progress"><strong>${completed} / ${ENGLISH_WEEK_PLAN.sessions.length}</strong><span>${trText('уроков завершено','lessons completed')}</span></div>
+      <div class="progress"><span style="width:${pct}%"></span></div>
+    </div>
+    <div class="english-plan-lessons">${ENGLISH_WEEK_PLAN.sessions.map((session,index)=>{
+      const state=englishPlanLessonState(session.id);
+      return `<button class="english-plan-lesson-card ${state.completedAt?'completed':''}" onclick="openEnglishPlanLesson('${session.id}')">
+        <div class="english-plan-lesson-top"><span>${trText('Урок','Lesson')} ${index+1} · ${session.durationMinutes} ${trText('мин','min')}</span><em>${escapeHTML(englishPlanStatusLabel(state.status||'New'))}</em></div>
+        <strong>${escapeHTML(session.topic)}</strong>
+        <p>${escapeHTML(session.mainFocus)}</p>
+        ${state.completedAt?`<div class="english-plan-done">✓ ${trText('Завершено','Completed')}</div>`:''}
+      </button>`;
+    }).join('')}</div>
+    <div class="english-plan-success-card">
+      <strong>${trText('Критерии успеха недели','Weekly success criteria')}</strong>
+      <ol>${ENGLISH_WEEK_PLAN.weeklySuccessCriteria.map(x=>`<li>${escapeHTML(x)}</li>`).join('')}</ol>
+    </div>
+  </div>`;
+}
+function renderEnglishPlanLessonView(){
+  const session=englishPlanSession(englishPlanSessionId);
+  if(!session)return `<div class="english-review-empty"><strong>${trText('Урок не найден','Lesson not found')}</strong></div>`;
+  const state=englishPlanLessonState(session.id);
+  const index=ENGLISH_WEEK_PLAN.sessions.findIndex(s=>s.id===session.id)+1;
+  const refs=(ENGLISH_WEEK_PLAN_GRAMMAR_REFS[session.id]||[]).map(id=>englishItemById(id)).filter(Boolean);
+  return `<div class="english-plan-lesson-view">
+    <div class="english-plan-lesson-hero">
+      <div class="english-detail-type">${trText('Урок','Lesson')} ${index} · ${session.durationMinutes} ${trText('мин','min')}</div>
+      <div class="english-detail-title">${escapeHTML(session.topic)}</div>
+      <div class="english-plan-focus-text">${escapeHTML(session.mainFocus)}</div>
+      <div class="english-plan-statuses">${ENGLISH_WEEK_PLAN.appUiSuggestions.lessonStatusLabels.map(s=>`<button class="${state.status===s?'active':''}" onclick="setEnglishPlanLessonStatus('${session.id}','${s}')">${escapeHTML(englishPlanStatusLabel(s))}</button>`).join('')}</div>
+    </div>
+
+    <div class="english-plan-section">
+      <div class="english-plan-section-head"><strong>${trText('План урока','Lesson flow')}</strong><span>${session.durationMinutes} ${trText('мин','min')}</span></div>
+      <div class="english-plan-blocks">${session.blocks.map(b=>`<div class="english-plan-block"><b>${b.minutes}</b><div><strong>${escapeHTML(englishPlanBlockLabel(b.type))}</strong><span>${escapeHTML(b.instruction)}</span></div></div>`).join('')}</div>
+    </div>
+
+    ${refs.length?`<div class="english-plan-section"><div class="english-plan-section-head"><strong>${trText('Связано с существующими темами','Uses existing grammar topics')}</strong></div><div class="english-plan-ref-chips">${refs.map(r=>`<span>${escapeHTML(englishCompactTitle(r))}</span>`).join('')}</div></div>`:''}
+
+    ${Array.isArray(session.rules)&&session.rules.length?`<div class="english-plan-section"><div class="english-plan-section-head"><strong>${trText('Правила и примеры','Rules & examples')}</strong></div><div class="english-plan-rules">${session.rules.map(r=>`<div class="english-plan-rule"><strong>${escapeHTML(r.rule)}</strong>${(r.examples||[]).map(e=>`<div class="english-plan-rule-example">${escapeHTML(e)}</div>`).join('')}</div>`).join('')}</div></div>`:''}
+
+    <div class="english-plan-section"><div class="english-plan-section-head"><strong>${trText('Упражнения','Exercises')}</strong></div><div class="english-plan-exercises">${(session.exercises||[]).map(e=>renderEnglishPlanExercise(session,e)).join('')}</div></div>
+
+    <div class="english-plan-section"><div class="english-plan-section-head"><strong>${trText('Новые слова и выражения','Words & phrases')}</strong><span>${trText('Перевод скрыт','Translation hidden')}</span></div><div class="english-plan-vocab">${(session.vocabulary||[]).map((v,i)=>{
+      const key=englishPlanTranslationKey(session.id,i),revealed=englishPlanTranslationReveals.has(key);
+      return `<div class="english-plan-vocab-card">
+        <div class="english-plan-vocab-top"><strong>${escapeHTML(v.term)}</strong>${v.nzUsage?`<span>NZ</span>`:''}</div>
+        <div class="english-item-ipa">${escapeHTML(v.ipa||'')}</div>
+        <div class="english-plan-vocab-example">${escapeHTML(v.example||'')}</div>
+        <button class="english-plan-reveal" onclick="toggleEnglishPlanTranslation('${session.id}',${i})">${revealed?trText('Скрыть перевод','Hide translation'):trText('Показать перевод','Reveal translation')}</button>
+        ${revealed?`<div class="english-plan-translation">${escapeHTML(v.translationRu||'')}</div>`:''}
+      </div>`;
+    }).join('')}</div></div>
+
+    <button class="english-plan-finish ${state.completedAt?'completed':''}" onclick="finishEnglishPlanLesson('${session.id}')" ${state.completedAt?'disabled':''}>${state.completedAt?`✓ ${trText('Урок завершён','Lesson completed')}`:trText('Завершить урок','Finish lesson')}</button>
+  </div>`;
 }
 
 function englishAllItems(){
@@ -3598,8 +3910,8 @@ function englishMinutesForDate(dateKey){
   return detailed || (Number(row.english_general)||0);
 }
 function englishWeekData(){
-  const keys=dates(7);
-  return keys.map(date=>({date,value:englishMinutesForDate(date)}));
+  const keys=weeklyKeys(weeklyMonday(),7);
+  return keys.map(date=>({date,value:date<=localDate()?englishMinutesForDate(date):0}));
 }
 function englishWeekdayShort(dateKey){
   const locale=(data.language||'ru')==='en'?'en-NZ':'ru-RU';
@@ -3625,6 +3937,16 @@ function closeEnglishLearning(){
   englishLearningItemId='';
 }
 function englishLearningBack(){
+  if(englishLearningView==='lesson'){
+    englishLearningView='plan';
+    englishPlanSessionId='';
+    renderEnglishLearning();
+    return;
+  }
+  if(englishLearningView==='plan'){
+    closeEnglishLearning();
+    return;
+  }
   if(englishLearningView==='practice'){
     englishLearningView='detail';
     englishLearningItemId=englishPracticeItemId;
@@ -3673,9 +3995,9 @@ function renderEnglishWordList(searchValue){
 
   host.innerHTML=items.length?items.map(item=>`
     <button class="english-item-card ${englishIsDue(item)?'due':''}" onclick="openEnglishItem('${item.id}','words')">
-      <div class="english-item-status">${englishReviewBadge(item)}<span class="english-fav">☆</span></div>
+      <div class="english-item-status">${englishReviewBadge(item)}</div>
       <div><span class="english-item-title">${escapeHTML(item.title)}</span>${item.ipa?`<span class="english-item-ipa">${escapeHTML(item.ipa)}</span>`:''}</div>
-      <div class="english-item-ru">${escapeHTML(item.ru||'')}</div>
+      <div class="english-item-ru">${item.translationHidden?trText('Перевод скрыт — открой карточку','Translation hidden — open the card'):escapeHTML(item.ru||'')}</div>
       ${item.example?`<div class="english-item-example">${escapeHTML(item.example)}</div>`:''}
       <div class="english-item-chips"><span class="english-item-chip">${englishKindLabel(item.kind)}</span>${item.level?`<span class="english-item-chip">${escapeHTML(item.level)}</span>`:''}</div>
     </button>
@@ -3742,7 +4064,9 @@ function renderEnglishDetailView(item){
     <div class="english-detail-type">${englishKindLabel(item.kind)} ${item.level?`· ${escapeHTML(item.level)}`:''}</div>
     <div class="english-detail-title">${escapeHTML(item.title)}</div>
     ${item.ipa?`<div class="english-detail-ipa">${escapeHTML(item.ipa)}</div>`:''}
-    ${meaning?`<div class="english-detail-translation">${isMistake?'✓ ':''}${escapeHTML(meaning)}</div>`:''}
+    ${meaning?(item.translationHidden&&!isMistake&&!englishWordTranslationReveals.has(item.id)
+      ?`<button class="english-plan-reveal english-word-reveal" onclick="toggleEnglishWordTranslation('${item.id}')">${trText('Показать перевод','Reveal translation')}</button>`
+      :`<div class="english-detail-translation">${isMistake?'✓ ':''}${escapeHTML(meaning)}</div>${item.translationHidden&&!isMistake?`<button class="english-plan-reveal english-word-reveal" onclick="toggleEnglishWordTranslation('${item.id}')">${trText('Скрыть перевод','Hide translation')}</button>`:''}`):''}
     ${item.formula?`<div class="english-detail-section"><div class="label">${trText('Формула','Formula')}</div><div class="english-detail-example english-detail-formula">${escapeHTML(item.formula)}</div></div>`:''}
     ${rule?`<div class="english-detail-section"><div class="label">${trText('Правило','Rule')}</div><div class="english-detail-example">${escapeHTML(rule)}</div></div>`:''}
     ${example?`<div class="english-detail-section"><div class="label">${trText('Пример','Example')}</div><div class="english-detail-example">${escapeHTML(example)}</div></div>`:''}
@@ -3935,7 +4259,7 @@ function renderEnglishPracticeView(){
   if(englishPracticeIndex>=questions.length){
     const pct=Math.round(englishPracticeScore/questions.length*100);
     const message=englishPracticeScore>=4
-      ?trText('Отлично. Правило уже довольно уверенно используется.','Great. You are using this rule quite confidently.')
+      ?trText('Хороший результат. Теперь попробуй составить свой пример вслух.','Good quiz result. Now try making your own example aloud.')
       :trText('Эту тему стоит ещё немного потренировать.','This topic needs a little more practice.');
     return `<div class="english-practice-finish">
       <div class="english-practice-score">${englishPracticeScore} / ${questions.length}</div>
@@ -4017,6 +4341,17 @@ function renderEnglishLearning(){
     if(subtitle)subtitle.textContent=item?englishCompactTitle(item):'';
     if(add)add.style.visibility='hidden';
     content=renderEnglishPracticeView();
+  }else if(englishLearningView==='plan'){
+    if(title)title.textContent=trText('План B2 · Неделя 1','B2 Plan · Week 1');
+    if(subtitle)subtitle.textContent=`${ENGLISH_WEEK_PLAN.sessions.length} ${trText('урока','lessons')} · ${ENGLISH_WEEK_PLAN.totalMinutes} ${trText('мин','min')}`;
+    if(add)add.style.visibility='hidden';
+    content=renderEnglishWeekPlanView();
+  }else if(englishLearningView==='lesson'){
+    const session=englishPlanSession(englishPlanSessionId);
+    if(title)title.textContent=session?.topic||trText('Урок','Lesson');
+    if(subtitle)subtitle.textContent=session?`${session.durationMinutes} ${trText('мин','min')}`:'';
+    if(add)add.style.visibility='hidden';
+    content=renderEnglishPlanLessonView();
   }else{
     const item=englishItemById(englishLearningItemId);
     if(title)title.textContent=item?.title||'English';
@@ -4149,8 +4484,8 @@ function ensureDay(d=localDate()){data.logs[d]=data.logs[d]||{};return data.logs
 
 function tracker(id){return data.trackers.find(t=>t.id===id)||defaultTrackers.find(t=>t.id===id)}
 function goalFor(id){return ({protein:data.proteinGoal,steps:data.stepsGoal,outdoors:data.outdoorsGoal,sleep:data.sleepGoal,gym:data.gymGoal,english_general:data.englishGoal})[id] ?? tracker(id)?.goal}
-function englishTotalN(n=7){const detailed=englishTypes.reduce((s,[id])=>s+sum(id,n),0);return detailed||sum('english_general',n)}
-function englishTodayN(){const detailed=englishTypes.reduce((s,[id])=>s+(Number(val(id))||0),0);return detailed||Number(val('english_general'))||0}
+function englishTotalN(n=7){return dates(n).reduce((total,date)=>total+englishMinutesForDate(date),0)}
+function englishTodayN(){return englishMinutesForDate(localDate())}
 function dailyComplete(id,d=localDate()){
  const t=tracker(id);if(!t)return false;const v=data.logs[d]?.[id];if(t.type==='boolean')return v===true;
  const g=goalFor(id);if(!g)return v!==undefined&&v!==null&&v!=='';return Number(v)>=Number(g)
@@ -4485,11 +4820,17 @@ function show(id,btn){
  btn.classList.add('active');
 }
 function openEntry(id){activeTracker=tracker(id);if(!activeTracker){alert(trText('Трекер не найден.','Tracker not found.'));return}const unit=trUnit(activeTracker);document.getElementById('entryTitle').textContent=activeTracker.icon+' '+trTrackerName(activeTracker);document.getElementById('entryLabel').textContent=trText('Значение','Value')+(unit?' ('+unit+')':'');document.getElementById('entryValue').value=val(id)??'';document.getElementById('entryModal').classList.add('show');setTimeout(()=>document.getElementById('entryValue').focus(),80)}
-function openEnglish(id){const type=englishTypes.find(x=>x[0]===id);if(!type)return;activeTracker={id,name:type[2],icon:type[1],type:'number',unit:'мин',category:'english'};document.getElementById('entryTitle').textContent=type[1]+' '+type[2];document.getElementById('entryLabel').textContent=trText('Минуты','Minutes');document.getElementById('entryValue').value=val(id)??'';document.getElementById('entryModal').classList.add('show');setTimeout(()=>document.getElementById('entryValue').focus(),80)}
+function openEnglish(id){const type=englishTypes.find(x=>x[0]===id);if(!type)return;activeTracker={id,name:type[2],icon:type[1],type:'number',unit:'мин',category:'english'};document.getElementById('entryTitle').textContent=type[1]+' '+type[2];document.getElementById('entryLabel').textContent=trText('Всего минут сегодня','Total minutes today');document.getElementById('entryValue').value=val(id)??'';document.getElementById('entryModal').classList.add('show');setTimeout(()=>document.getElementById('entryValue').focus(),80)}
 function saveEntry(){
  if(!activeTracker)return;
  const input=document.getElementById('entryValue');
- ensureDay()[activeTracker.id]=Number(input?.value||0);
+ const raw=input?.value?.trim()||'';
+ const value=Number(raw);
+ if(raw==='' || !Number.isFinite(value) || value<0){
+   alert(trText('Введи число не меньше нуля. Пустое поле не сохраняется.','Enter a number of zero or more. An empty field is not saved.'));
+   return;
+ }
+ ensureDay()[activeTracker.id]=value;
  if(activeTracker.id.startsWith('english_') && activeTracker.id!=='english_general'){
    const total=englishTypes.reduce((s,[id])=>s+(Number(val(id))||0),0);
    ensureDay().english_general=total;
@@ -5612,11 +5953,22 @@ function renderEnglish(){
   setText('englishReviewLabel',trText('Повторить сегодня','Today to review'));
   setText('englishStartReviewText',trText('Начать повторение','Start review'));
   setText('englishTodayLabel',trText('Сегодня','Today'));
-  setText('englishSessionTitle',trText('Добавить занятие','Add a session'));
-  setText('englishSessionHint',trText('Минуты продолжают попадать в Progress и Weekly Review','Minutes still feed Progress & Weekly Review'));
+  setText('englishSessionTitle',trText('Время учёбы за день','Daily study totals'));
+  setText('englishSessionHint',trText('Укажи общее время за сегодня для выбранного занятия.','Enter today’s total for the selected activity.'));
+
+  const planCompleted=englishPlanCompletedCount();
+  const planTotal=ENGLISH_WEEK_PLAN.sessions.length;
+  const planTitle=(data.language||'ru')==='en'?ENGLISH_WEEK_PLAN.title.en:ENGLISH_WEEK_PLAN.title.ru;
+  setText('englishPlanKicker',trText('B2 · Неделя 1','B2 · Week 1'));
+  setText('englishPlanDashboardTitle',planTitle);
+  setText('englishPlanDashboardMeta',`${planTotal} ${trText('урока','lessons')} · ${ENGLISH_WEEK_PLAN.totalMinutes} ${trText('мин','min')}`);
+  setText('englishPlanDashboardCompleted',`${planCompleted} / ${planTotal}`);
+  setText('englishPlanDashboardCompletedLabel',trText('завершено','completed'));
+  const planBar=document.getElementById('englishPlanDashboardBar');
+  if(planBar)planBar.style.width=`${Math.round(planCompleted/planTotal*100)}%`;
 
   const todayMinutes=Math.round(englishTodayN());
-  const weekMinutes=Math.round(englishTotalN(7));
+  const weekMinutes=Math.round(weeklyWindow().currentKeys.reduce((total,date)=>total+englishMinutesForDate(date),0));
   setText('engToday',`${todayMinutes} ${trText('мин','min')}`);
   setText('engWeek',weekMinutes);
   setText('engWeekGoal',`/ ${data.englishGoal} ${trText('мин','min')}`);
@@ -5718,11 +6070,7 @@ function weeklyNumericStats(id,keys,{positiveOnly=false,goal=null}={}){
   const total=values.reduce((s,x)=>s+x.value,0);
   return {values,count:values.length,avg,total,goalDays};
 }
-function weeklyEnglishForDay(dateKey){
-  const row=data.logs?.[dateKey]||{};
-  const detailed=englishTypes.reduce((s,[id])=>s+(Number(row[id])||0),0);
-  return detailed || (Number(row.english_general)||0);
-}
+function weeklyEnglishForDay(dateKey){return englishMinutesForDate(dateKey)}
 function weeklyEnglishStats(keys){
   const rows=keys.map(date=>({date,value:weeklyEnglishForDay(date)})).filter(x=>x.value>0);
   return {
@@ -7103,9 +7451,11 @@ recoverFromVaults()
   })
   .catch(err=>{console.warn('Vault recovery failed',err);updateStorageSafetyUI()});
 
+addEventListener('pagehide',flushEnglishPlanDraft);
 addEventListener('focus',checkAppDayRollover);
 document.addEventListener('visibilitychange',()=>{
-  if(!document.hidden)checkAppDayRollover();
+  if(document.hidden)flushEnglishPlanDraft();
+  else checkAppDayRollover();
 });
 setInterval(checkAppDayRollover,60000);
 

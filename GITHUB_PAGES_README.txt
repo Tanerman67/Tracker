@@ -1,20 +1,16 @@
-MY RHYTHM — GITHUB PAGES BUILD
+MY RHYTHM — V6.9.1 GITHUB PAGES REVIEW BUILD
 
-This package is adapted from V6.2 Alcohol Calendar for GitHub Pages project hosting.
+Replace all package files in the existing repository root, retaining the same URL.
+The supplied handoff identifies Tanerman67/Tracker, main branch / root.
+Live hosting and branch settings have not been verified in this review.
 
-Important:
-- Upload ALL files from this folder to the repository root.
-- GitHub Pages source: main branch / root.
-- PWA paths are repository-relative, so it works at:
-  https://USERNAME.github.io/REPOSITORY/
-- .nojekyll is included.
-- Data storage logic is unchanged.
-- Because github.io is a different origin from your Netlify domain,
-  browser/PWA local data will NOT move automatically.
-  Import the recovery JSON after installing the GitHub-hosted version.
+24 isolated JavaScript checks and static checks passed. Real browser and iPhone
+checks are still required before using this build with important records.
+Export a fresh external backup first. Keep the previous working package.
+Do not include backup JSON in public repository uploads. Do not delete the
+Home Screen app or clear Safari storage as an update method.
 
-Recommended repository name:
-  my-rhythm
-
-Suggested URL:
-  https://USERNAME.github.io/my-rhythm/
+All existing stored keys and schema version 2 are preserved. Lesson answer
+drafts add an optional map within existing study-plan lesson progress.
+The source still includes the original personal seed history; removing it safely
+is a separate task requiring a private backup/import path.

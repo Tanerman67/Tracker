@@ -819,3 +819,53 @@ V6.8.4 — DAILY REVIEW QUEUE + DAY ROLLOVER
 - local day rollover checked every 60 sec, on focus and visibility
 - open Review Queue rebuilds automatically after rollover
 - additive dailyQueue field only; schemaVersion stays 2
+
+
+V6.9 — B2 CHATGPT WEEK 1 PLAN
+
+SOURCE PLAN
+Integrated from my_rhythm_b2_chatgpt_week_1.json:
+- 4 lessons × 60 min = 240 min
+- rules and examples
+- controlled + speaking exercises
+- reference answers hidden until tap
+- 12 lesson vocabulary entries with IPA and hidden Russian translations
+- weekly success criteria
+
+DEDUPE
+No new grammar curriculum topic was created.
+The four lessons reference existing My Rhythm grammar items:
+- Gerunds & Infinitives
+- Present Perfect vs Present Perfect Continuous
+- First / Second Conditionals
+- Third Conditional
+- Unless & Otherwise
+
+Vocabulary dedupe:
+Existing items reused: figure out, keep up, so far.
+Only 9 missing expressions were added to the global Words & Phrases library.
+
+DATA
+Persistent progress is stored additively under:
+englishLearning.studyPlans['b2-chatgpt-week-1'].lessons
+Only lesson status / startedAt / completedAt are stored.
+Curriculum content remains application code.
+
+TRANSLATIONS
+Plan vocabulary translations are hidden until Reveal translation.
+Plan-linked global vocabulary items with translationHidden also hide Russian
+until the user explicitly reveals it.
+
+schemaVersion remains 2.
+
+
+V6.9.1 — LEARNING AND RECOVERY FIXES (REVIEW BUILD)
+- Lesson answers persist and survive reveal/reload; reopening hides reference answers.
+- English totals handle mixed legacy/general and detailed daily logs.
+- This week uses Monday–Sunday.
+- Recovery ranks saved time before record count and refreshes memory after async reads.
+- Blank/negative quick entries are rejected; New resets lesson completion.
+- Inactive favourite stars removed; daily-total and quiz wording clarified.
+- Schema 2 and storage keys unchanged. Optional lesson answers stored in studyPlans.
+- 24 isolated Node checks and static checks passed. No browser/iPhone verification.
+- Export an external backup before updating. Do not clear Safari or reinstall the PWA.
