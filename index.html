@@ -2116,8 +2116,8 @@ input,select,textarea{font-size:16px}
 }
 
 </style>
-<link rel="stylesheet" href="today.css?v=6100">
-<link rel="stylesheet" href="habits.css?v=6100">
+<link rel="stylesheet" href="today.css?v=6110">
+<link rel="stylesheet" href="habits.css?v=6110">
 </head>
 <body>
 <div class="app">
@@ -2127,12 +2127,12 @@ input,select,textarea{font-size:16px}
       <div class="today-combined-top">
         <div>
           <div class="hero-title" id="todayHeading">Сегодня</div>
-          <div class="hero-date" id="heroDate"></div>
+          <button type="button" class="hero-date" id="heroDate" onclick="toggleTodayDate()" aria-expanded="false" aria-controls="todayDateControls"></button>
         </div>
         <div class="today-motivation-icon" id="motivationIcon">🌱</div>
       </div>
 
-      <div class="today-date-controls">
+      <div class="today-date-controls" id="todayDateControls" hidden>
         <button type="button" id="todayPrev" onclick="shiftTodayDate(-1)">‹</button>
         <input type="date" id="todayDateInput" onchange="setTodayDate(this.value)">
         <button type="button" id="todayNext" onclick="shiftTodayDate(1)">›</button>
@@ -2152,7 +2152,6 @@ input,select,textarea{font-size:16px}
     </div>
 
     <div id="todayGrid" class="metric-grid"></div>
-    <button type="button" id="habitTodayButton" onclick="openHabitEditor('blocks')">Работа и отдых</button>
   </div>
 </section>
 
@@ -2260,45 +2259,16 @@ input,select,textarea{font-size:16px}
 </section>
 
 <section id="progress" class="section">
-  <div class="category-head"><h2>Прогресс</h2><div class="sub">Weekly Review, детальная динамика и паттерны.</div></div>
-
   <div class="weekly-review card">
-    <div class="weekly-review-head">
-      <div>
-        <div class="label">Weekly Review</div>
-        <div class="weekly-review-period" id="weeklyReviewPeriod">—</div>
-        <div class="weekly-review-scope" id="weeklyReviewScope">—</div>
-      </div>
-      <div class="weekly-review-status" id="weeklyReviewStatus">—</div>
-    </div>
-
-    <div class="weekly-metric-grid" id="weeklyMetricGrid"></div>
-    <details id="habitWeekly" open></details>
-
-    <div class="weekly-insight-grid">
-      <div class="weekly-insight weekly-strongest">
-        <div class="weekly-insight-label">✨ Лучшее</div>
-        <div class="weekly-insight-title" id="weeklyStrongestText">—</div>
-        <div class="weekly-insight-meta" id="weeklyStrongestMeta"></div>
-      </div>
-      <div class="weekly-insight weekly-changed">
-        <div class="weekly-insight-label">↗ Что изменилось</div>
-        <div class="weekly-insight-title" id="weeklyChangedText">—</div>
-        <div class="weekly-insight-meta" id="weeklyChangedMeta"></div>
-      </div>
-      <div class="weekly-insight weekly-focus">
-        <div class="weekly-insight-label">🎯 Фокус</div>
-        <div class="weekly-insight-title" id="weeklyFocusText">—</div>
-        <div class="weekly-insight-meta" id="weeklyFocusMeta"></div>
-      </div>
-    </div>
+    <h2 id="simpleProgressTitle">Эта неделя</h2>
+    <div class="sub" id="simpleProgressPeriod"></div>
+    <div id="simpleProgressRows" class="simple-progress-rows"></div>
+    <details class="progress-details">
+      <summary id="simpleProgressDetails">Подробности недели</summary>
+      <div id="habitWeekly"></div>
+    </details>
   </div>
-
   <div class="section-spacer"></div>
-  <div class="category-head progress-trends-head">
-    <h2>Trends</h2>
-    <div class="sub">Один показатель во времени — без дублирования Weekly Review.</div>
-  </div>
 
   <div class="trend-controls">
     <div class="trend-range-tabs">
@@ -2724,10 +2694,10 @@ input,select,textarea{font-size:16px}
     <button type="button" id="habitSave" onclick="saveHabitEditor()">Сохранить</button>
   </div>
 </div>
-<script src="today.js?v=6100"></script>
-<script src="habits.js?v=6100"></script>
+<script src="today.js?v=6110"></script>
+<script src="habits.js?v=6110"></script>
 <script>
-const APP_VERSION='6.10-github';
+const APP_VERSION='6.11-github';
 const DATA_KEY='my-life-tracker-data';
 const MIRROR_KEY='my-life-tracker-data-mirror-v1';
 const CURRENT_SCHEMA_VERSION=2;
@@ -5918,7 +5888,7 @@ function acknowledgeMotivation(){
   closeMotivationDetail();
 }
 
-function renderToday(){renderTodayPage();renderHabitToday()}
+function renderToday(){renderTodayPage()}
 function renderEnglish(){
   const setText=(id,value)=>{const el=document.getElementById(id);if(el)el.textContent=value};
   setText('englishPageSubtitle',trText('Учи, повторяй и превращай знания в активный английский.','Learn, review and turn knowledge into active English.'));
@@ -7311,7 +7281,7 @@ function renderTrends(){
 }
 // V6.7.3_TRENDS_END
 
-function renderProgress(){renderWeeklyReview();renderHabitWeek();renderTrends();renderCalendar()}
+function renderProgress(){renderSimpleProgress();renderTrends();renderCalendar()}
 function moveMonth(n){calendarDate=new Date(calendarDate.getFullYear(),calendarDate.getMonth()+n,1);renderCalendar()}
 function renderCalendar(){const ruM=['Январь','Февраль','Март','Апрель','Май','Июнь','Июль','Август','Сентябрь','Октябрь','Ноябрь','Декабрь'],enM=['January','February','March','April','May','June','July','August','September','October','November','December'],ruD=['Пн','Вт','Ср','Чт','Пт','Сб','Вс'],enD=['Mon','Tue','Wed','Thu','Fri','Sat','Sun'],y=calendarDate.getFullYear(),m=calendarDate.getMonth(),lang=data.language||'ru';document.getElementById('calendarTitle').textContent=(lang==='en'?enM:ruM)[m]+' '+y;const grid=document.getElementById('calendarGrid');grid.innerHTML=(lang==='en'?enD:ruD).map(x=>`<div class="dow">${x}</div>`).join('');const first=(new Date(y,m,1).getDay()+6)%7,total=new Date(y,m+1,0).getDate();for(let i=0;i<first;i++)grid.innerHTML+='<div></div>';for(let day=1;day<=total;day++){const d=`${y}-${String(m+1).padStart(2,'0')}-${String(day).padStart(2,'0')}`,filled=Object.keys(data.logs[d]||{}).filter(k=>data.logs[d][k]!==false&&data.logs[d][k]!==undefined).length,cls=filled>=5?'good':filled>=2?'mid':'';grid.innerHTML+=`<div class="cday ${cls}">${day}${filled>=5?'<span class="dot"></span>':''}</div>`}}
 

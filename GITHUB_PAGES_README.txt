@@ -1,4 +1,4 @@
-MY RHYTHM — V6.10 GITHUB PAGES HABITS BUILD
+MY RHYTHM — V6.11 GITHUB PAGES SIMPLE BUILD — see UPDATE_SIMPLE.md
 
 Current release instructions and verification limits: UPDATE_HABITS.md.
 Includes the Today changes from V6.9.2. Upload today.js, today.css, habits.js,

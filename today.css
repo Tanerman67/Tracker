@@ -1,6 +1,6 @@
 /* Scoped to Today; other screens retain their existing typography. */
 #today .metric-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
-#today .today-metric{display:block;width:100%;min-width:0;text-align:left;color:var(--text);font:inherit;padding:13px;border-radius:20px;min-height:146px;overflow:visible;white-space:normal}
+#today .today-metric{display:block;width:100%;min-width:0;text-align:left;color:var(--text);font:inherit;padding:13px;border-radius:20px;min-height:130px;overflow:visible;white-space:normal}
 #today .today-metric-title{display:flex;gap:7px;align-items:center;font-size:14px;font-weight:700;line-height:1.3;overflow-wrap:anywhere}
 #today .today-metric-title>span:first-child{font-size:23px;flex:none}
 #today .today-metric-value{margin-top:10px;font-size:16px;font-weight:700;line-height:1.4;overflow-wrap:anywhere}
@@ -21,3 +21,6 @@
 #today .today-combined-hero .motivation-kicker{font-size:12px;line-height:1.4}
 #today #todayMotivationLink{position:relative;z-index:3;min-height:44px;font-size:13px;margin-top:4px;padding:5px 0;background:none;border:0;box-shadow:none;color:var(--muted)}
 #today .today-combined-hero .hero-date{font-size:13px;line-height:1.4}
+#today #heroDate{position:relative;z-index:3;display:block;min-height:44px;padding:5px 0;background:none;border:0;box-shadow:none;color:var(--muted);text-align:left;white-space:normal;text-decoration:underline;text-underline-offset:3px}
+#today #todayDateControls[hidden]{display:none}
+#today .today-date-controls button{min-width:44px}

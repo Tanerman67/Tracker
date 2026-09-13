@@ -1,11 +1,11 @@
-const CACHE='my-rhythm-v6.10-habits-github-pages';
+const CACHE='my-rhythm-v6.11-simple-github-pages';
 const ASSETS=[
   './',
   './index.html',
-  './today.js?v=6100',
-  './today.css?v=6100',
-  './habits.js?v=6100',
-  './habits.css?v=6100',
+  './today.js?v=6110',
+  './today.css?v=6110',
+  './habits.js?v=6110',
+  './habits.css?v=6110',
   './manifest-github.webmanifest',
   './apple-touch-icon.png',
   './icon-192-v61.png',

@@ -10,6 +10,11 @@
 .habit-sheet #habitClose{position:absolute;right:12px;top:12px;width:44px}
 .habit-sheet #habitSave{width:100%;margin-top:14px}
 .habit-sheet #habitContent>button{width:100%;margin:5px 0}
+.habit-extra>button{width:100%;margin:5px 0}
+.habit-extra summary,.progress-details>summary{cursor:pointer;min-height:44px;padding:12px 0;box-sizing:border-box;font-size:14px;line-height:1.5}
+.habit-extra summary:focus-visible,.progress-details>summary:focus-visible{outline:2px solid var(--green);outline-offset:2px}
+.simple-progress-rows p{font-size:15px;line-height:1.5;overflow-wrap:anywhere}
+@media(max-width:360px){.habit-two-fields{grid-template-columns:minmax(0,1fr)}}
 .habit-activity{display:flex;align-items:center;flex-wrap:wrap;gap:6px;padding:10px 0;border-bottom:1px solid var(--line)}
 .habit-activity>span{flex-basis:100%;font-size:14px;line-height:1.5;overflow-wrap:anywhere}
 #today #habitTodayButton{position:relative;min-height:44px;padding:10px 14px;white-space:normal;font-size:14px;background:var(--soft);color:var(--text);border:1px solid var(--line)}

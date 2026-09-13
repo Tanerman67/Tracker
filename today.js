@@ -8,6 +8,15 @@ function setTodayDate(date){
   todaySelectedDate=date===localDate()?null:date;
   renderToday();
 }
+function toggleTodayDate(){
+  const controls=document.getElementById('todayDateControls');
+  controls.hidden=!controls.hidden;
+  document.getElementById('heroDate').setAttribute('aria-expanded',String(!controls.hidden));
+}
+function todayLatestWeight(date=todayDateKey()){
+  const key=Object.keys(data.logs||{}).filter(k=>k<=date&&todayMetricState('weight',k).value>0).sort().pop();
+  return key?{date:key,value:todayMetricState('weight',key).value}:null;
+}
 function shiftTodayDate(delta){setTodayDate(weeklyAddDays(todayDateKey(),delta))}
 function todayNumber(n){return new Intl.NumberFormat(data.language==='en'?'en-NZ':'ru-RU',{maximumFractionDigits:2}).format(n)}
 function todayMetricState(id,date=todayDateKey()){
@@ -29,7 +38,6 @@ function todayHint(date=todayDateKey()){
     const label={steps:trText('Шаги','Steps'),outdoors:trText('Улица','Outdoors'),protein:trText('Белок','Protein'),sleep:trText('Сон','Sleep')}[id];
     return {id,date,text:trText(`${label}: записано ${value} ${unit}. Твоя цель — ${goal} ${unit}.`,`${label}: ${value} ${unit} logged. Your goal is ${goal} ${unit}.`)};
   }
-  if(date===localDate()&&todayMetricState('sleep',date).status==='missing')return {id:'sleep',date,text:trText('Данные о сне пока не добавлены.','Sleep data has not been added yet.')};
   return null;
 }
 function openTodayMetric(id,date=todayDateKey()){
@@ -100,20 +108,20 @@ function renderTodayPage(){
     }else if(id==='alcohol'){
       if(date<alcoholTrackingStart()){status=trText('До начала учёта','Before tracking began')}
       else if(alcoholIsDrink(date)){main=trText('Есть отметка','Logged');status=trText('Употребление алкоголя','Alcohol use')}
-      else{main=trText('Нет отметки','Not logged');status=trText('Календарь считает день без алкоголя; это не подтверждение.','Calendar counts an alcohol-free day; not confirmed.')}
+      else{main=trText('Нет отметки','Not logged');status=trText('Предполагается день без алкоголя.','Assumed alcohol-free; unconfirmed.')}
     }else if(id==='gym'){
       const v=data.logs?.[date]?.gym;
       main=v===true?trText('Записана','Logged'):v===false?trText('Без тренировки','No workout'):'—';
-      status=v===true?trText('Нажми, чтобы изменить','Tap to change'):v===false?trText('День отдыха — это нормально','Rest days are okay'):trText('Нет записи','No entry');
+      status=v===true?trText('Тренировка записана','Workout logged'):v===false?trText('День отдыха — это нормально','Rest days are okay'):trText('Нет записи','No entry');
     }else if(id==='weight'){
-      const s=todayMetricState(id,date);
-      main=s.value!==null&&s.value>0?todayNumber(s.value)+' '+trText('кг','kg'):'—';
-      status=main==='—'?trText('Нет замера за этот день','No measurement for this day'):trText('Замер за выбранный день','Selected day’s measurement');
+      const measurement=todayLatestWeight(date);
+      main=measurement?todayNumber(measurement.value)+' '+trText('кг','kg'):'—';
+      status=measurement?trText('Замер: ','Measured: ')+new Date(measurement.date+'T12:00:00').toLocaleDateString(locale,{day:'numeric',month:'short',year:'numeric'}):trText('Нет замеров','No measurements');
     }else{
       const s=todayMetricState(id,date),unit=id==='steps'?trText('шагов','steps'):trUnit(tracker(id));
       state=s.status;
       main=(s.value===null?'—':todayNumber(s.value))+(s.goal!==null?' / '+todayNumber(s.goal):'')+' '+unit;
-      status={missing:trText('Нет данных','No data'),logged:trText('Записано · без цели','Logged · no goal'),met:trText('Цель достигнута','Goal reached'),progress:date===localDate()?trText('Пока ниже цели','Below goal so far'):trText('Ниже цели','Below goal')}[state];
+      status={missing:trText('Нет данных','No data'),logged:trText('Записано','Logged'),met:trText('Цель достигнута','Goal reached'),progress:date===localDate()?trText('Пока ниже цели','Below goal so far'):trText('Ниже цели','Below goal')}[state];
       if(s.goal!==null&&s.value!==null)progress=Math.max(0,Math.min(100,s.value/s.goal*100));
     }
     el.dataset.state=state;
