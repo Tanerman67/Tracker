@@ -1,0 +1,211 @@
+{
+  "schemaVersion": 1,
+  "planId": "b2-chatgpt-week-1",
+  "title": {
+    "en": "B2 ChatGPT Grammar Plan — Week 1",
+    "ru": "План грамматики B2 с ChatGPT — неделя 1"
+  },
+  "level": "B1 to B2",
+  "totalMinutes": 240,
+  "sessionsPerWeek": 4,
+  "translationDisplay": "hidden_until_tap",
+  "method": [
+    "targeted_diagnosis",
+    "active_recall",
+    "spaced_review",
+    "controlled_to_free_practice"
+  ],
+  "sessions": [
+    {
+      "id": "session-1",
+      "durationMinutes": 60,
+      "topic": "Gerunds and infinitives",
+      "mainFocus": "Choose -ing or to + verb after common verbs and expressions.",
+      "blocks": [
+        {"minutes": 5, "type": "diagnostic", "instruction": "Complete five sentences without checking the rule."},
+        {"minutes": 12, "type": "explanation", "instruction": "Study the patterns and compare the examples."},
+        {"minutes": 18, "type": "controlled_practice", "instruction": "Complete Exercises 1 and 2."},
+        {"minutes": 15, "type": "speaking", "instruction": "Answer the prompts aloud using the target patterns."},
+        {"minutes": 10, "type": "review", "instruction": "Correct mistakes and save three personal examples."}
+      ],
+      "rules": [
+        {"rule": "Use verb + -ing after enjoy, avoid, mention, suggest, finish and keep.", "examples": ["I enjoy speaking English.", "She mentioned moving to Auckland."]},
+        {"rule": "Use verb + to-infinitive after decide, hope, plan, want, need and promise.", "examples": ["I plan to apply for jobs.", "We decided to stay in New Zealand."]},
+        {"rule": "Use -ing after prepositions and expressions such as How about... ?", "examples": ["How about practising after dinner?", "I'm interested in improving my pronunciation."]}
+      ],
+      "exercises": [
+        {
+          "id": "1a",
+          "type": "fill_gap",
+          "instruction": "Use the correct form of the verb in brackets.",
+          "items": [
+            {"prompt": "I avoid ___ English only in class. (speak)", "answer": "speaking"},
+            {"prompt": "We decided ___ a different course. (try)", "answer": "to try"},
+            {"prompt": "How about ___ the answer again? (explain)", "answer": "explaining"},
+            {"prompt": "He mentioned ___ late. (arrive)", "answer": "arriving"},
+            {"prompt": "I hope ___ more confidently soon. (speak)", "answer": "to speak"}
+          ]
+        },
+        {
+          "id": "1b",
+          "type": "personal_speaking",
+          "instruction": "Answer aloud in two or three sentences.",
+          "items": [
+            {"prompt": "What do you enjoy doing in Auckland?", "target": "enjoy + -ing"},
+            {"prompt": "What do you plan to do when your English reaches B2?", "target": "plan + to-infinitive"},
+            {"prompt": "Suggest an English activity for tonight.", "target": "How about + -ing"}
+          ]
+        }
+      ],
+      "vocabulary": [
+        {"term": "figure out", "ipa": "/ˈfɪɡə aʊt/", "translationRu": "разобраться; понять", "translationHidden": true, "example": "I’m trying to figure out which form sounds right."},
+        {"term": "keep up", "ipa": "/kiːp ʌp/", "translationRu": "поддерживать темп; не отставать", "translationHidden": true, "example": "It is easier to keep up when I study regularly."},
+        {"term": "give it a go", "ipa": "/ɡɪv ɪt ə ɡəʊ/", "translationRu": "попробовать", "translationHidden": true, "nzUsage": true, "example": "I’m not completely sure, but I’ll give it a go."}
+      ]
+    },
+    {
+      "id": "session-2",
+      "durationMinutes": 60,
+      "topic": "Present Perfect vs Present Perfect Continuous",
+      "mainFocus": "Contrast completed results with duration or ongoing activity.",
+      "blocks": [
+        {"minutes": 8, "type": "spaced_review", "instruction": "Recall Session 1 patterns and say three examples."},
+        {"minutes": 12, "type": "explanation", "instruction": "Compare result, duration and repeated activity."},
+        {"minutes": 15, "type": "controlled_practice", "instruction": "Complete Exercise 2a."},
+        {"minutes": 15, "type": "speaking", "instruction": "Describe your life and English study using both tenses."},
+        {"minutes": 10, "type": "correction", "instruction": "Ask ChatGPT for direct corrections and repeat each corrected sentence."}
+      ],
+      "rules": [
+        {"rule": "Use Present Perfect for a result, completed amount or life experience.", "examples": ["I've completed four lessons this week.", "I've lived in three countries."]},
+        {"rule": "Use Present Perfect Continuous for duration, an unfinished activity or visible recent activity.", "examples": ["I've been studying for two hours.", "It's wet because it has been raining."]},
+        {"rule": "Some state verbs normally use the simple form, not the continuous form.", "examples": ["I've known her for ten years.", "I've wanted to improve my English for a long time."]}
+      ],
+      "exercises": [
+        {
+          "id": "2a",
+          "type": "choose_tense",
+          "instruction": "Complete each sentence with the best tense.",
+          "items": [
+            {"prompt": "I ___ three grammar exercises today. (finish)", "answer": "have finished"},
+            {"prompt": "I ___ English since breakfast. (study)", "answer": "have been studying"},
+            {"prompt": "How long ___ you ___ in Auckland? (live)", "answer": "have you been living"},
+            {"prompt": "I ___ that word several times this week. (use)", "answer": "have used"},
+            {"prompt": "She ___ him since university. (know)", "answer": "has known"}
+          ]
+        },
+        {
+          "id": "2b",
+          "type": "personal_speaking",
+          "instruction": "Speak for two minutes. Include at least two examples of each tense.",
+          "prompt": "What have you achieved since moving to New Zealand, and what have you been working on recently?"
+        }
+      ],
+      "vocabulary": [
+        {"term": "so far", "ipa": "/səʊ fɑː/", "translationRu": "пока что; к настоящему моменту", "translationHidden": true, "example": "I've studied for four hours so far this week."},
+        {"term": "make progress", "ipa": "/meɪk ˈprəʊɡres/", "translationRu": "добиваться прогресса", "translationHidden": true, "example": "I've been making progress with spontaneous speaking."},
+        {"term": "settle in", "ipa": "/ˈsetl ɪn/", "translationRu": "обжиться; освоиться", "translationHidden": true, "nzUsage": true, "example": "We've been settling into life in Auckland."}
+      ]
+    },
+    {
+      "id": "session-3",
+      "durationMinutes": 60,
+      "topic": "Conditionals with unless and otherwise",
+      "mainFocus": "Express real and hypothetical consequences accurately.",
+      "blocks": [
+        {"minutes": 8, "type": "spaced_review", "instruction": "Review two errors from Sessions 1 and 2."},
+        {"minutes": 12, "type": "explanation", "instruction": "Compare first, second and third conditionals."},
+        {"minutes": 18, "type": "controlled_practice", "instruction": "Complete Exercises 3a and 3b."},
+        {"minutes": 15, "type": "speaking", "instruction": "Answer hypothetical questions without writing first."},
+        {"minutes": 7, "type": "review", "instruction": "Build a three-card error review set."}
+      ],
+      "rules": [
+        {"rule": "First conditional: if/unless + present, will + base verb for a realistic future result.", "examples": ["If I practise daily, I'll improve.", "I won't improve unless I speak regularly."]},
+        {"rule": "Second conditional: if + past, would + base verb for a hypothetical present or future.", "examples": ["If I had more confidence, I would speak more."]},
+        {"rule": "Third conditional: if + past perfect, would have + past participle for an unreal past.", "examples": ["If I had practised earlier, I would have felt calmer."]},
+        {"rule": "Otherwise introduces the consequence if the previous action does not happen.", "examples": ["Write the phrase down; otherwise, you may forget it."]}
+      ],
+      "exercises": [
+        {
+          "id": "3a",
+          "type": "rewrite",
+          "instruction": "Rewrite without changing the meaning.",
+          "items": [
+            {"prompt": "If I don't practise speaking, I won't become confident. Use unless.", "answer": "I won't become confident unless I practise speaking."},
+            {"prompt": "Leave now, or you will miss the bus. Use otherwise.", "answer": "Leave now; otherwise, you will miss the bus."},
+            {"prompt": "I didn't prepare, so I felt nervous. Use the third conditional.", "answer": "If I had prepared, I wouldn't have felt nervous."}
+          ]
+        },
+        {
+          "id": "3b",
+          "type": "personal_speaking",
+          "instruction": "Answer aloud and explain why.",
+          "items": [
+            {"prompt": "What will happen if you practise speaking every day?", "target": "first conditional"},
+            {"prompt": "What would you do if you got a job interview tomorrow?", "target": "second conditional"},
+            {"prompt": "What would have been different if you had started speaking practice earlier?", "target": "third conditional"}
+          ]
+        }
+      ],
+      "vocabulary": [
+        {"term": "unless", "ipa": "/ənˈles/", "translationRu": "если не; разве что", "translationHidden": true, "example": "You won't remember it unless you use it."},
+        {"term": "otherwise", "ipa": "/ˈʌðəwaɪz/", "translationRu": "иначе; в противном случае", "translationHidden": true, "example": "Practise aloud; otherwise, recognition will not become active speech."},
+        {"term": "sort out", "ipa": "/sɔːt aʊt/", "translationRu": "разобраться; уладить", "translationHidden": true, "nzUsage": true, "example": "I'll sort out the appointment tomorrow."}
+      ]
+    },
+    {
+      "id": "session-4",
+      "durationMinutes": 60,
+      "topic": "Integrated grammar for spontaneous speaking",
+      "mainFocus": "Retrieve this week's grammar quickly in realistic New Zealand situations.",
+      "blocks": [
+        {"minutes": 10, "type": "weekly_recall", "instruction": "Explain the three grammar topics without looking at notes."},
+        {"minutes": 15, "type": "mixed_test", "instruction": "Complete Exercise 4a."},
+        {"minutes": 20, "type": "role_play", "instruction": "Role-play a job interview, café conversation and phone call with ChatGPT."},
+        {"minutes": 10, "type": "correction_loop", "instruction": "Repeat corrected sentences, then change one detail in each."},
+        {"minutes": 5, "type": "reflection", "instruction": "Mark each topic: Know, Hard or Again."}
+      ],
+      "exercises": [
+        {
+          "id": "4a",
+          "type": "mixed_review",
+          "instruction": "Correct each sentence.",
+          "items": [
+            {"prompt": "I enjoy to speak with native speakers.", "answer": "I enjoy speaking with native speakers."},
+            {"prompt": "I've studied for two hours and I'm not finished yet.", "answer": "I've been studying for two hours and I'm not finished yet."},
+            {"prompt": "Unless I will practise, I won't improve.", "answer": "Unless I practise, I won't improve."},
+            {"prompt": "If I would have more confidence, I would apply now.", "answer": "If I had more confidence, I would apply now."},
+            {"prompt": "She mentioned to move to Wellington.", "answer": "She mentioned moving to Wellington."}
+          ]
+        },
+        {
+          "id": "4b",
+          "type": "role_play",
+          "instruction": "Speak immediately. Do not write a script.",
+          "items": [
+            {"prompt": "A recruiter asks what you have been doing since moving to New Zealand.", "target": "perfect tenses"},
+            {"prompt": "A friend asks what you would do if you received two job offers.", "target": "second conditional"},
+            {"prompt": "Suggest a weekend activity in Auckland.", "target": "suggest or How about + -ing"}
+          ]
+        }
+      ],
+      "vocabulary": [
+        {"term": "catch up", "ipa": "/kætʃ ʌp/", "translationRu": "пообщаться после перерыва; наверстать", "translationHidden": true, "nzUsage": true, "example": "Let's catch up over coffee this weekend."},
+        {"term": "pop in", "ipa": "/pɒp ɪn/", "translationRu": "ненадолго зайти", "translationHidden": true, "nzUsage": true, "example": "I'll pop into the dairy on my way home."},
+        {"term": "head off", "ipa": "/hed ɒf/", "translationRu": "отправиться; выдвинуться", "translationHidden": true, "nzUsage": true, "example": "We're heading off to the beach early."}
+      ]
+    }
+  ],
+  "weeklySuccessCriteria": [
+    "Complete all four sessions.",
+    "Score at least 80 percent on the mixed review after corrections.",
+    "Use six target structures during unscripted speaking.",
+    "Recall at least eight new expressions without revealing the translation.",
+    "Save no more than five recurring errors for next week's spaced review."
+  ],
+  "appUiSuggestions": {
+    "lessonStatusLabels": ["New", "Learning", "Review", "Confident"],
+    "exerciseActions": ["Check", "Try again", "Show rule"],
+    "vocabularyActions": ["Reveal translation", "Play pronunciation", "Add example"],
+    "completionAction": "Finish lesson"
+  }
+}
