@@ -33,6 +33,7 @@ function todayHint(date=todayDateKey()){
   return null;
 }
 function openTodayMetric(id,date=todayDateKey()){
+  if(id==='sleep'||id==='outdoors'){openHabitEditor(id,date);return}
   if(id==='weight'){openBody();openBodyCheckin(date);return}
   if(id==='alcohol'){
     openAlcohol();

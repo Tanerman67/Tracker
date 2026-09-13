@@ -1,0 +1,21 @@
+.habit-modal{display:none;position:fixed;inset:0;z-index:80;background:rgba(0,0,0,.55);align-items:flex-end;justify-content:center}
+.habit-modal.show{display:flex}
+.habit-sheet{position:relative;box-sizing:border-box;width:min(100%,560px);max-height:90dvh;overflow-y:auto;padding:20px 16px calc(24px + env(safe-area-inset-bottom));border-radius:22px 22px 0 0;background:var(--bg,#09151e);color:var(--text);overscroll-behavior:contain}
+.habit-sheet h3{padding-right:44px;font-size:20px;line-height:1.4;margin:0 0 18px;overflow-wrap:anywhere}
+.habit-sheet input,.habit-sheet select{width:100%;min-width:0;box-sizing:border-box;font-size:16px;min-height:44px}
+.habit-sheet label{font-size:14px;line-height:1.4}
+.habit-two-fields{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.habit-note{font-size:13px;line-height:1.5;color:var(--muted);overflow-wrap:anywhere}
+.habit-sheet button{min-height:44px;white-space:normal;line-height:1.35;font-size:14px;padding:10px 12px}
+.habit-sheet #habitClose{position:absolute;right:12px;top:12px;width:44px}
+.habit-sheet #habitSave{width:100%;margin-top:14px}
+.habit-sheet #habitContent>button{width:100%;margin:5px 0}
+.habit-activity{display:flex;align-items:center;flex-wrap:wrap;gap:6px;padding:10px 0;border-bottom:1px solid var(--line)}
+.habit-activity>span{flex-basis:100%;font-size:14px;line-height:1.5;overflow-wrap:anywhere}
+#today #habitTodayButton{position:relative;min-height:44px;padding:10px 14px;white-space:normal;font-size:14px;background:var(--soft);color:var(--text);border:1px solid var(--line)}
+#habitWeekly{margin-top:14px;border-top:1px solid var(--line);padding-top:12px}
+#habitWeekly summary{cursor:pointer;min-height:44px;display:list-item;font-size:15px;font-weight:700;line-height:1.4}
+.habit-week-rows>div{padding:10px 0;border-top:1px solid var(--line)}
+.habit-week-rows strong{font-size:14px}
+.habit-week-rows p{margin:5px 0;font-size:14px;line-height:1.5;color:var(--muted);overflow-wrap:anywhere}
+.habit-sheet button:focus-visible,#habitWeekly summary:focus-visible,#habitTodayButton:focus-visible{outline:2px solid var(--green);outline-offset:2px}

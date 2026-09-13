@@ -1,3 +1,7 @@
+CURRENT RELEASE: V6.10 — integrated habits update, based on V6.9.2.
+See UPDATE_HABITS.md for features, data model, tests and update instructions.
+The entries below are historical release notes.
+
 МОЙ РИТМ — V4.0
 
 Добавлено:

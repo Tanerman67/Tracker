@@ -2116,7 +2116,8 @@ input,select,textarea{font-size:16px}
 }
 
 </style>
-<link rel="stylesheet" href="today.css?v=692">
+<link rel="stylesheet" href="today.css?v=6100">
+<link rel="stylesheet" href="habits.css?v=6100">
 </head>
 <body>
 <div class="app">
@@ -2151,6 +2152,7 @@ input,select,textarea{font-size:16px}
     </div>
 
     <div id="todayGrid" class="metric-grid"></div>
+    <button type="button" id="habitTodayButton" onclick="openHabitEditor('blocks')">Работа и отдых</button>
   </div>
 </section>
 
@@ -2271,6 +2273,7 @@ input,select,textarea{font-size:16px}
     </div>
 
     <div class="weekly-metric-grid" id="weeklyMetricGrid"></div>
+    <details id="habitWeekly" open></details>
 
     <div class="weekly-insight-grid">
       <div class="weekly-insight weekly-strongest">
@@ -2713,9 +2716,18 @@ input,select,textarea{font-size:16px}
   <button style="width:100%" onclick="saveExperiment()">Начать эксперимент</button>
 </div></div>
 
-<script src="today.js?v=692"></script>
+<div id="habitModal" class="habit-modal" role="dialog" aria-modal="true" aria-labelledby="habitTitle">
+  <div class="habit-sheet">
+    <button type="button" class="secondary" id="habitClose" onclick="closeHabitEditor()">✕</button>
+    <h3 id="habitTitle"></h3>
+    <div id="habitContent"></div>
+    <button type="button" id="habitSave" onclick="saveHabitEditor()">Сохранить</button>
+  </div>
+</div>
+<script src="today.js?v=6100"></script>
+<script src="habits.js?v=6100"></script>
 <script>
-const APP_VERSION='6.9.2-github';
+const APP_VERSION='6.10-github';
 const DATA_KEY='my-life-tracker-data';
 const MIRROR_KEY='my-life-tracker-data-mirror-v1';
 const CURRENT_SCHEMA_VERSION=2;
@@ -5906,7 +5918,7 @@ function acknowledgeMotivation(){
   closeMotivationDetail();
 }
 
-function renderToday(){renderTodayPage()}
+function renderToday(){renderTodayPage();renderHabitToday()}
 function renderEnglish(){
   const setText=(id,value)=>{const el=document.getElementById(id);if(el)el.textContent=value};
   setText('englishPageSubtitle',trText('Учи, повторяй и превращай знания в активный английский.','Learn, review and turn knowledge into active English.'));
@@ -6486,12 +6498,12 @@ function weeklyMetricCards(summary){
       neutral:true
     },
     {
-      id:'alcohol',icon:'🍷',name:trText('Без алкоголя','Alcohol-free'),
+      id:'alcohol',icon:'🍷',name:trText('Без отметок об алкоголе','No alcohol marked'),
       value:summary.alcohol.tracked?`${summary.alcohol.free}/${summary.alcohol.tracked}`:'—',
       meta:summary.alcohol.tracked
         ?(summary.alcohol.drink
           ?`${summary.alcohol.drink} ${trText('дн. с алкоголем','drinking day(s)')}`
-          :trText('алкоголь не отмечен в учтённых днях','no alcohol marked in counted days'))
+          :trText('по правилу календаря; не подтверждение трезвости','calendar assumption; not confirmed abstinence'))
         :trText('Эта неделя пока вне периода отслеживания.','This week is outside the tracking period.'),
       delta:''
     }
@@ -7299,7 +7311,7 @@ function renderTrends(){
 }
 // V6.7.3_TRENDS_END
 
-function renderProgress(){renderWeeklyReview();renderTrends();renderCalendar()}
+function renderProgress(){renderWeeklyReview();renderHabitWeek();renderTrends();renderCalendar()}
 function moveMonth(n){calendarDate=new Date(calendarDate.getFullYear(),calendarDate.getMonth()+n,1);renderCalendar()}
 function renderCalendar(){const ruM=['Январь','Февраль','Март','Апрель','Май','Июнь','Июль','Август','Сентябрь','Октябрь','Ноябрь','Декабрь'],enM=['January','February','March','April','May','June','July','August','September','October','November','December'],ruD=['Пн','Вт','Ср','Чт','Пт','Сб','Вс'],enD=['Mon','Tue','Wed','Thu','Fri','Sat','Sun'],y=calendarDate.getFullYear(),m=calendarDate.getMonth(),lang=data.language||'ru';document.getElementById('calendarTitle').textContent=(lang==='en'?enM:ruM)[m]+' '+y;const grid=document.getElementById('calendarGrid');grid.innerHTML=(lang==='en'?enD:ruD).map(x=>`<div class="dow">${x}</div>`).join('');const first=(new Date(y,m,1).getDay()+6)%7,total=new Date(y,m+1,0).getDate();for(let i=0;i<first;i++)grid.innerHTML+='<div></div>';for(let day=1;day<=total;day++){const d=`${y}-${String(m+1).padStart(2,'0')}-${String(day).padStart(2,'0')}`,filled=Object.keys(data.logs[d]||{}).filter(k=>data.logs[d][k]!==false&&data.logs[d][k]!==undefined).length,cls=filled>=5?'good':filled>=2?'mid':'';grid.innerHTML+=`<div class="cday ${cls}">${day}${filled>=5?'<span class="dot"></span>':''}</div>`}}
 
@@ -7421,6 +7433,7 @@ setInterval(checkAppDayRollover,60000);
 
 addEventListener('keydown',e=>{
   if(e.key!=='Escape')return;
+  if(document.getElementById('habitModal')?.classList.contains('show'))return closeHabitEditor();
   if(document.getElementById('englishAddModal')?.classList.contains('show'))return closeEnglishAdd();
   if(document.getElementById('englishLearningModal')?.classList.contains('show'))return englishLearningBack();
   if(document.getElementById('motivationModal')?.classList.contains('show'))return closeMotivationDetail();
