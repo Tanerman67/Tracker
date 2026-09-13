@@ -1,7 +1,9 @@
-const CACHE='my-rhythm-v6.9.1-learning-fixes-github-pages';
+const CACHE='my-rhythm-v6.9.2-today-github-pages';
 const ASSETS=[
   './',
   './index.html',
+  './today.js?v=692',
+  './today.css?v=692',
   './manifest-github.webmanifest',
   './apple-touch-icon.png',
   './icon-192-v61.png',

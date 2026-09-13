@@ -2116,25 +2116,33 @@ input,select,textarea{font-size:16px}
 }
 
 </style>
+<link rel="stylesheet" href="today.css?v=692">
 </head>
 <body>
 <div class="app">
 <section id="today" class="section active">
   <div class="home-stack">
-    <div id="motivationCard" class="hero card motivation-card today-combined-hero" onclick="openMotivationDetail()">
+    <div id="motivationCard" class="hero card motivation-card today-combined-hero">
       <div class="today-combined-top">
         <div>
-          <div class="hero-title">Сегодня</div>
+          <div class="hero-title" id="todayHeading">Сегодня</div>
           <div class="hero-date" id="heroDate"></div>
         </div>
         <div class="today-motivation-icon" id="motivationIcon">🌱</div>
       </div>
 
-      <div class="today-motivation-body">
+      <div class="today-date-controls">
+        <button type="button" id="todayPrev" onclick="shiftTodayDate(-1)">‹</button>
+        <input type="date" id="todayDateInput" onchange="setTodayDate(this.value)">
+        <button type="button" id="todayNext" onclick="shiftTodayDate(1)">›</button>
+      </div>
+      <button type="button" id="todayReturn" onclick="setTodayDate(localDate())" hidden>Сегодня</button>
+      <button type="button" id="todayHeroAction" onclick="openTodayHero()"><div class="today-motivation-body">
         <div class="motivation-kicker" id="motivationKicker"></div>
         <div class="quote-text" id="motivationText">Дисциплина сегодня — свобода завтра.</div>
         <div class="quote-sub" id="motivationSub">My Rhythm</div>
-      </div>
+      </div></button>
+      <button type="button" id="todayMotivationLink" onclick="openMotivationDetail()" hidden>Мотивация</button>
 
       <div class="today-hero-art" aria-hidden="true">
         <div class="today-hero-moon"></div>
@@ -2705,8 +2713,9 @@ input,select,textarea{font-size:16px}
   <button style="width:100%" onclick="saveExperiment()">Начать эксперимент</button>
 </div></div>
 
+<script src="today.js?v=692"></script>
 <script>
-const APP_VERSION='6.9.1-github';
+const APP_VERSION='6.9.2-github';
 const DATA_KEY='my-life-tracker-data';
 const MIRROR_KEY='my-life-tracker-data-mirror-v1';
 const CURRENT_SCHEMA_VERSION=2;
@@ -4819,7 +4828,7 @@ function show(id,btn){
  document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));
  btn.classList.add('active');
 }
-function openEntry(id){activeTracker=tracker(id);if(!activeTracker){alert(trText('Трекер не найден.','Tracker not found.'));return}const unit=trUnit(activeTracker);document.getElementById('entryTitle').textContent=activeTracker.icon+' '+trTrackerName(activeTracker);document.getElementById('entryLabel').textContent=trText('Значение','Value')+(unit?' ('+unit+')':'');document.getElementById('entryValue').value=val(id)??'';document.getElementById('entryModal').classList.add('show');setTimeout(()=>document.getElementById('entryValue').focus(),80)}
+function openEntry(id,dateKey=localDate()){activeTracker=tracker(id);if(!activeTracker){alert(trText('Трекер не найден.','Tracker not found.'));return}activeTracker={...activeTracker,entryDate:dateKey};const unit=trUnit(activeTracker);document.getElementById('entryTitle').textContent=activeTracker.icon+' '+trTrackerName(activeTracker);document.getElementById('entryLabel').textContent=trText('Значение','Value')+(unit?' ('+unit+')':'')+' · '+dateKey;document.getElementById('entryValue').value=val(id,dateKey)??'';document.getElementById('entryModal').classList.add('show');setTimeout(()=>document.getElementById('entryValue').focus(),80)}
 function openEnglish(id){const type=englishTypes.find(x=>x[0]===id);if(!type)return;activeTracker={id,name:type[2],icon:type[1],type:'number',unit:'мин',category:'english'};document.getElementById('entryTitle').textContent=type[1]+' '+type[2];document.getElementById('entryLabel').textContent=trText('Всего минут сегодня','Total minutes today');document.getElementById('entryValue').value=val(id)??'';document.getElementById('entryModal').classList.add('show');setTimeout(()=>document.getElementById('entryValue').focus(),80)}
 function saveEntry(){
  if(!activeTracker)return;
@@ -4830,7 +4839,7 @@ function saveEntry(){
    alert(trText('Введи число не меньше нуля. Пустое поле не сохраняется.','Enter a number of zero or more. An empty field is not saved.'));
    return;
  }
- ensureDay()[activeTracker.id]=value;
+ ensureDay(activeTracker.entryDate||localDate())[activeTracker.id]=value;
  if(activeTracker.id.startsWith('english_') && activeTracker.id!=='english_general'){
    const total=englishTypes.reduce((s,[id])=>s+(Number(val(id))||0),0);
    ensureDay().english_general=total;
@@ -5897,56 +5906,7 @@ function acknowledgeMotivation(){
   closeMotivationDetail();
 }
 
-function renderToday(){
- const now=new Date(),lang=data.language||'ru',
- ruW=['Воскресенье','Понедельник','Вторник','Среда','Четверг','Пятница','Суббота'],
- enW=['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'],
- ruM=['января','февраля','марта','апреля','мая','июня','июля','августа','сентября','октября','ноября','декабря'],
- enM=['January','February','March','April','May','June','July','August','September','October','November','December'];
- const heroDateEl=document.getElementById('heroDate');
- if(heroDateEl)heroDateEl.textContent=lang==='en'?`${enW[now.getDay()]}, ${now.getDate()} ${enM[now.getMonth()]}`:`${ruW[now.getDay()]}, ${now.getDate()} ${ruM[now.getMonth()]}`;
-
- const cards=[
-  {id:'smoke',kind:'special',emoji:'🚭',ru:'Без сигарет',en:'Smoke-free'},
-  {id:'alcohol',kind:'special',emoji:'🍷',ru:'Без алкоголя',en:'Alcohol-free'},
-  {id:'weight',kind:'weight',emoji:'⚖️',ru:'Вес',en:'Weight'},
-  {id:'protein',kind:'metric',emoji:'🥩',ru:'Белок',en:'Protein'},
-  {id:'outdoors',kind:'metric',emoji:'☀️',ru:'Улица',en:'Outdoors'},
-  {id:'steps',kind:'metric',emoji:'🚶',ru:'Шаги',en:'Steps'},
-  {id:'gym',kind:'metric',emoji:'🏋️',ru:'Тренировка',en:'Workout'},
-  {id:'sleep',kind:'metric',emoji:'🛏️',ru:'Сон',en:'Sleep'}
- ];
- const grid=document.getElementById('todayGrid');if(!grid)return;grid.innerHTML='';
- for(const c of cards){
-   const el=document.createElement('div');el.className='metric-card'+(c.kind==='special'?' metric-special':'')+(c.kind==='weight'?' metric-weight':'');
-   const title=lang==='en'?c.en:c.ru;
-   if(c.kind==='special'){
-     const isSmoke=c.id==='smoke';
-     const has=isSmoke?!!data.smokeDate:true;
-     const days=isSmoke?(has?daysSince(data.smokeDate):0):alcoholCurrentStreakDays();
-     const shown=has?days:'—';
-     const percent=has?Math.min(100,pct(days,30)):0;
-     el.classList.add('metric-static');
-     if(!isSmoke)el.classList.add('metric-alcohol-clickable');
-     el.innerHTML=`<div class="metric-head"><div class="metric-left"><div class="metric-emoji">${c.emoji}</div><div><div class="metric-name">${title}</div><div class="metric-stat metric-days">${shown}${has?' '+trText('дней','days'):''}</div></div></div></div><div class="metric-bar"><span style="width:${percent}%"></span></div>`;
-     if(!isSmoke)el.onclick=openAlcohol;
-   } else if(c.kind==='weight'){
-     const todayWeight=val('weight');
-     const latest=latestEntry('weight');
-     const hasToday=todayWeight!==undefined&&todayWeight!==null&&todayWeight!=='';
-     const shown=hasToday?Number(todayWeight):(latest?Number(latest.value):null);
-     const status=hasToday?trText('Сегодня','Today'):(latest?dateLabel(latest.date):trText('Нет данных','No data'));
-     el.innerHTML=`<div class="metric-head"><div class="metric-left"><div class="metric-emoji">${c.emoji}</div><div><div class="metric-name">${title}</div><div class="metric-stat metric-weight-value">${shown!=null?shown+' '+trText('кг','kg'):'—'}</div></div></div><div class="metric-weight-status">${status}</div></div><div class="metric-weight-line"></div>`;
-     el.onclick=openBody;
-   } else {
-     const t=tracker(c.id),current=c.id==='gym'?(val('gym')===true?1:0):(Number(val(c.id))||0),goal=c.id==='gym'?1:Number(goalFor(c.id)||0),unit=c.id==='gym'?trText('раз','x'):(c.id==='steps'?trText('шагов','steps'):trUnit(t)),percent=goal?Math.min(100,Math.round(current/goal*100)):(current>0?100:0);
-     el.innerHTML=`<div class="metric-head"><div class="metric-left"><div class="metric-emoji">${c.emoji}</div><div><div class="metric-name">${title}</div><div class="metric-stat">${current} / ${goal}${unit?' '+unit:''}</div></div></div><div class="metric-ring" style="--p:${percent}"></div></div><div class="metric-bar"><span style="width:${percent}%"></span></div>`;
-     el.onclick=()=>c.id==='gym'?toggleBool('gym'):openEntry(c.id);
-   }
-   grid.appendChild(el);
- }
- renderMotivationCard();
-}
+function renderToday(){renderTodayPage()}
 function renderEnglish(){
   const setText=(id,value)=>{const el=document.getElementById(id);if(el)el.textContent=value};
   setText('englishPageSubtitle',trText('Учи, повторяй и превращай знания в активный английский.','Learn, review and turn knowledge into active English.'));
