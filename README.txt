@@ -213,7 +213,7 @@ TEST:
 3. Refresh once.
 4. Share -> Add to Home Screen.
 5. Check the preview icon BEFORE pressing Add.
-6. Since the historical data has not been restored yet, it is safe to delete/re-add the Home Screen app during this icon test.
+6. Export and verify a backup before removing an installed app; removal may erase local data.
 
 
 V6.2 — ALCOHOL HISTORY CALENDAR
@@ -222,15 +222,10 @@ V6.2 — ALCOHOL HISTORY CALENDAR
 - Unmarked tracked past dates are automatically alcohol-free.
 - Future dates are neutral/disabled.
 - No portions are stored.
-- Tracking starts 2025-01-01.
+- Tracking starts from the locally saved tracking date.
 - Current streak is derived from calendar history.
 - Visual language: emerald = alcohol-free; indigo/violet neon = drank; dark = future.
-- Preloaded from the user's screenshots:
-  2025: 82 drinking days
-  2026 through Sep 8: 24 drinking days
-  Total: 106
-  Latest drinking day: 2026-08-30
-  Current alcohol-free period begins: 2026-08-31
+- New installations contain no personal history.
 - V6 safe storage and Safari Home Screen icon setup are preserved.
 
 
@@ -257,18 +252,8 @@ BODY SCREEN
   so Today, Progress, Body, backup and recovery remain consistent.
 - Body circumference data is stored in additive field "bodyMeasurements".
 
-PRELOADED BODY HISTORY FROM USER SCREENSHOTS
-2026-01-09  Chest 104 / Waist 96 / Abdomen 103 / Hips 108
-2026-01-23  Chest 102 / Waist 93 / Abdomen 101 / Hips 106
-2026-02-11  Chest 99  / Waist 91 / Abdomen 100 / Hips 106
-2026-02-20  Chest 99  / Waist 92 / Abdomen 98  / Hips 106
-2026-03-07  Chest 101 / Waist 91 / Abdomen 99  / Hips 108
-2026-03-18  Chest 99  / Waist 92 / Abdomen 99  / Hips 108
-2026-04-10  Chest 98  / Waist 90 / Abdomen 99  / Hips 106
-2026-06-12  Chest 99  / Waist 90 / Abdomen 98  / Hips 107
-2026-06-28  Chest 102 / Waist 90 / Abdomen 98  / Hips 106
-
-No historical Thigh values were invented. Thigh starts with the first new measurement.
+BODY HISTORY
+Body measurements are private device data and are never preloaded from application source.
 
 V6 safe redundant storage, Alcohol Calendar, GitHub Pages-relative paths,
 and Safari Home Screen icons are preserved.
