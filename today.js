@@ -19,6 +19,13 @@ function todayLatestWeight(date=todayDateKey()){
 }
 function shiftTodayDate(delta){setTodayDate(weeklyAddDays(todayDateKey(),delta))}
 function todayNumber(n){return new Intl.NumberFormat(data.language==='en'?'en-NZ':'ru-RU',{maximumFractionDigits:2}).format(n)}
+function todayAlcoholFreeDays(date=todayDateKey()){
+  if(date<alcoholTrackingStart()||alcoholIsDrink(date))return 0;
+  const lastDrink=alcoholLatestDrink(date);
+  const start=lastDrink?weeklyAddDays(lastDrink,1):alcoholTrackingStart();
+  if(!start||start>date)return 0;
+  return Math.max(0,weeklyDiffDays(start,date));
+}
 function todayMetricState(id,date=todayDateKey()){
   const raw=data.logs?.[date]?.[id];
   const has=raw!==undefined&&raw!==null&&raw!==''&&typeof raw!=='boolean'&&Number.isFinite(Number(raw))&&Number(raw)>=0;
@@ -106,9 +113,16 @@ function renderTodayPage(){
       if(start&&start<=date){main=todayNumber(weeklyDiffDays(start,date))+' '+trText('дней','days');status=trText('От даты отказа','Since quit date')}
       else status=trText('Дата отказа не задана для этого дня','No quit date for this day');
     }else if(id==='alcohol'){
-      if(date<alcoholTrackingStart()){status=trText('До начала учёта','Before tracking began')}
-      else if(alcoholIsDrink(date)){main=trText('Есть отметка','Logged');status=trText('Употребление алкоголя','Alcohol use')}
-      else{main=trText('Нет отметки','Not logged');status=trText('Предполагается день без алкоголя.','Assumed alcohol-free; unconfirmed.')}
+      if(date<alcoholTrackingStart()){
+        status=trText('До начала учёта','Before tracking began');
+      }else if(alcoholIsDrink(date)){
+        main=trText('Есть отметка','Logged');
+        status=trText('Употребление алкоголя','Alcohol use');
+      }else{
+        const days=todayAlcoholFreeDays(date);
+        main=todayNumber(days)+' '+trText('дней','days');
+        status=trText('Без отмеченного алкоголя','No alcohol marked');
+      }
     }else if(id==='gym'){
       const v=data.logs?.[date]?.gym;
       main=v===true?trText('Записана','Logged'):v===false?trText('Без тренировки','No workout'):'—';
