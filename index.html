@@ -6,7 +6,6 @@
 <meta name="theme-color" content="#061319">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="Мой ритм">
 
 <link rel="manifest" href="./manifest-github.webmanifest?v=622">
 <link rel="apple-touch-icon" sizes="180x180" href="./apple-touch-icon.png?v=622">
@@ -2697,7 +2696,7 @@ input,select,textarea{font-size:16px}
 <script src="today.js?v=6110"></script>
 <script src="habits.js?v=6110"></script>
 <script>
-const APP_VERSION='6.11-github';
+const APP_VERSION='6.11.1-audit';
 const DATA_KEY='my-life-tracker-data';
 const MIRROR_KEY='my-life-tracker-data-mirror-v1';
 const CURRENT_SCHEMA_VERSION=2;
@@ -2720,10 +2719,10 @@ const defaultTrackers=[
 ];
 const defaults={
  schemaVersion:CURRENT_SCHEMA_VERSION,
- smokeDate:'2025-06-08',alcoholDate:'2026-08-31',
- alcoholTrackingStart:'2025-01-01',
- alcoholHistory:{"2025-01-01":true,"2025-01-02":true,"2025-01-03":true,"2025-01-04":true,"2025-01-05":true,"2025-01-06":true,"2025-01-07":true,"2025-01-11":true,"2025-01-12":true,"2025-01-15":true,"2025-01-18":true,"2025-01-19":true,"2025-01-22":true,"2025-01-25":true,"2025-01-26":true,"2025-01-29":true,"2025-02-01":true,"2025-02-02":true,"2025-02-05":true,"2025-02-08":true,"2025-02-09":true,"2025-02-12":true,"2025-02-15":true,"2025-02-16":true,"2025-02-19":true,"2025-02-22":true,"2025-02-23":true,"2025-02-26":true,"2025-03-01":true,"2025-03-02":true,"2025-03-05":true,"2025-03-08":true,"2025-03-09":true,"2025-03-12":true,"2025-03-15":true,"2025-03-16":true,"2025-03-19":true,"2025-03-22":true,"2025-03-23":true,"2025-03-26":true,"2025-03-29":true,"2025-03-30":true,"2025-04-02":true,"2025-04-05":true,"2025-04-06":true,"2025-04-09":true,"2025-04-12":true,"2025-04-13":true,"2025-04-16":true,"2025-04-19":true,"2025-04-20":true,"2025-04-23":true,"2025-04-26":true,"2025-04-27":true,"2025-04-30":true,"2025-05-01":true,"2025-05-03":true,"2025-05-06":true,"2025-05-08":true,"2025-05-10":true,"2025-05-12":true,"2025-05-14":true,"2025-05-16":true,"2025-05-21":true,"2025-05-24":true,"2025-05-25":true,"2025-05-28":true,"2025-05-31":true,"2025-06-01":true,"2025-06-05":true,"2025-06-07":true,"2025-06-08":true,"2025-06-09":true,"2025-06-10":true,"2025-06-11":true,"2025-12-19":true,"2025-12-21":true,"2025-12-25":true,"2025-12-26":true,"2025-12-27":true,"2025-12-29":true,"2025-12-31":true,"2026-01-03":true,"2026-01-04":true,"2026-01-06":true,"2026-01-25":true,"2026-02-15":true,"2026-02-28":true,"2026-03-21":true,"2026-04-13":true,"2026-04-15":true,"2026-07-05":true,"2026-07-07":true,"2026-07-08":true,"2026-07-09":true,"2026-07-10":true,"2026-07-11":true,"2026-07-25":true,"2026-07-26":true,"2026-07-27":true,"2026-07-28":true,"2026-07-29":true,"2026-08-21":true,"2026-08-22":true,"2026-08-29":true,"2026-08-30":true},
- bodyMeasurements:{"2026-01-09":{"chest":104,"waist":96,"abdomen":103,"hips":108},"2026-01-23":{"chest":102,"waist":93,"abdomen":101,"hips":106},"2026-02-11":{"chest":99,"waist":91,"abdomen":100,"hips":106},"2026-02-20":{"chest":99,"waist":92,"abdomen":98,"hips":106},"2026-03-07":{"chest":101,"waist":91,"abdomen":99,"hips":108},"2026-03-18":{"chest":99,"waist":92,"abdomen":99,"hips":108},"2026-04-10":{"chest":98,"waist":90,"abdomen":99,"hips":106},"2026-06-12":{"chest":99,"waist":90,"abdomen":98,"hips":107},"2026-06-28":{"chest":102,"waist":90,"abdomen":98,"hips":106}},
+ smokeDate:'',alcoholDate:'',
+ alcoholTrackingStart:localDate(),
+ alcoholHistory:{},
+ bodyMeasurements:{},
  proteinGoal:120,stepsGoal:7000,outdoorsGoal:60,sleepGoal:7.5,englishGoal:240,gymGoal:3,
  trackers:defaultTrackers,logs:{},theme:'dark',language:'ru',experiments:[],
  motivationSeen:{},
@@ -2795,8 +2794,8 @@ function migrateData(raw){
 
   if(version < 2){
     d.experiments=Array.isArray(d.experiments)?d.experiments:[];
-    d.sleepGoal=Number(d.sleepGoal||7.5);
-    d.gymGoal=Number(d.gymGoal||3);
+    d.sleepGoal=d.sleepGoal??7.5;
+    d.gymGoal=d.gymGoal??3;
     d.schemaVersion=2;
     version=2;
   }
@@ -2813,10 +2812,12 @@ function migrateData(raw){
     bodyMeasurements:(d.bodyMeasurements && typeof d.bodyMeasurements==='object') ? d.bodyMeasurements : structuredClone(defaults.bodyMeasurements),
     motivationSeen:(d.motivationSeen && typeof d.motivationSeen==='object') ? d.motivationSeen : {},
     englishLearning:{
+      ...d.englishLearning,
       customItems:Array.isArray(d.englishLearning?.customItems) ? d.englishLearning.customItems : [],
       review:(d.englishLearning?.review && typeof d.englishLearning.review==='object') ? d.englishLearning.review : {},
       favorites:(d.englishLearning?.favorites && typeof d.englishLearning.favorites==='object') ? d.englishLearning.favorites : {},
       dailyQueue:{
+        ...d.englishLearning?.dailyQueue,
         date:typeof d.englishLearning?.dailyQueue?.date==='string' ? d.englishLearning.dailyQueue.date : '',
         itemIds:Array.isArray(d.englishLearning?.dailyQueue?.itemIds) ? d.englishLearning.dailyQueue.itemIds : [],
         newItemIds:Array.isArray(d.englishLearning?.dailyQueue?.newItemIds) ? d.englishLearning.dailyQueue.newItemIds : []
@@ -2829,15 +2830,32 @@ function migrateData(raw){
   for(const base of defaultTrackers){
     if(!d.trackers.some(t=>t.id===base.id))d.trackers.push(structuredClone(base));
   }
-  d.trackers=d.trackers.filter(t=>t.id!=='mood' && t.id!=='water');
   return d;
+}
+
+function isDataObject(value){return !!value&&typeof value==='object'&&!Array.isArray(value)}
+function validateStoredData(obj){
+  if(!isDataObject(obj))throw new Error('Invalid app data.');
+  const maps=['logs','alcoholHistory','bodyMeasurements','motivationSeen','englishLearning','_storageMeta'];
+  if(![...maps,'trackers','smokeDate','alcoholDate','schemaVersion'].some(k=>Object.prototype.hasOwnProperty.call(obj,k)))throw new Error('No app data found.');
+  for(const key of maps){
+    if(obj[key]!==undefined&&!isDataObject(obj[key]))throw new Error('Invalid '+key+'.');
+  }
+  for(const key of ['trackers','experiments']){
+    if(obj[key]!==undefined&&!Array.isArray(obj[key]))throw new Error('Invalid '+key+'.');
+  }
+  if(obj.trackers?.some(t=>!isDataObject(t)||typeof t.id!=='string'))throw new Error('Invalid tracker.');
+  for(const key of ['logs','bodyMeasurements']){
+    if(obj[key]&&Object.values(obj[key]).some(row=>!isDataObject(row)))throw new Error('Invalid '+key+' row.');
+  }
+  return obj;
 }
 
 function parseCandidate(key,raw,primary=false){
   if(!raw)return null;
   try{
     const obj=JSON.parse(raw);
-    if(!obj||typeof obj!=='object')return null;
+    validateStoredData(obj);
     return {key,data:migrateData(obj),primary};
   }catch(e){
     return null;
@@ -2991,7 +3009,15 @@ async function vaultSnapshotCount(){
   try{return (await vaultReadSnapshots()).length}catch(e){return 0}
 }
 
-async function writeVaultCopies(payload,makeSnapshot=true){
+// Serialize vault writes: a slower old save must not replace a newer save.
+let vaultWriteQueue=Promise.resolve();
+function writeVaultCopies(payload,makeSnapshot=true){
+  const snapshot=structuredClone(payload);
+  const task=vaultWriteQueue.then(()=>writeVaultCopiesNow(snapshot,makeSnapshot));
+  vaultWriteQueue=task.catch(()=>{});
+  return task;
+}
+async function writeVaultCopiesNow(payload,makeSnapshot=true){
   const settled=await Promise.allSettled([
     vaultWriteIndexedDB(payload,makeSnapshot),
     vaultWriteCache(payload)
@@ -3014,6 +3040,7 @@ async function writeVaultCopies(payload,makeSnapshot=true){
 function stampCurrentData(){
   const previous=data&&data._storageMeta&&typeof data._storageMeta==='object'?data._storageMeta:{};
   data._storageMeta={
+    ...previous,
     revision:Number(previous.revision||0)+1,
     savedAt:new Date(Math.max(Date.now(),(Date.parse(previous.savedAt)||0)+1)).toISOString(),
     appVersion:APP_VERSION
@@ -3094,7 +3121,6 @@ async function clearVaultCopies(){
 }
 
 let data=loadData();
-data.trackers=(data.trackers||[]).filter(t=>t.id!=='mood' && t.id!=='water');
 let activeTracker=null,trendRangeDays=7,trendMetricId='weight',calendarDate=new Date();
 
 const englishTypes=[
@@ -4865,11 +4891,11 @@ function exportBackup(){
 function validateBackupObject(obj){
   if(!obj || typeof obj!=='object') throw new Error('Некорректный JSON.');
   if(obj.format==='my-life-tracker-backup' && obj.data){
-    return migrateData(obj.data);
+    return migrateData(validateStoredData(obj.data));
   }
   // Also accept a raw database export for resilience.
   if(obj.logs || obj.trackers || obj.schemaVersion!==undefined){
-    return migrateData(obj);
+    return migrateData(validateStoredData(obj));
   }
   throw new Error('Файл не похож на backup приложения «Мой ритм».');
 }
@@ -4878,7 +4904,7 @@ function importBackupFile(event){
   const file=event.target.files && event.target.files[0];
   if(!file) return;
   const reader=new FileReader();
-  reader.onload=()=>{
+  reader.onload=async()=>{
     try{
       const parsed=JSON.parse(reader.result);
       const imported=validateBackupObject(parsed);
@@ -4887,6 +4913,7 @@ function importBackupFile(event){
         ? 'Импорт заменит текущие записи данными из backup. Продолжить?'
         : 'Импортировать данные из backup?';
       if(!confirm(message)) return;
+      await writeVaultCopies(structuredClone(data),true);
       data=imported;
       save();
       const el=document.getElementById('backupStatus');
@@ -5411,9 +5438,9 @@ function alcoholHistory(){
 }
 function alcoholIsDrink(dateKey){return !!alcoholHistory()[dateKey]}
 function alcoholDateKey(year,monthIndex,day){return `${year}-${String(monthIndex+1).padStart(2,'0')}-${String(day).padStart(2,'0')}`}
-function alcoholParseLocal(dateKey){const [y,m,d]=dateKey.split('-').map(Number);return new Date(y,m-1,d,12)}
+function alcoholParseLocal(dateKey){return weeklyParseDate(dateKey)}
 function alcoholTodayKey(){return localDate()}
-function alcoholTrackingStart(){return data.alcoholTrackingStart||'2025-01-01'}
+function alcoholTrackingStart(){return data.alcoholTrackingStart||data.alcoholDate||Object.keys(alcoholHistory()).filter(k=>alcoholHistory()[k]).sort()[0]||localDate()}
 function alcoholIsTrackedPast(dateKey){return dateKey>=alcoholTrackingStart()&&dateKey<=alcoholTodayKey()}
 function alcoholLatestDrink(onOrBefore=alcoholTodayKey()){return Object.keys(alcoholHistory()).filter(k=>alcoholHistory()[k]&&k<=onOrBefore).sort().pop()||''}
 
@@ -5429,7 +5456,7 @@ function alcoholCurrentStreakDays(){
   if(alcoholIsDrink(today))return 0;
   const startKey=alcoholCurrentStreakStart();
   if(!startKey||startKey>today)return 0;
-  return Math.max(0,Math.floor((alcoholParseLocal(today)-alcoholParseLocal(startKey))/86400000));
+  return Math.max(0,weeklyDiffDays(startKey,today));
 }
 function alcoholYearStats(year){
   const now=new Date(),currentYear=now.getFullYear(),trackStart=alcoholTrackingStart();
@@ -5440,7 +5467,7 @@ function alcoholYearStats(year){
   else return {tracked:0,drink:0,sober:0,pct:0};
   const start=alcoholParseLocal(effectiveStart);
   if(start>end)return {tracked:0,drink:0,sober:0,pct:0};
-  const tracked=Math.floor((end-start)/86400000)+1;
+  const tracked=weeklyDiffDays(effectiveStart,localDate(end))+1;
   const endKey=localDate(end);
   const drink=Object.keys(alcoholHistory()).filter(k=>k.startsWith(year+'-')&&alcoholHistory()[k]&&k>=effectiveStart&&k<=endKey).length;
   const sober=Math.max(0,tracked-drink);
@@ -5971,7 +5998,8 @@ function weeklyAddDays(dateKey,days){
   return localDate(d);
 }
 function weeklyDiffDays(a,b){
-  return Math.round((weeklyParseDate(b)-weeklyParseDate(a))/86400000);
+  const A=weeklyParseDate(a),B=weeklyParseDate(b);
+  return (Date.UTC(B.getFullYear(),B.getMonth(),B.getDate())-Date.UTC(A.getFullYear(),A.getMonth(),A.getDate()))/86400000;
 }
 function weeklyMonday(dateKey=localDate()){
   const d=weeklyParseDate(dateKey);
@@ -6001,7 +6029,7 @@ function weeklyNumericStats(id,keys,{positiveOnly=false,goal=null}={}){
   let goalDays=0;
   for(const key of keys){
     const row=data.logs?.[key];
-    if(!weeklyHasOwn(row,id))continue;
+    if(!weeklyHasOwn(row,id)||typeof row[id]==='boolean')continue;
     const n=Number(row[id]);
     if(!Number.isFinite(n))continue;
     if(positiveOnly ? n<=0 : n<0)continue;
@@ -6725,34 +6753,19 @@ function trendValueForDay(id,dateKey){
   }
 
   if(id==='gym'){
-    if(!Object.prototype.hasOwnProperty.call(row,'gym'))return null;
-    return row.gym===true?1:0;
+    return row.gym===true?1:row.gym===false?0:null;
   }
 
-  if(!Object.prototype.hasOwnProperty.call(row,id))return null;
+  if(!weeklyHasOwn(row,id)||typeof row[id]==='boolean')return null;
   const n=Number(row[id]);
   if(!Number.isFinite(n))return null;
   if(id==='weight' || id==='sleep')return n>0?n:null;
   return n>=0?n:null;
 }
-function trendDateObj(dateKey){
-  return new Date(dateKey+'T12:00:00');
-}
-function trendLocalDate(d){
-  const y=d.getFullYear(),m=String(d.getMonth()+1).padStart(2,'0'),day=String(d.getDate()).padStart(2,'0');
-  return `${y}-${m}-${day}`;
-}
-function trendAddDays(dateKey,n){
-  const d=trendDateObj(dateKey);
-  d.setDate(d.getDate()+n);
-  return trendLocalDate(d);
-}
-function trendMonday(dateKey){
-  const d=trendDateObj(dateKey);
-  const offset=(d.getDay()+6)%7;
-  d.setDate(d.getDate()-offset);
-  return trendLocalDate(d);
-}
+function trendDateObj(dateKey){return weeklyParseDate(dateKey)}
+function trendLocalDate(d){return localDate(d)}
+function trendAddDays(dateKey,n){return weeklyAddDays(dateKey,n)}
+function trendMonday(dateKey){return weeklyMonday(dateKey)}
 function trendMonthStart(dateKey){
   const d=trendDateObj(dateKey);
   return trendLocalDate(new Date(d.getFullYear(),d.getMonth(),1,12));
@@ -7283,7 +7296,7 @@ function renderTrends(){
 
 function renderProgress(){renderSimpleProgress();renderTrends();renderCalendar()}
 function moveMonth(n){calendarDate=new Date(calendarDate.getFullYear(),calendarDate.getMonth()+n,1);renderCalendar()}
-function renderCalendar(){const ruM=['Январь','Февраль','Март','Апрель','Май','Июнь','Июль','Август','Сентябрь','Октябрь','Ноябрь','Декабрь'],enM=['January','February','March','April','May','June','July','August','September','October','November','December'],ruD=['Пн','Вт','Ср','Чт','Пт','Сб','Вс'],enD=['Mon','Tue','Wed','Thu','Fri','Sat','Sun'],y=calendarDate.getFullYear(),m=calendarDate.getMonth(),lang=data.language||'ru';document.getElementById('calendarTitle').textContent=(lang==='en'?enM:ruM)[m]+' '+y;const grid=document.getElementById('calendarGrid');grid.innerHTML=(lang==='en'?enD:ruD).map(x=>`<div class="dow">${x}</div>`).join('');const first=(new Date(y,m,1).getDay()+6)%7,total=new Date(y,m+1,0).getDate();for(let i=0;i<first;i++)grid.innerHTML+='<div></div>';for(let day=1;day<=total;day++){const d=`${y}-${String(m+1).padStart(2,'0')}-${String(day).padStart(2,'0')}`,filled=Object.keys(data.logs[d]||{}).filter(k=>data.logs[d][k]!==false&&data.logs[d][k]!==undefined).length,cls=filled>=5?'good':filled>=2?'mid':'';grid.innerHTML+=`<div class="cday ${cls}">${day}${filled>=5?'<span class="dot"></span>':''}</div>`}}
+function renderCalendar(){const ruM=['Январь','Февраль','Март','Апрель','Май','Июнь','Июль','Август','Сентябрь','Октябрь','Ноябрь','Декабрь'],enM=['January','February','March','April','May','June','July','August','September','October','November','December'],ruD=['Пн','Вт','Ср','Чт','Пт','Сб','Вс'],enD=['Mon','Tue','Wed','Thu','Fri','Sat','Sun'],y=calendarDate.getFullYear(),m=calendarDate.getMonth(),lang=data.language||'ru';document.getElementById('calendarTitle').textContent=(lang==='en'?enM:ruM)[m]+' '+y;const grid=document.getElementById('calendarGrid');grid.innerHTML=(lang==='en'?enD:ruD).map(x=>`<div class="dow">${x}</div>`).join('');const first=(new Date(y,m,1).getDay()+6)%7,total=new Date(y,m+1,0).getDate();for(let i=0;i<first;i++)grid.innerHTML+='<div></div>';for(let day=1;day<=total;day++){const d=`${y}-${String(m+1).padStart(2,'0')}-${String(day).padStart(2,'0')}`,filled=Object.keys(data.logs[d]||{}).filter(k=>k!=='habitDetails'&&weeklyHasOwn(data.logs[d],k)&&data.logs[d][k]!==false).length,cls=filled>=5?'good':filled>=2?'mid':'';grid.innerHTML+=`<div class="cday ${cls}">${day}${filled>=5?'<span class="dot"></span>':''}</div>`}}
 
 function openExperiment(){document.getElementById('experimentModal')?.classList.add('show')}
 function saveExperiment(){
@@ -7293,8 +7306,8 @@ function saveExperiment(){
  if(nameEl)nameEl.value='';if(targetEl)targetEl.value='';if(daysEl)daysEl.value='30';if(hypEl)hypEl.value='';
  closeModal('experimentModal');save()
 }
-function expProgress(e){const a=new Date(e.start+'T00:00:00'),now=new Date(),elapsed=Math.max(0,Math.floor((now-a)/86400000)+1);return Math.min(100,pct(elapsed,e.days))}
-function renderExperiments(){const host=document.getElementById('experimentsList');if(!host)return;host.innerHTML='';if(!data.experiments.length){host.innerHTML='<div class="insight-card">Пример: «30 дней проводить ≥60 минут на улице» и потом сравнить сон и английский.</div>';return}data.experiments.forEach(e=>{const t=tracker(e.metric),p=expProgress(e),el=document.createElement('div');el.className='experiment';el.innerHTML=`<div class="exp-head"><div><div class="title">${t?.icon||'🧪'} ${e.name}</div><div class="small">${e.hypothesis||'Без гипотезы'}</div></div><span class="exp-status">${e.status==='active'?'Активен':'Завершён'}</span></div><div class="progress"><span style="width:${p}%"></span></div><div class="small" style="margin-top:7px">Цель: ${e.target||'—'} ${t?.unit||''} · ${e.days} дней · ${p}%</div><div style="margin-top:9px"><button class="secondary" style="padding:8px 10px">${e.status==='active'?'Завершить':'Возобновить'}</button> <button class="ghost" style="padding:8px 10px">Удалить</button></div>`;const bs=el.querySelectorAll('button');bs[0].onclick=()=>{e.status=e.status==='active'?'done':'active';save()};bs[1].onclick=()=>{if(confirm((data.language||'ru')==='en'?'Delete this experiment?':'Удалить эксперимент?')){data.experiments=data.experiments.filter(x=>x.id!==e.id);save()}};host.appendChild(el)})}
+function expProgress(e){const elapsed=Math.max(0,weeklyDiffDays(e.start,localDate())+1);return Number.isFinite(elapsed)?Math.min(100,pct(elapsed,e.days)):0}
+function renderExperiments(){const host=document.getElementById('experimentsList');if(!host)return;host.innerHTML='';if(!data.experiments.length){host.innerHTML='<div class="insight-card">Пример: «30 дней проводить ≥60 минут на улице» и потом сравнить сон и английский.</div>';return}data.experiments.forEach(e=>{const t=tracker(e.metric),p=expProgress(e),el=document.createElement('div');el.className='experiment';el.innerHTML=`<div class="exp-head"><div><div class="title">${escapeHTML(t?.icon||'🧪')} ${escapeHTML(e.name)}</div><div class="small">${escapeHTML(e.hypothesis||'Без гипотезы')}</div></div><span class="exp-status">${e.status==='active'?'Активен':'Завершён'}</span></div><div class="progress"><span style="width:${p}%"></span></div><div class="small" style="margin-top:7px">Цель: ${escapeHTML(e.target||'—')} ${escapeHTML(t?.unit||'')} · ${escapeHTML(e.days)} дней · ${p}%</div><div style="margin-top:9px"><button class="secondary" style="padding:8px 10px">${e.status==='active'?'Завершить':'Возобновить'}</button> <button class="ghost" style="padding:8px 10px">Удалить</button></div>`;const bs=el.querySelectorAll('button');bs[0].onclick=()=>{e.status=e.status==='active'?'done':'active';save()};bs[1].onclick=()=>{if(confirm((data.language||'ru')==='en'?'Delete this experiment?':'Удалить эксперимент?')){data.experiments=data.experiments.filter(x=>x.id!==e.id);save()}};host.appendChild(el)})}
 
 function formatBackupDate(value){
   if(!value)return trText('Никогда','Never');
