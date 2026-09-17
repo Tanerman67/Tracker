@@ -889,7 +889,7 @@ function renderEnglishWordList(searchValue){
   });
 
   host.innerHTML=items.length?items.map(item=>`
-    <button class="english-item-card ${englishIsDue(item)?'due':''}" onclick="openEnglishItem('${item.id}','words')">
+    <button class="english-item-card ${englishIsDue(item)?'due':''}" onclick="openEnglishItem(${inlineArgument(item.id)},'words')">
       <div class="english-item-status">${englishReviewBadge(item)}</div>
       <div><span class="english-item-title">${escapeHTML(item.title)}</span>${item.ipa?`<span class="english-item-ipa">${escapeHTML(item.ipa)}</span>`:''}</div>
       <div class="english-item-ru">${item.translationHidden?trText('Перевод скрыт — открой карточку','Translation hidden — open the card'):escapeHTML(item.ru||'')}</div>
@@ -898,6 +898,7 @@ function renderEnglishWordList(searchValue){
     </button>
   `).join(''):`<div class="english-review-empty"><strong>${trText('Ничего не найдено','Nothing found')}</strong></div>`;
 }
+function inlineArgument(value){return escapeHTML(JSON.stringify(String(value)))}
 function escapeHTML(value){
   return String(value??'').replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
 }
@@ -923,7 +924,7 @@ function renderEnglishGrammarView(){
     return String(a.title).localeCompare(String(b.title));
   });
   return `<div class="english-grammar-list">${items.map(item=>`
-    <button class="english-curriculum-card ${englishIsDue(item)?'due':''}" onclick="openEnglishItem('${item.id}','grammar')">
+    <button class="english-curriculum-card ${englishIsDue(item)?'due':''}" onclick="openEnglishItem(${inlineArgument(item.id)},'grammar')">
       <div class="english-curriculum-top">
         <span class="english-curriculum-title">${escapeHTML(item.title)}</span>
         <span class="english-curriculum-meta">${escapeHTML(item.level||'')} · ${englishReviewBadge(item)}</span>
@@ -938,7 +939,7 @@ function renderEnglishMistakesView(){
     return ad-bd;
   });
   return `<div class="english-mistake-list">${items.map(item=>`
-    <button class="english-item-card ${englishIsDue(item)?'due':''}" onclick="openEnglishItem('${item.id}','mistakes')">
+    <button class="english-item-card ${englishIsDue(item)?'due':''}" onclick="openEnglishItem(${inlineArgument(item.id)},'mistakes')">
       <div class="english-item-status">${englishReviewBadge(item)}<span class="english-item-chip">${escapeHTML(item.level||'')}</span></div>
       <div class="english-mistake-wrong">✕ ${escapeHTML(item.title)}</div>
       <div class="english-mistake-correct">✓ ${escapeHTML(item.correct||item.ru||'')}</div>
@@ -960,19 +961,19 @@ function renderEnglishDetailView(item){
     <div class="english-detail-title">${escapeHTML(item.title)}</div>
     ${item.ipa?`<div class="english-detail-ipa">${escapeHTML(item.ipa)}</div>`:''}
     ${meaning?(item.translationHidden&&!isMistake&&!englishWordTranslationReveals.has(item.id)
-      ?`<button class="english-plan-reveal english-word-reveal" onclick="toggleEnglishWordTranslation('${item.id}')">${trText('Показать перевод','Reveal translation')}</button>`
-      :`<div class="english-detail-translation">${isMistake?'✓ ':''}${escapeHTML(meaning)}</div>${item.translationHidden&&!isMistake?`<button class="english-plan-reveal english-word-reveal" onclick="toggleEnglishWordTranslation('${item.id}')">${trText('Скрыть перевод','Hide translation')}</button>`:''}`):''}
+      ?`<button class="english-plan-reveal english-word-reveal" onclick="toggleEnglishWordTranslation(${inlineArgument(item.id)})">${trText('Показать перевод','Reveal translation')}</button>`
+      :`<div class="english-detail-translation">${isMistake?'✓ ':''}${escapeHTML(meaning)}</div>${item.translationHidden&&!isMistake?`<button class="english-plan-reveal english-word-reveal" onclick="toggleEnglishWordTranslation(${inlineArgument(item.id)})">${trText('Скрыть перевод','Hide translation')}</button>`:''}`):''}
     ${item.formula?`<div class="english-detail-section"><div class="label">${trText('Формула','Formula')}</div><div class="english-detail-example english-detail-formula">${escapeHTML(item.formula)}</div></div>`:''}
     ${rule?`<div class="english-detail-section"><div class="label">${trText('Правило','Rule')}</div><div class="english-detail-example">${escapeHTML(rule)}</div></div>`:''}
     ${example?`<div class="english-detail-section"><div class="label">${trText('Пример','Example')}</div><div class="english-detail-example">${escapeHTML(example)}</div></div>`:''}
     <div class="english-detail-section"><div class="label">${trText('Повторение','Review')}</div><div class="small">${state?.nextReview?`${trText('Следующее','Next')}: ${bodyFriendlyDate(state.nextReview)}`:trText('Ещё не повторялось','Not reviewed yet')}</div></div>
     <div class="english-detail-actions ${canPractice?'':'single'}">
       ${canPractice
-        ?`<button class="secondary" onclick="openEnglishPractice('${item.id}')">${trText('Нужна практика','Need practice')}</button>`
-        :`<button class="secondary" onclick="quickEnglishReview('${item.id}','hard')">${trText('Повторить позже','Review later')}</button>`}
-      <button onclick="quickEnglishReview('${item.id}','know')">${trText('Понятно','Got it')}</button>
+        ?`<button class="secondary" onclick="openEnglishPractice(${inlineArgument(item.id)})">${trText('Нужна практика','Need practice')}</button>`
+        :`<button class="secondary" onclick="quickEnglishReview(${inlineArgument(item.id)},'hard')">${trText('Повторить позже','Review later')}</button>`}
+      <button onclick="quickEnglishReview(${inlineArgument(item.id)},'know')">${trText('Понятно','Got it')}</button>
     </div>
-    ${englishItemIsCustom(item)?`<button class="danger" style="width:100%;margin-top:8px" onclick="deleteEnglishCustomItem('${item.id}')">${trText('Удалить','Delete')}</button>`:''}
+    ${englishItemIsCustom(item)?`<button class="danger" style="width:100%;margin-top:8px" onclick="deleteEnglishCustomItem(${inlineArgument(item.id)})">${trText('Удалить','Delete')}</button>`:''}
   </div>`;
 }
 
@@ -1347,26 +1348,6 @@ function val(id,d=localDate()){return data.logs[d]?.[id]}
 function sum(id,n=7){return dates(n).reduce((s,d)=>s+(Number(data.logs[d]?.[id])||0),0)}
 function avg(id,n=7){let xs=dates(n).map(d=>Number(data.logs[d]?.[id])).filter(v=>v>0);return xs.length?xs.reduce((a,b)=>a+b,0)/xs.length:0}
 
-function latestEntry(id){
-  const keys=Object.keys(data.logs||{}).sort().reverse();
-  for(const d of keys){
-    const v=data.logs[d]?.[id];
-    if(v!==undefined && v!==null && v!=='') return {date:d,value:v};
-  }
-  return null;
-}
-function dateLabel(d){
-  if(!d)return '';
-  const today=localDate();
-  const yd=new Date(); yd.setDate(yd.getDate()-1);
-  const yesterday=localDate(yd);
-  if(d===today)return trText('Сегодня','Today');
-  if(d===yesterday)return trText('Вчера','Yesterday');
-  const dt=new Date(d+'T00:00:00');
-  return (data.language||'ru')==='en'
-    ? dt.toLocaleDateString('en-NZ',{day:'numeric',month:'short'})
-    : dt.toLocaleDateString('ru-RU',{day:'numeric',month:'short'});
-}
 function boolCount(id,n=7){return dates(n).filter(d=>data.logs[d]?.[id]===true).length}
 function pct(v,g){return !g?0:Math.min(100,Math.max(0,Math.round(v/g*100)))}
 function save(){persistData({renderAfter:true,makeSnapshot:true})}
@@ -1380,14 +1361,6 @@ function dailyComplete(id,d=localDate()){
  const t=tracker(id);if(!t)return false;const v=data.logs[d]?.[id];if(t.type==='boolean')return v===true;
  const g=goalFor(id);if(!g)return v!==undefined&&v!==null&&v!=='';return Number(v)>=Number(g)
 }
-function completion(id,n=7){
- if(id==='gym')return pct(boolCount('gym',n),Math.max(1,data.gymGoal*(n/7)));
- if(id==='english_general')return pct(englishTotalN(n),Math.max(1,data.englishGoal*(n/7)));
- return pct(dates(n).filter(d=>dailyComplete(id,d)).length,n)
-}
-
-
-
 const TRACKER_I18N = {
   protein:{ru:'Белок',en:'Protein',unitRu:'г',unitEn:'g'},
   steps:{ru:'Шаги',en:'Steps',unitRu:'',unitEn:''},
@@ -1727,7 +1700,6 @@ function saveEntry(){
  }
  closeModal('entryModal');save()
 }
-function toggleBool(id){ensureDay()[id]=!ensureDay()[id];save()}
 function closeModal(id){document.getElementById(id).classList.remove('show')}
 function saveSettings(){const gv=id=>document.getElementById(id)?.value;data.smokeDate=gv('smokeDate')||'';data.alcoholDate=Object.keys(alcoholHistory()).length?alcoholCurrentStreakStart():(gv('alcoholDate')||'');data.proteinGoal=Number(gv('proteinGoal')||120);data.stepsGoal=Number(gv('stepsGoal')||7000);data.outdoorsGoal=Number(gv('outdoorsGoal')||60);data.sleepGoal=Number(gv('sleepGoal')||7.5);data.englishGoal=Number(gv('englishGoal')||240);data.gymGoal=Number(gv('gymGoal')||3);const map={protein:data.proteinGoal,steps:data.stepsGoal,outdoors:data.outdoorsGoal,sleep:data.sleepGoal};Object.entries(map).forEach(([id,g])=>{const t=tracker(id);if(t)t.goal=g});save()}
 function exportBackup(){
@@ -1968,6 +1940,10 @@ function saveBodyCheckin(){
   if(!date)return alert(trText('Выбери дату.','Choose a date.'));
   if(date>localDate())return alert(trText('Нельзя записать будущую дату.','Future dates cannot be logged.'));
 
+  const fields=['bodyWeightInput','bodyChestInput','bodyWaistInput','bodyAbdomenInput','bodyHipsInput','bodyThighInput'];
+  if(fields.some(id=>{const raw=document.getElementById(id)?.value?.trim();return raw&&numberOrNull(id)===null})){
+    return alert(trText('Замеры должны быть положительными числами.','Measurements must be positive numbers.'));
+  }
   const vals={
     weight:numberOrNull('bodyWeightInput'),
     chest:numberOrNull('bodyChestInput'),
@@ -1982,9 +1958,10 @@ function saveBodyCheckin(){
   else delete data.logs[date].weight;
   if(Object.keys(data.logs[date]).length===0)delete data.logs[date];
 
-  const row={};
+  const row={...(bodyStore()[date]||{})};
   for(const key of ['chest','waist','abdomen','hips','thigh']){
     if(vals[key]!==null)row[key]=vals[key];
+    else delete row[key];
   }
   if(Object.keys(row).length)bodyStore()[date]=row;
   else delete bodyStore()[date];
@@ -2282,7 +2259,7 @@ function renderBody(){
         const originalIndex=rows.length-1-revIndex;
         const prev=originalIndex>0?rows[originalIndex-1]:null;
         const d=prev?Math.round((r.value-prev.value)*10)/10:null;
-        return `<div class="body-history-row" onclick="openBodyCheckin('${r.date}')">
+        return `<div class="body-history-row" onclick="openBodyCheckin(${inlineArgument(r.date)})">
           <div>
             <div class="body-history-date">${bodyFriendlyDate(r.date)}</div>
             <div class="body-history-meta">${bodySelectedMetric==='weight'?trText('Вес','Weight'):trText('Body Check-in','Body Check-in')}</div>
@@ -3037,11 +3014,6 @@ function weeklyPeriodLabel(start,end){
   }
   return `${a.toLocaleDateString(locale,{day:'numeric',month:'short'})} – ${b.toLocaleDateString(locale,{day:'numeric',month:'short'})}`;
 }
-function weeklyCompareDelta(current,previous,kind='number'){
-  if(current===null||current===undefined||previous===null||previous===undefined)return null;
-  if(kind==='pct')return weeklyPctChange(current,previous);
-  return weeklyRound(Number(current)-Number(previous),1);
-}
 function weeklyCoverageScore(count,elapsed){
   if(!elapsed)return 0;
   return Math.max(0,Math.min(1,Number(count||0)/elapsed));
@@ -3615,10 +3587,6 @@ function trendDateObj(dateKey){return weeklyParseDate(dateKey)}
 function trendLocalDate(d){return localDate(d)}
 function trendAddDays(dateKey,n){return weeklyAddDays(dateKey,n)}
 function trendMonday(dateKey){return weeklyMonday(dateKey)}
-function trendMonthStart(dateKey){
-  const d=trendDateObj(dateKey);
-  return trendLocalDate(new Date(d.getFullYear(),d.getMonth(),1,12));
-}
 function trendQuarterStart(dateKey){
   const d=trendDateObj(dateKey);
   const qMonth=Math.floor(d.getMonth()/3)*3;
@@ -3960,60 +3928,6 @@ function trendScale(id,series){
   else max=Math.ceil(max);
 
   return {min:0,max};
-}
-function trendLineSegments(id,series,x,y){
-  const connectAcrossMissing=id==='weight';
-  const segments=[];
-  let current=[];
-
-  for(const row of series){
-    if(row.value===null){
-      if(!connectAcrossMissing && current.length){
-        segments.push(current);
-        current=[];
-      }
-      continue;
-    }
-    current.push({...row,x:x(row.index),y:y(row.value)});
-  }
-  if(current.length)segments.push(current);
-
-  if(connectAcrossMissing){
-    const all=series.filter(r=>r.value!==null).map(r=>({...r,x:x(r.index),y:y(r.value)}));
-    return all.length?[all]:[];
-  }
-  return segments;
-}
-function trendAxisLabels(id,series,scale){
-  const {min,max}=scale;
-  const yValues=[max,(min+max)/2,min].map(v=>trendFormatNumber(v,id));
-
-  const nonEmpty=series.filter(r=>r.value!==null);
-  const source=nonEmpty.length?nonEmpty:series;
-  if(!source.length)return {y:yValues,x:[]};
-
-  const rawIndices=series.length>=7
-    ?[0,Math.round((series.length-1)/3),Math.round((series.length-1)*2/3),series.length-1]
-    :[0,Math.floor((series.length-1)/2),series.length-1];
-  const candidateIndices=rawIndices.filter((v,i,a)=>v>=0 && a.indexOf(v)===i);
-
-  const x=candidateIndices.map((idx,pos)=>{
-    const row=series[idx];
-    let label='';
-    if(row.bucket==='month')label=trendFormatMonthShort(row.startDate);
-    else if(row.bucket==='quarter')label=trendQuarterLabel(row.startDate,true);
-    else if(row.bucket==='week')label=trendFormatDate(row.startDate);
-    else label=trendFormatDate(row.date);
-
-    return {
-      index:idx,
-      pct:series.length<=1?50:(idx/(series.length-1))*100,
-      label,
-      cls:pos===0?'first':(pos===candidateIndices.length-1?'last':'')
-    };
-  });
-
-  return {y:yValues,x};
 }
 function trendPointDetailText(id,row){
   const unit=trendMetricUnit(id);

@@ -36,7 +36,7 @@
 
       <div class="today-date-controls" id="todayDateControls" hidden>
         <button type="button" id="todayPrev" onclick="shiftTodayDate(-1)">‹</button>
-        <input type="date" id="todayDateInput" onchange="setTodayDate(this.value)">
+        <input type="date" id="todayDateInput" aria-label="Entry date" onchange="setTodayDate(this.value)">
         <button type="button" id="todayNext" onclick="shiftTodayDate(1)">›</button>
       </div>
       <button type="button" id="todayReturn" onclick="setTodayDate(localDate())" hidden>Сегодня</button>
@@ -337,8 +337,7 @@
     <button type="button" class="close" onclick="closeEnglishAdd()">✕</button>
     <h3 id="englishAddTitle">Add learning item</h3>
     <div class="field">
-      <label id="englishAddKindLabel">Type</label>
-      <select id="englishAddKind" onchange="renderEnglishAddLabels()">
+      <label id="englishAddKindLabel" for="englishAddKind">Type</label><select id="englishAddKind" onchange="renderEnglishAddLabels()">
         <option value="word">Word</option>
         <option value="phrase">Phrase</option>
         <option value="phrasal">Phrasal verb</option>
@@ -347,23 +346,19 @@
       </select>
     </div>
     <div class="field">
-      <label id="englishAddTermLabel">English / title</label>
-      <input id="englishAddTerm" type="text" autocomplete="off">
+      <label id="englishAddTermLabel" for="englishAddTerm">English / title</label><input id="englishAddTerm" type="text" autocomplete="off">
     </div>
     <div class="field" id="englishAddIpaField">
       <label for="englishAddIpa">IPA</label><input id="englishAddIpa" type="text" placeholder="/.../">
     </div>
     <div class="field">
-      <label id="englishAddMeaningLabel">Russian / explanation</label>
-      <textarea id="englishAddMeaning"></textarea>
+      <label id="englishAddMeaningLabel" for="englishAddMeaning">Russian / explanation</label><textarea id="englishAddMeaning"></textarea>
     </div>
     <div class="field">
-      <label id="englishAddExampleLabel">Example</label>
-      <textarea id="englishAddExample"></textarea>
+      <label id="englishAddExampleLabel" for="englishAddExample">Example</label><textarea id="englishAddExample"></textarea>
     </div>
     <div class="field">
-      <label id="englishAddNoteLabel">Rule / note</label>
-      <textarea id="englishAddNote"></textarea>
+      <label id="englishAddNoteLabel" for="englishAddNote">Rule / note</label><textarea id="englishAddNote"></textarea>
     </div>
     <button type="button" style="width:100%" onclick="saveEnglishCustomItem()" id="englishAddSaveBtn">Save</button>
   </div>
@@ -479,34 +474,27 @@
     <h3 id="bodyCheckinTitle">Body Check-in</h3>
 
     <div class="field">
-      <label id="bodyDateLabel">Дата</label>
-      <input id="bodyDateInput" type="date">
+      <label id="bodyDateLabel" for="bodyDateInput">Дата</label><input id="bodyDateInput" type="date">
     </div>
 
     <div class="body-checkin-grid">
       <div class="field">
-        <label id="bodyWeightInputLabel">⚖️ Вес, кг</label>
-        <input id="bodyWeightInput" type="number" step="0.1" inputmode="decimal">
+        <label id="bodyWeightInputLabel" for="bodyWeightInput">⚖️ Вес, кг</label><input id="bodyWeightInput" type="number" step="0.1" inputmode="decimal">
       </div>
       <div class="field">
-        <label id="bodyChestInputLabel">Грудь, см</label>
-        <input id="bodyChestInput" type="number" step="0.1" inputmode="decimal">
+        <label id="bodyChestInputLabel" for="bodyChestInput">Грудь, см</label><input id="bodyChestInput" type="number" step="0.1" inputmode="decimal">
       </div>
       <div class="field">
-        <label id="bodyWaistInputLabel">Талия, см</label>
-        <input id="bodyWaistInput" type="number" step="0.1" inputmode="decimal">
+        <label id="bodyWaistInputLabel" for="bodyWaistInput">Талия, см</label><input id="bodyWaistInput" type="number" step="0.1" inputmode="decimal">
       </div>
       <div class="field">
-        <label id="bodyAbdomenInputLabel">Живот, см</label>
-        <input id="bodyAbdomenInput" type="number" step="0.1" inputmode="decimal">
+        <label id="bodyAbdomenInputLabel" for="bodyAbdomenInput">Живот, см</label><input id="bodyAbdomenInput" type="number" step="0.1" inputmode="decimal">
       </div>
       <div class="field">
-        <label id="bodyHipsInputLabel">Бёдра, см</label>
-        <input id="bodyHipsInput" type="number" step="0.1" inputmode="decimal">
+        <label id="bodyHipsInputLabel" for="bodyHipsInput">Бёдра, см</label><input id="bodyHipsInput" type="number" step="0.1" inputmode="decimal">
       </div>
       <div class="field">
-        <label id="bodyThighInputLabel">Бедро, см</label>
-        <input id="bodyThighInput" type="number" step="0.1" inputmode="decimal">
+        <label id="bodyThighInputLabel" for="bodyThighInput">Бедро, см</label><input id="bodyThighInput" type="number" step="0.1" inputmode="decimal">
       </div>
     </div>
 
@@ -572,7 +560,7 @@
 <div id="entryModal" class="modal"><div class="sheet">
   <button type="button" class="close" onclick="closeModal('entryModal')">✕</button>
   <h3 id="entryTitle">Запись</h3>
-  <div class="field"><label id="entryLabel">Значение</label><input id="entryValue" type="number" step="0.1"></div>
+  <div class="field"><label id="entryLabel" for="entryValue">Значение</label><input id="entryValue" type="number" step="0.1"></div>
   <button type="button" style="width:100%" onclick="saveEntry()">Сохранить</button>
 </div></div>
 
