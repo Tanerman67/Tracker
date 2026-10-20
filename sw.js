@@ -1,7 +1,7 @@
-const CACHE='my-rhythm-v6.13-nutrition-rings';
+const CACHE='my-rhythm-v6.13.1-nutrition-rings';
 const ASSETS=[
   './', './index.html',
-  './nutrition.js?v=6130', './nutrition.css?v=6130',
+  './nutrition.js?v=6130', './nutrition.css?v=6131',
   './dates.js?v=6111', './storage.js?v=6130', './app.js?v=6112',
   './app.css?v=6111', './today.js?v=6130', './today.css?v=6130',
   './habits.js?v=6111', './habits.css?v=6111',
