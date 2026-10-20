@@ -1,0 +1,37 @@
+{
+  "format": "my-rhythm-nutrition-import-v1",
+  "entries": [
+    {
+      "id": "demo-oats-2024-01-02",
+      "date": "2024-01-02",
+      "meal": "breakfast",
+      "name": "Fictional oats with milk",
+      "portion": {"amount": 250, "unit": "g"},
+      "source": "chatgpt-estimate",
+      "notes": "Example only. Nutrition values are fictional estimates.",
+      "nutrients": {
+        "calories": {"value": 300, "unit": "kcal", "quality": "estimated"},
+        "protein": {"value": 12, "unit": "g", "quality": "estimated"},
+        "fat": {"value": 8, "unit": "g", "quality": "estimated"},
+        "carbs": {"value": 48, "unit": "g", "quality": "estimated"},
+        "fiber": {"value": 6, "unit": "g", "quality": "estimated"},
+        "calcium": {"value": null, "unit": "mg", "quality": "unknown"},
+        "vitaminD": {"value": null, "unit": "µg", "quality": "unknown"}
+      }
+    },
+    {
+      "id": "demo-soup-2024-01-03",
+      "date": "2024-01-03",
+      "meal": "lunch",
+      "name": "Fictional vegetable soup",
+      "portion": {"amount": 1, "unit": "serving"},
+      "source": "label",
+      "nutrients": {
+        "calories": {"value": 500, "unit": "kJ", "quality": "label"},
+        "protein": {"value": 4, "unit": "g", "quality": "label"},
+        "sodium": {"value": 450, "unit": "mg", "quality": "label"},
+        "vitaminA": {"value": 140, "unit": "µg", "quality": "label", "basis": "RAE"}
+      }
+    }
+  ]
+}

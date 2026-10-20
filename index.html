@@ -20,6 +20,7 @@
 
 <link rel="stylesheet" href="today.css?v=6111">
 <link rel="stylesheet" href="habits.css?v=6111">
+<link rel="stylesheet" href="nutrition.css?v=6112">
 </head>
 <body>
 <div class="app">
@@ -557,6 +558,76 @@
   </div>
 </div>
 
+<div id="nutritionModal" class="nutrition-modal" role="dialog" aria-modal="true" aria-labelledby="nutritionTitle">
+  <div class="nutrition-page">
+    <div class="nutrition-topbar">
+      <button type="button" class="secondary" onclick="nutritionClose()"><span id="nutritionBackLabel">Назад</span></button>
+      <div><h2 id="nutritionTitle">Питание</h2><small id="nutritionSubtitle"></small></div>
+    </div>
+    <div class="nutrition-date-nav card">
+      <button type="button" class="secondary" onclick="nutritionShiftDate(-1)" aria-label="Previous day">‹</button>
+      <input id="nutritionDate" type="date" aria-label="Nutrition date" onchange="nutritionSetDate(this.value)">
+      <button type="button" class="secondary" id="nutritionNext" onclick="nutritionShiftDate(1)" aria-label="Next day">›</button>
+      <button type="button" class="ghost" id="nutritionTodayButton" onclick="nutritionSetDate(localDate())">Сегодня</button>
+    </div>
+    <div id="nutritionSummary" class="nutrition-summary"></div>
+    <div id="nutritionProteinSource" class="nutrition-explanation"></div>
+    <button type="button" class="ghost nutrition-copy" onclick="nutritionEditLegacyProtein()">Manual protein / Ручной белок</button>
+    <div id="nutritionIncomplete" class="nutrition-explanation"></div>
+    <div class="nutrition-actions">
+      <button type="button" id="nutritionAddButton" onclick="nutritionOpenForm()">+ Добавить еду</button>
+      <button type="button" id="nutritionImportButton" class="secondary" onclick="document.getElementById('nutritionFile').click()">Импорт JSON</button>
+    </div>
+    <input id="nutritionFile" type="file" accept=".json,application/json" hidden onchange="nutritionReadImport(event)">
+    <button type="button" id="nutritionCopyButton" class="ghost nutrition-copy" onclick="nutritionCopyInstructions()">Скопировать инструкцию для ChatGPT</button>
+    <pre id="nutritionInstructions" class="nutrition-instructions" hidden></pre>
+    <div id="nutritionStatus" class="nutrition-status" role="status" aria-live="polite"></div>
+    <div id="nutritionDiary"></div>
+    <details class="card nutrition-details"><summary id="nutritionMicrosLabel">Витамины и минералы</summary><div id="nutritionMicros"></div></details>
+    <details class="card nutrition-details"><summary id="nutritionHistoryLabel">История дней</summary><div id="nutritionHistory"></div></details>
+    <details class="card nutrition-details"><summary>Goals / Цели</summary>
+      <div class="nutrition-goals">
+        <div class="field"><label for="nutritionGoal_calories">Calories / Калории (kcal)</label><input id="nutritionGoal_calories" type="number" min="0" inputmode="decimal"></div>
+        <div class="field"><label for="nutritionGoal_fat">Fat / Жиры (g)</label><input id="nutritionGoal_fat" type="number" min="0" inputmode="decimal"></div>
+        <div class="field"><label for="nutritionGoal_carbs">Carbs / Углеводы (g)</label><input id="nutritionGoal_carbs" type="number" min="0" inputmode="decimal"></div>
+        <div class="field"><label for="nutritionGoal_fiber">Fiber / Клетчатка (g)</label><input id="nutritionGoal_fiber" type="number" min="0" inputmode="decimal"></div>
+      </div>
+      <button type="button" onclick="nutritionSaveGoals()">Save goals / Сохранить цели</button>
+      <small>Protein / Белок: Settings / Настройки</small>
+    </details>
+  </div>
+</div>
+<div id="nutritionForm" class="nutrition-form" role="dialog" aria-modal="true" aria-labelledby="nutritionFormTitle">
+  <div class="nutrition-form-sheet">
+    <div class="nutrition-form-head"><h2 id="nutritionFormTitle">Add food</h2><button type="button" class="secondary" onclick="nutritionCancelForm()" aria-label="Close food editor">✕</button></div>
+    <div class="nutrition-form-grid">
+      <div class="field"><label for="nutritionFoodDate">Date / Дата</label><input id="nutritionFoodDate" type="date"></div>
+      <div class="field"><label for="nutritionFoodMeal">Meal / Приём пищи</label><select id="nutritionFoodMeal"><option value="breakfast">Breakfast / Завтрак</option><option value="lunch">Lunch / Обед</option><option value="dinner">Dinner / Ужин</option><option value="snack">Snack / Перекус</option><option value="other">Other / Другое</option></select></div>
+      <div class="field nutrition-wide"><label for="nutritionFoodName">Food / Продукт</label><input id="nutritionFoodName" maxlength="160" autocomplete="off"></div>
+      <div class="field"><label for="nutritionFoodAmount">Amount / Количество</label><input id="nutritionFoodAmount" type="number" min="0" step="any" inputmode="decimal"></div>
+      <div class="field"><label for="nutritionFoodUnit">Unit / Единица</label><select id="nutritionFoodUnit"><option value="g">g</option><option value="ml">ml</option><option value="piece">piece</option><option value="serving">serving</option></select></div>
+      <div class="field"><label for="nutritionCalories">Calories (kcal)</label><input id="nutritionCalories" type="number" min="0" step="any" inputmode="decimal"></div>
+      <div class="field"><label for="nutritionProtein">Protein (g)</label><input id="nutritionProtein" type="number" min="0" step="any" inputmode="decimal"></div>
+      <div class="field"><label for="nutritionFat">Fat (g)</label><input id="nutritionFat" type="number" min="0" step="any" inputmode="decimal"></div>
+      <div class="field"><label for="nutritionCarbs">Carbs (g)</label><input id="nutritionCarbs" type="number" min="0" step="any" inputmode="decimal"></div>
+    </div>
+    <details class="nutrition-details"><summary>More nutrients / Другие нутриенты</summary><div id="nutritionAdvancedFields" class="nutrition-form-grid"></div></details>
+    <div class="field"><label for="nutritionFoodSource">Source / Источник</label><select id="nutritionFoodSource"><option value="manual">Manual</option><option value="label">Label</option><option value="chatgpt-estimate">ChatGPT estimate</option><option value="other">Other</option></select></div>
+    <div class="field"><label for="nutritionFoodNotes">Notes / Примечание</label><textarea id="nutritionFoodNotes" maxlength="2000"></textarea></div>
+    <div id="nutritionFormError" class="nutrition-status" role="alert"></div>
+    <div class="nutrition-actions"><button type="button" onclick="nutritionSaveFood()">Save food / Сохранить</button><button type="button" id="nutritionDeleteFood" class="danger" onclick="nutritionDeleteFood()" hidden>Delete / Удалить</button></div>
+  </div>
+</div>
+<div id="nutritionImportPreview" class="nutrition-form" role="dialog" aria-modal="true" aria-labelledby="nutritionPreviewTitle">
+  <div class="nutrition-form-sheet">
+    <div class="nutrition-form-head"><h2 id="nutritionPreviewTitle">Import preview / Предпросмотр</h2><button type="button" class="secondary" onclick="nutritionCancelImport()">✕</button></div>
+    <p id="nutritionPreviewCount"></p><div id="nutritionPreviewList" class="nutrition-preview-list"></div>
+    <label id="nutritionReplaceWrap"><input id="nutritionReplaceConflicts" type="checkbox"> Replace conflicting IDs / Заменить записи с конфликтующими ID</label>
+    <p class="nutrition-explanation">Conflicts are kept unless you explicitly select replacement. Duplicate content is skipped. / Конфликтующие записи сохраняются, если не выбрать замену.</p>
+    <div class="nutrition-actions"><button type="button" onclick="nutritionConfirmImport()">Confirm import / Подтвердить</button><button type="button" class="secondary" onclick="nutritionCancelImport()">Cancel / Отмена</button></div>
+  </div>
+</div>
+
 <div id="entryModal" class="modal"><div class="sheet">
   <button type="button" class="close" onclick="closeModal('entryModal')">✕</button>
   <h3 id="entryTitle">Запись</h3>
@@ -583,10 +654,11 @@
     <button type="button" id="habitSave" onclick="saveHabitEditor()">Сохранить</button>
   </div>
 </div>
-<script src="today.js?v=6111"></script>
+<script src="today.js?v=6112"></script>
 <script src="habits.js?v=6111"></script>
 <script src="dates.js?v=6111"></script>
-<script src="storage.js?v=6111"></script>
-<script src="app.js?v=6111"></script>
+<script src="storage.js?v=6112"></script>
+<script src="nutrition.js?v=6112"></script>
+<script src="app.js?v=6112"></script>
 </body>
 </html>

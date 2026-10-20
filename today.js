@@ -27,7 +27,7 @@ function todayAlcoholFreeDays(date=todayDateKey()){
   return Math.max(0,weeklyDiffDays(start,date));
 }
 function todayMetricState(id,date=todayDateKey()){
-  const raw=data.logs?.[date]?.[id];
+  const raw=nutritionMetricValue(id,date);
   const has=raw!==undefined&&raw!==null&&raw!==''&&typeof raw!=='boolean'&&Number.isFinite(Number(raw))&&Number(raw)>=0;
   const value=has?Number(raw):null;
   const target=Number(goalFor(id));
@@ -50,6 +50,7 @@ function todayHint(date=todayDateKey()){
 function openTodayMetric(id,date=todayDateKey()){
   if(id==='sleep'||id==='outdoors'){openHabitEditor(id,date);return}
   if(id==='weight'){openBody();openBodyCheckin(date);return}
+  if(id==='protein'){nutritionOpen(date);return}
   if(id==='alcohol'){
     openAlcohol();
     const d=new Date(date+'T12:00:00');
@@ -139,6 +140,10 @@ function renderTodayPage(){
       if(s.goal!==null&&s.value!==null)progress=Math.max(0,Math.min(100,s.value/s.goal*100));
     }
     el.dataset.state=state;
+    if(id==='protein'&&nutritionRows(date).length){
+      const c=nutritionAggregate(date).calories;
+      status+=' · '+(c.value===null?trText('ккал неизвестны','kcal unknown'):nutritionDisplay(c));
+    }
     el.innerHTML=`<div class="today-metric-title"><span aria-hidden="true">${emoji}</span><span>${escapeHTML(trText(ru,en))}</span></div><div class="today-metric-value">${escapeHTML(main)}</div><div class="today-metric-status">${escapeHTML(status)}</div>${progress===null?'':`<div class="metric-bar" aria-hidden="true"><span style="width:${progress}%"></span></div>`}`;
     grid.appendChild(el);
   }
