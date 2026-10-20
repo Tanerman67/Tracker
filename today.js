@@ -144,7 +144,15 @@ function renderTodayPage(){
       const c=nutritionAggregate(date).calories;
       status+=' · '+(c.value===null?trText('ккал неизвестны','kcal unknown'):nutritionDisplay(c));
     }
-    el.innerHTML=`<div class="today-metric-title"><span aria-hidden="true">${emoji}</span><span>${escapeHTML(trText(ru,en))}</span></div><div class="today-metric-value">${escapeHTML(main)}</div><div class="today-metric-status">${escapeHTML(status)}</div>${progress===null?'':`<div class="metric-bar" aria-hidden="true"><span style="width:${progress}%"></span></div>`}`;
+    el.innerHTML=`<div class="today-metric-title"><span aria-hidden="true">${emoji}</span><span>${escapeHTML(trText(ru,en))}</span></div><div class="today-metric-value">${escapeHTML(main)}</div><div class="today-metric-status">${escapeHTML(status)}</div>${progress===null||id==='protein'?'':`<div class="metric-bar" aria-hidden="true"><span style="width:${progress}%"></span></div>`}`;
+    if(id==='protein'&&progress!==null){
+      const effective=nutritionEffectiveProtein(date);
+      const ringState=nutritionProgressState({value:effective.value,partial:effective.partial},data.proteinGoal);
+      const ring=document.createElement('span');ring.className='today-protein-ring';
+      ring.setAttribute('aria-label',trText('Белок: ','Protein: ')+(ringState.partial?'≥ ':'')+nutritionFormat(ringState.percent,1)+'%');
+      ring.append(nutritionRingSvg(ringState,{home:true}));
+      el.querySelector('.today-metric-title').append(ring);
+    }
     grid.appendChild(el);
   }
   renderTodayHero(date);

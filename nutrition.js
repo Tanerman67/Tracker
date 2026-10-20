@@ -14,6 +14,8 @@ const NUTRITION_BASIS={vitaminA:['RAE','retinol','beta-carotene','unspecified'],
 const NUTRITION_MEAL_LABELS={breakfast:['Завтрак','Breakfast'],lunch:['Обед','Lunch'],dinner:['Ужин','Dinner'],snack:['Перекус','Snack'],other:['Другое','Other']};
 const NUTRITION_FIELD_IDS={calories:'nutritionCalories',protein:'nutritionProtein',fat:'nutritionFat',carbs:'nutritionCarbs'};
 let nutritionDate=null,nutritionEditId='',nutritionPendingImport=null,nutritionImportFingerprint='',nutritionHistoryOpen=false;
+const NUTRITION_RING_CIRCUMFERENCE=2*Math.PI*43;
+const nutritionRingOffsets=new Map();
 function nutritionStore(){
   if(!data.nutrition||typeof data.nutrition!=='object'||Array.isArray(data.nutrition))data.nutrition={entries:[],goals:{}};
   if(!Array.isArray(data.nutrition.entries))data.nutrition.entries=[];
@@ -110,7 +112,7 @@ function nutritionAggregate(date){
   for(const key of Object.keys(NUTRIENTS)){
     const reported=rows.map(e=>e.nutrients?.[key]).filter(n=>n&&typeof n.value==='number'&&Number.isFinite(n.value));
     const bases=[...new Set(reported.map(n=>n.basis||'standard'))];
-    out[key]={value:reported.length&&bases.length===1?reported.reduce((sum,n)=>sum+n.value,0):null,known:reported.length,total:rows.length,partial:reported.length<rows.length,mixedBasis:bases.length>1,unit:NUTRIENTS[key][0],qualities:[...new Set(reported.map(n=>n.quality))]};
+    out[key]={value:reported.length&&bases.length===1?reported.reduce((sum,n)=>sum+n.value,0):null,known:reported.length,total:rows.length,partial:reported.length<rows.length,mixedBasis:bases.length>1,basis:bases.length===1?bases[0]:null,unit:NUTRIENTS[key][0],qualities:[...new Set(reported.map(n=>n.quality))]};
   }
   return out;
 }
@@ -126,6 +128,72 @@ function nutritionFormat(value,max=1){return new Intl.NumberFormat(data.language
 function nutritionLabel(ru,en){return data.language==='en'?en:ru}
 function nutritionNutrientName(key){return NUTRIENTS[key][1]}
 function nutritionDisplay(stat){if(stat.value===null)return stat.mixedBasis?nutritionLabel('разные основы','mixed bases'):'—';return (stat.partial?'≥ ':'')+nutritionFormat(stat.value,stat.unit==='kcal'?0:1)+' '+stat.unit}
+function nutritionProgressState(stat,goal){
+  const target=Number(goal);
+  const hasGoal=goal!==null&&goal!==undefined&&goal!==''&&Number.isFinite(target)&&target>0;
+  const consumed=typeof stat?.value==='number'&&Number.isFinite(stat.value)&&stat.value>=0?stat.value:null;
+  const partial=consumed!==null&&!!stat.partial;
+  const rawPercent=hasGoal&&consumed!==null?consumed/target*100:null;
+  const percent=Number.isFinite(rawPercent)?rawPercent:null;
+  return {consumed,goal:hasGoal?target:null,percent,arc:percent===null?0:Math.min(100,Math.max(0,percent)),partial,
+    remaining:hasGoal&&consumed!==null&&!partial?Math.max(0,target-consumed):null,
+    over:hasGoal&&consumed!==null&&consumed>target?consumed-target:null};
+}
+function nutritionRingSvg(state,{home=false,key=''}={}){
+  const svg=document.createElementNS('http://www.w3.org/2000/svg','svg');
+  svg.classList.add('nutrition-ring-svg');svg.setAttribute('viewBox','0 0 100 100');svg.setAttribute('aria-hidden','true');
+  for(const kind of ['track','fill']){
+    const circle=document.createElementNS('http://www.w3.org/2000/svg','circle');circle.classList.add('nutrition-ring-'+kind);
+    circle.setAttribute('cx','50');circle.setAttribute('cy','50');circle.setAttribute('r','43');
+    if(kind==='fill'){
+      const end=NUTRITION_RING_CIRCUMFERENCE*(1-state.arc/100);
+      circle.style.strokeDasharray=String(NUTRITION_RING_CIRCUMFERENCE);
+      const before=nutritionRingOffsets.get(key);
+      circle.style.strokeDashoffset=String(home||before===undefined?end:before);
+      nutritionRingOffsets.set(key,end);
+      if(!home&&before!==undefined&&before!==end)requestAnimationFrame(()=>requestAnimationFrame(()=>{circle.style.strokeDashoffset=String(end)}));
+    }
+    svg.append(circle);
+  }
+  return svg;
+}
+function nutritionRingCard(key,stat,goal,date){
+  const state=nutritionProgressState(stat,goal),card=document.createElement('div');
+  card.className='nutrition-total card';card.dataset.nutrient=key;
+  if(key==='calories')card.classList.add('nutrition-calorie-card');
+  if(key==='calories'&&state.over!==null)card.classList.add('nutrition-over-limit');
+  if(state.partial)card.classList.add('nutrition-partial');
+  const name=document.createElement('div');name.className='nutrition-ring-name';name.textContent=key==='calories'?nutritionLabel('Калории','Calories'):nutritionNutrientName(key);
+  const display=document.createElement('div');display.className='nutrition-ring-graphic';
+  display.append(nutritionRingSvg(state,{key:date+':'+key}));
+  const center=document.createElement('div');center.className='nutrition-ring-center';
+  const prominent=document.createElement('strong');prominent.textContent=state.percent!==null?(state.partial?'≥ ':'')+nutritionFormat(state.percent,1)+'%':state.consumed!==null?(state.partial?'≥ ':'')+nutritionFormat(state.consumed,stat.unit==='kcal'?0:1):'—';
+  center.append(prominent);
+  if(state.percent===null&&state.consumed!==null){const unit=document.createElement('small');unit.textContent=stat.unit;center.append(unit)}
+  display.append(center);
+  const amounts=document.createElement('div');amounts.className='nutrition-ring-amounts';
+  amounts.textContent=(state.consumed===null?'—':nutritionDisplay(stat))+(state.goal===null?'':' / '+nutritionFormat(state.goal,0)+' '+stat.unit);
+  const description=document.createElement('small');description.className='nutrition-ring-caption';
+  if(key==='calories'&&state.goal!==null){
+    description.textContent=state.consumed===null?nutritionLabel('Остаток неизвестен','Remaining unknown'):
+      state.over!==null?(state.partial?nutritionLabel('Превышено минимум на ','Over by at least '):nutritionLabel('Превышено на ','Over by '))+nutritionFormat(state.over,0)+' kcal':
+      state.partial?nutritionLabel('Остаток неизвестен - данные неполные','Remaining unknown - incomplete data'):
+      nutritionLabel('Осталось ','Remaining ')+nutritionFormat(state.remaining,0)+' kcal';
+  }else if(state.goal===null)description.textContent=nutritionLabel('Цель не задана','No goal set');
+  else if(state.consumed===null)description.textContent=nutritionLabel('Нет данных','No data');
+  else if(state.partial)description.textContent=nutritionLabel('Неполные данные','Incomplete data');
+  card.append(name,display,amounts,description);
+  return card;
+}
+function nutritionMicronutrientProgress(stat,key,target){
+  if(!stat||stat.partial||stat.mixedBasis||stat.value===null)return null;
+  if(NUTRITION_BASIS[key]){
+    if(!nutritionObject(target)||target.basis!==stat.basis||target.unit!==stat.unit||target.basis==='unspecified')return null;
+    target=target.value;
+  }
+  const progress=nutritionProgressState(stat,target);
+  return progress.percent===null?null:progress;
+}
 function nutritionId(){return 'food_'+(globalThis.crypto?.randomUUID?.()||Date.now().toString(36)+'_'+Math.random().toString(36).slice(2,11)).replace(/[^A-Za-z0-9_-]/g,'_')}
 function nutritionCheckDate(date){nutritionAssert(nutritionDateValid(date)&&date<=localDate(),'Invalid or future date.');return date}
 function nutritionOpen(date=todayDateKey()){
@@ -153,15 +221,12 @@ function nutritionRender(){
   put('nutritionHistoryLabel',nutritionLabel('История дней','Daily history'));
   put('nutritionIncomplete',rows.length?nutritionLabel('Указаны только известные значения. ≥ означает, что данные о части еды отсутствуют.','Only known amounts are shown. ≥ means some foods have missing data.'):nutritionLabel('На этот день пока нет записей.','No foods logged for this day.'));
   const summary=document.getElementById('nutritionSummary');summary.replaceChildren();
-  for(const key of NUTRITION_MAIN){
-    const stat=total[key],card=document.createElement('div');card.className='nutrition-total card';
-    const title=document.createElement('span');title.textContent=key==='calories'?nutritionLabel('Калории','Calories'):nutritionNutrientName(key);
-    const value=document.createElement('strong');value.textContent=rows.length?nutritionDisplay(stat):'—';
-    const target=key==='protein'?data.proteinGoal:goal[key];
-    const targetEl=document.createElement('small');targetEl.textContent=target!==null&&target!==undefined&&Number(target)>0?nutritionLabel('Цель: ','Goal: ')+nutritionFormat(Number(target),0)+' '+stat.unit:'';
-    card.append(title,value,targetEl);summary.append(card);
-  }
   const source=nutritionEffectiveProtein(date);
+  for(const key of NUTRITION_MAIN){
+    const stat=key==='protein'?{...total.protein,value:source.value,partial:source.partial}:total[key];
+    const target=key==='protein'?data.proteinGoal:goal[key];
+    summary.append(nutritionRingCard(key,stat,target,date));
+  }
   put('nutritionProteinSource',source.source==='manual'?nutritionLabel('Белок: ручная запись сохранена отдельно.','Protein: separate manual entry is in use.'):source.source==='foods'?nutritionLabel('Белок: сумма продуктов'+(source.partial?' (частично)':''),'Protein: food total'+(source.partial?' (partial)':'')):nutritionLabel('Белок: нет данных','Protein: no data'));
   const diary=document.getElementById('nutritionDiary');diary.replaceChildren();
   for(const meal of NUTRITION_MEALS){
@@ -183,7 +248,12 @@ function nutritionRender(){
   const micro=document.getElementById('nutritionMicros');micro.replaceChildren();
   const list=[...NUTRITION_EXTRA,...Object.keys(NUTRIENTS).filter(k=>!NUTRITION_MAIN.includes(k)&&!NUTRITION_EXTRA.includes(k))];
   for(const key of list){const stat=total[key];if(!stat.known)continue;
-    const item=document.createElement('div');item.className='nutrition-micro-row';item.textContent=`${nutritionNutrientName(key)}: ${nutritionDisplay(stat)}${stat.qualities.includes('estimated')?' · '+nutritionLabel('оценка','estimate'):''}${stat.mixedBasis?' · '+nutritionLabel('нельзя суммировать','cannot sum'):''}`;micro.append(item)}
+    const item=document.createElement('div');item.className='nutrition-micro-row';
+    const label=document.createElement('span');label.textContent=`${nutritionNutrientName(key)}: ${nutritionDisplay(stat)}${stat.qualities.includes('estimated')?' · '+nutritionLabel('оценка','estimate'):''}${stat.mixedBasis?' · '+nutritionLabel('нельзя суммировать','cannot sum'):''}`;item.append(label);
+    const progress=nutritionMicronutrientProgress(stat,key,goal[key]);
+    if(progress){const info=document.createElement('small');info.textContent=nutritionFormat(progress.percent,1)+'% · '+nutritionFormat(progress.consumed,1)+' / '+nutritionFormat(progress.goal,1)+' '+stat.unit;
+      const track=document.createElement('div');track.className='nutrition-micro-track';const fill=document.createElement('span');fill.style.width=progress.arc+'%';track.append(fill);item.append(info,track)}
+    micro.append(item)}
   if(!micro.childElementCount)micro.textContent=nutritionLabel('Пока нет данных о микронутриентах.','No micronutrient data yet.');
   const history=document.getElementById('nutritionHistory');history.replaceChildren();
   for(const day of [...new Set(nutritionStore().entries.map(e=>e.date))].sort().reverse().slice(0,45)){

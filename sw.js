@@ -1,9 +1,9 @@
-const CACHE='my-rhythm-v6.12.1-nutrition';
+const CACHE='my-rhythm-v6.13-nutrition-rings';
 const ASSETS=[
   './', './index.html',
-  './nutrition.js?v=6113', './nutrition.css?v=6112',
-  './dates.js?v=6111', './storage.js?v=6112', './app.js?v=6112',
-  './app.css?v=6111', './today.js?v=6112', './today.css?v=6111',
+  './nutrition.js?v=6130', './nutrition.css?v=6130',
+  './dates.js?v=6111', './storage.js?v=6130', './app.js?v=6112',
+  './app.css?v=6111', './today.js?v=6130', './today.css?v=6130',
   './habits.js?v=6111', './habits.css?v=6111',
   './manifest-github.webmanifest', './apple-touch-icon.png',
   './icon-192-v61.png', './icon-512-v61.png', './favicon-32-v61.png', './aurora-bg.jpg'

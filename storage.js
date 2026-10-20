@@ -1,5 +1,5 @@
 // Persistent schema and recovery. Keep keys compatible with existing installations.
-const APP_VERSION='6.12-nutrition';
+const APP_VERSION='6.13-nutrition-rings';
 const DATA_KEY='my-life-tracker-data';
 const MIRROR_KEY='my-life-tracker-data-mirror-v1';
 const CURRENT_SCHEMA_VERSION=2;

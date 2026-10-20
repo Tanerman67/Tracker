@@ -8,12 +8,12 @@ const root=path.resolve(__dirname,'..');
 const base='fbe5b5e0c961e125ad8f0227c55c7d82302b7cda';
 function runtime(seed, original=false){
  const memory=new Map(seed?Object.entries(seed):[]),nodes=new Map(),errors=[];
- const element=()=>{const el={value:'',hidden:false,textContent:'',innerHTML:'',dataset:{},style:{},classList:{add(){},remove(){},toggle(){},contains(){return false}},setAttribute(){},getAttribute(){return null},append(){},appendChild(){},querySelectorAll(){return [element(),element()]},querySelector(){return element()},focus(){},remove(){},click(){}};Object.defineProperty(el,'id',{set(id){nodes.set(id,el)},get(){return [...nodes].find(([,v])=>v===el)?.[0]}});return el};
+ const element=()=>{const classes=new Set();const el={value:'',hidden:false,textContent:'',innerHTML:'',children:[],dataset:{},style:{},classList:{add:k=>classes.add(k),remove:k=>classes.delete(k),toggle:k=>classes.has(k)?classes.delete(k):classes.add(k),contains:k=>classes.has(k)},setAttribute(){},getAttribute(){return null},append(...xs){this.children.push(...xs)},appendChild(x){this.children.push(x)},replaceChildren(...xs){this.children=xs},get childElementCount(){return this.children.length},querySelectorAll(){return [element(),element()]},querySelector(){return element()},focus(){},remove(){},click(){}};Object.defineProperty(el,'id',{set(id){nodes.set(id,el)},get(){return [...nodes].find(([,v])=>v===el)?.[0]}});return el};
  const html=fs.readFileSync(path.join(root,'index.html'),'utf8');
  for(const [,id] of html.matchAll(/\bid="([^"]+)"/g))nodes.set(id,element());
- const document={getElementById:id=>nodes.get(id)||null,querySelectorAll:()=>[],querySelector:()=>null,createElement:element,createTreeWalker:()=>({nextNode:()=>null}),body:element(),documentElement:element(),addEventListener(){}};
+ const document={getElementById:id=>nodes.get(id)||null,querySelectorAll:()=>[],querySelector:()=>null,createElement:element,createElementNS:element,createTreeWalker:()=>({nextNode:()=>null}),body:element(),documentElement:element(),addEventListener(){}};
  const localStorage={getItem:k=>memory.get(k)??null,setItem:(k,v)=>memory.set(k,v),removeItem:k=>memory.delete(k),key:i=>[...memory.keys()][i],get length(){return memory.size}};
- const ctx=vm.createContext({console:{...console,error:(...x)=>errors.push(x.join(' ')),warn(){}},structuredClone,Date,URL,Request,Response,Blob,Map,Set,Intl,document,NodeFilter:{SHOW_TEXT:4,FILTER_REJECT:2,FILTER_ACCEPT:1},localStorage,navigator:{},location:{href:'https://test.invalid/Tracker/'},setTimeout:()=>0,clearTimeout(){},setInterval(){},addEventListener(){},alert(){},confirm:()=>true});
+ const ctx=vm.createContext({console:{...console,error:(...x)=>errors.push(x.join(' ')),warn(){}},structuredClone,Date,URL,Request,Response,Blob,Map,Set,Intl,document,NodeFilter:{SHOW_TEXT:4,FILTER_REJECT:2,FILTER_ACCEPT:1},localStorage,navigator:{},location:{href:'https://test.invalid/Tracker/'},requestAnimationFrame:fn=>fn(),setTimeout:()=>0,clearTimeout(){},setInterval(){},addEventListener(){},alert(){},confirm:()=>true});
  ctx.window=ctx;
  const run=s=>vm.runInContext(s,ctx);
  if(original){
@@ -116,4 +116,50 @@ test('deployed Add Food editor resolves every main and advanced nutrient input',
  const r=runtime();r.run('nutritionDate="2024-01-02";nutritionOpenForm()');
  for(const key of Object.keys(r.json('NUTRIENTS'))){const id=r.run('NUTRITION_FIELD_IDS['+JSON.stringify(key)+']||"nutritionNutrient_'+key+'"');assert.ok(r.nodes.has(id),key+' input missing')}
  assert.equal(r.nodes.get('nutritionFoodDate').value,'2024-01-02');
+});
+test('ring math preserves zero, unknown, missing goals and over-limit percentages',()=>{
+ const r=runtime();r.ctx.known={value:250,partial:false};
+ assert.deepEqual(r.json('nutritionProgressState(known,200)'),{consumed:250,goal:200,percent:125,arc:100,partial:false,remaining:0,over:50});
+ assert.deepEqual(r.json('nutritionProgressState({value:0,partial:false},200)'),{consumed:0,goal:200,percent:0,arc:0,partial:false,remaining:200,over:null});
+ assert.equal(r.run('nutritionProgressState({value:null},200).percent'),null);
+ assert.equal(r.run('nutritionProgressState({value:null},200).remaining'),null);
+ assert.equal(r.run('nutritionProgressState(known,null).percent'),null);
+ assert.equal(r.run('nutritionProgressState(known,0).goal'),null);
+ assert.equal(r.run('nutritionProgressState(known,-1).goal'),null);
+ assert.equal(r.run('nutritionProgressState(known,"bad").goal'),null);
+ assert.equal(r.run('nutritionProgressState({value:150,partial:true},200).remaining'),null);
+ assert.equal(r.run('nutritionProgressState({value:250,partial:true},200).over'),50);
+});
+test('micronutrient progress requires complete values and compatible reference basis',()=>{
+ const r=runtime();r.ctx.stat={value:400,partial:false,mixedBasis:false,basis:'RAE',unit:'µg'};
+ assert.equal(r.run('nutritionMicronutrientProgress(stat,"vitaminA",{value:800,unit:"µg",basis:"RAE"}).percent'),50);
+ assert.equal(r.run('nutritionMicronutrientProgress(stat,"vitaminA",800)'),null);
+ assert.equal(r.run('nutritionMicronutrientProgress(stat,"vitaminA",{value:800,unit:"µg",basis:"retinol"})'),null);
+ r.run('stat.partial=true');assert.equal(r.run('nutritionMicronutrientProgress(stat,"vitaminA",{value:800,unit:"µg",basis:"RAE"})'),null);
+ r.run('stat.partial=false;stat.mixedBasis=true');assert.equal(r.run('nutritionMicronutrientProgress(stat,"vitaminA",{value:800,unit:"µg",basis:"RAE"})'),null);
+});
+test('rendered calorie ring updates immediately after each JSON import without double counting',()=>{
+ const r=runtime();r.run('nutritionDate="2024-01-02";data.nutrition.goals.calories=200;document.getElementById("nutritionModal").classList.add("show");persistData=()=>nutritionRender();nutritionRender()');
+ const card=()=>r.nodes.get('nutritionSummary').children.find(x=>x.dataset.nutrient==='calories');
+ const center=()=>card().children[1].children[1].children[0].textContent;
+ assert.equal(center(),'—');assert.equal(card().children[3].textContent,'Остаток неизвестен');
+ r.ctx.p=nutritionPayload({...food('ring-one'),nutrients:{calories:{value:100,unit:'kcal',quality:'label'}}});r.run('nutritionApplyImport(nutritionPreview(nutritionValidateImport(p)))');
+ assert.equal(center(),'50%');assert.equal(card().children[3].textContent,'Осталось 100 kcal');
+ r.ctx.p=nutritionPayload({...food('ring-two'),name:'Second food',nutrients:{calories:{value:150,unit:'kcal',quality:'label'}}});r.run('nutritionApplyImport(nutritionPreview(nutritionValidateImport(p)))');
+ assert.equal(center(),'125%');assert.equal(card().children[3].textContent,'Превышено на 50 kcal');
+ r.run('nutritionApplyImport(nutritionPreview(nutritionValidateImport(p)))');assert.equal(center(),'125%');
+ r.ctx.p=nutritionPayload({...food('ring-three'),name:'Unknown-calorie food',nutrients:{protein:{value:5,unit:'g',quality:'estimated'}}});r.run('nutritionApplyImport(nutritionPreview(nutritionValidateImport(p)))');
+ assert.equal(center(),'≥ 125%');assert.equal(card().children[3].textContent,'Превышено минимум на 50 kcal');
+ assert.deepEqual(r.errors,[]);
+});
+test('manual save, correction and deletion recalculate rendered rings',()=>{
+ const r=runtime();r.run('nutritionDate="2024-01-02";data.nutrition.goals.calories=200;document.getElementById("nutritionModal").classList.add("show");persistData=()=>nutritionRender();nutritionOpenForm()');
+ const center=()=>r.nodes.get('nutritionSummary').children[0].children[1].children[1].children[0].textContent;
+ r.nodes.get('nutritionFoodName').value='Fictional meal';r.nodes.get('nutritionCalories').value='100';r.run('nutritionSaveFood()');assert.equal(center(),'50%');assert.equal(r.run('data.nutrition.entries.length'),1);
+ r.run('nutritionOpenForm(data.nutrition.entries[0].id)');r.nodes.get('nutritionCalories').value='250';r.run('nutritionSaveFood()');assert.equal(center(),'125%');assert.equal(r.run('data.nutrition.entries.length'),1);
+ r.run('nutritionOpenForm(data.nutrition.entries[0].id);nutritionDeleteFood()');assert.equal(center(),'—');assert.equal(r.run('data.nutrition.entries.length'),0);assert.deepEqual(r.errors,[]);
+});
+test('Home Protein ring uses effective value and leaves missing data without a ring',()=>{
+ const r=runtime();r.run('data.logs["2024-01-02"]={protein:150};setTodayDate("2024-01-02");renderToday()');assert.deepEqual(r.errors,[]);assert.equal(r.run('nutritionProgressState({value:nutritionEffectiveProtein("2024-01-02").value},data.proteinGoal).percent'),125);
+ r.run('delete data.logs["2024-01-02"].protein;renderToday()');assert.deepEqual(r.errors,[]);
 });
