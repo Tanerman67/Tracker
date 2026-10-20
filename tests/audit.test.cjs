@@ -8,7 +8,7 @@ const root=path.resolve(__dirname,'..');
 const base='fbe5b5e0c961e125ad8f0227c55c7d82302b7cda';
 function runtime(seed, original=false){
  const memory=new Map(seed?Object.entries(seed):[]),nodes=new Map(),errors=[];
- const element=()=>({value:'',hidden:false,textContent:'',innerHTML:'',dataset:{},style:{},classList:{add(){},remove(){},toggle(){},contains(){return false}},setAttribute(){},getAttribute(){return null},appendChild(){},querySelectorAll(){return [element(),element()]},querySelector(){return element()},focus(){},remove(){},click(){}});
+ const element=()=>{const el={value:'',hidden:false,textContent:'',innerHTML:'',dataset:{},style:{},classList:{add(){},remove(){},toggle(){},contains(){return false}},setAttribute(){},getAttribute(){return null},append(){},appendChild(){},querySelectorAll(){return [element(),element()]},querySelector(){return element()},focus(){},remove(){},click(){}};Object.defineProperty(el,'id',{set(id){nodes.set(id,el)},get(){return [...nodes].find(([,v])=>v===el)?.[0]}});return el};
  const html=fs.readFileSync(path.join(root,'index.html'),'utf8');
  for(const [,id] of html.matchAll(/\bid="([^"]+)"/g))nodes.set(id,element());
  const document={getElementById:id=>nodes.get(id)||null,querySelectorAll:()=>[],querySelector:()=>null,createElement:element,createTreeWalker:()=>({nextNode:()=>null}),body:element(),documentElement:element(),addEventListener(){}};
@@ -111,4 +111,9 @@ test('multiple meals on one day and separate dates aggregate only known food por
 });
 test('malformed JSON file is rejected before any food data changes',async()=>{
  const r=runtime();r.ctx.event={target:{files:[{size:12,text:async()=>'{invalid'}],value:'selected'}};await r.run('nutritionReadImport(event)');assert.equal(r.run('data.nutrition.entries.length'),0);assert.ok(r.nodes.get('nutritionStatus').textContent);assert.equal(r.nodes.get('nutritionFile').value,'');
+});
+test('deployed Add Food editor resolves every main and advanced nutrient input',()=>{
+ const r=runtime();r.run('nutritionDate="2024-01-02";nutritionOpenForm()');
+ for(const key of Object.keys(r.json('NUTRIENTS'))){const id=r.run('NUTRITION_FIELD_IDS['+JSON.stringify(key)+']||"nutritionNutrient_'+key+'"');assert.ok(r.nodes.has(id),key+' input missing')}
+ assert.equal(r.nodes.get('nutritionFoodDate').value,'2024-01-02');
 });

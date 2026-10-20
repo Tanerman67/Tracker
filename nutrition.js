@@ -12,7 +12,7 @@ const NUTRITION_QUALITIES=['measured','label','calculated','estimated','unknown'
 const NUTRITION_SOURCES=['manual','label','chatgpt-estimate','other'];
 const NUTRITION_BASIS={vitaminA:['RAE','retinol','beta-carotene','unspecified'],vitaminB3:['NE','niacin','unspecified'],vitaminB9:['DFE','folate','folic-acid','unspecified'],vitaminE:['alpha-tocopherol','total','unspecified']};
 const NUTRITION_MEAL_LABELS={breakfast:['Завтрак','Breakfast'],lunch:['Обед','Lunch'],dinner:['Ужин','Dinner'],snack:['Перекус','Snack'],other:['Другое','Other']};
-const NUTRITION_FIELD_IDS={calories:'nutritionCalories',protein:'nutritionProtein',fat:'nutritionFat',carbs:'nutritionCarbs',fiber:'nutritionFiber',sugars:'nutritionSugars',saturatedFat:'nutritionSaturatedFat'};
+const NUTRITION_FIELD_IDS={calories:'nutritionCalories',protein:'nutritionProtein',fat:'nutritionFat',carbs:'nutritionCarbs'};
 let nutritionDate=null,nutritionEditId='',nutritionPendingImport=null,nutritionImportFingerprint='',nutritionHistoryOpen=false;
 function nutritionStore(){
   if(!data.nutrition||typeof data.nutrition!=='object'||Array.isArray(data.nutrition))data.nutrition={entries:[],goals:{}};
