@@ -1,5 +1,5 @@
 // Persistent schema and recovery. Keep keys compatible with existing installations.
-const APP_VERSION='6.11.1-audit';
+const APP_VERSION='6.12-nutrition';
 const DATA_KEY='my-life-tracker-data';
 const MIRROR_KEY='my-life-tracker-data-mirror-v1';
 const CURRENT_SCHEMA_VERSION=2;
@@ -30,6 +30,7 @@ const defaults={
  trackers:defaultTrackers,logs:{},theme:'dark',language:'ru',experiments:[],
  motivationSeen:{},
  englishLearning:{customItems:[],review:{},favorites:{},dailyQueue:{date:'',itemIds:[],newItemIds:[]},studyPlans:{}},
+ nutrition:{entries:[],goals:{}},
  lastExternalBackupAt:''
 };
 
@@ -52,6 +53,7 @@ function dataStats(d){
   return {
     logDays:days.length,
     entries,
+    nutritionEntries:Array.isArray(d?.nutrition?.entries)?d.nutrition.entries.length:0,
     latest:days.length?days[days.length-1]:'',
     revision:Number(meta.revision||0),
     savedAt:Date.parse(meta.savedAt||'')||0
@@ -66,6 +68,7 @@ function candidateBetter(a,b){
   // Legacy copies without metadata still fall back to record coverage.
   if(A.savedAt!==B.savedAt)return A.savedAt>B.savedAt;
   if(A.revision!==B.revision)return A.revision>B.revision;
+  if(A.nutritionEntries!==B.nutritionEntries)return A.nutritionEntries>B.nutritionEntries;
   if(A.logDays!==B.logDays)return A.logDays>B.logDays;
   if(A.entries!==B.entries)return A.entries>B.entries;
   if(A.latest!==B.latest)return A.latest>B.latest;
@@ -127,6 +130,11 @@ function migrateData(raw){
       },
       studyPlans:(d.englishLearning?.studyPlans && typeof d.englishLearning.studyPlans==='object') ? d.englishLearning.studyPlans : {}
     },
+    nutrition:{
+      ...(isDataObject(d.nutrition)?d.nutrition:{}),
+      entries:Array.isArray(d.nutrition?.entries)?d.nutrition.entries:[],
+      goals:isDataObject(d.nutrition?.goals)?d.nutrition.goals:{}
+    },
     lastExternalBackupAt:d.lastExternalBackupAt||''
   };
 
@@ -148,6 +156,9 @@ function validateStoredData(obj){
     if(obj[key]!==undefined&&!Array.isArray(obj[key]))throw new Error('Invalid '+key+'.');
   }
   if(obj.trackers?.some(t=>!isDataObject(t)||typeof t.id!=='string'))throw new Error('Invalid tracker.');
+  if(obj.nutrition!==undefined){
+    if(!isDataObject(obj.nutrition)||!Array.isArray(obj.nutrition.entries)||!isDataObject(obj.nutrition.goals)||obj.nutrition.entries.some(e=>!isDataObject(e)||typeof e.id!=='string'||typeof e.date!=='string'||!isDataObject(e.nutrients)))throw new Error('Invalid nutrition data.');
+  }
   for(const key of ['logs','bodyMeasurements']){
     if(obj[key]&&Object.values(obj[key]).some(row=>!isDataObject(row)))throw new Error('Invalid '+key+' row.');
   }

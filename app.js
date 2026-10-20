@@ -1344,9 +1344,9 @@ function deleteEnglishCustomItem(id){
 
 
 function dates(n){let arr=[];for(let i=n-1;i>=0;i--){let d=new Date();d.setDate(d.getDate()-i);arr.push(localDate(d))}return arr}
-function val(id,d=localDate()){return data.logs[d]?.[id]}
-function sum(id,n=7){return dates(n).reduce((s,d)=>s+(Number(data.logs[d]?.[id])||0),0)}
-function avg(id,n=7){let xs=dates(n).map(d=>Number(data.logs[d]?.[id])).filter(v=>v>0);return xs.length?xs.reduce((a,b)=>a+b,0)/xs.length:0}
+function val(id,d=localDate()){return nutritionMetricValue(id,d)}
+function sum(id,n=7){return dates(n).reduce((s,d)=>s+(Number(nutritionMetricValue(id,d))||0),0)}
+function avg(id,n=7){let xs=dates(n).map(d=>Number(nutritionMetricValue(id,d))).filter(v=>v>0);return xs.length?xs.reduce((a,b)=>a+b,0)/xs.length:0}
 
 function boolCount(id,n=7){return dates(n).filter(d=>data.logs[d]?.[id]===true).length}
 function pct(v,g){return !g?0:Math.min(100,Math.max(0,Math.round(v/g*100)))}
@@ -1358,7 +1358,7 @@ function goalFor(id){return ({protein:data.proteinGoal,steps:data.stepsGoal,outd
 function englishTotalN(n=7){return dates(n).reduce((total,date)=>total+englishMinutesForDate(date),0)}
 function englishTodayN(){return englishMinutesForDate(localDate())}
 function dailyComplete(id,d=localDate()){
- const t=tracker(id);if(!t)return false;const v=data.logs[d]?.[id];if(t.type==='boolean')return v===true;
+ const t=tracker(id);if(!t)return false;const v=nutritionMetricValue(id,d);if(t.type==='boolean')return v===true;
  const g=goalFor(id);if(!g)return v!==undefined&&v!==null&&v!=='';return Number(v)>=Number(g)
 }
 const TRACKER_I18N = {
@@ -1682,7 +1682,7 @@ function show(id,btn){
  document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));
  btn.classList.add('active');
 }
-function openEntry(id,dateKey=localDate()){activeTracker=tracker(id);if(!activeTracker){alert(trText('Трекер не найден.','Tracker not found.'));return}activeTracker={...activeTracker,entryDate:dateKey};const unit=trUnit(activeTracker);document.getElementById('entryTitle').textContent=activeTracker.icon+' '+trTrackerName(activeTracker);document.getElementById('entryLabel').textContent=trText('Значение','Value')+(unit?' ('+unit+')':'')+' · '+dateKey;document.getElementById('entryValue').value=val(id,dateKey)??'';document.getElementById('entryModal').classList.add('show');setTimeout(()=>document.getElementById('entryValue').focus(),80)}
+function openEntry(id,dateKey=localDate()){activeTracker=tracker(id);if(!activeTracker){alert(trText('Трекер не найден.','Tracker not found.'));return}activeTracker={...activeTracker,entryDate:dateKey};const unit=trUnit(activeTracker);document.getElementById('entryTitle').textContent=activeTracker.icon+' '+trTrackerName(activeTracker);document.getElementById('entryLabel').textContent=trText('Значение','Value')+(unit?' ('+unit+')':'')+' · '+dateKey;document.getElementById('entryValue').value=(id==='protein'?data.logs?.[dateKey]?.protein:val(id,dateKey))??'';document.getElementById('entryModal').classList.add('show');setTimeout(()=>document.getElementById('entryValue').focus(),80)}
 function openEnglish(id){const type=englishTypes.find(x=>x[0]===id);if(!type)return;activeTracker={id,name:type[2],icon:type[1],type:'number',unit:'мин',category:'english'};document.getElementById('entryTitle').textContent=type[1]+' '+type[2];document.getElementById('entryLabel').textContent=trText('Всего минут сегодня','Total minutes today');document.getElementById('entryValue').value=val(id)??'';document.getElementById('entryModal').classList.add('show');setTimeout(()=>document.getElementById('entryValue').focus(),80)}
 function saveEntry(){
  if(!activeTracker)return;
@@ -1753,9 +1753,13 @@ function importBackupFile(event){
     try{
       const parsed=JSON.parse(reader.result);
       const imported=validateBackupObject(parsed);
-      const hasCurrent=Object.keys(data.logs||{}).length>0;
+      const rawBackup=parsed.format==='my-life-tracker-backup'?parsed.data:parsed;
+      const oldBackup=!Object.prototype.hasOwnProperty.call(rawBackup,'nutrition');
+      const existingFood=data.nutrition?.entries?.length||0;
+      if(oldBackup&&existingFood)imported.nutrition=structuredClone(data.nutrition);
+      const hasCurrent=Object.keys(data.logs||{}).length>0||existingFood>0;
       const message=hasCurrent
-        ? 'Импорт заменит текущие записи данными из backup. Продолжить?'
+        ? 'Импорт заменит текущие записи данными из backup.'+(oldBackup&&existingFood?' Этот старый backup не содержит раздел питания; текущие записи питания будут сохранены.':'')+' Продолжить?'
         : 'Импортировать данные из backup?';
       if(!confirm(message)) return;
       await writeVaultCopies(structuredClone(data),true);
@@ -2541,15 +2545,16 @@ function motivationLoggedCount(id){
 function motivationLongestGoalStreak(id,goal){
   goal=Number(goal||0);
   if(!goal)return 0;
-  const keys=Object.keys(data.logs||{}).filter(k=>/^\d{4}-\d{2}-\d{2}$/.test(k)).sort();
+  const keys=[...new Set([...Object.keys(data.logs||{}),...(id==='protein'?nutritionStore().entries.map(e=>e.date):[])])].filter(k=>/^\d{4}-\d{2}-\d{2}$/.test(k)).sort();
   if(!keys.length)return 0;
   const first=new Date(keys[0]+'T12:00:00');
   const last=new Date(keys[keys.length-1]+'T12:00:00');
   let best=0,current=0;
   for(let d=new Date(first);d<=last;d.setDate(d.getDate()+1)){
     const key=localDate(d);
-    const v=Number(data.logs?.[key]?.[id]);
-    if(Number.isFinite(v)&&v>=goal){current++;best=Math.max(best,current)}
+    const raw=nutritionMetricValue(id,key);
+    const v=raw===null||raw===undefined||raw===''?null:Number(raw);
+    if(v!==null&&Number.isFinite(v)&&v>=goal){current++;best=Math.max(best,current)}
     else current=0;
   }
   return best;
@@ -2855,8 +2860,9 @@ function weeklyNumericStats(id,keys,{positiveOnly=false,goal=null}={}){
   let goalDays=0;
   for(const key of keys){
     const row=data.logs?.[key];
-    if(!weeklyHasOwn(row,id)||typeof row[id]==='boolean')continue;
-    const n=Number(row[id]);
+    const raw=nutritionMetricValue(id,key);
+    if(id==='protein'?(raw===null):( !weeklyHasOwn(row,id)||typeof row[id]==='boolean'))continue;
+    const n=Number(raw);
     if(!Number.isFinite(n))continue;
     if(positiveOnly ? n<=0 : n<0)continue;
     values.push({date:key,value:n});
@@ -3577,8 +3583,9 @@ function trendValueForDay(id,dateKey){
     return row.gym===true?1:row.gym===false?0:null;
   }
 
-  if(!weeklyHasOwn(row,id)||typeof row[id]==='boolean')return null;
-  const n=Number(row[id]);
+  const raw=nutritionMetricValue(id,dateKey);
+  if(id==='protein'?raw===null:(!weeklyHasOwn(row,id)||typeof row[id]==='boolean'))return null;
+  const n=Number(raw);
   if(!Number.isFinite(n))return null;
   if(id==='weight' || id==='sleep')return n>0?n:null;
   return n>=0?n:null;
@@ -3606,7 +3613,7 @@ function trendAddMonths(dateKey,n){
   return trendLocalDate(new Date(d.getFullYear(),d.getMonth()+n,1,12));
 }
 function trendEarliestMetricDate(id){
-  const keys=Object.keys(data.logs||{}).sort();
+  const keys=[...new Set([...Object.keys(data.logs||{}),...(id==='protein'?nutritionStore().entries.map(e=>e.date):[])])].sort();
   return keys.find(k=>trendValueForDay(id,k)!==null)||localDate();
 }
 function trendDailyRange(start,end){
@@ -4059,7 +4066,7 @@ function renderTrends(){
 
 function renderProgress(){renderSimpleProgress();renderTrends();renderCalendar()}
 function moveMonth(n){calendarDate=new Date(calendarDate.getFullYear(),calendarDate.getMonth()+n,1);renderCalendar()}
-function renderCalendar(){const ruM=['Январь','Февраль','Март','Апрель','Май','Июнь','Июль','Август','Сентябрь','Октябрь','Ноябрь','Декабрь'],enM=['January','February','March','April','May','June','July','August','September','October','November','December'],ruD=['Пн','Вт','Ср','Чт','Пт','Сб','Вс'],enD=['Mon','Tue','Wed','Thu','Fri','Sat','Sun'],y=calendarDate.getFullYear(),m=calendarDate.getMonth(),lang=data.language||'ru';document.getElementById('calendarTitle').textContent=(lang==='en'?enM:ruM)[m]+' '+y;const grid=document.getElementById('calendarGrid');grid.innerHTML=(lang==='en'?enD:ruD).map(x=>`<div class="dow">${x}</div>`).join('');const first=(new Date(y,m,1).getDay()+6)%7,total=new Date(y,m+1,0).getDate();for(let i=0;i<first;i++)grid.innerHTML+='<div></div>';for(let day=1;day<=total;day++){const d=`${y}-${String(m+1).padStart(2,'0')}-${String(day).padStart(2,'0')}`,filled=Object.keys(data.logs[d]||{}).filter(k=>k!=='habitDetails'&&weeklyHasOwn(data.logs[d],k)&&data.logs[d][k]!==false).length,cls=filled>=5?'good':filled>=2?'mid':'';grid.innerHTML+=`<div class="cday ${cls}">${day}${filled>=5?'<span class="dot"></span>':''}</div>`}}
+function renderCalendar(){const ruM=['Январь','Февраль','Март','Апрель','Май','Июнь','Июль','Август','Сентябрь','Октябрь','Ноябрь','Декабрь'],enM=['January','February','March','April','May','June','July','August','September','October','November','December'],ruD=['Пн','Вт','Ср','Чт','Пт','Сб','Вс'],enD=['Mon','Tue','Wed','Thu','Fri','Sat','Sun'],y=calendarDate.getFullYear(),m=calendarDate.getMonth(),lang=data.language||'ru';document.getElementById('calendarTitle').textContent=(lang==='en'?enM:ruM)[m]+' '+y;const grid=document.getElementById('calendarGrid');grid.innerHTML=(lang==='en'?enD:ruD).map(x=>`<div class="dow">${x}</div>`).join('');const first=(new Date(y,m,1).getDay()+6)%7,total=new Date(y,m+1,0).getDate();for(let i=0;i<first;i++)grid.innerHTML+='<div></div>';for(let day=1;day<=total;day++){const d=`${y}-${String(m+1).padStart(2,'0')}-${String(day).padStart(2,'0')}`,filled=Object.keys(data.logs[d]||{}).filter(k=>k!=='habitDetails'&&weeklyHasOwn(data.logs[d],k)&&data.logs[d][k]!==false).length+(nutritionRows(d).length?1:0),cls=filled>=5?'good':filled>=2?'mid':'';grid.innerHTML+=`<div class="cday ${cls}">${day}${filled>=5?'<span class="dot"></span>':''}</div>`}}
 
 function openExperiment(){document.getElementById('experimentModal')?.classList.add('show')}
 function saveExperiment(){
@@ -4136,7 +4143,7 @@ function renderSettings(){
  updateStorageSafetyUI();
  renderExperiments();
 }
-function render(){applyTheme();for(const job of [renderToday,renderEnglish,renderProgress,renderSettings]){try{job()}catch(e){console.error('Render error in '+job.name,e)}}try{translateDOM()}catch(e){console.error('Translation error',e)}}
+function render(){applyTheme();nutritionRender();for(const job of [renderToday,renderEnglish,renderProgress,renderSettings]){try{job()}catch(e){console.error('Render error in '+job.name,e)}}try{translateDOM()}catch(e){console.error('Translation error',e)}}
 
 let appActiveDate=localDate();
 function rebuildEnglishReviewQueueForToday(){
