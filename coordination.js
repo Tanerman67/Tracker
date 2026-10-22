@@ -41,8 +41,21 @@ function coordinateSave({renderAfter=true,makeSnapshot=true}={}){
   resetStorageBaseline();if(renderAfter)render();
   await writeVaultCopies(payload,makeSnapshot);return true;
  };
- const task=()=>navigator.locks?navigator.locks.request('my-rhythm-data-write',commit):commit();
+ const task=()=>withStorageLock(commit);
  const result=saveCoordinationQueue.then(task);saveCoordinationQueue=result.catch(()=>{alert(trText('Не удалось сохранить. Экспортируй backup.','Could not save. Export a backup.'))});return result;
+}
+function withStorageLock(commit){
+ if(navigator.locks)return navigator.locks.request('my-rhythm-data-write',commit);
+ if(!('indexedDB' in window))return commit();
+ // A readwrite transaction serializes the synchronous compare/merge/local write
+ // section across tabs even when Web Locks is unavailable. Vault writes follow it.
+ return openVaultDB().then(db=>new Promise((resolve,reject)=>{
+  const tx=db.transaction('current','readwrite'),req=tx.objectStore('current').get('data');
+  let result;req.onsuccess=()=>{try{result=commit()}catch(e){reject(e)}};
+  tx.oncomplete=()=>Promise.resolve(result).then(resolve,reject);
+  tx.onerror=()=>reject(tx.error||Error('Local write lock failed.'));
+  tx.onabort=()=>reject(tx.error||Error('Local write lock aborted.'));
+ }));
 }
 function downloadConflictDraft(){
  const raw=unsavedConflict||JSON.parse(storageGet('my-rhythm-conflict-draft')||'null');

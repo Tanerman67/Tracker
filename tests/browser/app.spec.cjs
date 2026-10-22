@@ -2,7 +2,7 @@ const {test,expect}=require('@playwright/test');
 const {execFileSync}=require('node:child_process');
 const fs=require('node:fs'),path=require('node:path'),http=require('node:http');
 const DAY='2024-01-02';
-async function ready(page){await page.goto('/');await expect(page.locator('[data-metric="nutrition"]')).toBeVisible();await page.evaluate(()=>saveCoordinationQueue);}
+async function ready(page){await page.goto('/');await expect(page.locator('[data-metric="nutrition"]')).toBeVisible();await expect(page.locator('body')).not.toHaveClass(/loading-data/);await page.evaluate(()=>saveCoordinationQueue);}
 async function settle(page){await page.evaluate(()=>saveCoordinationQueue);}
 async function addFood(page,name='Fictional rice',calories='250'){
  await page.locator('#nutritionAddButton').click();await page.locator('#nutritionFoodName').fill(name);await page.locator('#nutritionFoodAmount').fill('100');await page.locator('#nutritionCalories').fill(calories);await page.locator('#nutritionProtein').fill('12');await page.locator('[onclick="nutritionSaveFood()"]').click();await settle(page);
@@ -96,4 +96,9 @@ test('upgrade from actual 6.13 assets keeps existing records and local recovery 
  upgraded=true;await page.evaluate(async()=>{const r=await navigator.serviceWorker.getRegistration();await r.update()});await page.reload();await expect(page.locator('#todayCustomize')).toBeVisible();await expect(page.locator('#appVersionText')).toHaveText('V7.0.0',{timeout:15000});expect(await page.evaluate(()=>data.logs['2024-01-02'])).toEqual({steps:321,protein:0,gym:false});expect(await page.evaluate(()=>data.englishLearning.customItems[0].title)).toBe('Retain this');expect(await page.evaluate(()=>data.language)).toBe('ru');expect(await page.evaluate(async()=>(await caches.keys()).includes('my-rhythm-data-vault-v1'))).toBe(true);
  await new Promise(resolve=>server.close(resolve));await page.reload();await expect(page.locator('#todayCustomize')).toBeVisible();expect(await page.evaluate(()=>data.logs['2024-01-02'].steps)).toBe(321);
  }finally{if(server.listening)await new Promise(resolve=>server.close(resolve))}
+});
+
+test('IndexedDB coordination fallback preserves edits without Web Locks',async({page,context})=>{
+ await context.addInitScript(()=>Object.defineProperty(navigator,'locks',{value:undefined,configurable:true}));await ready(page);const other=await context.newPage();await ready(other);
+ await Promise.all([page.evaluate(()=>{ensureDay('2024-01-02').steps=555;return save()}),other.evaluate(()=>{ensureDay('2024-01-02').sleep=7;return save()})]);await page.reload();await expect(page.locator('body')).not.toHaveClass(/loading-data/);expect(await page.evaluate(()=>data.logs['2024-01-02'])).toEqual({steps:555,sleep:7});
 });

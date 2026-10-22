@@ -2786,10 +2786,11 @@ render();
 recoverFromVaults()
   .then(()=>{
     resetStorageBaseline();
+    document.body.classList.remove('loading-data');
     appActiveDate=localDate();
     render();
   })
-  .catch(err=>{console.warn('Vault recovery failed',err);updateStorageSafetyUI()});
+  .catch(err=>{document.body.classList.remove('loading-data');console.warn('Vault recovery failed',err);updateStorageSafetyUI()});
 
 addEventListener('focus',checkAppDayRollover);
 document.addEventListener('visibilitychange',()=>{
