@@ -1,8 +1,8 @@
 // Persistent schema and recovery. Keep keys compatible with existing installations.
-const APP_VERSION='6.13-nutrition-rings';
+const APP_VERSION='7.0.0';
 const DATA_KEY='my-life-tracker-data';
 const MIRROR_KEY='my-life-tracker-data-mirror-v1';
-const CURRENT_SCHEMA_VERSION=2;
+const CURRENT_SCHEMA_VERSION=3;
 const LEGACY_KEYS=['life-tracker-v3','life-tracker-v2','cleaner-stronger-v1'];
 
 const VAULT_DB='my-rhythm-vault-v1';
@@ -23,11 +23,11 @@ const defaultTrackers=[
 const defaults={
  schemaVersion:CURRENT_SCHEMA_VERSION,
  smokeDate:'',alcoholDate:'',
- alcoholTrackingStart:localDate(),
+ alcoholTrackingStart:'',
  alcoholHistory:{},
  bodyMeasurements:{},
  proteinGoal:120,stepsGoal:7000,outdoorsGoal:60,sleepGoal:7.5,englishGoal:240,gymGoal:3,
- trackers:defaultTrackers,logs:{},theme:'dark',language:'ru',experiments:[],
+ trackers:defaultTrackers,logs:{},theme:'dark',language:'en',experiments:[],
  motivationSeen:{},
  englishLearning:{customItems:[],review:{},favorites:{},dailyQueue:{date:'',itemIds:[],newItemIds:[]},studyPlans:{}},
  nutrition:{entries:[],goals:{}},
@@ -106,6 +106,14 @@ function migrateData(raw){
     version=2;
   }
 
+  if(version < 3){
+    d.dashboard=d.dashboard||{blocks:defaultDashboardBlocks()};
+    d.cycle=d.cycle||{enabled:false,periods:[]};
+    d.englishActivity=d.englishActivity||{entries:[]};
+    d.goalRules=d.goalRules||legacyGoalRules(d);
+    d.schemaVersion=3;
+  }
+
   d = {
     ...defaults,
     ...d,
@@ -113,7 +121,7 @@ function migrateData(raw){
     logs:(d.logs && typeof d.logs==='object') ? d.logs : {},
     trackers:Array.isArray(d.trackers) ? d.trackers : structuredClone(defaultTrackers),
     experiments:Array.isArray(d.experiments) ? d.experiments : [],
-    alcoholTrackingStart:d.alcoholTrackingStart||defaults.alcoholTrackingStart,
+    alcoholTrackingStart:d.alcoholTrackingStart??d.alcoholDate??'',
     alcoholHistory:(d.alcoholHistory && typeof d.alcoholHistory==='object') ? d.alcoholHistory : structuredClone(defaults.alcoholHistory),
     bodyMeasurements:(d.bodyMeasurements && typeof d.bodyMeasurements==='object') ? d.bodyMeasurements : structuredClone(defaults.bodyMeasurements),
     motivationSeen:(d.motivationSeen && typeof d.motivationSeen==='object') ? d.motivationSeen : {},
@@ -141,6 +149,10 @@ function migrateData(raw){
   for(const base of defaultTrackers){
     if(!d.trackers.some(t=>t.id===base.id))d.trackers.push(structuredClone(base));
   }
+  d.dashboard=d.dashboard||{blocks:defaultDashboardBlocks()};
+  d.cycle=d.cycle||{enabled:false,periods:[]};
+  d.englishActivity=d.englishActivity||{entries:[]};
+  d.goalRules=d.goalRules||legacyGoalRules(d);
   return d;
 }
 
@@ -162,6 +174,7 @@ function validateStoredData(obj){
   for(const key of ['logs','bodyMeasurements']){
     if(obj[key]&&Object.values(obj[key]).some(row=>!isDataObject(row)))throw new Error('Invalid '+key+' row.');
   }
+  validateV7Data(obj);
   return obj;
 }
 
@@ -287,7 +300,9 @@ async function vaultWriteIndexedDB(payload,makeSnapshot=true){
   const db=await openVaultDB();
   const now=new Date().toISOString();
   const tx=db.transaction(['current','snapshots'],'readwrite');
-  tx.objectStore('current').put({savedAt:now,data:structuredClone(payload)},'data');
+  const store=tx.objectStore('current');
+  const check=store.get('data');
+  check.onsuccess=()=>{if(!check.result?.data||!candidateBetter({data:check.result.data},{data:payload}))store.put({savedAt:now,data:structuredClone(payload)},'data')};
   if(makeSnapshot){
     tx.objectStore('snapshots').put({
       id:`${Date.now()}-${Math.random().toString(36).slice(2,8)}`,
@@ -304,6 +319,8 @@ async function vaultWriteIndexedDB(payload,makeSnapshot=true){
 async function vaultWriteCache(payload){
   if(!('caches' in window))throw new Error('CacheStorage unavailable');
   const cache=await caches.open(VAULT_CACHE);
+  const old=await cache.match(new Request(new URL(VAULT_CACHE_URL,location.href).href));
+  if(old){try{if(candidateBetter({data:(await old.json()).data},{data:payload}))return true}catch(e){}}
   const body=JSON.stringify({savedAt:new Date().toISOString(),data:payload});
   const req=new Request(new URL(VAULT_CACHE_URL,location.href).href);
   await cache.put(req,new Response(body,{headers:{'Content-Type':'application/json','Cache-Control':'no-store'}}));
@@ -362,9 +379,14 @@ function stampCurrentData(){
 }
 
 function persistData({renderAfter=true,makeSnapshot=true}={}){
+  if(typeof coordinateSave==='function')return coordinateSave({renderAfter,makeSnapshot});
+  return persistDataDirect({renderAfter,makeSnapshot});
+}
+function persistDataDirect({renderAfter=true,makeSnapshot=true}={}){
   data.schemaVersion=CURRENT_SCHEMA_VERSION;
   stampCurrentData();
-  writeLocalCopies(data);
+  const saved=writeLocalCopies(data);
+  if(!saved.primary&&!saved.mirror)alert(trText('Не удалось сохранить в браузере. Сделай JSON backup.','Browser storage write failed. Export a JSON backup.'));
   if(renderAfter)render();
   writeVaultCopies(structuredClone(data),makeSnapshot).catch(err=>{
     console.warn('Vault write failed',err);
@@ -405,6 +427,7 @@ async function recoverFromVaults(){
 
   if(best&&best.key!==memory.key&&candidateBetter(best,memory)){
     data=migrateData(best.data);
+    if(typeof resetStorageBaseline==='function')resetStorageBaseline();
     writeLocalCopies(data);
     window.__dataDiagnostic={
       source:best.key,

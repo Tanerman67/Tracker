@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="ru">
+<html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
@@ -16,20 +16,21 @@
 <meta name="apple-mobile-web-app-title" content="My Rhythm">
 
 <title>Мой ритм</title>
-<link rel="stylesheet" href="app.css?v=6111">
+<link rel="stylesheet" href="app.css?v=7000">
 
-<link rel="stylesheet" href="today.css?v=6130">
-<link rel="stylesheet" href="habits.css?v=6111">
-<link rel="stylesheet" href="nutrition.css?v=6131">
+<link rel="stylesheet" href="today.css?v=7000">
+<link rel="stylesheet" href="modules.css?v=7000">
+<link rel="stylesheet" href="habits.css?v=7000">
+<link rel="stylesheet" href="nutrition.css?v=7000">
 </head>
 <body>
-<div class="app">
+<div class="app"><p id="tabUpdateNotice" class="privacy-note" role="status" hidden data-localized></p>
 <section id="today" class="section active">
   <div class="home-stack">
     <div id="motivationCard" class="hero card motivation-card today-combined-hero">
       <div class="today-combined-top">
         <div>
-          <div class="hero-title" id="todayHeading">Сегодня</div>
+          <div class="app-brand">MY RHYTHM</div><div class="hero-title" id="todayHeading">Сегодня</div>
           <button type="button" class="hero-date" id="heroDate" onclick="toggleTodayDate()" aria-expanded="false" aria-controls="todayDateControls"></button>
         </div>
         <div class="today-motivation-icon" id="motivationIcon">🌱</div>
@@ -54,110 +55,8 @@
       </div>
     </div>
 
-    <div id="todayGrid" class="metric-grid"></div>
-  </div>
-</section>
-
-<section id="english" class="section">
-  <div class="english-page-head">
-    <div>
-      <h2>English</h2>
-      <div class="sub" id="englishPageSubtitle">Learn a little every day. Build active English.</div>
-    </div>
-  </div>
-
-  <div class="english-hero card">
-    <div class="english-hero-top">
-      <div>
-        <div class="label">Current path</div>
-        <div class="english-level">B1 → B2</div>
-      </div>
-      <div class="english-coverage">
-        <strong id="englishCoverageValue">0 / 0</strong>
-        <span id="englishCoverageLabel">reviewed</span>
-      </div>
-    </div>
-    <div class="progress english-coverage-bar"><span id="englishCoverageBar"></span></div>
-    <div class="english-hero-note" id="englishCoverageNote">Your curriculum is ready.</div>
-  </div>
-
-  <button type="button" class="english-review-banner" onclick="openEnglishLearning('review')">
-    <div>
-      <div class="english-review-kicker">📚 <span id="englishReviewLabel">Today to review</span></div>
-      <div class="english-review-counts" id="englishReviewCounts">—</div>
-    </div>
-    <div class="english-review-action">▶ <span id="englishStartReviewText">Start review</span></div>
-  </button>
-
-  <button type="button" class="english-plan-banner" onclick="openEnglishWeekPlan()">
-    <div class="english-plan-main">
-      <div class="english-plan-kicker">🧭 <span id="englishPlanKicker">B2 · Week 1</span></div>
-      <strong id="englishPlanDashboardTitle">B2 ChatGPT Grammar Plan — Week 1</strong>
-      <span id="englishPlanDashboardMeta">4 lessons · 240 min</span>
-    </div>
-    <div class="english-plan-dashboard-progress">
-      <strong id="englishPlanDashboardCompleted">0 / 4</strong>
-      <span id="englishPlanDashboardCompletedLabel">completed</span>
-    </div>
-    <div class="progress english-plan-progress"><span id="englishPlanDashboardBar"></span></div>
-  </button>
-
-  <div class="english-week-card card">
-    <div class="english-week-head">
-      <div>
-        <div class="label">This week</div>
-        <div class="english-week-total"><strong id="engWeek">0</strong> <span id="engWeekGoal">/ 1200 min</span></div>
-      </div>
-      <div class="english-today-mini"><span id="englishTodayLabel">Today</span><strong id="engToday">0 min</strong></div>
-    </div>
-    <div class="english-week-strip" id="englishWeekStrip"></div>
-  </div>
-
-  <div class="english-hub-grid">
-    <button type="button" class="english-hub-card words" onclick="openEnglishLearning('words')">
-      <span class="english-hub-icon">📖</span>
-      <strong>Words & Phrases</strong>
-      <span><b id="englishWordsCount">0</b> items · <em id="englishWordsDue">0 due</em></span>
-    </button>
-    <button type="button" class="english-hub-card grammar" onclick="openEnglishLearning('grammar')">
-      <span class="english-hub-icon">🎓</span>
-      <strong>Grammar Rules</strong>
-      <span><b id="englishGrammarCount">0</b> topics · <em id="englishGrammarDue">0 due</em></span>
-    </button>
-    <button type="button" class="english-hub-card mistakes" onclick="openEnglishLearning('mistakes')">
-      <span class="english-hub-icon">⚠️</span>
-      <strong>My Mistakes</strong>
-      <span><b id="englishMistakesCount">0</b> items · <em id="englishMistakesDue">0 due</em></span>
-    </button>
-    <button type="button" class="english-hub-card review" onclick="openEnglishLearning('review')">
-      <span class="english-hub-icon">↻</span>
-      <strong>Review Queue</strong>
-      <span><em id="englishQueueDue">0 items due</em></span>
-    </button>
-  </div>
-
-  <div class="english-focus-card card">
-    <div class="english-focus-head">
-      <div><span>🎯</span> <strong>Current focus</strong></div>
-      <span class="english-focus-sub">B1 → B2</span>
-    </div>
-    <div id="englishFocusList" class="english-focus-list"></div>
-  </div>
-
-  <div class="english-session-card card">
-    <div class="english-session-head">
-      <div>
-        <div class="label">Study log</div>
-        <strong id="englishSessionTitle">Add a session</strong>
-      </div>
-      <span class="small" id="englishSessionHint">Minutes still feed Progress & Weekly Review</span>
-    </div>
-    <div class="english-session-buttons">
-      <button type="button" class="ghost" onclick="openEnglish('english_chatgpt')">🤖 ChatGPT</button>
-      <button type="button" class="ghost" onclick="openEnglish('english_native')">🗣️ Native</button>
-      <button type="button" class="ghost" onclick="openEnglish('english_russian')">📘 Russian</button>
-      <button type="button" class="ghost" onclick="openEnglish('english_watching')">🎬 Watching</button>
-    </div>
+    <button id="todayCustomize" class="secondary" onclick="openModule('layout')" data-localized>Customize blocks</button>
+    <div id="todayGrid" class="metric-grid" data-localized></div><div id="todayWeekly" class="card weekly-compact" data-localized></div><p id="todayPrivacy" class="privacy-note" data-localized></p>
   </div>
 </section>
 
@@ -222,7 +121,7 @@
   <div class="card settings-goals-card">
     <div class="label">🎯 Настройки целей</div>
     <div class="field"><label for="smokeDate">Дата отказа от сигарет</label><input id="smokeDate" type="date"></div>
-    <div class="field"><label for="alcoholDate">Дата текущего периода без алкоголя</label><input id="alcoholDate" type="date"></div>
+    <div class="field" data-localized><label for="alcoholDate" data-i18n-ru="Дата начала учёта алкоголя" data-i18n-en="Alcohol tracking start">Alcohol tracking start</label><input id="alcoholDate" type="date"><small id="alcoholDerivedDate"></small></div>
     <div class="field"><label for="proteinGoal">Белок, г/день</label><input id="proteinGoal" type="number"></div>
     <div class="field"><label for="stepsGoal">Шаги / день</label><input id="stepsGoal" type="number"></div>
     <div class="field"><label for="outdoorsGoal">Время на улице, мин/день</label><input id="outdoorsGoal" type="number"></div>
@@ -232,6 +131,8 @@
     <button type="button" style="width:100%" onclick="saveSettings()">Сохранить настройки</button>
   </div>
 
+  <details class="card" data-localized><summary data-i18n-ru="Правила целей" data-i18n-en="Goal rules">Goal rules</summary><div id="goalRuleSettings"></div></details>
+  <div class="card" data-localized><p data-i18n-ru="Данные хранятся в этом браузере без аккаунта и синхронизации. Общий профиль браузера означает общие записи. Перенос на другое устройство - через JSON backup." data-i18n-en="Records stay in this browser without accounts or sync. A shared browser profile shares records. Use a JSON backup for another device.">Records stay in this browser without accounts or sync.</p><button class="secondary" onclick="openModule('layout')" data-i18n-ru="Настроить главную" data-i18n-en="Customize Today">Customize Today</button><button class="ghost" onclick="downloadConflictDraft()" data-i18n-ru="Скачать черновик конфликта вкладок" data-i18n-en="Download tab conflict draft">Download tab conflict draft</button></div>
   <div class="section-spacer"></div>
   <div class="card">
     <div class="label">🎨 Оформление и язык</div>
@@ -310,7 +211,7 @@
 <div class="tabs">
 <div class="tabsin">
 <button type="button" id="tabToday" class="tab active" onclick="show('today',this)"><span class="ico">⌂</span>Сегодня</button>
-<button type="button" id="tabEnglish" class="tab" onclick="show('english',this)"><span class="ico">A</span>English</button>
+<button type="button" id="tabNutrition" class="tab" onclick="nutritionOpen(todayDateKey())"><span class="ico">◉</span><span data-i18n-ru="Питание" data-i18n-en="Nutrition">Nutrition</span></button>
 <button type="button" id="tabProgress" class="tab" onclick="show('progress',this)"><span class="ico">▥</span>Прогресс</button>
 <button type="button" id="tabSettings" class="tab" onclick="show('settings',this)"><span class="ico">⚙</span>Настройки</button>
 </div></div>
@@ -318,52 +219,6 @@
 
 
 
-
-<div id="englishLearningModal" class="english-learning-modal">
-  <div class="english-learning-shell">
-    <div class="english-learning-topbar">
-      <button type="button" class="english-learning-back" id="englishLearningBackBtn" onclick="englishLearningBack()">‹</button>
-      <div class="english-learning-heading">
-        <strong id="englishLearningTitle">English</strong>
-        <span id="englishLearningSubtitle"></span>
-      </div>
-      <button type="button" class="english-learning-add" id="englishLearningAddBtn" onclick="openEnglishAdd()">＋</button>
-    </div>
-    <div id="englishLearningContent" class="english-learning-content"></div>
-  </div>
-</div>
-
-<div id="englishAddModal" class="english-add-modal">
-  <div class="english-add-sheet">
-    <button type="button" class="close" onclick="closeEnglishAdd()">✕</button>
-    <h3 id="englishAddTitle">Add learning item</h3>
-    <div class="field">
-      <label id="englishAddKindLabel" for="englishAddKind">Type</label><select id="englishAddKind" onchange="renderEnglishAddLabels()">
-        <option value="word">Word</option>
-        <option value="phrase">Phrase</option>
-        <option value="phrasal">Phrasal verb</option>
-        <option value="grammar">Grammar rule</option>
-        <option value="mistake">My mistake</option>
-      </select>
-    </div>
-    <div class="field">
-      <label id="englishAddTermLabel" for="englishAddTerm">English / title</label><input id="englishAddTerm" type="text" autocomplete="off">
-    </div>
-    <div class="field" id="englishAddIpaField">
-      <label for="englishAddIpa">IPA</label><input id="englishAddIpa" type="text" placeholder="/.../">
-    </div>
-    <div class="field">
-      <label id="englishAddMeaningLabel" for="englishAddMeaning">Russian / explanation</label><textarea id="englishAddMeaning"></textarea>
-    </div>
-    <div class="field">
-      <label id="englishAddExampleLabel" for="englishAddExample">Example</label><textarea id="englishAddExample"></textarea>
-    </div>
-    <div class="field">
-      <label id="englishAddNoteLabel" for="englishAddNote">Rule / note</label><textarea id="englishAddNote"></textarea>
-    </div>
-    <button type="button" style="width:100%" onclick="saveEnglishCustomItem()" id="englishAddSaveBtn">Save</button>
-  </div>
-</div>
 
 <div id="motivationModal" class="motivation-modal">
   <div class="motivation-sheet">
@@ -558,7 +413,8 @@
   </div>
 </div>
 
-<div id="nutritionModal" class="nutrition-modal" role="dialog" aria-modal="true" aria-labelledby="nutritionTitle">
+<div id="moduleModal" class="module-modal" role="dialog" aria-modal="true" aria-labelledby="moduleTitle" data-localized><div class="module-page"><div class="module-header"><button id="moduleBack" class="secondary" onclick="closeModule()">Back</button><h2 id="moduleTitle"></h2></div><div id="moduleContent"></div></div></div>
+<div id="nutritionModal" data-localized class="nutrition-modal" role="dialog" aria-modal="true" aria-labelledby="nutritionTitle">
   <div class="nutrition-page">
     <div class="nutrition-topbar">
       <button type="button" class="secondary" onclick="nutritionClose()"><span id="nutritionBackLabel">Назад</span></button>
@@ -582,6 +438,8 @@
     <button type="button" id="nutritionCopyButton" class="ghost nutrition-copy" onclick="nutritionCopyInstructions()">Скопировать инструкцию для ChatGPT</button>
     <pre id="nutritionInstructions" class="nutrition-instructions" hidden></pre>
     <div id="nutritionStatus" class="nutrition-status" role="status" aria-live="polite"></div>
+    <details class="card nutrition-details"><summary data-i18n-ru="Избранное и частые продукты" data-i18n-en="Favourites & frequent foods">Favourites & frequent foods</summary><div id="nutritionReuse" class="nutrition-reuse"></div></details>
+    <button class="secondary" onclick="nutritionCopyDay()" data-i18n-ru="Скопировать еду с другого дня" data-i18n-en="Copy foods from another day">Copy foods from another day</button><input id="nutritionCopyDate" type="date" aria-label="Source day">
     <div id="nutritionDiary"></div>
     <details class="card nutrition-details"><summary id="nutritionMicrosLabel">Витамины и минералы</summary><div id="nutritionMicros"></div></details>
     <details class="card nutrition-details"><summary id="nutritionHistoryLabel">История дней</summary><div id="nutritionHistory"></div></details>
@@ -597,7 +455,7 @@
     </details>
   </div>
 </div>
-<div id="nutritionForm" class="nutrition-form" role="dialog" aria-modal="true" aria-labelledby="nutritionFormTitle">
+<div id="nutritionForm" data-localized class="nutrition-form" role="dialog" aria-modal="true" aria-labelledby="nutritionFormTitle">
   <div class="nutrition-form-sheet">
     <div class="nutrition-form-head"><h2 id="nutritionFormTitle">Add food</h2><button type="button" class="secondary" onclick="nutritionCancelForm()" aria-label="Close food editor">✕</button></div>
     <div class="nutrition-form-grid">
@@ -613,17 +471,18 @@
     </div>
     <details class="nutrition-details"><summary>More nutrients / Другие нутриенты</summary><div id="nutritionAdvancedFields" class="nutrition-form-grid"></div></details>
     <div class="field"><label for="nutritionFoodSource">Source / Источник</label><select id="nutritionFoodSource"><option value="manual">Manual</option><option value="label">Label</option><option value="chatgpt-estimate">ChatGPT estimate</option><option value="other">Other</option></select></div>
+    <div class="field"><label for="nutritionFoodQuality" data-i18n-ru="Точность новых значений" data-i18n-en="Quality of new values">Quality of new values</label><select id="nutritionFoodQuality"><option value="estimated">Estimated</option><option value="measured">Measured</option><option value="label">Label</option><option value="calculated">Calculated</option></select></div><button class="secondary" onclick="nutritionScaleForm()" data-i18n-ru="Пересчитать под указанную порцию" data-i18n-en="Recalculate for this portion">Recalculate for this portion</button><button id="nutritionFavorite" class="secondary" onclick="nutritionToggleFavorite()" data-i18n-ru="Добавить / убрать из избранного" data-i18n-en="Toggle favourite">Toggle favourite</button>
     <div class="field"><label for="nutritionFoodNotes">Notes / Примечание</label><textarea id="nutritionFoodNotes" maxlength="2000"></textarea></div>
     <div id="nutritionFormError" class="nutrition-status" role="alert"></div>
     <div class="nutrition-actions"><button type="button" onclick="nutritionSaveFood()">Save food / Сохранить</button><button type="button" id="nutritionDeleteFood" class="danger" onclick="nutritionDeleteFood()" hidden>Delete / Удалить</button></div>
   </div>
 </div>
-<div id="nutritionImportPreview" class="nutrition-form" role="dialog" aria-modal="true" aria-labelledby="nutritionPreviewTitle">
+<div id="nutritionImportPreview" data-localized class="nutrition-form" role="dialog" aria-modal="true" aria-labelledby="nutritionPreviewTitle">
   <div class="nutrition-form-sheet">
     <div class="nutrition-form-head"><h2 id="nutritionPreviewTitle">Import preview / Предпросмотр</h2><button type="button" class="secondary" onclick="nutritionCancelImport()">✕</button></div>
     <p id="nutritionPreviewCount"></p><div id="nutritionPreviewList" class="nutrition-preview-list"></div>
     <label id="nutritionReplaceWrap"><input id="nutritionReplaceConflicts" type="checkbox"> Replace conflicting IDs / Заменить записи с конфликтующими ID</label>
-    <p class="nutrition-explanation">Conflicts are kept unless you explicitly select replacement. Duplicate content is skipped. / Конфликтующие записи сохраняются, если не выбрать замену.</p>
+    <p class="nutrition-explanation">Conflicts are kept unless you explicitly select replacement. Records with the same ID are skipped. Different IDs are separate meals. / Конфликтующие записи сохраняются, если не выбрать замену.</p>
     <div class="nutrition-actions"><button type="button" onclick="nutritionConfirmImport()">Confirm import / Подтвердить</button><button type="button" class="secondary" onclick="nutritionCancelImport()">Cancel / Отмена</button></div>
   </div>
 </div>
@@ -654,11 +513,15 @@
     <button type="button" id="habitSave" onclick="saveHabitEditor()">Сохранить</button>
   </div>
 </div>
-<script src="today.js?v=6130"></script>
-<script src="habits.js?v=6111"></script>
-<script src="dates.js?v=6111"></script>
-<script src="storage.js?v=6130"></script>
-<script src="nutrition.js?v=6130"></script>
-<script src="app.js?v=6112"></script>
+<script src="goals.js?v=7000"></script>
+<script src="coordination.js?v=7000"></script>
+<script src="modules.js?v=7000"></script>
+<script src="dashboard.js?v=7000"></script>
+<script src="today.js?v=7000"></script>
+<script src="habits.js?v=7000"></script>
+<script src="dates.js?v=7000"></script>
+<script src="storage.js?v=7000"></script>
+<script src="nutrition.js?v=7000"></script>
+<script src="app.js?v=7000"></script>
 </body>
 </html>

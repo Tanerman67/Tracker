@@ -20,7 +20,7 @@ function todayLatestWeight(date=todayDateKey()){
 function shiftTodayDate(delta){setTodayDate(weeklyAddDays(todayDateKey(),delta))}
 function todayNumber(n){return new Intl.NumberFormat(data.language==='en'?'en-NZ':'ru-RU',{maximumFractionDigits:2}).format(n)}
 function todayAlcoholFreeDays(date=todayDateKey()){
-  if(date<alcoholTrackingStart()||alcoholIsDrink(date))return 0;
+  if(!alcoholTrackingStart()||date<alcoholTrackingStart()||alcoholIsDrink(date))return 0;
   const lastDrink=alcoholLatestDrink(date);
   const start=lastDrink?weeklyAddDays(lastDrink,1):alcoholTrackingStart();
   if(!start||start>date)return 0;
@@ -102,58 +102,11 @@ function renderTodayPage(){
   document.getElementById('todayNext').disabled=date>=localDate();
   document.getElementById('todayReturn').textContent=trText('Сегодня','Today');
   document.getElementById('todayReturn').hidden=date===localDate();
-  const cards=[['smoke','🚭','Без сигарет','Smoke-free'],['alcohol','🍷','Без алкоголя','Alcohol-free'],['weight','⚖️','Вес','Weight'],['protein','🥩','Белок','Protein'],['outdoors','☀️','Улица','Outdoors'],['steps','🚶','Шаги','Steps'],['gym','🏋️','Тренировка','Workout'],['sleep','😴','Сон','Sleep']];
-  const grid=document.getElementById('todayGrid');grid.innerHTML='';
-  for(const [id,emoji,ru,en] of cards){
-    const el=document.createElement(id==='smoke'?'div':'button');
-    if(id!=='smoke'){el.type='button';el.onclick=()=>openTodayMetric(id,date)}
-    el.className='metric-card today-metric';el.dataset.metric=id;
-    let main='—',status='',progress=null,state='neutral';
-    if(id==='smoke'){
-      const start=data.smokeDate;
-      if(start&&start<=date){main=todayNumber(weeklyDiffDays(start,date))+' '+trText('дней','days');status=trText('От даты отказа','Since quit date')}
-      else status=trText('Дата отказа не задана для этого дня','No quit date for this day');
-    }else if(id==='alcohol'){
-      if(date<alcoholTrackingStart()){
-        status=trText('До начала учёта','Before tracking began');
-      }else if(alcoholIsDrink(date)){
-        main=trText('Есть отметка','Logged');
-        status=trText('Употребление алкоголя','Alcohol use');
-      }else{
-        const days=todayAlcoholFreeDays(date);
-        main=todayNumber(days)+' '+trText('дней','days');
-        status=trText('Без отмеченного алкоголя','No alcohol marked');
-      }
-    }else if(id==='gym'){
-      const v=data.logs?.[date]?.gym;
-      main=v===true?trText('Записана','Logged'):v===false?trText('Без тренировки','No workout'):'—';
-      status=v===true?trText('Тренировка записана','Workout logged'):v===false?trText('День отдыха — это нормально','Rest days are okay'):trText('Нет записи','No entry');
-    }else if(id==='weight'){
-      const measurement=todayLatestWeight(date);
-      main=measurement?todayNumber(measurement.value)+' '+trText('кг','kg'):'—';
-      status=measurement?trText('Замер: ','Measured: ')+new Date(measurement.date+'T12:00:00').toLocaleDateString(locale,{day:'numeric',month:'short',year:'numeric'}):trText('Нет замеров','No measurements');
-    }else{
-      const s=todayMetricState(id,date),unit=id==='steps'?trText('шагов','steps'):trUnit(tracker(id));
-      state=s.status;
-      main=(s.value===null?'—':todayNumber(s.value))+(s.goal!==null?' / '+todayNumber(s.goal):'')+' '+unit;
-      status={missing:trText('Нет данных','No data'),logged:trText('Записано','Logged'),met:trText('Цель достигнута','Goal reached'),progress:date===localDate()?trText('Пока ниже цели','Below goal so far'):trText('Ниже цели','Below goal')}[state];
-      if(s.goal!==null&&s.value!==null)progress=Math.max(0,Math.min(100,s.value/s.goal*100));
-    }
-    el.dataset.state=state;
-    if(id==='protein'&&nutritionRows(date).length){
-      const c=nutritionAggregate(date).calories;
-      status+=' · '+(c.value===null?trText('ккал неизвестны','kcal unknown'):nutritionDisplay(c));
-    }
-    el.innerHTML=`<div class="today-metric-title"><span aria-hidden="true">${emoji}</span><span>${escapeHTML(trText(ru,en))}</span></div><div class="today-metric-value">${escapeHTML(main)}</div><div class="today-metric-status">${escapeHTML(status)}</div>${progress===null||id==='protein'?'':`<div class="metric-bar" aria-hidden="true"><span style="width:${progress}%"></span></div>`}`;
-    if(id==='protein'&&progress!==null){
-      const effective=nutritionEffectiveProtein(date);
-      const ringState=nutritionProgressState({value:effective.value,partial:effective.partial},data.proteinGoal);
-      const ring=document.createElement('span');ring.className='today-protein-ring';
-      ring.setAttribute('aria-label',trText('Белок: ','Protein: ')+(ringState.partial?'≥ ':'')+nutritionFormat(ringState.percent,1)+'%');
-      ring.append(nutritionRingSvg(ringState,{home:true}));
-      el.querySelector('.today-metric-title').append(ring);
-    }
-    grid.appendChild(el);
+  const grid=document.getElementById('todayGrid');grid.replaceChildren();
+  for(const block of data.dashboard.blocks){
+    const card=dashboardCard(block.id,date);if(!card)continue;
+    card.classList.add(block.size==='expanded'?'block-expanded':'block-compact');grid.append(card);
   }
+  dashboardWeekly(date);
   renderTodayHero(date);
 }
