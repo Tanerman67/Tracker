@@ -28,7 +28,7 @@ function englishTotalN(n=7){return dates(n).reduce((total,date)=>total+englishMi
 function englishTodayN(){return englishMinutesForDate(localDate())}
 function dailyComplete(id,d=localDate()){
  const t=tracker(id);if(!t)return false;const v=nutritionMetricValue(id,d);if(t.type==='boolean')return v===true;
- const rule=goalRule(id);if(rule.type==='weekly')return false;return goalState(typeof v==='number'?v:null,rule).status==='met'
+ const rule=goalRule(id);if(rule.type==='weekly')return false;return ['met','within'].includes(goalState(typeof v==='number'?v:null,rule).status)
 }
 const TRACKER_I18N = {
   protein:{ru:'Белок',en:'Protein',unitRu:'г',unitEn:'g'},
@@ -1489,7 +1489,7 @@ function weeklyNumericStats(id,keys,{positiveOnly=false,goal=null}={}){
     if(!Number.isFinite(n))continue;
     if(positiveOnly ? n<=0 : n<0)continue;
     values.push({date:key,value:n});
-    if(goal!==null && Number(goal)>0 && n>=Number(goal))goalDays++;
+    if(goal!==null && Number(goal)>0 && ['met','within'].includes(goalState(n,goalRule(id)).status))goalDays++;
   }
   const avg=values.length?values.reduce((s,x)=>s+x.value,0)/values.length:null;
   const total=values.reduce((s,x)=>s+x.value,0);
@@ -2675,6 +2675,7 @@ function renderTrends(){
   if(detail && trendSelectedPoint===null)detail.hidden=true;
 
   host.innerHTML=trendChartHTML(trendMetricId,chartSeries);
+  renderDataCoverage();
 
   if(trendSelectedPoint!==null){
     const selected=chartSeries[trendSelectedPoint];
@@ -2687,9 +2688,9 @@ function renderTrends(){
 }
 // V6.7.3_TRENDS_END
 
-function renderProgress(){renderSimpleProgress();renderTrends();renderCalendar()}
+function renderProgress(){renderSimpleProgress();renderTrends();renderCalendar();renderDataCoverage()}
 function moveMonth(n){calendarDate=new Date(calendarDate.getFullYear(),calendarDate.getMonth()+n,1);renderCalendar()}
-function renderCalendar(){const ruM=['Январь','Февраль','Март','Апрель','Май','Июнь','Июль','Август','Сентябрь','Октябрь','Ноябрь','Декабрь'],enM=['January','February','March','April','May','June','July','August','September','October','November','December'],ruD=['Пн','Вт','Ср','Чт','Пт','Сб','Вс'],enD=['Mon','Tue','Wed','Thu','Fri','Sat','Sun'],y=calendarDate.getFullYear(),m=calendarDate.getMonth(),lang=data.language||'ru';document.getElementById('calendarTitle').textContent=(lang==='en'?enM:ruM)[m]+' '+y;const grid=document.getElementById('calendarGrid');grid.innerHTML=(lang==='en'?enD:ruD).map(x=>`<div class="dow">${x}</div>`).join('');const first=(new Date(y,m,1).getDay()+6)%7,total=new Date(y,m+1,0).getDate();for(let i=0;i<first;i++)grid.innerHTML+='<div></div>';for(let day=1;day<=total;day++){const d=`${y}-${String(m+1).padStart(2,'0')}-${String(day).padStart(2,'0')}`,filled=Object.keys(data.logs[d]||{}).filter(k=>k!=='habitDetails'&&weeklyHasOwn(data.logs[d],k)&&data.logs[d][k]!==false).length+(nutritionRows(d).length?1:0),cls=filled>=5?'good':filled>=2?'mid':'';grid.innerHTML+=`<div class="cday ${cls}">${day}${filled>=5?'<span class="dot"></span>':''}</div>`}}
+function renderCalendar(){const ruM=['Январь','Февраль','Март','Апрель','Май','Июнь','Июль','Август','Сентябрь','Октябрь','Ноябрь','Декабрь'],enM=['January','February','March','April','May','June','July','August','September','October','November','December'],ruD=['Пн','Вт','Ср','Чт','Пт','Сб','Вс'],enD=['Mon','Tue','Wed','Thu','Fri','Sat','Sun'],y=calendarDate.getFullYear(),m=calendarDate.getMonth(),lang=data.language||'ru';document.getElementById('calendarTitle').textContent=(lang==='en'?enM:ruM)[m]+' '+y;const grid=document.getElementById('calendarGrid');grid.innerHTML=(lang==='en'?enD:ruD).map(x=>`<div class="dow">${x}</div>`).join('');const first=(new Date(y,m,1).getDay()+6)%7,total=new Date(y,m+1,0).getDate();for(let i=0;i<first;i++)grid.innerHTML+='<div></div>';for(let day=1;day<=total;day++){const d=`${y}-${String(m+1).padStart(2,'0')}-${String(day).padStart(2,'0')}`,filled=Object.keys(data.logs[d]||{}).filter(k=>k!=='habitDetails'&&weeklyHasOwn(data.logs[d],k)).length+(nutritionRows(d).length?1:0),cls=filled>=5?'good':filled>=2?'mid':'';grid.innerHTML+=`<div class="cday ${cls}">${day}${filled>=5?'<span class="dot"></span>':''}</div>`}}
 
 function openExperiment(){document.getElementById('experimentModal')?.classList.add('show')}
 function saveExperiment(){

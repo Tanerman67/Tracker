@@ -355,7 +355,7 @@ async function nutritionReadImport(event){
   }catch(e){nutritionCancelImport();nutritionMessage(e.message)}
 }
 function nutritionRenderImportPreview(){
-  const rows=nutritionPendingImport;if(!rows)return;
+  const rows=nutritionPendingImport;if(!rows)return;nutritionLocalize();
   const box=document.getElementById('nutritionImportPreview');box.classList.add('show');
   const counts={add:0,conflict:0,duplicate:0,skip:0};rows.forEach(x=>counts[x.action]++);
   document.getElementById('nutritionPreviewCount').textContent=`${rows.length} ${nutritionLabel('продуктов','foods')} · ${new Set(rows.map(x=>x.entry.date)).size} ${nutritionLabel('дней','dates')} · ${counts.add} ${nutritionLabel('добавить','add')} · ${counts.conflict} ${nutritionLabel('конфликт','conflict')} · ${counts.duplicate+counts.skip} ${nutritionLabel('пропустить','skip')}`;

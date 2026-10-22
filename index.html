@@ -60,7 +60,7 @@
   </div>
 </section>
 
-<section id="progress" class="section">
+<section id="progress" class="section"><div id="dataCoverage" class="card" data-localized></div>
   <div class="weekly-review card">
     <h2 id="simpleProgressTitle">Эта неделя</h2>
     <div class="sub" id="simpleProgressPeriod"></div>
@@ -428,7 +428,7 @@
     </div>
     <div id="nutritionSummary" class="nutrition-summary"></div>
     <div id="nutritionProteinSource" class="nutrition-explanation"></div>
-    <button type="button" class="ghost nutrition-copy" onclick="nutritionEditLegacyProtein()">Manual protein / Ручной белок</button>
+    <button type="button" class="ghost nutrition-copy" onclick="nutritionEditLegacyProtein()" data-i18n-ru="Ручной белок" data-i18n-en="Manual protein">Manual protein</button>
     <div id="nutritionIncomplete" class="nutrition-explanation"></div>
     <div class="nutrition-actions">
       <button type="button" id="nutritionAddButton" onclick="nutritionOpenForm()">+ Добавить еду</button>
@@ -443,15 +443,15 @@
     <div id="nutritionDiary"></div>
     <details class="card nutrition-details"><summary id="nutritionMicrosLabel">Витамины и минералы</summary><div id="nutritionMicros"></div></details>
     <details class="card nutrition-details"><summary id="nutritionHistoryLabel">История дней</summary><div id="nutritionHistory"></div></details>
-    <details class="card nutrition-details"><summary>Goals / Цели</summary>
+    <details class="card nutrition-details"><summary data-i18n-ru="Цели" data-i18n-en="Goals">Goals</summary>
       <div class="nutrition-goals">
-        <div class="field"><label for="nutritionGoal_calories">Daily calorie limit / Лимит калорий (kcal)</label><input id="nutritionGoal_calories" type="number" min="0" inputmode="decimal"></div>
-        <div class="field"><label for="nutritionGoal_fat">Fat / Жиры (g)</label><input id="nutritionGoal_fat" type="number" min="0" inputmode="decimal"></div>
-        <div class="field"><label for="nutritionGoal_carbs">Carbs / Углеводы (g)</label><input id="nutritionGoal_carbs" type="number" min="0" inputmode="decimal"></div>
-        <div class="field"><label for="nutritionGoal_fiber">Fiber / Клетчатка (g)</label><input id="nutritionGoal_fiber" type="number" min="0" inputmode="decimal"></div>
+        <div class="field"><label for="nutritionGoal_calories" data-i18n-ru="Лимит калорий (kcal)" data-i18n-en="Daily calorie limit (kcal)">Daily calorie limit (kcal)</label><input id="nutritionGoal_calories" type="number" min="0" inputmode="decimal"></div>
+        <div class="field"><label for="nutritionGoal_fat" data-i18n-ru="Жиры (g)" data-i18n-en="Fat (g)">Fat (g)</label><input id="nutritionGoal_fat" type="number" min="0" inputmode="decimal"></div>
+        <div class="field"><label for="nutritionGoal_carbs" data-i18n-ru="Углеводы (g)" data-i18n-en="Carbs (g)">Carbs (g)</label><input id="nutritionGoal_carbs" type="number" min="0" inputmode="decimal"></div>
+        <div class="field"><label for="nutritionGoal_fiber" data-i18n-ru="Клетчатка (g)" data-i18n-en="Fiber (g)">Fiber (g)</label><input id="nutritionGoal_fiber" type="number" min="0" inputmode="decimal"></div>
       </div>
-      <button type="button" onclick="nutritionSaveGoals()">Save goals / Сохранить цели</button>
-      <small>Protein / Белок: Settings / Настройки</small>
+      <button type="button" onclick="nutritionSaveGoals()" data-i18n-ru="Сохранить цели" data-i18n-en="Save goals">Save goals</button>
+      <small data-i18n-ru="Цель белка - в Настройках" data-i18n-en="Protein goal is in Settings">Protein goal is in Settings</small>
     </details>
   </div>
 </div>
@@ -469,21 +469,21 @@
       <div class="field"><label for="nutritionFat">Fat (g)</label><input id="nutritionFat" type="number" min="0" step="any" inputmode="decimal"></div>
       <div class="field"><label for="nutritionCarbs">Carbs (g)</label><input id="nutritionCarbs" type="number" min="0" step="any" inputmode="decimal"></div>
     </div>
-    <details class="nutrition-details"><summary>More nutrients / Другие нутриенты</summary><div id="nutritionAdvancedFields" class="nutrition-form-grid"></div></details>
+    <details class="nutrition-details"><summary data-i18n-ru="Другие нутриенты" data-i18n-en="More nutrients">More nutrients</summary><div id="nutritionAdvancedFields" class="nutrition-form-grid"></div></details>
     <div class="field"><label for="nutritionFoodSource">Source / Источник</label><select id="nutritionFoodSource"><option value="manual">Manual</option><option value="label">Label</option><option value="chatgpt-estimate">ChatGPT estimate</option><option value="other">Other</option></select></div>
     <div class="field"><label for="nutritionFoodQuality" data-i18n-ru="Точность новых значений" data-i18n-en="Quality of new values">Quality of new values</label><select id="nutritionFoodQuality"><option value="estimated">Estimated</option><option value="measured">Measured</option><option value="label">Label</option><option value="calculated">Calculated</option></select></div><button class="secondary" onclick="nutritionScaleForm()" data-i18n-ru="Пересчитать под указанную порцию" data-i18n-en="Recalculate for this portion">Recalculate for this portion</button><button id="nutritionFavorite" class="secondary" onclick="nutritionToggleFavorite()" data-i18n-ru="Добавить / убрать из избранного" data-i18n-en="Toggle favourite">Toggle favourite</button>
     <div class="field"><label for="nutritionFoodNotes">Notes / Примечание</label><textarea id="nutritionFoodNotes" maxlength="2000"></textarea></div>
     <div id="nutritionFormError" class="nutrition-status" role="alert"></div>
-    <div class="nutrition-actions"><button type="button" onclick="nutritionSaveFood()">Save food / Сохранить</button><button type="button" id="nutritionDeleteFood" class="danger" onclick="nutritionDeleteFood()" hidden>Delete / Удалить</button></div>
+    <div class="nutrition-actions"><button type="button" onclick="nutritionSaveFood()" data-i18n-ru="Сохранить" data-i18n-en="Save food">Save food</button><button type="button" id="nutritionDeleteFood" class="danger" onclick="nutritionDeleteFood()" hidden data-i18n-ru="Удалить" data-i18n-en="Delete">Delete</button></div>
   </div>
 </div>
 <div id="nutritionImportPreview" data-localized class="nutrition-form" role="dialog" aria-modal="true" aria-labelledby="nutritionPreviewTitle">
   <div class="nutrition-form-sheet">
-    <div class="nutrition-form-head"><h2 id="nutritionPreviewTitle">Import preview / Предпросмотр</h2><button type="button" class="secondary" onclick="nutritionCancelImport()">✕</button></div>
+    <div class="nutrition-form-head"><h2 id="nutritionPreviewTitle" data-i18n-ru="Предпросмотр импорта" data-i18n-en="Import preview">Import preview</h2><button type="button" class="secondary" onclick="nutritionCancelImport()">✕</button></div>
     <p id="nutritionPreviewCount"></p><div id="nutritionPreviewList" class="nutrition-preview-list"></div>
-    <label id="nutritionReplaceWrap"><input id="nutritionReplaceConflicts" type="checkbox"> Replace conflicting IDs / Заменить записи с конфликтующими ID</label>
-    <p class="nutrition-explanation">Conflicts are kept unless you explicitly select replacement. Records with the same ID are skipped. Different IDs are separate meals. / Конфликтующие записи сохраняются, если не выбрать замену.</p>
-    <div class="nutrition-actions"><button type="button" onclick="nutritionConfirmImport()">Confirm import / Подтвердить</button><button type="button" class="secondary" onclick="nutritionCancelImport()">Cancel / Отмена</button></div>
+    <label id="nutritionReplaceWrap"><input id="nutritionReplaceConflicts" type="checkbox"><span data-i18n-ru="Заменить записи с конфликтующими ID" data-i18n-en="Replace conflicting IDs">Replace conflicting IDs</span></label>
+    <p class="nutrition-explanation" data-i18n-ru="Конфликты сохраняются без явного выбора замены. Те же ID пропускаются; разные ID - отдельные записи." data-i18n-en="Conflicts are kept unless replacement is selected. The same IDs are skipped; different IDs are separate entries.">Conflicts are kept unless replacement is selected. The same IDs are skipped; different IDs are separate entries.</p>
+    <div class="nutrition-actions"><button type="button" onclick="nutritionConfirmImport()" data-i18n-ru="Подтвердить импорт" data-i18n-en="Confirm import">Confirm import</button><button type="button" class="secondary" onclick="nutritionCancelImport()" data-i18n-ru="Отмена" data-i18n-en="Cancel">Cancel</button></div>
   </div>
 </div>
 
@@ -517,6 +517,7 @@
 <script src="coordination.js?v=7000"></script>
 <script src="modules.js?v=7000"></script>
 <script src="dashboard.js?v=7000"></script>
+<script src="analytics.js?v=7000"></script>
 <script src="today.js?v=7000"></script>
 <script src="habits.js?v=7000"></script>
 <script src="dates.js?v=7000"></script>

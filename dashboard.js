@@ -52,7 +52,7 @@ function dashboardCard(id,date){
   const s=todayMetricState(id,date),rule=goalRule(id),gs=goalState(s.value,rule);state=gs.status;progress=gs.percent;
   main=s.value===null?'—':todayNumber(s.value);if(rule.type==='range')main+=' / '+todayNumber(rule.target)+'-'+todayNumber(rule.upper);else if(s.goal!==null&&rule.type!=='observe')main+=' / '+todayNumber(s.goal);main+=' '+trUnit(tracker(id));
   status=({missing:trText('Нет данных','No data'),logged:trText('Записано','Logged'),met:trText('Цель достигнута','Goal reached'),progress:trText('Ниже цели','Below goal'),within:trText('В пределах лимита','Within limit'),over:trText('Выше диапазона / лимита','Above range / limit')})[state];
-  if(id==='protein'){const source=nutritionEffectiveProtein(date);status+=' · '+(source.source==='manual'?trText('ручная запись','manual entry'):source.source==='foods'?trText('из еды','food diary'):trText('нет источника','no source'));if(source.partial)status+=' · '+trText('частично','partial')}
+  if(id==='protein'){const source=nutritionEffectiveProtein(date);status+=' · '+(source.source==='manual'?trText('ручная запись','manual entry'):source.source==='foods'?trText('из еды','food diary'):trText('нет источника','no source'));if(source.partial){main='≥ '+main;status+=' · '+trText('частично','partial')}}
  }
  el.dataset.state=state;
  el.innerHTML=`<div class="today-metric-title"><span aria-hidden="true">${escapeHTML(icon)}</span><span>${escapeHTML(trText(ru,en))}</span></div><div class="today-metric-value">${escapeHTML(main)}</div><div class="today-metric-status">${escapeHTML(status)}</div>${progress===null?'':`<div class="metric-bar" aria-hidden="true"><span style="width:${Math.max(0,Math.min(100,progress))}%"></span></div>`}`;

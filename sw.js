@@ -11,6 +11,7 @@ const ASSETS=[
   "./coordination.js?v=7000",
   "./modules.js?v=7000",
   "./dashboard.js?v=7000",
+  "./analytics.js?v=7000",
   "./today.js?v=7000",
   "./habits.js?v=7000",
   "./dates.js?v=7000",

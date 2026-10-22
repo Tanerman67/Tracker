@@ -86,6 +86,7 @@ function bestCandidate(items){
 function migrateData(raw){
   let d = raw && typeof raw === 'object' ? structuredClone(raw) : {};
   let version = Number(d.schemaVersion || 0);
+  if(version<3&&!Object.prototype.hasOwnProperty.call(d,'alcoholTrackingStart'))d.alcoholTrackingStart=d.alcoholDate||'';
 
   if(version < 1){
     d = {
@@ -170,6 +171,8 @@ function validateStoredData(obj){
   if(obj.trackers?.some(t=>!isDataObject(t)||typeof t.id!=='string'))throw new Error('Invalid tracker.');
   if(obj.nutrition!==undefined){
     if(!isDataObject(obj.nutrition)||!Array.isArray(obj.nutrition.entries)||!isDataObject(obj.nutrition.goals)||obj.nutrition.entries.some(e=>!isDataObject(e)||typeof e.id!=='string'||typeof e.date!=='string'||!isDataObject(e.nutrients)))throw new Error('Invalid nutrition data.');
+    if(typeof nutritionNormalizeRecord==='function')for(const e of obj.nutrition.entries)nutritionNormalizeRecord(e);
+    if(obj.nutrition.favorites!==undefined){if(!Array.isArray(obj.nutrition.favorites))throw Error('Invalid food favourites.');for(const e of obj.nutrition.favorites)nutritionNormalizeRecord(e)}
   }
   for(const key of ['logs','bodyMeasurements']){
     if(obj[key]&&Object.values(obj[key]).some(row=>!isDataObject(row)))throw new Error('Invalid '+key+' row.');

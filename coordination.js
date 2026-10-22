@@ -5,7 +5,8 @@ function mergeLocalEdits(base,ours,theirs,path='',conflicts=[]){
  const equal=(a,b)=>JSON.stringify(a)===JSON.stringify(b);
  if(equal(ours,base))return structuredClone(theirs);
  if(equal(theirs,base)||equal(ours,theirs))return structuredClone(ours);
- if(isDataObject(base)&&isDataObject(ours)&&isDataObject(theirs)){
+ if((isDataObject(base)||base===undefined)&&isDataObject(ours)&&isDataObject(theirs)){
+  base=base||{};
   const out={};for(const key of new Set([...Object.keys(base),...Object.keys(ours),...Object.keys(theirs)])){
    if(path===''&&key==='_storageMeta'){out[key]=structuredClone(theirs[key]);continue}
    const value=mergeLocalEdits(base[key],ours[key],theirs[key],path+'.'+key,conflicts);if(value!==undefined)out[key]=value;
