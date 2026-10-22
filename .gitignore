@@ -1,0 +1,7 @@
+node_modules/
+test-results/
+playwright-report/
+.browser-artifacts/
+*.local.json
+my-life-tracker-backup-*.json
+my-rhythm-conflict-draft.json

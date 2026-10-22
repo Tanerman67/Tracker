@@ -1,0 +1,149 @@
+<section id="english" class="section" hidden inert aria-hidden="true">
+  <div class="english-page-head">
+    <div>
+      <h2>English</h2>
+      <div class="sub" id="englishPageSubtitle">Learn a little every day. Build active English.</div>
+    </div>
+  </div>
+
+  <div class="english-hero card">
+    <div class="english-hero-top">
+      <div>
+        <div class="label">Current path</div>
+        <div class="english-level">B1 → B2</div>
+      </div>
+      <div class="english-coverage">
+        <strong id="englishCoverageValue">0 / 0</strong>
+        <span id="englishCoverageLabel">reviewed</span>
+      </div>
+    </div>
+    <div class="progress english-coverage-bar"><span id="englishCoverageBar"></span></div>
+    <div class="english-hero-note" id="englishCoverageNote">Your curriculum is ready.</div>
+  </div>
+
+  <button type="button" class="english-review-banner" onclick="openEnglishLearning('review')">
+    <div>
+      <div class="english-review-kicker">📚 <span id="englishReviewLabel">Today to review</span></div>
+      <div class="english-review-counts" id="englishReviewCounts">—</div>
+    </div>
+    <div class="english-review-action">▶ <span id="englishStartReviewText">Start review</span></div>
+  </button>
+
+  <button type="button" class="english-plan-banner" onclick="openEnglishWeekPlan()">
+    <div class="english-plan-main">
+      <div class="english-plan-kicker">🧭 <span id="englishPlanKicker">B2 · Week 1</span></div>
+      <strong id="englishPlanDashboardTitle">B2 ChatGPT Grammar Plan — Week 1</strong>
+      <span id="englishPlanDashboardMeta">4 lessons · 240 min</span>
+    </div>
+    <div class="english-plan-dashboard-progress">
+      <strong id="englishPlanDashboardCompleted">0 / 4</strong>
+      <span id="englishPlanDashboardCompletedLabel">completed</span>
+    </div>
+    <div class="progress english-plan-progress"><span id="englishPlanDashboardBar"></span></div>
+  </button>
+
+  <div class="english-week-card card">
+    <div class="english-week-head">
+      <div>
+        <div class="label">This week</div>
+        <div class="english-week-total"><strong id="engWeek">0</strong> <span id="engWeekGoal">/ 1200 min</span></div>
+      </div>
+      <div class="english-today-mini"><span id="englishTodayLabel">Today</span><strong id="engToday">0 min</strong></div>
+    </div>
+    <div class="english-week-strip" id="englishWeekStrip"></div>
+  </div>
+
+  <div class="english-hub-grid">
+    <button type="button" class="english-hub-card words" onclick="openEnglishLearning('words')">
+      <span class="english-hub-icon">📖</span>
+      <strong>Words & Phrases</strong>
+      <span><b id="englishWordsCount">0</b> items · <em id="englishWordsDue">0 due</em></span>
+    </button>
+    <button type="button" class="english-hub-card grammar" onclick="openEnglishLearning('grammar')">
+      <span class="english-hub-icon">🎓</span>
+      <strong>Grammar Rules</strong>
+      <span><b id="englishGrammarCount">0</b> topics · <em id="englishGrammarDue">0 due</em></span>
+    </button>
+    <button type="button" class="english-hub-card mistakes" onclick="openEnglishLearning('mistakes')">
+      <span class="english-hub-icon">⚠️</span>
+      <strong>My Mistakes</strong>
+      <span><b id="englishMistakesCount">0</b> items · <em id="englishMistakesDue">0 due</em></span>
+    </button>
+    <button type="button" class="english-hub-card review" onclick="openEnglishLearning('review')">
+      <span class="english-hub-icon">↻</span>
+      <strong>Review Queue</strong>
+      <span><em id="englishQueueDue">0 items due</em></span>
+    </button>
+  </div>
+
+  <div class="english-focus-card card">
+    <div class="english-focus-head">
+      <div><span>🎯</span> <strong>Current focus</strong></div>
+      <span class="english-focus-sub">B1 → B2</span>
+    </div>
+    <div id="englishFocusList" class="english-focus-list"></div>
+  </div>
+
+  <div class="english-session-card card">
+    <div class="english-session-head">
+      <div>
+        <div class="label">Study log</div>
+        <strong id="englishSessionTitle">Add a session</strong>
+      </div>
+      <span class="small" id="englishSessionHint">Minutes still feed Progress & Weekly Review</span>
+    </div>
+    <div class="english-session-buttons">
+      <button type="button" class="ghost" onclick="openEnglish('english_chatgpt')">🤖 ChatGPT</button>
+      <button type="button" class="ghost" onclick="openEnglish('english_native')">🗣️ Native</button>
+      <button type="button" class="ghost" onclick="openEnglish('english_russian')">📘 Russian</button>
+      <button type="button" class="ghost" onclick="openEnglish('english_watching')">🎬 Watching</button>
+    </div>
+  </div>
+</section>
+
+<div id="englishLearningModal" class="english-learning-modal">
+  <div class="english-learning-shell">
+    <div class="english-learning-topbar">
+      <button type="button" class="english-learning-back" id="englishLearningBackBtn" onclick="englishLearningBack()">‹</button>
+      <div class="english-learning-heading">
+        <strong id="englishLearningTitle">English</strong>
+        <span id="englishLearningSubtitle"></span>
+      </div>
+      <button type="button" class="english-learning-add" id="englishLearningAddBtn" onclick="openEnglishAdd()">＋</button>
+    </div>
+    <div id="englishLearningContent" class="english-learning-content"></div>
+  </div>
+</div>
+
+<div id="englishAddModal" class="english-add-modal">
+  <div class="english-add-sheet">
+    <button type="button" class="close" onclick="closeEnglishAdd()">✕</button>
+    <h3 id="englishAddTitle">Add learning item</h3>
+    <div class="field">
+      <label id="englishAddKindLabel" for="englishAddKind">Type</label><select id="englishAddKind" onchange="renderEnglishAddLabels()">
+        <option value="word">Word</option>
+        <option value="phrase">Phrase</option>
+        <option value="phrasal">Phrasal verb</option>
+        <option value="grammar">Grammar rule</option>
+        <option value="mistake">My mistake</option>
+      </select>
+    </div>
+    <div class="field">
+      <label id="englishAddTermLabel" for="englishAddTerm">English / title</label><input id="englishAddTerm" type="text" autocomplete="off">
+    </div>
+    <div class="field" id="englishAddIpaField">
+      <label for="englishAddIpa">IPA</label><input id="englishAddIpa" type="text" placeholder="/.../">
+    </div>
+    <div class="field">
+      <label id="englishAddMeaningLabel" for="englishAddMeaning">Russian / explanation</label><textarea id="englishAddMeaning"></textarea>
+    </div>
+    <div class="field">
+      <label id="englishAddExampleLabel" for="englishAddExample">Example</label><textarea id="englishAddExample"></textarea>
+    </div>
+    <div class="field">
+      <label id="englishAddNoteLabel" for="englishAddNote">Rule / note</label><textarea id="englishAddNote"></textarea>
+    </div>
+    <button type="button" style="width:100%" onclick="saveEnglishCustomItem()" id="englishAddSaveBtn">Save</button>
+  </div>
+</div>
+
