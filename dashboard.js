@@ -24,7 +24,7 @@ function dashboardOpen(id,date){
  return openTodayMetric(id,date);
 }
 function dashboardCard(id,date){
- const definitions=dashboardAvailable(),definition=definitions[id];if(!definition)return null;
+ const definitions=dashboardAvailable(),definition=Object.prototype.hasOwnProperty.call(definitions,id)?definitions[id]:null;if(!definition)return null;
  const [icon,ru,en]=definition,el=document.createElement('button');el.type='button';el.className='metric-card today-metric';el.dataset.metric=id;el.onclick=()=>dashboardOpen(id,date);
  let main='—',status=trText('Нет данных','No data'),state='neutral',progress=null;
  if(id==='nutrition'){

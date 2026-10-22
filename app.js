@@ -1215,13 +1215,8 @@ const MOTIVATION_MILESTONES=[
 let currentMotivation=null;
 
 function motivationEnglishTotalAll(){
-  let total=0;
-  for(const date of Object.keys(data.logs||{})){
-    const row=data.logs[date]||{};
-    const detailed=(Number(row.english_chatgpt)||0)+(Number(row.english_native)||0)+(Number(row.english_russian)||0)+(Number(row.english_watching)||0);
-    total+=detailed || (Number(row.english_general)||0);
-  }
-  return total;
+ const keys=new Set([...Object.keys(data.logs||{}),...data.englishActivity.entries.map(e=>e.date)]);
+ return [...keys].reduce((total,date)=>total+englishMinutesForDate(date),0);
 }
 
 function motivationGymTotal(){
@@ -1581,8 +1576,8 @@ function weeklyAlcoholStats(keys){
 }
 function weeklyBuildSummary(todayKey=localDate()){
   const window=weeklyWindow(todayKey);
-  const sleep=weeklyNumericStats('sleep',window.currentKeys,{positiveOnly:true,goal:data.sleepGoal});
-  const prevSleep=weeklyNumericStats('sleep',window.prevKeys,{positiveOnly:true,goal:data.sleepGoal});
+  const sleep=weeklyNumericStats('sleep',window.currentKeys,{goal:data.sleepGoal});
+  const prevSleep=weeklyNumericStats('sleep',window.prevKeys,{goal:data.sleepGoal});
   const steps=weeklyNumericStats('steps',window.currentKeys,{goal:data.stepsGoal});
   const prevSteps=weeklyNumericStats('steps',window.prevKeys,{goal:data.stepsGoal});
   const protein=weeklyNumericStats('protein',window.currentKeys,{goal:data.proteinGoal});
@@ -2210,7 +2205,7 @@ function trendValueForDay(id,dateKey){
   if(id==='protein'?raw===null:(!weeklyHasOwn(row,id)||typeof row[id]==='boolean'))return null;
   const n=Number(raw);
   if(!Number.isFinite(n))return null;
-  if(id==='weight' || id==='sleep')return n>0?n:null;
+  if(id==='weight')return n>0?n:null;
   return n>=0?n:null;
 }
 function trendDateObj(dateKey){return weeklyParseDate(dateKey)}
