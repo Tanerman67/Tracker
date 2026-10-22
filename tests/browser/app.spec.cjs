@@ -26,7 +26,7 @@ test('dashboard add, move, expand, hide and refresh preserve records',async({pag
 });
 
 test('nutrition save, edit, partial rings, favourite, reuse, scale and safe delete',async({page})=>{
- await ready(page);await page.locator('#tabNutrition').click();await page.locator('#nutritionGoal_calories').fill('200');await page.locator('[onclick="nutritionSaveGoals()"]').click();await settle(page);await addFood(page);
+ await ready(page);await page.locator('#tabNutrition').click();await page.locator('details:has(#nutritionGoal_calories) > summary').click();await page.locator('#nutritionGoal_calories').fill('200');await page.locator('[onclick="nutritionSaveGoals()"]').click();await settle(page);await addFood(page);
  await expect(page.locator('#nutritionSummary [data-nutrient="calories"]')).toContainText('125%');await expect(page.locator('#nutritionIncomplete')).toBeVisible();
  await page.locator('.nutrition-food').click();await page.locator('#nutritionFavorite').click();await settle(page);await page.locator('#nutritionFoodAmount').fill('150');await page.locator('[onclick="nutritionScaleForm()"]').click();await expect(page.locator('#nutritionCalories')).toHaveValue('375');await page.locator('[onclick="nutritionSaveFood()"]').click();await settle(page);
  await page.locator('summary').filter({hasText:'Favourites & frequent foods'}).click();await page.locator('#nutritionReuse button').first().click();await page.locator('[onclick="nutritionSaveFood()"]').click();await settle(page);await expect(page.locator('.nutrition-food')).toHaveCount(2);
@@ -72,9 +72,15 @@ test('multiple tabs merge independent edits and retain a draft for conflicts',as
  expect(await second.evaluate(()=>JSON.parse(localStorage.getItem('my-rhythm-conflict-draft')).logs['2024-01-02'].steps)).toBe(300);expect(await second.evaluate(()=>data.logs['2024-01-02'].steps)).toBe(200);
 });
 
-test('offline PWA reload retains records and sends only public asset requests',async({page,context})=>{
- const requests=[];page.on('request',r=>requests.push({url:r.url(),method:r.method(),body:r.postData()}));await ready(page);await page.evaluate(async()=>{await navigator.serviceWorker.ready;if(!navigator.serviceWorker.controller)await new Promise(resolve=>navigator.serviceWorker.addEventListener('controllerchange',resolve,{once:true}));ensureDay('2024-01-02').steps=123;await save()});
- await context.setOffline(true);await page.reload();await expect(page.locator('[data-metric="nutrition"]')).toBeVisible();expect(await page.evaluate(()=>data.logs['2024-01-02'].steps)).toBe(123);await context.setOffline(false);expect(requests.every(r=>r.url.startsWith('http://127.0.0.1:8765/')&&r.method==='GET'&&r.body===null)).toBe(true);
+test('offline PWA reload retains records and sends only public asset requests',async({page})=>{
+ // Stop the real local server rather than relying on an emulated offline flag.
+ const root=path.resolve(__dirname,'../..');
+ const server=http.createServer((req,res)=>{try{const file=decodeURIComponent(new URL(req.url,'http://localhost').pathname).replace(/^\//,'')||'index.html';if(file.includes('..'))throw Error();const ext=path.extname(file);res.setHeader('Content-Type',({'.js':'application/javascript','.css':'text/css','.html':'text/html','.webmanifest':'application/manifest+json','.png':'image/png','.jpg':'image/jpeg'})[ext]||'text/plain');res.end(fs.readFileSync(path.join(root,file)))}catch(e){res.writeHead(404);res.end('missing')}});
+ await new Promise(resolve=>server.listen(8878,'127.0.0.1',resolve));
+ const requests=[];page.on('request',r=>requests.push({url:r.url(),method:r.method(),body:r.postData()}));
+ try{await page.goto('http://127.0.0.1:8878/');await expect(page.locator('[data-metric="nutrition"]')).toBeVisible();await page.evaluate(async()=>{await navigator.serviceWorker.ready;if(!navigator.serviceWorker.controller)await new Promise(resolve=>navigator.serviceWorker.addEventListener('controllerchange',resolve,{once:true}));ensureDay('2024-01-02').steps=123;await save()});
+ await new Promise(resolve=>server.close(resolve));await page.reload();await expect(page.locator('[data-metric="nutrition"]')).toBeVisible();expect(await page.evaluate(()=>data.logs['2024-01-02'].steps)).toBe(123);expect(requests.every(r=>r.url.startsWith('http://127.0.0.1:8878/')&&r.method==='GET'&&r.body===null)).toBe(true);
+ }finally{if(server.listening)await new Promise(resolve=>server.close(resolve))}
 });
 
 test('charts support sparse history in every range and Russian switch',async({page})=>{
@@ -88,6 +94,6 @@ test('upgrade from actual 6.13 assets keeps existing records and local recovery 
  await new Promise(resolve=>server.listen(8877,'127.0.0.1',resolve));try{
  await page.goto('http://127.0.0.1:8877/');await page.evaluate(async()=>{await navigator.serviceWorker.ready;data.logs={'2024-01-02':{steps:321,protein:0,gym:false}};data.englishLearning.customItems=[{id:'custom-synthetic',title:'Retain this'}];data.language='ru';save();await vaultWriteQueue});
  upgraded=true;await page.evaluate(async()=>{const r=await navigator.serviceWorker.getRegistration();await r.update()});await page.reload();await expect(page.locator('#todayCustomize')).toBeVisible();await expect(page.locator('#appVersionText')).toHaveText('V7.0.0',{timeout:15000});expect(await page.evaluate(()=>data.logs['2024-01-02'])).toEqual({steps:321,protein:0,gym:false});expect(await page.evaluate(()=>data.englishLearning.customItems[0].title)).toBe('Retain this');expect(await page.evaluate(()=>data.language)).toBe('ru');expect(await page.evaluate(async()=>(await caches.keys()).includes('my-rhythm-data-vault-v1'))).toBe(true);
- await context.setOffline(true);await page.reload();await expect(page.locator('#todayCustomize')).toBeVisible();expect(await page.evaluate(()=>data.logs['2024-01-02'].steps)).toBe(321);await context.setOffline(false);
- }finally{await new Promise(resolve=>server.close(resolve))}
+ await new Promise(resolve=>server.close(resolve));await page.reload();await expect(page.locator('#todayCustomize')).toBeVisible();expect(await page.evaluate(()=>data.logs['2024-01-02'].steps)).toBe(321);
+ }finally{if(server.listening)await new Promise(resolve=>server.close(resolve))}
 });
