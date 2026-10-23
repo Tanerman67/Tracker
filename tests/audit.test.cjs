@@ -22,7 +22,7 @@ function runtime(seed, original=false,coord=false){
   run(cp.execFileSync('git',['show',base+':today.js'],{cwd:root,encoding:'utf8'}));
   run(fs.readFileSync(path.join(root,'habits.js'),'utf8'));
   run(html.match(/<script>([\s\S]*?)<\/script>/)[1].split("if('serviceWorker'in navigator)")[0]);
- }else for(const f of ['dates.js','goals.js','modules.js','dashboard.js','analytics.js','today.js','habits.js','storage.js','nutrition.js','tests/legacy-english.js',...(coord?['coordination.js']:[]),'app.js'])run(fs.readFileSync(path.join(root,f),'utf8').split("if('serviceWorker'in navigator)")[0]);
+ }else for(const f of ['dates.js','calendar.js','goals.js','modules.js','dashboard.js','analytics.js','today.js','habits.js','storage.js','nutrition.js','tests/legacy-english.js',...(coord?['coordination.js']:[]),'app.js'])run(fs.readFileSync(path.join(root,f),'utf8').split("if('serviceWorker'in navigator)")[0]);
  return {run,nodes,memory,errors,ctx,json:s=>JSON.parse(run(`JSON.stringify(${s})`))};
 }
 function fixture(){return {schemaVersion:2,smokeDate:'2022-02-02',alcoholDate:'2023-03-03',alcoholTrackingStart:'2021-01-01',alcoholHistory:{'2023-03-02':true},bodyMeasurements:{'2023-03-03':{waist:81.2,thigh:null}},logs:{'2023-03-03':{protein:0,steps:1234,gym:false,sleep:null,weight:75.5,outdoors:'',habitDetails:{walks:[{id:'synthetic',minutes:10}]}},'2023-03-04':{gym:true,english_general:35}},trackers:[{id:'custom',goal:5},{id:'water',goal:2}],englishLearning:{customItems:[{id:'custom_1',title:'Synthetic item',kind:'word'}],review:{custom_1:{nextReview:'2023-03-05',lastReviewed:'2023-03-03'}},favorites:{custom_1:true},dailyQueue:{date:'2023-03-03',itemIds:['custom_1'],newItemIds:[],extension:'keep'},studyPlans:{sample:{answers:['saved answer']}},extension:'keep'},experiments:[{id:'sample',name:'Test',metric:'steps',target:1000,days:30,start:'2023-03-03'}],theme:'light',language:'en',motivationSeen:{sample:'seen'},lastExternalBackupAt:'2023-03-03T00:00:00Z',_storageMeta:{revision:20,savedAt:'2023-03-03T00:00:00Z',extra:'keep'},extra:{keep:true}}}
@@ -140,7 +140,7 @@ test('micronutrient progress requires complete values and compatible reference b
  r.run('stat.partial=false;stat.mixedBasis=true');assert.equal(r.run('nutritionMicronutrientProgress(stat,"vitaminA",{value:800,unit:"µg",basis:"RAE"})'),null);
 });
 test('rendered calorie ring updates immediately after each JSON import without double counting',()=>{
- const r=runtime();r.run('data.language="ru";nutritionDate="2024-01-02";data.nutrition.goals.calories=200;document.getElementById("nutritionModal").classList.add("show");persistData=()=>nutritionRender();nutritionRender()');
+ const r=runtime();r.run('data.language="ru";nutritionDate="2024-01-02";data.nutrition.goals.calories=200;document.getElementById("nutritionModal").classList.add("active");persistData=()=>nutritionRender();nutritionRender()');
  const card=()=>r.nodes.get('nutritionSummary').children.find(x=>x.dataset.nutrient==='calories');
  const center=()=>card().children[1].children[1].children[0].textContent;
  assert.equal(center(),'—');assert.equal(card().children[3].textContent,'Остаток неизвестен');
@@ -154,7 +154,7 @@ test('rendered calorie ring updates immediately after each JSON import without d
  assert.deepEqual(r.errors,[]);
 });
 test('manual save, correction and deletion recalculate rendered rings',()=>{
- const r=runtime();r.run('data.language="ru";nutritionDate="2024-01-02";data.nutrition.goals.calories=200;document.getElementById("nutritionModal").classList.add("show");persistData=()=>nutritionRender();nutritionOpenForm()');
+ const r=runtime();r.run('data.language="ru";nutritionDate="2024-01-02";data.nutrition.goals.calories=200;document.getElementById("nutritionModal").classList.add("active");persistData=()=>nutritionRender();nutritionOpenForm()');
  const center=()=>r.nodes.get('nutritionSummary').children[0].children[1].children[1].children[0].textContent;
  r.nodes.get('nutritionFoodName').value='Fictional meal';r.nodes.get('nutritionCalories').value='100';r.run('nutritionSaveFood()');assert.equal(center(),'50%');assert.equal(r.run('data.nutrition.entries.length'),1);
  r.run('nutritionOpenForm(data.nutrition.entries[0].id)');r.nodes.get('nutritionCalories').value='250';r.run('nutritionSaveFood()');assert.equal(center(),'125%');assert.equal(r.run('data.nutrition.entries.length'),1);
@@ -193,3 +193,50 @@ test('very old alcohol-only backup preserves its user-selected start date',()=>{
 test('coverage statistics use true zero and mark partial protein without inventing missing days',()=>{const r=runtime();r.run('data.logs={"2024-01-01":{steps:0},"2024-01-03":{steps:100}}');assert.deepEqual(r.json('analyticsPeriod(["2024-01-01","2024-01-02","2024-01-03"],"steps")'),{count:2,average:50,partial:0});r.ctx.a=food('known','2024-01-01',10);r.ctx.b={...food('unknown','2024-01-01'),nutrients:{}};r.run('data.nutrition.entries=[a,b]');assert.deepEqual(r.json('analyticsPeriod(["2024-01-01","2024-01-02"],"protein")'),{count:1,average:10,partial:1});});
 test('module IDs cannot introduce prototype keys and unsupported cards are safely ignored',()=>{const r=runtime();for(const id of ['__proto__','constructor','prototype']){r.ctx.raw={logs:{},trackers:[{id}]};assert.throws(()=>r.run('validateStoredData(raw)'))}assert.equal(r.run('dashboardCard("toString",localDate())'),null)});
 test('explicit zero sleep is recorded in trends and weekly statistics',()=>{const r=runtime();r.run('data.logs={"2024-01-01":{sleep:0},"2024-01-02":{sleep:null},"2024-01-03":{sleep:8}}');assert.equal(r.run('trendValueForDay("sleep","2024-01-01")'),0);assert.equal(r.run('weeklyNumericStats("sleep",["2024-01-01","2024-01-02","2024-01-03"]).avg'),4);assert.equal(r.run('analyticsPeriod(["2024-01-01","2024-01-02","2024-01-03"],"sleep").count'),2)});
+
+test('Settings save cannot touch canonical protein, its rule, tracker, or hidden fibre goal',()=>{
+ const r=runtime();r.run('save=()=>{};data.proteinGoal=137;tracker("protein").goal=137;data.goalRules.protein={type:"range",target:137,upper:180,extension:false};data.nutrition.goals={fiber:27,extension:null};renderSettings()');
+ const before=r.json('[data.proteinGoal,tracker("protein").goal,data.goalRules.protein,data.nutrition]');
+ r.nodes.get('stepsGoal').value='4321';r.run('saveSettings();renderSettings()');assert.deepEqual(r.json('[data.proteinGoal,tracker("protein").goal,data.goalRules.protein,data.nutrition]'),before);assert.equal(r.run('data.stepsGoal'),4321);assert.equal(r.nodes.has('proteinGoal'),false);
+});
+test('Nutrition goal save synchronises protein once and preserves fibre, extensions and zero',()=>{
+ const r=runtime();r.run('persistData=()=>{};data.nutrition.goals={fiber:29,calories:0,extension:{keep:false}};data.goalRules.protein={type:"min",target:120,extension:null}');
+ for(const [id,value] of Object.entries({calories:'0',protein:'135',fat:'60',carbs:''}))r.nodes.get('nutritionGoal_'+id).value=value;
+ r.run('nutritionSaveGoals()');assert.deepEqual(r.json('data.nutrition.goals'),{fiber:29,calories:0,fat:60,extension:{keep:false}});assert.equal(r.run('data.proteinGoal'),135);assert.equal(r.run('tracker("protein").goal'),135);assert.deepEqual(r.json('data.goalRules.protein'),{type:'min',target:135,extension:null});assert.equal(r.run('Object.hasOwn(data.nutrition.goals,"protein")'),false);
+ r.nodes.get('nutritionGoal_protein').value='0';r.run('nutritionSaveGoals()');assert.equal(r.run('goalFor("protein")'),0);assert.equal(r.run('goalRule("protein").target'),0);
+ r.nodes.get('nutritionGoal_protein').value='';r.run('nutritionSaveGoals()');assert.equal(r.run('data.proteinGoal'),null);r.run('tracker("protein").goal=999');assert.equal(r.run('goalFor("protein")'),null);assert.equal(r.run('goalRule("protein").target'),null);
+});
+test('invalid Nutrition goal save is atomic and cannot erase hidden values',()=>{
+ const r=runtime();r.run('persistData=()=>{};data.nutrition.goals={fiber:25,calories:1900};data.goalRules.protein={type:"range",target:120,upper:150}');const before=r.json('data');
+ for(const [id,value] of Object.entries({calories:'2200',protein:'160',fat:'60',carbs:'200'}))r.nodes.get('nutritionGoal_'+id).value=value;
+ r.nodes.set('goalMode_protein',{value:'range'});r.nodes.set('goalUpper_protein',{value:'150'});r.run('nutritionSaveGoals()');assert.deepEqual(r.json('data'),before);
+ r.nodes.get('goalUpper_protein').value='180';r.nodes.get('nutritionGoal_fat').value='-1';r.run('nutritionSaveGoals()');assert.deepEqual(r.json('data'),before);
+});
+test('edited protein and full synthetic legacy data survive validation and backup round trip',()=>{
+ const f=fixture();f.proteinGoal=133;f.nutrition={entries:[food('synthetic-backup')],goals:{fiber:28,calories:0},extension:false};f.cycle={enabled:true,periods:[{id:'synthetic-cycle',start:'2024-01-02',end:'2024-01-05',notes:'fictional',symptoms:''}]};f.dashboard={blocks:[{id:'nutrition',size:'expanded'},{id:'steps',size:'compact'}]};f.englishActivity={entries:[],extension:null};const r=runtime({'my-life-tracker-data':JSON.stringify(f)});const before=r.json('data');r.ctx.backup={format:'my-life-tracker-backup',formatVersion:1,schemaVersion:3,data:before};assert.deepEqual(r.json('validateBackupObject(backup)'),before);
+});
+test('shared calendar handles Monday weeks, leap days and historical years without DST mutation',()=>{
+ const r=runtime();assert.deepEqual(r.json('calendarMonthInfo(2024,1)'),{offset:3,days:29});assert.deepEqual(r.json('calendarMonthInfo(2023,1)'),{offset:2,days:28});assert.deepEqual(r.json('calendarMonthInfo(2024,0)'),{offset:0,days:31});assert.equal(r.run('calendarKey(calendarDateParts(1999,11,31))'),'1999-12-31');assert.equal(r.run('calendarKey(calendarDateParts(42,1,28))'),'0042-02-28');
+ r.run('data.language="en"');const html=r.run('calendarMonthHTML(2024,1,{selected:"2024-02-29",min:"2024-02-02",max:"2024-02-29"})');assert.ok(html.includes('data-day="2024-02-29" aria-label="29 February 2024" aria-pressed="true"'));assert.ok(html.includes('Mon'));assert.ok(html.includes('unavailable'));assert.ok(!html.includes('2024-02-30'));
+});
+test('shared alcohol renderer preserves explicit markers, tracking boundaries and records',()=>{
+ const r=runtime();r.run('data.alcoholTrackingStart="2024-01-02";data.alcoholHistory={"2024-01-04":true}');const before=r.json('data');const html=r.run('alcoholMonthHTML(2024,0)');assert.ok(html.includes('shared-calendar'));assert.ok(html.includes('drank'));assert.ok(html.includes('sober'));assert.ok(html.includes("toggleAlcoholDay('2024-01-04')"));assert.deepEqual(r.json('data'),before);
+});
+test('Today layout and shared Nutrition section contain no obsolete target or privacy controls',()=>{
+ const html=fs.readFileSync(path.join(root,'index.html'),'utf8');assert.ok(html.indexOf('id="todayCustomize"')>html.indexOf('id="todayWeekly"'));assert.ok(!html.includes('todayPrivacy'));assert.ok(!html.includes('nutritionGoal_fiber'));assert.ok(!html.includes('id="proteinGoal"'));assert.equal((html.match(/class="tabsin"/g)||[]).length,1);assert.ok(html.includes('id="nutritionModal" data-localized class="section nutrition-section"'));assert.ok(html.indexOf('id="nutritionGoal_protein"')<html.indexOf('id="nutritionGoal_fat"'));
+});
+test('unusual legacy protein modes survive target editing without dropping extensions',()=>{
+ const r=runtime();r.run('data.goalRules.protein={type:"weekly",target:120,extension:false}');r.nodes.set('goalMode_protein',{value:'weekly'});assert.deepEqual(r.json('editedGoalRule("protein",130)'),{type:'weekly',target:130,extension:false});
+});
+test('shared date construction retains the requested day through northern and southern DST changes',()=>{
+ const previous=process.env.TZ;
+ try{for(const timezone of ['UTC','America/New_York','Europe/Berlin','Pacific/Auckland']){process.env.TZ=timezone;const r=runtime();for(const day of ['2024-03-10','2024-03-31','2024-09-29','2024-10-27','2024-11-03']){r.ctx.day=day;assert.equal(r.run('calendarKey(calendarDateParts(...day.split("-").map((v,i)=>Number(v)-(i===1?1:0))))'),day,timezone)}}}
+ finally{if(previous===undefined)delete process.env.TZ;else process.env.TZ=previous}
+});
+test('automatic date bounds follow day rollover while explicit limits and saved field values stay intact',()=>{
+ for(const explicit of [false,true]){
+  const r=runtime();const input=r.nodes.get('bodyDateInput');input.type='date';input.max=explicit?'2020-01-01':'';input.value='2019-12-31';input.parentNode={insertBefore(){}};
+  r.ctx.document.querySelectorAll=s=>s==='input[type="date"]'?[input]:[];r.run('localDate=()=>"2026-10-23";enhanceDateInputs()');assert.equal(input.max,explicit?'2020-01-01':'2026-10-23');
+  r.run('localDate=()=>"2026-10-24";enhanceDateInputs()');assert.equal(input.max,explicit?'2020-01-01':'2026-10-24');assert.equal(input.value,'2019-12-31');
+ }
+});

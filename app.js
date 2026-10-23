@@ -23,7 +23,7 @@ function save(){return persistData({renderAfter:true,makeSnapshot:true})}
 function ensureDay(d=localDate()){data.logs[d]=data.logs[d]||{};return data.logs[d]}
 
 function tracker(id){return data.trackers.find(t=>t.id===id)||defaultTrackers.find(t=>t.id===id)}
-function goalFor(id){return ({protein:data.proteinGoal,steps:data.stepsGoal,outdoors:data.outdoorsGoal,sleep:data.sleepGoal,gym:data.gymGoal,english_general:data.englishGoal})[id] ?? tracker(id)?.goal}
+function goalFor(id){if(id==='protein')return data.proteinGoal;return ({protein:data.proteinGoal,steps:data.stepsGoal,outdoors:data.outdoorsGoal,sleep:data.sleepGoal,gym:data.gymGoal,english_general:data.englishGoal})[id] ?? tracker(id)?.goal}
 function englishTotalN(n=7){return dates(n).reduce((total,date)=>total+englishMinutesForDate(date),0)}
 function englishTodayN(){return englishMinutesForDate(localDate())}
 function dailyComplete(id,d=localDate()){
@@ -344,14 +344,21 @@ function toggleTheme(){
   data.theme=(data.theme||'dark')==='dark'?'light':'dark';
   save();
 }
+let currentSection='today',previousSection='today';
+const sectionScroll={};
 function show(id,btn){
  if(id==='english')return openModule('activity');
- const section=document.getElementById(id);
- if(!section||!btn){console.warn('Navigation target missing',id);return}
- document.querySelectorAll('.section').forEach(x=>x.classList.remove('active'));
- section.classList.add('active');
- document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));
- btn.classList.add('active');
+ const section=document.getElementById(id);if(!section)return;
+ if(currentSection!==id){sectionScroll[currentSection]=window.scrollY||0;previousSection=currentSection;}
+ if(currentSection==='nutritionModal'&&id!==currentSection){nutritionCancelForm();nutritionCancelImport()}
+ document.querySelectorAll('.section').forEach(x=>x.classList.remove('active'));section.classList.add('active');
+ const tabIds={today:'tabToday',nutritionModal:'tabNutrition',progress:'tabProgress',settings:'tabSettings'};
+ document.querySelectorAll('.tab').forEach(x=>{x.classList.remove('active');x.removeAttribute('aria-current')});
+ btn=btn||document.getElementById(tabIds[id]);if(btn){btn.classList.add('active');btn.setAttribute('aria-current','page')}
+ const changed=currentSection!==id;currentSection=id;
+ if(id==='nutritionModal')nutritionRender();
+ if(changed)window.scrollTo?.(0,sectionScroll[id]||0);
+ enhanceDateInputs();
 }
 function openEntry(id,dateKey=localDate()){activeTracker=tracker(id);if(!activeTracker){alert(trText('Трекер не найден.','Tracker not found.'));return}activeTracker={...activeTracker,entryDate:dateKey};const unit=trUnit(activeTracker);document.getElementById('entryTitle').textContent=activeTracker.icon+' '+trTrackerName(activeTracker);document.getElementById('entryLabel').textContent=trText('Значение','Value')+(unit?' ('+unit+')':'')+' · '+dateKey;document.getElementById('entryValue').value=(id==='protein'?data.logs?.[dateKey]?.protein:val(id,dateKey))??'';document.getElementById('entryModal').classList.add('show');setTimeout(()=>document.getElementById('entryValue').focus(),80)}
 function openEnglish(id){const type=englishTypes.find(x=>x[0]===id);if(!type)return;activeTracker={id,name:type[2],icon:type[1],type:'number',unit:'мин',category:'english'};document.getElementById('entryTitle').textContent=type[1]+' '+type[2];document.getElementById('entryLabel').textContent=trText('Всего минут сегодня','Total minutes today');document.getElementById('entryValue').value=val(id)??'';document.getElementById('entryModal').classList.add('show');setTimeout(()=>document.getElementById('entryValue').focus(),80)}
@@ -376,7 +383,7 @@ function saveSettings(){
  const gv=id=>document.getElementById(id)?.value??'';
  const smoke=gv('smokeDate'),alcohol=gv('alcoholDate');
  if([smoke,alcohol].some(v=>v&&(!validDay(v)||v>localDate()))){alert(trText('Проверь даты. Будущая дата недоступна.','Check the dates. Future dates are unavailable.'));return}
- const next={};for(const key of ['proteinGoal','stepsGoal','outdoorsGoal','sleepGoal','englishGoal','gymGoal']){
+ const next={};for(const key of ['stepsGoal','outdoorsGoal','sleepGoal','englishGoal','gymGoal']){
   const raw=gv(key);const value=raw===''?null:Number(raw);
   if(value!==null&&(!Number.isFinite(value)||value<0)){alert(trText('Проверь цели.','Check the goals.'));return}next[key]=value;
  }
@@ -384,7 +391,7 @@ function saveSettings(){
  data.smokeDate=smoke;data.alcoholTrackingStart=alcohol;
  // alcoholDate is a retained legacy field, no longer rewritten by derived streaks.
  Object.assign(data,next);
- for(const [id,key] of Object.entries({protein:'proteinGoal',steps:'stepsGoal',outdoors:'outdoorsGoal',sleep:'sleepGoal',gym:'gymGoal',english_general:'englishGoal'})){
+ for(const [id,key] of Object.entries({steps:'stepsGoal',outdoors:'outdoorsGoal',sleep:'sleepGoal',gym:'gymGoal',english_general:'englishGoal'})){
   const t=tracker(id);if(t)t.goal=next[key];
   if(data.goalRules[id]&&data.goalRules[id].type!=='range')data.goalRules[id].target=next[key];
  }
@@ -1049,16 +1056,7 @@ function alcoholDayClass(dateKey){
   return alcoholIsDrink(dateKey)?'drank':'sober';
 }
 function alcoholMonthHTML(year,monthIndex){
-  const lang=data.language||'ru',months=lang==='en'?ALCOHOL_MONTHS_EN:ALCOHOL_MONTHS_RU,week=lang==='en'?ALCOHOL_WEEK_EN:ALCOHOL_WEEK_RU;
-  const first=new Date(year,monthIndex,1,12),daysInMonth=new Date(year,monthIndex+1,0,12).getDate(),offset=(first.getDay()+6)%7;
-  let days='';
-  for(let i=0;i<offset;i++)days+='<button class="alcohol-day empty" tabindex="-1"></button>';
-  for(let day=1;day<=daysInMonth;day++){
-    const key=alcoholDateKey(year,monthIndex,day),cls=alcoholDayClass(key),today=key===alcoholTodayKey()?' today':'',disabled=(cls==='future'||cls==='untracked')?' disabled':'';
-    const aria=alcoholIsDrink(key)?trText('Пил алкоголь','Drank alcohol'):(cls==='sober'?trText('Без алкоголя','Alcohol-free'):'');
-    days+=`<button class="alcohol-day ${cls}${today}"${disabled} onclick="toggleAlcoholDay('${key}')" aria-label="${day} ${months[monthIndex]} ${year}. ${aria}">${day}</button>`;
-  }
-  return `<div class="alcohol-month-card"><div class="alcohol-month-title">${months[monthIndex]}</div><div class="alcohol-weekdays">${week.map(x=>`<span>${x}</span>`).join('')}</div><div class="alcohol-days-grid">${days}</div></div>`;
+ return `<div class="alcohol-month-card"><div class="alcohol-month-title">${CALENDAR_MONTHS[calendarLanguage()][monthIndex]}</div>${calendarMonthHTML(year,monthIndex,{context:'alcohol',onDay:'toggleAlcoholDay',min:alcoholTrackingStart()||localDate(),marker:key=>{const cls=alcoholDayClass(key);return {className:cls,pressed:cls==='drank',disabled:cls==='untracked',label:cls==='drank'?trText('Пил алкоголь','Drank alcohol'):cls==='sober'?trText('Без алкоголя','Alcohol-free'):''}}})}</div>`;
 }
 function renderAlcoholCalendar(){
   if(!document.getElementById('alcoholModal'))return;
@@ -1076,7 +1074,7 @@ function renderAlcoholCalendar(){
   if(alcoholViewMode==='year'){
     host.innerHTML=`<div class="alcohol-year-grid">${Array.from({length:12},(_,m)=>alcoholMonthHTML(alcoholViewYear,m)).join('')}</div>`;
   }else{
-    host.innerHTML=`<div class="alcohol-month-view"><div class="alcohol-month-switch"><button onclick="changeAlcoholMonth(-1)">‹</button><strong>${months[alcoholViewMonth]} ${alcoholViewYear}</strong><button onclick="changeAlcoholMonth(1)">›</button></div>${alcoholMonthHTML(alcoholViewYear,alcoholViewMonth)}</div>`;
+    host.innerHTML=`<div class="alcohol-month-view">${calendarControls('alcohol',alcoholViewYear,alcoholViewMonth)}${alcoholMonthHTML(alcoholViewYear,alcoholViewMonth)}</div>`;
   }
 }
 
@@ -2685,7 +2683,14 @@ function renderTrends(){
 
 function renderProgress(){renderSimpleProgress();renderTrends();renderCalendar();renderDataCoverage()}
 function moveMonth(n){calendarDate=new Date(calendarDate.getFullYear(),calendarDate.getMonth()+n,1);renderCalendar()}
-function renderCalendar(){const ruM=['Январь','Февраль','Март','Апрель','Май','Июнь','Июль','Август','Сентябрь','Октябрь','Ноябрь','Декабрь'],enM=['January','February','March','April','May','June','July','August','September','October','November','December'],ruD=['Пн','Вт','Ср','Чт','Пт','Сб','Вс'],enD=['Mon','Tue','Wed','Thu','Fri','Sat','Sun'],y=calendarDate.getFullYear(),m=calendarDate.getMonth(),lang=data.language||'ru';document.getElementById('calendarTitle').textContent=(lang==='en'?enM:ruM)[m]+' '+y;const grid=document.getElementById('calendarGrid');grid.innerHTML=(lang==='en'?enD:ruD).map(x=>`<div class="dow">${x}</div>`).join('');const first=(new Date(y,m,1).getDay()+6)%7,total=new Date(y,m+1,0).getDate();for(let i=0;i<first;i++)grid.innerHTML+='<div></div>';for(let day=1;day<=total;day++){const d=`${y}-${String(m+1).padStart(2,'0')}-${String(day).padStart(2,'0')}`,filled=Object.keys(data.logs[d]||{}).filter(k=>k!=='habitDetails'&&weeklyHasOwn(data.logs[d],k)).length+(nutritionRows(d).length?1:0),cls=filled>=5?'good':filled>=2?'mid':'';grid.innerHTML+=`<div class="cday ${cls}">${day}${filled>=5?'<span class="dot"></span>':''}</div>`}}
+function renderCalendar(){
+ const y=calendarDate.getFullYear(),m=calendarDate.getMonth();
+ document.getElementById('calendarTitle').textContent=CALENDAR_MONTHS[calendarLanguage()][m]+' '+y;
+ document.getElementById('progressCalendarControls').innerHTML=calendarControls('progress',y,m);
+ document.getElementById('calendarGrid').innerHTML=calendarMonthHTML(y,m,{context:'progress',onDay:'calendarOpenHistoryDay',marker:d=>{const filled=Object.keys(data.logs[d]||{}).filter(k=>k!=='habitDetails'&&weeklyHasOwn(data.logs[d],k)).length+(nutritionRows(d).length?1:0);return {className:filled>=5?'good':filled>=2?'mid':'',dot:filled>0,label:filled?trText('Есть записи','Recorded day'):trText('Нет записей','No records')}}});
+}
+function calendarOpenHistoryDay(key){if(!validDay(key)||key>localDate())return;setTodayDate(key);show('today')}
+
 
 function openExperiment(){document.getElementById('experimentModal')?.classList.add('show')}
 function saveExperiment(){
@@ -2696,7 +2701,7 @@ function saveExperiment(){
  closeModal('experimentModal');save()
 }
 function expProgress(e){const elapsed=Math.max(0,weeklyDiffDays(e.start,localDate())+1);return Number.isFinite(elapsed)?Math.min(100,pct(elapsed,e.days)):0}
-function renderExperiments(){const host=document.getElementById('experimentsList');if(!host)return;host.innerHTML='';if(!data.experiments.length){host.innerHTML='<div class="insight-card">Пример: «30 дней проводить ≥60 минут на улице» и потом сравнить сон и английский.</div>';return}data.experiments.forEach(e=>{const t=tracker(e.metric),p=expProgress(e),el=document.createElement('div');el.className='experiment';el.innerHTML=`<div class="exp-head"><div><div class="title">${escapeHTML(t?.icon||'🧪')} ${escapeHTML(e.name)}</div><div class="small">${escapeHTML(e.hypothesis||'Без гипотезы')}</div></div><span class="exp-status">${e.status==='active'?'Активен':'Завершён'}</span></div><div class="progress"><span style="width:${p}%"></span></div><div class="small" style="margin-top:7px">Цель: ${escapeHTML(e.target||'—')} ${escapeHTML(t?.unit||'')} · ${escapeHTML(e.days)} дней · ${p}%</div><div style="margin-top:9px"><button class="secondary" style="padding:8px 10px">${e.status==='active'?'Завершить':'Возобновить'}</button> <button class="ghost" style="padding:8px 10px">Удалить</button></div>`;const bs=el.querySelectorAll('button');bs[0].onclick=()=>{e.status=e.status==='active'?'done':'active';save()};bs[1].onclick=()=>{if(confirm((data.language||'ru')==='en'?'Delete this experiment?':'Удалить эксперимент?')){data.experiments=data.experiments.filter(x=>x.id!==e.id);save()}};host.appendChild(el)})}
+function renderExperiments(){const host=document.getElementById('experimentsList');if(!host)return;host.innerHTML='';if(!data.experiments.length){host.innerHTML='<div class="insight-card">'+trText('Пример: 30 дней гулять по 60 минут и сравнить сон.','Example: walk for 60 minutes for 30 days and compare sleep.')+'</div>';return}data.experiments.forEach(e=>{const t=tracker(e.metric),p=expProgress(e),el=document.createElement('div');el.className='experiment';el.innerHTML=`<div class="exp-head"><div><div class="title">${escapeHTML(t?.icon||'🧪')} ${escapeHTML(e.name)}</div><div class="small">${escapeHTML(e.hypothesis||trText('Без гипотезы','No hypothesis'))}</div></div><span class="exp-status">${e.status==='active'?trText('Активен','Active'):trText('Завершён','Done')}</span></div><div class="progress"><span style="width:${p}%"></span></div><div class="small" style="margin-top:7px">${trText('Цель','Goal')}: ${escapeHTML(e.target||'—')} ${escapeHTML(t?.unit||'')} · ${escapeHTML(e.days)} ${trText('дней','days')} · ${p}%</div><div style="margin-top:9px"><button class="secondary" style="padding:8px 10px">${e.status==='active'?trText('Завершить','Finish'):trText('Возобновить','Resume')}</button> <button class="ghost" style="padding:8px 10px">${trText('Удалить','Delete')}</button></div>`;const bs=el.querySelectorAll('button');bs[0].onclick=()=>{e.status=e.status==='active'?'done':'active';save()};bs[1].onclick=()=>{if(confirm((data.language||'ru')==='en'?'Delete this experiment?':'Удалить эксперимент?')){data.experiments=data.experiments.filter(x=>x.id!==e.id);save()}};host.appendChild(el)})}
 
 function formatBackupDate(value){
   if(!value)return trText('Никогда','Never');
@@ -2742,10 +2747,11 @@ function updateStorageSafetyUI(){
 
 function renderSettings(){
  const set=(id,v)=>{const el=document.getElementById(id);if(el)el.value=v??''};
- set('smokeDate',data.smokeDate);set('alcoholDate',alcoholTrackingStart());set('proteinGoal',data.proteinGoal);set('stepsGoal',data.stepsGoal);set('outdoorsGoal',data.outdoorsGoal);set('sleepGoal',data.sleepGoal);set('englishGoal',data.englishGoal);set('gymGoal',data.gymGoal);
+ set('smokeDate',data.smokeDate);set('alcoholDate',alcoholTrackingStart());set('stepsGoal',data.stepsGoal);set('outdoorsGoal',data.outdoorsGoal);set('sleepGoal',data.sleepGoal);set('englishGoal',data.englishGoal);set('gymGoal',data.gymGoal);
  for(const id of ['smokeDate','alcoholDate'])document.getElementById(id).max=localDate();
  document.getElementById('alcoholDerivedDate').textContent=trText('Текущая серия (расчёт): ','Current streak (calculated): ')+(alcoholCurrentStreakStart()||'—');
  renderGoalRuleSettings();
+ const draft=document.getElementById('conflictDraftButton');if(draft)draft.hidden=!((typeof unsavedConflict!=='undefined'&&unsavedConflict)||storageGet('my-rhythm-conflict-draft'));
  const av=document.getElementById('appVersionText');if(av)av.textContent='V'+APP_VERSION;
  const sv=document.getElementById('schemaVersionText');if(sv)sv.textContent=String(data.schemaVersion||CURRENT_SCHEMA_VERSION);
 
@@ -2765,7 +2771,7 @@ function renderSettings(){
  updateStorageSafetyUI();
  renderExperiments();
 }
-function render(){applyTheme();nutritionRender();for(const job of [renderToday,renderProgress,renderSettings]){try{job()}catch(e){console.error('Render error in '+job.name,e)}}try{translateDOM()}catch(e){console.error('Translation error',e)}}
+function render(){applyTheme();nutritionRender();for(const job of [renderToday,renderProgress,renderSettings]){try{job()}catch(e){console.error('Render error in '+job.name,e)}}try{translateDOM();enhanceDateInputs()}catch(e){console.error('Translation error',e)}}
 
 let appActiveDate=localDate();
 function checkAppDayRollover(){
@@ -2798,7 +2804,6 @@ addEventListener('keydown',e=>{
  if(document.getElementById('nutritionForm')?.classList.contains('show'))return nutritionCancelForm();
  if(document.getElementById('nutritionImportPreview')?.classList.contains('show'))return nutritionCancelImport();
  if(document.getElementById('moduleModal')?.classList.contains('show'))return closeModule();
- if(document.getElementById('nutritionModal')?.classList.contains('show'))return nutritionClose();
   if(document.getElementById('habitModal')?.classList.contains('show'))return closeHabitEditor();
   if(document.getElementById('motivationModal')?.classList.contains('show'))return closeMotivationDetail();
   if(document.getElementById('bodyCheckinModal')?.classList.contains('show'))return closeBodyCheckin();
