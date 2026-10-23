@@ -1,3 +1,7 @@
+# Missing steps update (7.2.2)
+
+When daily steps are missing, use the configured habitual allowance for display and calculation only. Extra walking contributes zero. Explicit recorded steps, including zero, take priority. Existing daily and period calculations recalculate historical food days on demand without writing assumptions into logs or backups. Such days show “Steps not logged; usual activity used”. Missing food remains unknown. Workout overlap checks continue to use actual recorded steps, never assumed steps.
+
 # Energy Balance 7.2.1 update
 
 Daily balance and period analytics now use recorded data automatically. All results are provisional: a diary cannot establish whether unlogged meals or workouts exist. Missing steps and missing/partial food remain unknown and are excluded from period sums. Weight comparison still requires the existing measurement windows and reports coverage.
