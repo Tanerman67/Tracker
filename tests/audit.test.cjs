@@ -233,3 +233,10 @@ test('shared date construction retains the requested day through northern and so
  try{for(const timezone of ['UTC','America/New_York','Europe/Berlin','Pacific/Auckland']){process.env.TZ=timezone;const r=runtime();for(const day of ['2024-03-10','2024-03-31','2024-09-29','2024-10-27','2024-11-03']){r.ctx.day=day;assert.equal(r.run('calendarKey(calendarDateParts(...day.split("-").map((v,i)=>Number(v)-(i===1?1:0))))'),day,timezone)}}}
  finally{if(previous===undefined)delete process.env.TZ;else process.env.TZ=previous}
 });
+test('automatic date bounds follow day rollover while explicit limits and saved field values stay intact',()=>{
+ for(const explicit of [false,true]){
+  const r=runtime();const input=r.nodes.get('bodyDateInput');input.type='date';input.max=explicit?'2020-01-01':'';input.value='2019-12-31';input.parentNode={insertBefore(){}};
+  r.ctx.document.querySelectorAll=s=>s==='input[type="date"]'?[input]:[];r.run('localDate=()=>"2026-10-23";enhanceDateInputs()');assert.equal(input.max,explicit?'2020-01-01':'2026-10-23');
+  r.run('localDate=()=>"2026-10-24";enhanceDateInputs()');assert.equal(input.max,explicit?'2020-01-01':'2026-10-24');assert.equal(input.value,'2019-12-31');
+ }
+});

@@ -22,7 +22,7 @@ function calendarMonthHTML(year,month,options={}){
 }
 function calendarControls(kind,year,month){
  const months=CALENDAR_MONTHS[calendarLanguage()];
- return `<div class="shared-calendar-controls"><button class="secondary" type="button" aria-label="${calendarText('Предыдущий месяц','Previous month')}" onclick="calendarControlChange('${kind}',this,-1)">‹</button><select aria-label="${calendarText('Месяц','Month')}" onchange="calendarControlChange('${kind}',this)">${months.map((m,i)=>`<option value="${i}" ${i===month?'selected':''}>${m}</option>`).join('')}</select><input type="number" inputmode="numeric" min="1" max="9999" value="${year}" aria-label="${calendarText('Год','Year')}" onchange="calendarControlChange('${kind}',this)"><button class="secondary" type="button" aria-label="${calendarText('Следующий месяц','Next month')}" onclick="calendarControlChange('${kind}',this,1)">›</button></div>`;
+ return `<div class="shared-calendar-controls"><button class="secondary" type="button" aria-label="${calendarText('Предыдущий месяц','Previous month')}" onclick="calendarControlChange('${kind}',this,-1)">‹</button><select aria-label="${calendarText('Месяц','Month')}" onchange="calendarControlChange('${kind}',this)">${months.map((m,i)=>`<option value="${i}" ${i===month?'selected':''}>${m}</option>`).join('')}</select><input type="number" inputmode="numeric" min="1" max="9999" value="${year}" aria-label="${calendarText('Год','Year')}" ${kind==='picker'?`oninput="calendarControlChange('${kind}',this)"`:''} onchange="calendarControlChange('${kind}',this)"><button class="secondary" type="button" aria-label="${calendarText('Следующий месяц','Next month')}" onclick="calendarControlChange('${kind}',this,1)">›</button></div>`;
 }
 function calendarControlChange(kind,control,delta=0){
  const host=control.closest('.shared-calendar-controls');calendarNavigate(kind,Number(host.querySelector('input').value),Number(host.querySelector('select').value)+delta);
@@ -30,7 +30,7 @@ function calendarControlChange(kind,control,delta=0){
 function calendarNavigate(kind,year,month){
  if(!Number.isInteger(year)||year<1||year>9999||!Number.isInteger(month))return;
  const d=calendarDateParts(year,month);if(d.getFullYear()<1||d.getFullYear()>9999)return;
- if(kind==='picker'&&datePickerState){datePickerState.year=d.getFullYear();datePickerState.month=d.getMonth();calendarRenderPicker()}
+ if(kind==='picker'&&datePickerState){if(datePickerState.year===d.getFullYear()&&datePickerState.month===d.getMonth())return;datePickerState.year=d.getFullYear();datePickerState.month=d.getMonth();calendarRenderPicker()}
  if(kind==='progress'){calendarDate=d;renderCalendar()}
  if(kind==='cycle'){cycleMonth=calendarKey(d);renderCycle()}
  if(kind==='alcohol'){alcoholViewYear=d.getFullYear();alcoholViewMonth=d.getMonth();renderAlcoholCalendar()}
@@ -40,7 +40,7 @@ function enhanceDateInputs(root=document){
   if(input.type!=='date'||!input.parentNode)return;
   const labels={todayDateInput:['Дата записи','Entry date'],nutritionDate:['Дата питания','Nutrition date'],nutritionCopyDate:['День для копирования','Source day'],nutritionFoodDate:['Дата','Date'],smokeDate:['Дата отказа от сигарет','Smoking quit date'],alcoholDate:['Начало учёта алкоголя','Alcohol tracking start'],bodyDateInput:['Дата замера','Measurement date'],cycleStart:['Начало','Start'],cycleEnd:['Конец (необязательно)','End (optional)'],activityDate:['Дата занятия','Activity date']};
   if(labels[input.id])input.setAttribute('aria-label',calendarText(...labels[input.id]));
-  if(!input.max)input.max=localDate();
+  if(!input.max||input.dataset.sharedDateMax==='today'){input.max=localDate();input.dataset.sharedDateMax='today'}
   if(input.dataset.sharedDate)return;
   input.dataset.sharedDate='true';
   const wrap=document.createElement('div');wrap.className='shared-date-field';input.parentNode.insertBefore(wrap,input);wrap.append(input);
@@ -51,6 +51,7 @@ function enhanceDateInputs(root=document){
 }
 function calendarOpenPicker(input,trigger){
  if(input.disabled)return;
+ if(input.dataset.sharedDateMax==='today')input.max=localDate();
  if(datePickerState)calendarClosePicker();
  if(input.id==='cycleEnd')input.min=document.getElementById('cycleStart')?.value||'';
  const value=validDay(input.value)?input.value:localDate(),d=new Date(value+'T12:00:00');
