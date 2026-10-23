@@ -455,6 +455,7 @@ function importBackupFile(event){
       const existingFood=data.nutrition?.entries?.length||0;
       if(oldBackup&&existingFood)imported.nutrition=structuredClone(data.nutrition);
       for(const key of ['dashboard','cycle','englishActivity','goalRules'])if(!Object.prototype.hasOwnProperty.call(rawBackup,key))imported[key]=structuredClone(data[key]);
+      if(!Object.prototype.hasOwnProperty.call(rawBackup,'energyBalance')&&data.energyBalance)imported.energyBalance=structuredClone(data.energyBalance);
       const hasCurrent=Object.keys(data.logs||{}).length>0||existingFood>0||data.cycle.periods.length>0||data.englishActivity.entries.length>0;
       const message=hasCurrent
         ? 'Импорт заменит текущие записи данными из backup.'+(oldBackup&&existingFood?' Этот старый backup не содержит раздел питания; текущие записи питания будут сохранены.':'')+' Продолжить?'
@@ -2771,7 +2772,7 @@ function renderSettings(){
  updateStorageSafetyUI();
  renderExperiments();
 }
-function render(){applyTheme();nutritionRender();for(const job of [renderToday,renderProgress,renderSettings]){try{job()}catch(e){console.error('Render error in '+job.name,e)}}try{translateDOM();enhanceDateInputs()}catch(e){console.error('Translation error',e)}}
+function render(){applyTheme();nutritionRender();for(const job of [renderToday,renderProgress,renderSettings]){try{job()}catch(e){console.error('Render error in '+job.name,e)}}if(typeof energyRefresh==='function')energyRefresh();try{translateDOM();enhanceDateInputs()}catch(e){console.error('Translation error',e)}}
 
 let appActiveDate=localDate();
 function checkAppDayRollover(){

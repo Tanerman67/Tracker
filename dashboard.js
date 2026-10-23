@@ -1,4 +1,5 @@
 const DASHBOARD_MODULES={
+ energy:['◒','Энергетический баланс','Energy Balance'],
  nutrition:['🍽️','Питание','Nutrition'],protein:['🥩','Белок','Protein'],steps:['🚶','Шаги','Steps'],sleep:['😴','Сон','Sleep'],weight:['⚖️','Вес и замеры','Weight & body'],gym:['🏋️','Тренировка','Workout'],outdoors:['☀️','Улица','Outdoors'],smoke:['🚭','Без сигарет','Smoke-free'],alcohol:['🍷','Без алкоголя','Alcohol-free'],cycle:['◌','Цикл','Cycle'],english:['A','Английский: время','English Activity']
 };
 function dashboardAvailable(){return {...DASHBOARD_MODULES,...Object.fromEntries(data.trackers.filter(t=>!DASHBOARD_MODULES[t.id]&&t.id!=='english_general'&&!t.id.startsWith('english_')).map(t=>[t.id,[t.icon||'＋',t.name,t.name]]))}}
@@ -15,6 +16,7 @@ function renderDashboardSettings(){
  moduleShell(trText('Настроить главную','Customize Today'),`<p>${trText('Скрытие блока сохраняет все записи. Кнопки вверх и вниз меняют порядок.','Hiding a block keeps all records. Use up and down buttons to change the order.')}</p>${blocks.filter(b=>available[b.id]).map((b,i)=>{const [icon,ru,en]=available[b.id];return `<div class="layout-row"><strong>${escapeHTML(icon+' '+trText(ru,en))}</strong><div class="layout-actions"><button class="secondary" aria-label="${trText('Вверх','Move up')}" onclick="dashboardChange(${inlineArgument(b.id)},'move',-1)" ${i===0?'disabled':''}>↑</button><button class="secondary" aria-label="${trText('Вниз','Move down')}" onclick="dashboardChange(${inlineArgument(b.id)},'move',1)" ${i===blocks.length-1?'disabled':''}>↓</button><button class="secondary" onclick="dashboardChange(${inlineArgument(b.id)},'size','${b.size==='expanded'?'compact':'expanded'}')">${b.size==='expanded'?trText('Компактно','Compact'):trText('Шире','Expand')}</button><button class="ghost" onclick="dashboardChange(${inlineArgument(b.id)},'toggle')">${trText('Скрыть','Hide')}</button></div></div>`}).join('')}<h3>${trText('Добавить блок','Add a block')}</h3><div class="module-actions">${Object.entries(available).filter(([id])=>!blocks.some(b=>b.id===id)).map(([id,[icon,ru,en]])=>`<button class="secondary" onclick="dashboardChange(${inlineArgument(id)},'toggle')">+ ${escapeHTML(icon+' '+trText(ru,en))}</button>`).join('')}</div><button class="ghost" onclick="resetDashboard()">${trText('Сбросить расположение','Reset layout')}</button>`);
 }
 function dashboardOpen(id,date){
+ if(id==='energy')return energyOpen(date);
  if(id==='nutrition'||id==='protein')return nutritionOpen(date);
  if(id==='cycle')return openModule('cycle');
  if(id==='english')return openModule('activity');
@@ -27,7 +29,9 @@ function dashboardCard(id,date){
  const definitions=dashboardAvailable(),definition=Object.prototype.hasOwnProperty.call(definitions,id)?definitions[id]:null;if(!definition)return null;
  const [icon,ru,en]=definition,el=document.createElement('button');el.type='button';el.className='metric-card today-metric';el.dataset.metric=id;el.onclick=()=>dashboardOpen(id,date);
  let main='—',status=trText('Нет данных','No data'),state='neutral',progress=null;
- if(id==='nutrition'){
+ if(id==='energy'){
+  const s=energyDay(date);main=energyKcal(s.tdee);status=trText('Питание: ','Food: ')+nutritionDisplay(s.food)+' · '+energyStatus(s.status)+(s.balance===null?'':' · '+energyBalanceText(s.balance));
+ }else if(id==='nutrition'){
   const c=nutritionAggregate(date).calories,g=nutritionProgressState(c,data.nutrition.goals.calories);main=nutritionDisplay(c);
   status=g.goal===null?trText('Нажми, чтобы добавить еду','Tap to log food'):g.over?trText('Сверх лимита: ','Over limit: ')+todayNumber(g.over)+' kcal':g.remaining!==null?trText('Осталось: ','Remaining: ')+todayNumber(g.remaining)+' kcal':trText('Часть данных неизвестна','Some values are unknown');
   if(g.percent!==null)status+=' · '+(c.partial?'≥ ':'')+todayNumber(g.percent)+'%';state=g.over?'over':'neutral';progress=g.percent;

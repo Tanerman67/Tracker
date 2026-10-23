@@ -76,7 +76,51 @@
   if(recordedSteps!==null&&excludedSteps>recordedSteps){suppressWalking=true;issues.push('inconsistentSteps')}
   return {value,excludedSteps,suppressWalking,issues:[...new Set(issues)],rows};
  }
- const api={dateNumber,addDays,dayDiff,number,stable,weightAt,ROUTINES,ageAt,resting,walking,WORKOUT_TYPES,validWorkout,exercise};
+ // Two independent 32-bit hashes are a compact change detector, not security.
+ function fingerprint(value){let a=2166136261,b=2246822507;for(const ch of stable(value)){const n=ch.codePointAt(0);a=Math.imul(a^n,16777619);b=Math.imul(b^n,3266489909)}return (a>>>0).toString(16).padStart(8,'0')+(b>>>0).toString(16).padStart(8,'0')}
+ function foodSignature(db,date){return fingerprint((db.nutrition?.entries||[]).filter(e=>e.date===date).slice().sort((a,b)=>a.id.localeCompare(b.id)))}
+ function activitySignature(db,date){return fingerprint({steps:db.logs?.[date]?.steps??null,gym:db.logs?.[date]?.gym??null,noExtraSteps:db.energyBalance?.days?.[date]?.noExtraSteps===true,workouts:(db.energyBalance?.workouts||[]).filter(w=>w.date===date).slice().sort((a,b)=>a.id.localeCompare(b.id))})}
+ function daily(db,date,calories){
+  const module=db.energyBalance||{},p=module.profile||{},d=module.days?.[date]||{},r=resting(p,db.logs,date),routine=ROUTINES[p.routine];
+  const base=r.value!==null&&routine&&number(p.baselineIncludedSteps,0,100000)!==null?r.value*routine.pal:null;
+  const ex=exercise(module.workouts,date,r.value,number(db.logs?.[date]?.steps,0,200000));
+  const walk=walking(p,db.logs,date,{excludedSteps:ex.excludedSteps,suppress:ex.suppressWalking,noExtraSteps:d.noExtraSteps===true});
+  const issues=[...ex.issues];
+  if(base===null)issues.push('missingProfile');
+  if(walk.value===null)issues.push('missingWalking');
+  if(r.weight?.stale&&(r.source==='mifflin'||walk.steps>0))issues.push('staleWeight');
+  if(walk.belowBaseline)issues.push('belowBaseline');
+  if(db.logs?.[date]?.gym===true&&!(module.workouts||[]).some(w=>w.date===date))issues.push('missingWorkout');
+  const food=calories&&number(calories.value)!==null?{...calories,value:number(calories.value)}:{value:null,partial:false,qualities:[]};
+  const foodConfirmed=!!d.foodSignature&&d.foodSignature===foodSignature(db,date);
+  const activityConfirmed=!!d.activitySignature&&d.activitySignature===activitySignature(db,date);
+  if(food.value===null)issues.push('missingFood');else if(food.partial)issues.push('partialFood');
+  if(!foodConfirmed)issues.push(d.foodSignature?'foodChanged':'foodUnconfirmed');
+  if(!activityConfirmed)issues.push(d.activitySignature?'activityChanged':'activityUnconfirmed');
+  const insufficient=issues.some(i=>['missingProfile','missingWalking','missingFood','unknownOverlap','inconsistentSteps','invalidWorkout'].includes(i));
+  const incompleteEnergy=issues.some(i=>['unknownWorkout','totalNeedsDuration','missingWorkout'].includes(i));
+  const tdee=base!==null&&walk.value!==null?base+walk.value+ex.value:null;
+  const balance=tdee!==null&&food.value!==null&&!food.partial&&!incompleteEnergy&&!insufficient?tdee-food.value:null;
+  const blocking=issues.filter(i=>i!=='belowBaseline');
+  const status=insufficient?'insufficient':blocking.length?'provisional':'confirmed';
+  // Conditional model scenarios, NOT a statistical interval or device accuracy bound.
+  const sensitivity=tdee!==null&&routine&&walk.range&&!ex.suppressWalking?[r.value*routine.range[0]+walk.range[0]+ex.value,r.value*routine.range[1]+walk.range[1]+ex.value]:null;
+  return {date,resting:r,base,routineExtra:base===null?null:base-r.value,walking:walk,exercise:ex,tdee,sensitivity,food,balance,status,issues:[...new Set(issues)],foodConfirmed,activityConfirmed,incompleteEnergy};
+ }
+ function validateStore(store){
+  if(!store||typeof store!=='object'||Array.isArray(store)||!store.profile||typeof store.profile!=='object'||Array.isArray(store.profile)||!Array.isArray(store.workouts)||!store.days||typeof store.days!=='object'||Array.isArray(store.days))throw Error('Invalid energy balance data.');
+  const p=store.profile;
+  for(const [key,min,max] of [['heightCm',100,250],['manualRmr',100,10000],['baselineIncludedSteps',0,100000]])if(p[key]!==undefined&&p[key]!==null&&(typeof p[key]!=='number'||number(p[key],min,max)===null))throw Error('Invalid energy profile.');
+  if(p.mode!==undefined&&!['manual','mifflin'].includes(p.mode)||p.variant!==undefined&&p.variant!==null&&!['plus5','minus161'].includes(p.variant)||p.routine!==undefined&&p.routine!==null&&!Object.hasOwn(ROUTINES,p.routine)||p.birthDate!==undefined&&p.birthDate!==null&&dateNumber(p.birthDate)===null)throw Error('Invalid energy profile.');
+  const ids=new Set();for(const w of store.workouts){if(!validWorkout(w)||ids.has(w.id))throw Error('Invalid energy workout.');ids.add(w.id)}
+  for(const [date,d] of Object.entries(store.days)){
+   if(dateNumber(date)===null||!d||typeof d!=='object'||Array.isArray(d))throw Error('Invalid energy day.');
+   for(const key of ['foodSignature','activitySignature'])if(d[key]!==undefined&&d[key]!==null&&(typeof d[key]!=='string'||!/^[a-f0-9]{16}$/.test(d[key])))throw Error('Invalid energy confirmation.');
+   if(d.noExtraSteps!==undefined&&typeof d.noExtraSteps!=='boolean')throw Error('Invalid energy walking confirmation.');
+  }
+  return store;
+ }
+ const api={dateNumber,addDays,dayDiff,number,stable,weightAt,ROUTINES,ageAt,resting,walking,WORKOUT_TYPES,validWorkout,exercise,fingerprint,foodSignature,activitySignature,daily,validateStore};
  root.MyRhythmEnergy=api;
  if(typeof module==='object'&&module.exports)module.exports=api;
 })(globalThis);

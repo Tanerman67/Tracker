@@ -74,3 +74,39 @@ test('workout IDs prevent duplicate counting; edits/removal recalculate; daily w
  assert.equal(E.validWorkout(workout({scope:'daily'})),false);assert.equal(E.validWorkout(workout({type:'running',overlap:'none'})),false);
  for(const extra of [{kcal:-1},{minutes:0},{kcal:''},{steps:1.5}])assert.equal(E.validWorkout(workout(extra)),false);
 });
+const calories=(value=2000,partial=false)=>({value,partial,qualities:['estimated']});
+function database(){return {logs:logs(),nutrition:{entries:[{id:'fictional-food',date:DAY,nutrients:{calories:{value:2000}}}]},energyBalance:{profile:{...profile},workouts:[],days:{}}}}
+function confirm(db){db.energyBalance.days[DAY]={foodSignature:E.foodSignature(db,DAY),activitySignature:E.activitySignature(db,DAY)}}
+test('confirmed daily log uses the supplied existing food aggregate and correct deficit sign',()=>{
+ const db=database();confirm(db);const d=E.daily(db,DAY,calories());assert.equal(d.status,'confirmed');assert.equal(d.balance,d.tdee-2000);assert.ok(d.balance>0);
+ assert.equal(E.daily(db,DAY,calories(3000)).balance,d.tdee-3000);assert.equal(E.daily(db,DAY,calories(0)).balance,d.tdee);
+ assert.equal(d.base,d.resting.value*1.2);assert.equal(d.routineExtra,d.base-d.resting.value);
+});
+test('missing/partial food cannot produce a confirmed balance even after checkbox confirmation',()=>{
+ const db=database();confirm(db);for(const food of [calories(null),calories(1000,true)]){const d=E.daily(db,DAY,food);assert.notEqual(d.status,'confirmed');assert.equal(d.balance,null)}
+ db.nutrition.entries=[];confirm(db);assert.equal(E.daily(db,DAY,calories(null)).status,'insufficient');
+});
+test('food confirmation becomes stale after create/edit/delete/import/move, order alone is harmless',()=>{
+ const db=database();confirm(db);const original=structuredClone(db.nutrition.entries);
+ for(const entries of [[...original,{...original[0],id:'fictional-new'}],[{...original[0],notes:'changed'}],[],[{...original[0],date:'2024-03-02'}]]){db.nutrition.entries=entries;assert.equal(E.daily(db,DAY,calories()).foodConfirmed,false)}
+ db.nutrition.entries=[...original,{...original[0],id:'fictional-second'}];confirm(db);db.nutrition.entries.reverse();assert.equal(E.daily(db,DAY,calories()).foodConfirmed,true);
+});
+test('activity confirmation detects step/workout changes and never converts Gym/outdoors to calories',()=>{
+ const db=database();confirm(db);db.logs[DAY].steps=6900;assert.equal(E.daily(db,DAY,calories()).activityConfirmed,false);
+ db.logs[DAY].gym=true;db.logs[DAY].outdoors=120;confirm(db);const d=E.daily(db,DAY,calories());assert.equal(d.exercise.value,0);assert.ok(d.issues.includes('missingWorkout'));assert.equal(d.balance,null);
+ db.energyBalance.workouts=[workout()];assert.equal(E.daily(db,DAY,calories()).activityConfirmed,false);confirm(db);assert.equal(E.daily(db,DAY,calories()).status,'confirmed');
+ db.energyBalance.workouts=[];assert.equal(E.daily(db,DAY,calories()).activityConfirmed,false);
+});
+test('today remains provisional until explicitly confirmed; missing steps need explicit no-extra-walking',()=>{
+ const db=database();assert.equal(E.daily(db,DAY,calories()).status,'provisional');delete db.logs[DAY].steps;assert.equal(E.daily(db,DAY,calories()).status,'insufficient');
+ db.energyBalance.days[DAY]={noExtraSteps:true};db.energyBalance.days[DAY].foodSignature=E.foodSignature(db,DAY);db.energyBalance.days[DAY].activitySignature=E.activitySignature(db,DAY);
+ assert.equal(E.daily(db,DAY,calories()).status,'confirmed');assert.equal(E.daily(db,DAY,calories()).walking.value,0);
+});
+test('unknown workouts and overlap never enter confirmed accumulated balances',()=>{
+ for(const w of [workout({energyType:'unknown'}),workout({energyType:'total',minutes:null}),workout({type:'running',overlap:'unknown'})]){const db=database();db.energyBalance.workouts=[w];confirm(db);const d=E.daily(db,DAY,calories());assert.notEqual(d.status,'confirmed');assert.equal(d.balance,null)}
+});
+test('energy schema is additive, validates unknown/null/zero, and rejects malformed records',()=>{
+ const db=database();confirm(db);assert.equal(E.validateStore(db.energyBalance),db.energyBalance);
+ const keep=structuredClone(db);E.daily(db,DAY,calories());assert.deepEqual(db,keep,'calculation must never mutate records');
+ for(const patch of [{workouts:[workout({scope:'daily'})]},{workouts:[workout(),workout()]},{profile:{heightCm:false}},{days:{bad:{}}},{days:{[DAY]:{foodSignature:'not-valid'}}}])assert.throws(()=>E.validateStore({...db.energyBalance,...patch}));
+});

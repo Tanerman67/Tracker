@@ -178,6 +178,7 @@ function validateStoredData(obj){
     if(obj[key]&&Object.values(obj[key]).some(row=>!isDataObject(row)))throw new Error('Invalid '+key+' row.');
   }
   validateV7Data(obj);
+  if(obj.energyBalance!==undefined&&typeof MyRhythmEnergy!=='undefined')MyRhythmEnergy.validateStore(obj.energyBalance);
   return obj;
 }
 
