@@ -10,13 +10,13 @@ function calendarMonthHTML(year,month,options={}){
  const lang=calendarLanguage(),months=CALENDAR_MONTHS[lang],week=lang==='en'?['Mon','Tue','Wed','Thu','Fri','Sat','Sun']:['Пн','Вт','Ср','Чт','Пт','Сб','Вс'];
  const {offset,days}=calendarMonthInfo(year,month),today=localDate(),max=options.max||today;
  const preferred=options.focus||options.selected||today;let tabAssigned=false;
- let body=week.map(d=>`<span class="shared-dow" role="columnheader">${d}</span>`).join('')+'<span class="shared-empty" aria-hidden="true"></span>'.repeat(offset);
+ let body=week.map(d=>`<span class="shared-dow">${d}</span>`).join('')+'<span class="shared-empty" aria-hidden="true"></span>'.repeat(offset);
  for(let day=1;day<=days;day++){
   const key=calendarKey(calendarDateParts(year,month,day)),mark=options.marker?.(key)||{},disabled=key>max||options.min&&key<options.min||mark.disabled;
   const selected=key===options.selected,focus=key===preferred,cls=[mark.className||'',key===today?'today':'',selected?'selected':'',disabled?'unavailable':''].join(' ');
   const description=`${day} ${months[month]} ${year}${mark.label?'. '+mark.label:''}${key===today?'. '+calendarText('Сегодня','Today'):''}`;
   const tabStop=!disabled&&(focus||!tabAssigned&&preferred.slice(0,7)!==key.slice(0,7));if(tabStop)tabAssigned=true;
-  body+=`<button type="button" class="shared-day ${cls}" data-day="${key}" aria-label="${escapeHTML(description)}" aria-pressed="${selected}" ${disabled?'disabled':''} tabindex="${tabStop?'0':'-1'}" onclick="${options.onDay||'calendarPickDay'}('${key}')">${day}${mark.dot?'<span class="shared-dot"></span>':''}</button>`;
+  body+=`<button type="button" class="shared-day ${cls}" data-day="${key}" aria-label="${escapeHTML(description)}" aria-pressed="${mark.pressed??selected}" ${disabled?'disabled':''} tabindex="${tabStop?'0':'-1'}" onclick="${options.onDay||'calendarPickDay'}('${key}')">${day}${mark.dot?'<span class="shared-dot"></span>':''}</button>`;
  }
  return `<div class="shared-calendar" data-year="${year}" data-month="${month}" data-context="${options.context||''}" role="group" aria-label="${months[month]} ${year}"><div class="shared-calendar-grid">${body}</div></div>`;
 }

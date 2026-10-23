@@ -1056,7 +1056,7 @@ function alcoholDayClass(dateKey){
   return alcoholIsDrink(dateKey)?'drank':'sober';
 }
 function alcoholMonthHTML(year,monthIndex){
- return `<div class="alcohol-month-card"><div class="alcohol-month-title">${CALENDAR_MONTHS[calendarLanguage()][monthIndex]}</div>${calendarMonthHTML(year,monthIndex,{context:'alcohol',onDay:'toggleAlcoholDay',min:alcoholTrackingStart()||localDate(),marker:key=>{const cls=alcoholDayClass(key);return {className:cls,disabled:cls==='untracked',label:cls==='drank'?trText('Пил алкоголь','Drank alcohol'):cls==='sober'?trText('Без алкоголя','Alcohol-free'):''}}})}</div>`;
+ return `<div class="alcohol-month-card"><div class="alcohol-month-title">${CALENDAR_MONTHS[calendarLanguage()][monthIndex]}</div>${calendarMonthHTML(year,monthIndex,{context:'alcohol',onDay:'toggleAlcoholDay',min:alcoholTrackingStart()||localDate(),marker:key=>{const cls=alcoholDayClass(key);return {className:cls,pressed:cls==='drank',disabled:cls==='untracked',label:cls==='drank'?trText('Пил алкоголь','Drank alcohol'):cls==='sober'?trText('Без алкоголя','Alcohol-free'):''}}})}</div>`;
 }
 function renderAlcoholCalendar(){
   if(!document.getElementById('alcoholModal'))return;

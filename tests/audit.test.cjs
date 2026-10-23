@@ -228,3 +228,8 @@ test('Today layout and shared Nutrition section contain no obsolete target or pr
 test('unusual legacy protein modes survive target editing without dropping extensions',()=>{
  const r=runtime();r.run('data.goalRules.protein={type:"weekly",target:120,extension:false}');r.nodes.set('goalMode_protein',{value:'weekly'});assert.deepEqual(r.json('editedGoalRule("protein",130)'),{type:'weekly',target:130,extension:false});
 });
+test('shared date construction retains the requested day through northern and southern DST changes',()=>{
+ const previous=process.env.TZ;
+ try{for(const timezone of ['UTC','America/New_York','Europe/Berlin','Pacific/Auckland']){process.env.TZ=timezone;const r=runtime();for(const day of ['2024-03-10','2024-03-31','2024-09-29','2024-10-27','2024-11-03']){r.ctx.day=day;assert.equal(r.run('calendarKey(calendarDateParts(...day.split("-").map((v,i)=>Number(v)-(i===1?1:0))))'),day,timezone)}}}
+ finally{if(previous===undefined)delete process.env.TZ;else process.env.TZ=previous}
+});
