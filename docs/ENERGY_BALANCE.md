@@ -1,6 +1,6 @@
 # Energy Balance implementation
 
-Current UI: 7.3.0, based on main ec8ffd15bd02062d2528f9376ca72eb5d29e07aa (7.2.0), schema 3. Formulas are unchanged.
+Current UI: 7.3.0, based on main 1a006e6e531e8a87b808fe7708f7881e0c4f33e4 (7.2.2), schema 3. Formulas are unchanged.
 
 ## Existing architecture
 
@@ -49,15 +49,15 @@ Workouts contain a stable ID, date, type, optional minutes/kcal/steps, source, e
 - Unknown overlap: suppress all extra walking as a conservative choice, show an explicit warning and a provisional difference using known components. Such dates are excluded from sufficient-data history totals. An impossible session-step sum also excludes a date from sufficient-data history.
 - New cycling/strength/swimming sessions default to no step overlap based on the activity type. Other/legacy overlap choices are retained. Gym is unchanged. Gym=true without an energy-bearing/step-counted session remains provisional, never a made-up energy amount. Outdoors is not used as walking.
 
-Food totals come exclusively from `nutritionAggregate(date).calories`. Without usable calories or a base-energy profile, the balance is unavailable. Otherwise the provisional difference uses the **known** intake/activity components. Missing walking remains null in the model and visible as not logged; it is not saved as zero. Partial food values keep their ≥ marker. Missing components and unreliable overlap are disclosed in a compact limitations section, and the summary explicitly indicates missing data. No real-world diary completeness is claimed.
+Food totals come exclusively from `nutritionAggregate(date).calories`. Without usable calories or a base-energy profile, the balance is unavailable. Otherwise the provisional difference uses the **known** intake/activity components. The 7.2.2 missing-step behavior is retained: recorded steps remain null and the configured usual allowance supplies a clearly labelled calculation assumption, with no extra walking added. Assumptions are never written into logs or backups. Workout overlap uses actual recorded steps only. Partial food values keep their ≥ marker. Missing components and unreliable overlap are disclosed in a compact limitations section, and the summary explicitly indicates missing data. No real-world diary completeness is claimed.
 
 Legacy `days.foodSignature`, `days.activitySignature` and `days.noExtraSteps` are retained for backup compatibility; signatures no longer gate any calculation. Existing explicit no-extra-step records remain valid historical input. Source changes recalculate the day/card/history immediately. Cross-tab refresh preserves unfinished form drafts through the existing save/conflict infrastructure. Derived expenditure is never persisted as a second source of truth.
 
 ## History and weight comparison
 
-7/14/30/90 days and custom ranges up to 3661 days are available. Days automatically enter totals when profile, food calories, steps and any workout/overlap inputs are sufficiently known; no manual approval is used. All totals and comparisons remain provisional because unlogged meals/activity cannot be detected. A period with no qualified days has an unknown sum, not zero. Counts and all exclusion reasons are visible. The daily chart uses discrete points/bars with explicit missing positions; it cannot draw a cumulative line across gaps.
+7/14/30/90 days and custom ranges up to 3661 days are available. Days automatically enter totals when profile, food calories and workout/overlap inputs are sufficiently known; unlogged steps use the 7.2.2 usual-activity assumption and its day count is displayed; no manual approval is used. All totals and comparisons remain provisional because unlogged meals/activity cannot be detected. A period with no qualified days has an unknown sum, not zero. Counts and all exclusion reasons are visible. The daily chart uses discrete points/bars with explicit missing positions; it cannot draw a cumulative line across gaps.
 
-The 7700 kcal/kg conversion is only an illustrative energy equivalent. Weight averages use at least three measurements in a trailing seven-calendar-day window and appear only on actual measurement dates. Comparison requires two such points at least seven days apart. Their measurement counts/dates are shown. Energy is compared over full days `[first average date, last average date)`; measurement times are unknown. A discrepancy is withheld unless every day in this matching interval qualifies. Sparse weight histories produce no confident trend or comparison. No automatic calibration, energy target changes, or future weight access.
+The 7700 kcal/kg conversion is only an illustrative energy equivalent. Weight averages use at least three measurements in a trailing seven-calendar-day window and appear only on actual measurement dates. Comparison requires two such points at least seven days apart. Their measurement counts/dates are shown. Energy is compared over full days `[first average date, last average date)`; measurement times are unknown. A discrepancy is withheld unless every day in this matching interval qualifies and none relies on assumed steps. Sparse weight histories produce no confident trend or comparison. No automatic calibration, energy target changes, or future weight access.
 
 ## Compatibility, privacy and operation
 

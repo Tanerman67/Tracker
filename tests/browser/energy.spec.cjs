@@ -82,3 +82,22 @@ test('independent tab edits merge workout IDs and update the open balance automa
  await page.reload();await expect(page.locator('body')).not.toHaveClass(/loading-data/);await open(page);const before=await page.evaluate(()=>energyDay().balance);
  await other.evaluate(async()=>{data.nutrition.entries[0].nutrients.calories.value=1800;await save()});await expect.poll(()=>page.evaluate(()=>energyDay().balance)).toBe(before+200);await other.close();
 });
+
+test('missing steps recalculate old food days without mutating logs or backup data',async({page})=>{
+ await ready(page);await seed(page);
+ await page.evaluate(async()=>{delete data.logs['2024-03-01'].steps;await save()});await settle(page);
+ const before=await page.evaluate(()=>structuredClone(data));await open(page);
+ await expect(page.locator('.energy-issues')).toContainText('Steps not logged; usual activity used');
+ await expect(page.locator('.energy-components')).toContainText('Usual allowance: 800');
+ let d=await page.evaluate(()=>energyDay());expect(d.walking.value).toBe(0);expect(d.balance).toBeCloseTo(d.base-2000);
+ await page.evaluate(()=>energySwitch('history'));await expect(page.locator('.energy-summary').first()).toContainText('1/30');
+ await page.locator('details:has(.energy-history-list)>summary').click();await expect(page.locator('.energy-history-list')).toContainText('Steps not logged; usual activity used');
+ expect(await page.evaluate(()=>data)).toEqual(before);
+ await page.reload();await expect(page.locator('body')).not.toHaveClass(/loading-data/);await open(page);
+ expect(await page.evaluate(()=>Object.hasOwn(data.logs['2024-03-01'],'steps'))).toBe(false);
+ await page.evaluate(async()=>{data.logs['2024-03-01'].steps=0;await save();renderEnergy()});await settle(page);
+ await expect(page.locator('.energy-issues')).not.toContainText('Steps not logged');
+ d=await page.evaluate(()=>energyDay());expect(d.walking.recorded).toBe(0);expect(d.walking.assumed).toBe(false);expect(d.walking.value).toBe(0);
+ await page.locator('#moduleBack').click();await page.locator('#tabSettings').click();const download=page.waitForEvent('download');await page.locator('[onclick="exportBackup()"]').click();const backup=JSON.parse(fs.readFileSync(await (await download).path(),'utf8'));expect(backup.data.logs['2024-03-01'].steps).toBe(0);
+ expect(backup.data.nutrition).toEqual(before.nutrition);
+});

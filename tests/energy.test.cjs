@@ -37,7 +37,7 @@ test('only steps above 500/800/1000 habitual steps produce net walking energy',(
  for(const baseline of [500,800,1000]){const p={...profile,baselineIncludedSteps:baseline},l=logs();l[DAY].steps=baseline+6000;
  const w=E.walking(p,l,DAY);assert.equal(w.steps,6000);assert.ok(Math.abs(w.value-148.155)<0.0001);assert.ok(w.range[0]<w.value&&w.range[1]>w.value);
  l[DAY].steps=baseline-100;assert.equal(E.walking(p,l,DAY).value,0);
- l[DAY].steps=0;assert.equal(E.walking(p,l,DAY).value,0);delete l[DAY].steps;assert.equal(E.walking(p,l,DAY).value,null);
+ l[DAY].steps=0;assert.equal(E.walking(p,l,DAY).value,0);delete l[DAY].steps;assert.equal(E.walking(p,l,DAY).value,0);
  }
 });
 test('walking never silently replaces missing inputs and can explicitly confirm no extra walking',()=>{
@@ -88,7 +88,7 @@ test('food changes recalculate without re-confirming; no food never becomes zero
  const partial=E.daily(db,DAY,calories(1000,true));assert.equal(partial.balance,first.tdee-1000);assert.equal(partial.usable,false);assert.ok(partial.issues.includes('partialFood'));
 });
 test('missing steps and unknown workouts stay unknown while showing difference of known records',()=>{
- const db=database();delete db.logs[DAY].steps;let d=E.daily(db,DAY,calories());assert.equal(d.walking.value,null);assert.equal(d.tdee,d.base);assert.equal(d.balance,d.base-2000);assert.equal(d.usable,false);
+ const db=database();delete db.logs[DAY].steps;let d=E.daily(db,DAY,calories());assert.equal(d.walking.recorded,null);assert.equal(d.walking.assumed,true);assert.equal(d.walking.value,0);assert.equal(d.tdee,d.base);assert.equal(d.balance,d.base-2000);assert.equal(d.usable,true);
  db.logs[DAY].steps=0;assert.equal(E.daily(db,DAY,calories()).usable,true);
  db.logs[DAY].gym=true;d=E.daily(db,DAY,calories());assert.ok(d.issues.includes('missingWorkout'));assert.equal(d.exercise.value,0);assert.equal(d.usable,false);assert.notEqual(d.balance,null);
 });
@@ -125,5 +125,25 @@ test('automatic smoothed comparison matches dates and withholds discrepancy with
  for(let i=0;i<20;i++){const date=E.addDays(DAY,i);db.logs[date]={weight:70-i*.02,steps:800};db.nutrition.entries.push({id:'fictional-food-'+i,date})}
  db.logs['2025-01-01']={weight:999};
  const p=E.period(db,DAY,E.addDays(DAY,19),()=>calories(1800));assert.equal(p.weights[0].smooth,null);assert.equal(p.weights[2].count,3);assert.equal(p.weights[2].smooth,(70+69.98+69.96)/3);assert.equal(p.comparison.total,17);assert.equal(p.comparison.used,17);assert.notEqual(p.comparison.discrepancy,null);
- assert.ok(p.weights.every(w=>w.value<100));delete db.logs[E.addDays(DAY,8)].steps;const gap=E.period(db,DAY,E.addDays(DAY,19),()=>calories(1800));assert.equal(gap.comparison.used,16);assert.equal(gap.comparison.discrepancy,null);
+ assert.ok(p.weights.every(w=>w.value<100));delete db.logs[E.addDays(DAY,8)].steps;const gap=E.period(db,DAY,E.addDays(DAY,19),()=>calories(1800));assert.equal(gap.comparison.used,17);assert.equal(gap.comparison.discrepancy,null);
+});
+
+test('missing steps use all routine/custom allowances without changing any saved records',()=>{
+ for(const baseline of [800,2500,6000,1234,0])for(const raw of [undefined,null,0,7500]){
+  const db=database();db.energyBalance.profile.baselineIncludedSteps=baseline;
+  if(raw===undefined)delete db.logs[DAY].steps;else db.logs[DAY].steps=raw;
+  const before=structuredClone(db),d=E.daily(db,DAY,calories());
+  assert.equal(d.walking.assumed,raw===undefined||raw===null);assert.equal(d.walking.effective,raw??baseline);
+  assert.equal(d.walking.steps,raw==null?0:Math.max(0,raw-baseline));
+  if(raw==null||raw===0)assert.equal(d.walking.value,0);
+  assert.notEqual(d.balance,null);assert.deepEqual(db,before);
+ }
+});
+test('historical food days without step records recalculate, missing food stays unknown',()=>{
+ const db=database();delete db.logs[DAY];const before=structuredClone(db);
+ const p=E.period(db,DAY,E.addDays(DAY,1),date=>calories(date===DAY?1800:null));
+ assert.equal(p.used,1);assert.equal(p.days[0].walking.value,0);assert.equal(p.days[0].balance,p.days[0].base-1800);
+ assert.equal(p.days[1].food.value,null);assert.equal(p.days[1].balance,null);assert.deepEqual(db,before);
+ db.energyBalance.workouts=[workout({type:'running',overlap:'included',steps:4000})];
+ const d=E.daily(db,DAY,calories());assert.equal(d.walking.value,0);assert.equal(d.exercise.value,300);assert.equal(d.balance,d.base+300-2000);assert.ok(d.issues.includes('unknownOverlap'));
 });

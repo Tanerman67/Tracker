@@ -38,16 +38,18 @@
   const value=enough?10*weight.value+6.25*height-5*age+(variant==='plus5'?5:-161):null;
   return {value:value>0?value:null,source:'mifflin',weight,age};
  }
- function walking(profile,logs,date,{excludedSteps=0,suppress=false,noExtraSteps=false}={}){
+ function walking(profile,logs,date,{excludedSteps=0,suppress=false}={}){
   const raw=number(logs?.[date]?.steps,0,200000),included=number(profile?.baselineIncludedSteps,0,100000);
   const weight=weightAt(logs,date),height=number(profile?.heightCm,100,250);
-  const steps=raw!==null&&included!==null?Math.max(0,raw-included-excludedSteps):noExtraSteps&&raw===null?0:null;
+  // Missing steps use the habitual allowance only in this calculation, never in logs.
+  const assumed=raw===null&&included!==null,effective=assumed?included:raw;
+  const steps=effective!==null&&included!==null?Math.max(0,effective-included-excludedSteps):null;
   // ACSM horizontal net oxygen cost ~0.1 ml/kg/m * 5 kcal/l = 0.5 kcal/kg/km.
   // Step length 0.415 * height is a deliberately approximate engineering estimate.
   const km=steps!==null&&height!==null?steps*height*0.415/100000:null;
   const value=suppress?0:steps===0?0:km!==null&&weight?km*weight.value*0.5:null;
   const range=steps===0?[0,0]:steps!==null&&height!==null&&weight?[steps*height*0.35/100000*weight.value*0.35,steps*height*0.5/100000*weight.value*0.65]:null;
-  return {value,steps,recorded:raw,included,excludedSteps,km,range,suppressed:suppress,belowBaseline:raw!==null&&included!==null&&raw<included};
+  return {value,steps,recorded:raw,assumed,effective,included,excludedSteps,km,range,suppressed:suppress,belowBaseline:raw!==null&&included!==null&&raw<included};
  }
  const WORKOUT_TYPES=['walking','running','cycling','strength','swimming','other'];
  function validWorkout(w){
@@ -88,6 +90,7 @@
   const issues=[...ex.issues];
   if(base===null)issues.push('missingProfile');
   if(walk.value===null)issues.push('missingWalking');
+  if(walk.assumed)issues.push('assumedSteps');
   if(r.weight?.stale&&(r.source==='mifflin'||walk.steps>0))issues.push('staleWeight');
   if(walk.belowBaseline)issues.push('belowBaseline');
   if(db.logs?.[date]?.gym===true&&!(module.workouts||[]).some(w=>w.date===date))issues.push('missingWorkout');
@@ -98,7 +101,7 @@
   // Sum known components only; unknown walking remains null and is disclosed.
   const tdee=base!==null?base+(walk.value??0)+ex.value:null;
   const balance=tdee!==null&&food.value!==null?tdee-food.value:null;
-  const usable=balance!==null&&!issues.some(i=>i!=='belowBaseline');
+  const usable=balance!==null&&!issues.some(i=>!['belowBaseline','assumedSteps'].includes(i));
   const status=insufficient?'insufficient':'provisional';
   // Conditional model scenarios, NOT a statistical interval or device accuracy bound.
   const sensitivity=tdee!==null&&routine&&walk.range&&!ex.suppressWalking?[r.value*routine.range[0]+walk.range[0]+ex.value,r.value*routine.range[1]+walk.range[1]+ex.value]:null;
@@ -135,7 +138,7 @@
   if(first&&last&&dayDiff(first.date,last.date)>=7){
    const matched=days.filter(d=>d.date>=first.date&&d.date<last.date),qualified=matched.filter(d=>d.usable);
    const energy=qualified.length?qualified.reduce((n,d)=>n+d.balance,0):null,actual=last.smooth-first.smooth;
-   comparison={start:first.date,end:last.date,first,last,actual,used:qualified.length,total:matched.length,energy,equivalent:energy===null?null:-energy/7700,discrepancy:qualified.length===matched.length&&energy!==null?actual+energy/7700:null};
+   comparison={start:first.date,end:last.date,first,last,actual,used:qualified.length,total:matched.length,energy,equivalent:energy===null?null:-energy/7700,discrepancy:qualified.length===matched.length&&energy!==null&&!qualified.some(d=>d.walking.assumed)?actual+energy/7700:null};
   }
   return {start,end,days,used:used.length,excludedDays:days.length-used.length,excluded,sum,equivalent:sum===null?null:-sum/7700,weights,comparison};
  }
