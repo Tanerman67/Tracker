@@ -49,7 +49,34 @@
   const range=steps===0?[0,0]:steps!==null&&height!==null&&weight?[steps*height*0.35/100000*weight.value*0.35,steps*height*0.5/100000*weight.value*0.65]:null;
   return {value,steps,recorded:raw,included,excludedSteps,km,range,suppressed:suppress,belowBaseline:raw!==null&&included!==null&&raw<included};
  }
- const api={dateNumber,addDays,dayDiff,number,stable,weightAt,ROUTINES,ageAt,resting,walking};
+ const WORKOUT_TYPES=['walking','running','cycling','strength','swimming','other'];
+ function validWorkout(w){
+  return !!w&&typeof w==='object'&&!Array.isArray(w)&&typeof w.id==='string'&&w.id.length>0&&w.id.length<=150&&dateNumber(w.date)!==null
+   &&WORKOUT_TYPES.includes(w.type)&&['watch','manual'].includes(w.source)&&w.scope==='workout'
+   &&['active','total','unknown'].includes(w.energyType)&&['steps','watch'].includes(w.counting)&&['included','none','unknown'].includes(w.overlap)
+   &&(w.kcal===null||typeof w.kcal==='number'&&number(w.kcal,0,20000)!==null)
+   &&(w.minutes===null||typeof w.minutes==='number'&&number(w.minutes,Number.MIN_VALUE,1440)!==null)
+   &&(w.steps===null||Number.isInteger(w.steps)&&number(w.steps,0,200000)!==null)
+   &&(!['walking','running'].includes(w.type)||w.overlap!=='none')
+   &&(w.counting!=='steps'||w.overlap==='included');
+ }
+ function exercise(workouts,date,rmr,recordedSteps){
+  let value=0,excludedSteps=0,suppressWalking=false;
+  const issues=[],rows=[],seen=new Set();
+  for(const w of (workouts||[]).filter(w=>w.date===date)){
+   if(!validWorkout(w)||seen.has(w.id)){issues.push('invalidWorkout');continue}seen.add(w.id);
+   if(w.counting==='steps'){rows.push({id:w.id,value:0,source:'steps'});continue}
+   let net=w.energyType==='active'?w.kcal:w.energyType==='total'&&w.minutes!==null&&rmr!==null&&w.kcal!==null?Math.max(0,w.kcal-rmr*w.minutes/1440):null;
+   if(net===null){issues.push(w.energyType==='total'&&w.minutes===null?'totalNeedsDuration':'unknownWorkout');rows.push({id:w.id,value:null,source:w.energyType});continue}
+   if(w.overlap==='unknown'||w.overlap==='included'&&(w.steps===null||recordedSteps===null)){
+    suppressWalking=true;issues.push('unknownOverlap');
+   }else if(w.overlap==='included')excludedSteps+=w.steps;
+   value+=net;rows.push({id:w.id,value:net,source:w.energyType});
+  }
+  if(recordedSteps!==null&&excludedSteps>recordedSteps){suppressWalking=true;issues.push('inconsistentSteps')}
+  return {value,excludedSteps,suppressWalking,issues:[...new Set(issues)],rows};
+ }
+ const api={dateNumber,addDays,dayDiff,number,stable,weightAt,ROUTINES,ageAt,resting,walking,WORKOUT_TYPES,validWorkout,exercise};
  root.MyRhythmEnergy=api;
  if(typeof module==='object'&&module.exports)module.exports=api;
 })(globalThis);

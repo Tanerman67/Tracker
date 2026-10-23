@@ -46,3 +46,31 @@ test('walking never silently replaces missing inputs and can explicitly confirm 
  assert.equal(E.walking(profile,{},DAY,{noExtraSteps:true}).value,0);
  assert.equal(E.walking(profile,logs(),DAY,{excludedSteps:6000}).value,0);
 });
+function workout(extra={}){return {id:'fictional-session',date:DAY,type:'cycling',source:'watch',scope:'workout',energyType:'active',counting:'watch',overlap:'none',kcal:300,minutes:60,steps:null,...extra}}
+test('watch active calories are net; total calories remove rest and require duration',()=>{
+ assert.equal(E.exercise([workout()],DAY,1440,6800).value,300);
+ assert.equal(E.exercise([workout({energyType:'total'})],DAY,1440,6800).value,240);
+ for(const w of [workout({energyType:'total',minutes:null}),workout({energyType:'unknown'}),workout({kcal:null})]){const x=E.exercise([w],DAY,1440,6800);assert.equal(x.value,0);assert.ok(x.issues.length)}
+ assert.equal(E.exercise([workout({energyType:'total',kcal:10})],DAY,1440,6800).value,0);
+});
+test('walking/running watch sessions exclude their known steps; step mode never adds watch kcal',()=>{
+ for(const type of ['walking','running']){const w=workout({type,overlap:'included',steps:4000}),x=E.exercise([w],DAY,1600,6800);
+ assert.equal(x.value,300);assert.equal(x.excludedSteps,4000);assert.equal(E.walking(profile,logs(),DAY,{excludedSteps:x.excludedSteps}).steps,2000);
+ const bySteps=E.exercise([{...w,counting:'steps'}],DAY,1600,6800);assert.equal(bySteps.value,0);assert.equal(bySteps.excludedSteps,0);
+ }
+});
+test('unknown overlap suppresses all extra walking and never blindly adds both estimates',()=>{
+ const x=E.exercise([workout({type:'running',overlap:'included',steps:null})],DAY,1600,6800);
+ assert.equal(x.suppressWalking,true);assert.ok(x.issues.includes('unknownOverlap'));assert.equal(E.walking(profile,logs(),DAY,{suppress:x.suppressWalking}).value,0);
+ assert.ok(E.exercise([workout({overlap:'included',steps:9000})],DAY,1600,6800).issues.includes('inconsistentSteps'));
+});
+test('cycling/strength/swimming are additional only with explicit no-step-overlap choice',()=>{
+ for(const type of ['cycling','strength','swimming']){const x=E.exercise([workout({type})],DAY,1600,6800);assert.deepEqual(x.issues,[]);assert.equal(x.excludedSteps,0);assert.equal(x.value,300)}
+});
+test('workout IDs prevent duplicate counting; edits/removal recalculate; daily watch totals rejected',()=>{
+ const a=workout(),b=workout({id:'fictional-second',kcal:150});assert.equal(E.exercise([a,b],DAY,1600,6800).value,450);
+ assert.equal(E.exercise([a,{...a}],DAY,1600,6800).value,300);assert.ok(E.exercise([a,{...a}],DAY,1600,6800).issues.includes('invalidWorkout'));
+ assert.equal(E.exercise([{...a,kcal:200}],DAY,1600,6800).value,200);assert.equal(E.exercise([],DAY,1600,6800).value,0);
+ assert.equal(E.validWorkout(workout({scope:'daily'})),false);assert.equal(E.validWorkout(workout({type:'running',overlap:'none'})),false);
+ for(const extra of [{kcal:-1},{minutes:0},{kcal:''},{steps:1.5}])assert.equal(E.validWorkout(workout(extra)),false);
+});
