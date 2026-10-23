@@ -1,3 +1,13 @@
+# Energy Balance 7.2.1 update
+
+Daily balance and period analytics now use recorded data automatically. All results are provisional: a diary cannot establish whether unlogged meals or workouts exist. Missing steps and missing/partial food remain unknown and are excluded from period sums. Weight comparison still requires the existing measurement windows and reports coverage.
+
+No expenditure formula has changed. Unknown workout step overlap suppresses extra walking to prevent double counting; the remaining balance is a conservative provisional estimate and carries a warning. Unknown workout calories still block a usable balance. Workout input defaults to active workout calories, with total calories, duration, overlap and source under More options.
+
+Schema version remains 3. Legacy food/activity signatures and no-extra-step records are preserved and accepted in imports/backups, but signatures no longer gate calculations. Profile and workouts retain their existing storage format. No migration rewrites historical records.
+
+## Original model reference (confirmation workflow superseded above)
+
 # Energy Balance implementation
 
 Base: main 8e018f44d3554478d6e6c11aee819ff4cfda23f8 (7.1.0), schema 3.

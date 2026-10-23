@@ -78,7 +78,7 @@ const calories=(value=2000,partial=false)=>({value,partial,qualities:['estimated
 function database(){return {logs:logs(),nutrition:{entries:[{id:'fictional-food',date:DAY,nutrients:{calories:{value:2000}}}]},energyBalance:{profile:{...profile},workouts:[],days:{}}}}
 function confirm(db){db.energyBalance.days[DAY]={foodSignature:E.foodSignature(db,DAY),activitySignature:E.activitySignature(db,DAY)}}
 test('confirmed daily log uses the supplied existing food aggregate and correct deficit sign',()=>{
- const db=database();confirm(db);const d=E.daily(db,DAY,calories());assert.equal(d.status,'confirmed');assert.equal(d.balance,d.tdee-2000);assert.ok(d.balance>0);
+ const db=database();confirm(db);const d=E.daily(db,DAY,calories());assert.equal(d.status,'provisional');assert.equal(d.balance,d.tdee-2000);assert.ok(d.balance>0);
  assert.equal(E.daily(db,DAY,calories(3000)).balance,d.tdee-3000);assert.equal(E.daily(db,DAY,calories(0)).balance,d.tdee);
  assert.equal(d.base,d.resting.value*1.2);assert.equal(d.routineExtra,d.base-d.resting.value);
 });
@@ -94,16 +94,16 @@ test('food confirmation becomes stale after create/edit/delete/import/move, orde
 test('activity confirmation detects step/workout changes and never converts Gym/outdoors to calories',()=>{
  const db=database();confirm(db);db.logs[DAY].steps=6900;assert.equal(E.daily(db,DAY,calories()).activityConfirmed,false);
  db.logs[DAY].gym=true;db.logs[DAY].outdoors=120;confirm(db);const d=E.daily(db,DAY,calories());assert.equal(d.exercise.value,0);assert.ok(d.issues.includes('missingWorkout'));assert.equal(d.balance,null);
- db.energyBalance.workouts=[workout()];assert.equal(E.daily(db,DAY,calories()).activityConfirmed,false);confirm(db);assert.equal(E.daily(db,DAY,calories()).status,'confirmed');
+ db.energyBalance.workouts=[workout()];assert.equal(E.daily(db,DAY,calories()).activityConfirmed,false);confirm(db);assert.equal(E.daily(db,DAY,calories()).status,'provisional');
  db.energyBalance.workouts=[];assert.equal(E.daily(db,DAY,calories()).activityConfirmed,false);
 });
 test('today remains provisional until explicitly confirmed; missing steps need explicit no-extra-walking',()=>{
  const db=database();assert.equal(E.daily(db,DAY,calories()).status,'provisional');delete db.logs[DAY].steps;assert.equal(E.daily(db,DAY,calories()).status,'insufficient');
  db.energyBalance.days[DAY]={noExtraSteps:true};db.energyBalance.days[DAY].foodSignature=E.foodSignature(db,DAY);db.energyBalance.days[DAY].activitySignature=E.activitySignature(db,DAY);
- assert.equal(E.daily(db,DAY,calories()).status,'confirmed');assert.equal(E.daily(db,DAY,calories()).walking.value,0);
+ assert.equal(E.daily(db,DAY,calories()).status,'provisional');assert.equal(E.daily(db,DAY,calories()).walking.value,0);
 });
 test('unknown workouts and overlap never enter confirmed accumulated balances',()=>{
- for(const w of [workout({energyType:'unknown'}),workout({energyType:'total',minutes:null}),workout({type:'running',overlap:'unknown'})]){const db=database();db.energyBalance.workouts=[w];confirm(db);const d=E.daily(db,DAY,calories());assert.notEqual(d.status,'confirmed');assert.equal(d.balance,null)}
+ for(const w of [workout({energyType:'unknown'}),workout({energyType:'total',minutes:null})]){const db=database();db.energyBalance.workouts=[w];confirm(db);const d=E.daily(db,DAY,calories());assert.notEqual(d.status,'confirmed');assert.equal(d.balance,null)}
 });
 test('energy schema is additive, validates unknown/null/zero, and rejects malformed records',()=>{
  const db=database();confirm(db);assert.equal(E.validateStore(db.energyBalance),db.energyBalance);
@@ -125,5 +125,7 @@ test('smoothed comparison matches energy dates, requires coverage, never uses fu
  for(let i=0;i<20;i++){const date=E.addDays(DAY,i);db.logs[date]={weight:70-i*.02,steps:800};db.nutrition.entries.push({id:'fictional-food-'+i,date});db.energyBalance.days[date]={foodSignature:E.foodSignature(db,date),activitySignature:E.activitySignature(db,date)}}
  db.logs['2025-01-01']={weight:999};
  const p=E.period(db,DAY,E.addDays(DAY,19),()=>calories(1800));assert.equal(p.weights[0].smooth,null);assert.equal(p.weights[2].count,3);assert.equal(p.weights[2].smooth,(70+69.98+69.96)/3);assert.equal(p.comparison.total,17);assert.equal(p.comparison.used,17);assert.notEqual(p.comparison.discrepancy,null);
- assert.ok(p.weights.every(w=>w.value<100));delete db.energyBalance.days[E.addDays(DAY,8)];const gap=E.period(db,DAY,E.addDays(DAY,19),()=>calories(1800));assert.equal(gap.comparison.used,16);assert.equal(gap.comparison.discrepancy,null);
+ assert.ok(p.weights.every(w=>w.value<100));delete db.logs[E.addDays(DAY,8)].steps;const gap=E.period(db,DAY,E.addDays(DAY,19),()=>calories(1800));assert.equal(gap.comparison.used,16);assert.equal(gap.comparison.discrepancy,null);
 });
+
+test('automatic balance ignores legacy confirmations and safely suppresses overlapping walking',()=>{const db=database();const a=E.daily(db,DAY,calories());assert.notEqual(a.balance,null);assert.equal(E.period(db,DAY,DAY,()=>calories()).used,1);confirm(db);db.logs[DAY].steps+=1000;const b=E.daily(db,DAY,calories(1900));assert.equal(b.balance,b.tdee-1900);assert.ok(!b.issues.some(i=>/Confirmed|Changed/.test(i)));db.energyBalance.workouts=[workout({type:'running',overlap:'unknown'})];const c=E.daily(db,DAY,calories());assert.equal(c.walking.value,0);assert.equal(c.balance,c.base+c.exercise.value-2000);assert.ok(c.issues.includes('unknownOverlap'));});
