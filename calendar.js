@@ -38,6 +38,8 @@ function calendarNavigate(kind,year,month){
 function enhanceDateInputs(root=document){
  root.querySelectorAll('input[type="date"]').forEach(input=>{
   if(input.type!=='date'||!input.parentNode)return;
+  const labels={todayDateInput:['Дата записи','Entry date'],nutritionDate:['Дата питания','Nutrition date'],nutritionCopyDate:['День для копирования','Source day'],nutritionFoodDate:['Дата','Date'],smokeDate:['Дата отказа от сигарет','Smoking quit date'],alcoholDate:['Начало учёта алкоголя','Alcohol tracking start'],bodyDateInput:['Дата замера','Measurement date'],cycleStart:['Начало','Start'],cycleEnd:['Конец (необязательно)','End (optional)'],activityDate:['Дата занятия','Activity date']};
+  if(labels[input.id])input.setAttribute('aria-label',calendarText(...labels[input.id]));
   if(!input.max)input.max=localDate();
   if(input.dataset.sharedDate)return;
   input.dataset.sharedDate='true';
