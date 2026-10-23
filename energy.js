@@ -24,7 +24,7 @@ function energyRefresh(){if(moduleView==='energy'&&!document.activeElement?.clos
 function energyExternalUpdate(){
  if(moduleView!=='energy'||energyTab==='profile'||energyWorkoutId||document.activeElement?.closest('.energy-workout-form,.energy-form-grid'))return;
  saveCoordinationQueue.then(()=>{
-  if(moduleView!=='energy'||energyTab==='profile'||energyWorkoutId||JSON.stringify(data)!==JSON.stringify(storageBaseline))return;
+  if(moduleView!=='energy'||energyTab==='profile'||energyWorkoutId||document.activeElement?.closest('.energy-workout-form,.energy-form-grid')||JSON.stringify(data)!==JSON.stringify(storageBaseline))return;
   const latest=bestCandidate([parseCandidate(DATA_KEY,storageGet(DATA_KEY),true),parseCandidate(MIRROR_KEY,storageGet(MIRROR_KEY))].filter(Boolean));
   if(latest&&candidateBetter(latest,{data})){data=migrateData(latest.data);resetStorageBaseline();render()}
  });

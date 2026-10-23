@@ -1,5 +1,7 @@
 const {test,expect}=require('@playwright/test');
 const fs=require('node:fs');
+const http=require('node:http');
+const path=require('node:path');
 const DAY='2024-03-01';
 async function ready(page){await page.goto('/');await expect(page.locator('body')).not.toHaveClass(/loading-data/)}
 async function settle(page){await page.evaluate(async()=>{await saveCoordinationQueue;await vaultWriteQueue})}
@@ -51,8 +53,20 @@ test('energy backup, restore, vault and offline reload preserve existing records
  await page.locator('#tabSettings').click();const download=page.waitForEvent('download');await page.locator('[onclick="exportBackup()"]').click();const backup=JSON.parse(fs.readFileSync(await (await download).path(),'utf8'));expect(backup.schemaVersion).toBe(3);
  const context=await browser.newContext(),second=await context.newPage();await second.goto('http://127.0.0.1:8765/');await expect(second.locator('body')).not.toHaveClass(/loading-data/);second.on('dialog',d=>d.type()==='confirm'?d.accept():d.dismiss());await second.locator('#tabSettings').click();await second.locator('#backupFile').setInputFiles({name:'fictional-energy-backup.json',mimeType:'application/json',buffer:Buffer.from(JSON.stringify(backup))});await expect(second.locator('#backupStatus')).toContainText('Backup');await settle(second);
  for(const key of ['energyBalance','logs','nutrition','bodyMeasurements'])expect(await second.evaluate(key=>data[key],key)).toEqual(backup.data[key]);
+ const older=structuredClone(backup);delete older.data.energyBalance;
+ await second.locator('#backupFile').setInputFiles({name:'fictional-older-backup.json',mimeType:'application/json',buffer:Buffer.from(JSON.stringify(older))});await expect(second.locator('#backupStatus')).toContainText('Backup');await settle(second);expect(await second.evaluate(()=>data.energyBalance)).toEqual(backup.data.energyBalance);
  await second.evaluate(async()=>{await navigator.serviceWorker.ready;await vaultWriteQueue});await second.reload();await expect(second.locator('body')).not.toHaveClass(/loading-data/);await second.evaluate(async()=>{await navigator.serviceWorker.ready;if(!navigator.serviceWorker.controller)await new Promise(resolve=>navigator.serviceWorker.addEventListener('controllerchange',resolve,{once:true}))});
- await context.setOffline(true);await second.reload();await expect(second.locator('body')).not.toHaveClass(/loading-data/);await open(second);expect(await second.evaluate(()=>energyDay().status)).toBe('confirmed');await context.setOffline(false);await context.close();
+ await context.close();
+ // Stop an actual server: WebKit's emulated offline flag can fail before a SW navigation.
+ const root=path.resolve(__dirname,'../..'),server=http.createServer((req,res)=>{try{
+  const file=decodeURIComponent(new URL(req.url,'http://localhost').pathname).replace(/^\//,'')||'index.html';if(file.includes('..'))throw Error();
+  res.setHeader('Content-Type',({'.js':'application/javascript','.css':'text/css','.html':'text/html','.webmanifest':'application/manifest+json','.png':'image/png','.jpg':'image/jpeg'})[path.extname(file)]||'text/plain');res.end(fs.readFileSync(path.join(root,file)));
+ }catch(e){res.writeHead(404);res.end('missing')}});
+ await new Promise(resolve=>server.listen(8876,'127.0.0.1',resolve));try{
+  await page.goto('http://127.0.0.1:8876/');await expect(page.locator('body')).not.toHaveClass(/loading-data/);
+  await page.evaluate(async snapshot=>{data=migrateData(snapshot);await save();await navigator.serviceWorker.ready;await vaultWriteQueue;if(!navigator.serviceWorker.controller)await new Promise(resolve=>navigator.serviceWorker.addEventListener('controllerchange',resolve,{once:true}))},backup.data);
+  await new Promise(resolve=>server.close(resolve));await page.reload();await expect(page.locator('body')).not.toHaveClass(/loading-data/);await open(page);expect(await page.evaluate(()=>energyDay().status)).toBe('confirmed');
+ }finally{if(server.listening)await new Promise(resolve=>server.close(resolve))}
 });
 test('independent tab edits merge workout IDs and food changes invalidate another tab confirmation',async({page,context})=>{
  await ready(page);await seed(page);const other=await context.newPage();await ready(other);
