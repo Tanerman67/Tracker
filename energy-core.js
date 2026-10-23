@@ -23,7 +23,33 @@
   const key=Object.keys(logs||{}).filter(k=>dateNumber(k)!==null&&k<=date&&number(logs[k]?.weight,Number.MIN_VALUE)!==null).sort().pop();
   return key?{date:key,value:number(logs[key].weight),ageDays:dayDiff(key,date),stale:dayDiff(key,date)>30}:null;
  }
- const api={dateNumber,addDays,dayDiff,number,stable,weightAt};
+ // Routine PAL includes habitual steps and average TEF; it is not a full-day
+ // activity factor to which ALL steps can be added. These are starting assumptions.
+ const ROUTINES={seated:{pal:1.2,steps:800,range:[1.15,1.35]},light:{pal:1.35,steps:2500,range:[1.25,1.5]},moving:{pal:1.55,steps:6000,range:[1.4,1.7]}};
+ function ageAt(birthDate,date){
+  if(dateNumber(birthDate)===null||dateNumber(date)===null||birthDate>date)return null;
+  return Number(date.slice(0,4))-Number(birthDate.slice(0,4))-(date.slice(5)<birthDate.slice(5)?1:0);
+ }
+ function resting(profile,logs,date){
+  const weight=weightAt(logs,date),age=ageAt(profile?.birthDate,date);
+  if(profile?.mode==='manual')return {value:number(profile.manualRmr,100,10000),source:'manual',weight,age};
+  const height=number(profile?.heightCm,100,250),variant=profile?.variant;
+  const enough=profile?.mode==='mifflin'&&height!==null&&age!==null&&age>=18&&age<=120&&weight&&['plus5','minus161'].includes(variant);
+  const value=enough?10*weight.value+6.25*height-5*age+(variant==='plus5'?5:-161):null;
+  return {value:value>0?value:null,source:'mifflin',weight,age};
+ }
+ function walking(profile,logs,date,{excludedSteps=0,suppress=false,noExtraSteps=false}={}){
+  const raw=number(logs?.[date]?.steps,0,200000),included=number(profile?.baselineIncludedSteps,0,100000);
+  const weight=weightAt(logs,date),height=number(profile?.heightCm,100,250);
+  const steps=raw!==null&&included!==null?Math.max(0,raw-included-excludedSteps):noExtraSteps&&raw===null?0:null;
+  // ACSM horizontal net oxygen cost ~0.1 ml/kg/m * 5 kcal/l = 0.5 kcal/kg/km.
+  // Step length 0.415 * height is a deliberately approximate engineering estimate.
+  const km=steps!==null&&height!==null?steps*height*0.415/100000:null;
+  const value=suppress?0:steps===0?0:km!==null&&weight?km*weight.value*0.5:null;
+  const range=steps===0?[0,0]:steps!==null&&height!==null&&weight?[steps*height*0.35/100000*weight.value*0.35,steps*height*0.5/100000*weight.value*0.65]:null;
+  return {value,steps,recorded:raw,included,excludedSteps,km,range,suppressed:suppress,belowBaseline:raw!==null&&included!==null&&raw<included};
+ }
+ const api={dateNumber,addDays,dayDiff,number,stable,weightAt,ROUTINES,ageAt,resting,walking};
  root.MyRhythmEnergy=api;
  if(typeof module==='object'&&module.exports)module.exports=api;
 })(globalThis);
