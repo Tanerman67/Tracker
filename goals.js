@@ -12,7 +12,7 @@ function legacyGoalRules(d){
 function goalRule(id){
  const rule=data.goalRules?.[id]||{type:tracker(id)?.type==='boolean'?'boolean':'min',target:goalFor(id)};
  const target=id==='calories'?data.nutrition?.goals?.calories:goalFor(id);
- return {...rule,target:rule.type==='range'?rule.target:target??rule.target};
+ return {...rule,target:id==='protein'?data.proteinGoal:rule.type==='range'?rule.target:target??rule.target};
 }
 function goalState(value,rule){
  const known=typeof value==='number'&&Number.isFinite(value)||typeof value==='boolean';
@@ -36,15 +36,17 @@ function validateV7Data(obj){
  if(obj.englishActivity!==undefined){if(!isDataObject(obj.englishActivity)||!Array.isArray(obj.englishActivity.entries))throw Error('Invalid English activity.');const ids=new Set();for(const e of obj.englishActivity.entries){if(!isDataObject(e)||typeof e.id!=='string'||ids.has(e.id)||!validDay(e.date)||e.date>localDate()||!Number.isFinite(e.minutes)||e.minutes<0||e.minutes>1440||typeof e.type!=='string'||e.type.length>80)throw Error('Invalid study entry.');ids.add(e.id)}}
  if(obj.goalRules!==undefined){if(!isDataObject(obj.goalRules))throw Error('Invalid goal rules.');for(const g of Object.values(obj.goalRules)){if(!isDataObject(g)||!['min','max','range','boolean','weekly','observe'].includes(g.type)||g.target!==undefined&&g.target!==null&&(!Number.isFinite(g.target)||g.target<0)||g.type==='range'&&(!Number.isFinite(g.upper)||g.upper<g.target))throw Error('Invalid goal rule.')}}
 }
-function renderGoalRuleSettings(){
- const host=document.getElementById('goalRuleSettings');if(!host)return;
- host.innerHTML=['protein','steps','sleep','outdoors'].map(id=>{const rule=goalRule(id);return `<div class="field"><label for="goalMode_${id}">${escapeHTML(trTrackerName(tracker(id)))}</label><select id="goalMode_${id}">${[['min','Минимум','Minimum'],['max','Лимит','Limit'],['range','Диапазон','Range'],['observe','Наблюдение','Observe']].map(([type,ru,en])=>`<option value="${type}" ${rule.type===type?'selected':''}>${trText(ru,en)}</option>`).join('')}</select><label for="goalUpper_${id}">${trText('Верх диапазона (для режима «Диапазон»)','Upper value (Range mode)')}</label><input id="goalUpper_${id}" type="number" min="0" step="any" value="${rule.upper??''}"></div>`}).join('');
+function goalRuleEditorHTML(ids){
+ return ids.map(id=>{const rule=goalRule(id);return `<div class="field"><label for="goalMode_${id}">${escapeHTML(trTrackerName(tracker(id)))}</label><select id="goalMode_${id}">${[['min','Минимум','Minimum'],['max','Лимит','Limit'],['range','Диапазон','Range'],['observe','Наблюдение','Observe']].map(([type,ru,en])=>`<option value="${type}" ${rule.type===type?'selected':''}>${trText(ru,en)}</option>`).join('')}</select><label for="goalUpper_${id}">${trText('Верх диапазона (для режима «Диапазон»)','Upper value (Range mode)')}</label><input id="goalUpper_${id}" type="number" min="0" step="any" value="${rule.upper??''}"></div>`}).join('');
+}
+function renderGoalRuleSettings(){const host=document.getElementById('goalRuleSettings');if(host)host.innerHTML=goalRuleEditorHTML(['steps','sleep','outdoors'])}
+function editedGoalRule(id,target){
+ const old=data.goalRules?.[id]||{type:'min'},mode=document.getElementById('goalMode_'+id);if(!mode)return {...old,target};
+ const type=mode.value,raw=document.getElementById('goalUpper_'+id).value.trim(),upper=raw===''?null:Number(raw);
+ if(!['min','max','range','observe'].includes(type)||type==='range'&&(upper===null||!Number.isFinite(upper)||upper<0||target!=null&&upper<target))throw Error(trText('Проверь границы диапазона.','Check the range limits.'));
+ return {...old,type,target,...(type==='range'?{upper}:{})};
 }
 function saveGoalRulesFromSettings(){
- const next=structuredClone(data.goalRules);for(const id of ['protein','steps','sleep','outdoors']){
- const mode=document.getElementById('goalMode_'+id);if(!mode)continue;
- const type=mode.value,upper=Number(document.getElementById('goalUpper_'+id).value),target=goalFor(id);
- if(type==='range'&&(!Number.isFinite(upper)||!Number.isFinite(target)||upper<target||target<=0)){alert(trText('Проверь границы диапазона.','Check the range limits.'));return false}
- next[id]={...next[id],type,target,...(type==='range'?{upper}:{})};
- }data.goalRules=next;return true;
+ try{const next=structuredClone(data.goalRules);for(const id of ['steps','sleep','outdoors'])next[id]=editedGoalRule(id,goalFor(id));data.goalRules=next;return true}
+ catch(e){alert(e.message);return false}
 }

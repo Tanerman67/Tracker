@@ -194,16 +194,27 @@ function nutritionMicronutrientProgress(stat,key,target){
 }
 function nutritionId(){return 'food_'+(globalThis.crypto?.randomUUID?.()||Date.now().toString(36)+'_'+Math.random().toString(36).slice(2,11)).replace(/[^A-Za-z0-9_-]/g,'_')}
 function nutritionCheckDate(date){nutritionAssert(nutritionDateValid(date)&&date<=localDate(),'Invalid or future date.');return date}
-function nutritionOpen(date=todayDateKey()){
-  nutritionDate=nutritionCheckDate(date);document.getElementById('nutritionModal').classList.add('show');document.body.style.overflow='hidden';nutritionRender();
+function nutritionOpen(date=nutritionDateKey()){
+ nutritionDate=nutritionCheckDate(date);show('nutritionModal',document.getElementById('tabNutrition'));
 }
-function nutritionClose(){document.getElementById('nutritionModal').classList.remove('show');document.body.style.overflow='';nutritionCancelForm();nutritionCancelImport()}
+function nutritionClose(){nutritionCancelForm();nutritionCancelImport();show(previousSection==='nutritionModal'?'today':previousSection)}
+let nutritionOverlayContext=null;
+function nutritionStartOverlay(id){
+ if(!nutritionOverlayContext)nutritionOverlayContext={scroll:window.scrollY||0,overflow:document.body.style.overflow,focus:document.activeElement,date:nutritionDateKey()};
+ document.body.style.overflow='hidden';const host=document.getElementById(id);host.classList.add('show');host.scrollTop=0;enhanceDateInputs(host);
+}
+function nutritionEndOverlay(id){
+ const host=document.getElementById(id),wasOpen=host?.classList.contains('show');host?.classList.remove('show');
+ if(!wasOpen||!nutritionOverlayContext)return;
+ const context=nutritionOverlayContext;nutritionOverlayContext=null;document.body.style.overflow=context.overflow;
+ window.scrollTo?.(0,context.date===nutritionDateKey()?context.scroll:0);context.focus?.focus?.({preventScroll:true});
+}
 function nutritionSetDate(date){try{nutritionDate=nutritionCheckDate(date);nutritionRender()}catch(e){nutritionMessage(e.message)}}
 function nutritionShiftDate(days){nutritionSetDate(weeklyAddDays(nutritionDateKey(),days))}
 function nutritionMessage(message){const el=document.getElementById('nutritionStatus');if(el)el.textContent=message}
 function nutritionMealLabel(key){return nutritionLabel(...NUTRITION_MEAL_LABELS[key])}
 function nutritionRender(){
-  if(!document.getElementById('nutritionModal')?.classList.contains('show'))return;
+  if(!document.getElementById('nutritionModal')?.classList.contains('active'))return;
   nutritionLocalize();
   nutritionRenderReuse();
   const date=nutritionDateKey(),total=nutritionAggregate(date),rows=nutritionRows(date),goal=nutritionStore().goals;
@@ -214,6 +225,7 @@ function nutritionRender(){
   document.getElementById('nutritionNext').disabled=date>=localDate();
   put('nutritionBackLabel',nutritionLabel('Назад','Back'));
   put('nutritionTodayButton',nutritionLabel('Сегодня','Today'));
+  document.getElementById('nutritionTodayButton').hidden=date===localDate();
   put('nutritionAddButton',nutritionLabel('+ Добавить еду','+ Add food'));
   put('nutritionImportButton',nutritionLabel('Импорт JSON','Import JSON'));
   put('nutritionCopyButton',nutritionLabel('Скопировать инструкцию для ChatGPT','Copy ChatGPT instructions'));
@@ -250,7 +262,7 @@ function nutritionRender(){
   for(const key of list){const stat=total[key];if(!stat.known)continue;
     const item=document.createElement('div');item.className='nutrition-micro-row';
     const label=document.createElement('span');label.textContent=`${nutritionNutrientName(key)}: ${nutritionDisplay(stat)}${stat.qualities.includes('estimated')?' · '+nutritionLabel('оценка','estimate'):''}${stat.mixedBasis?' · '+nutritionLabel('нельзя суммировать','cannot sum'):''}`;item.append(label);
-    const progress=nutritionMicronutrientProgress(stat,key,goal[key]);
+    const progress=key==='fiber'?null:nutritionMicronutrientProgress(stat,key,goal[key]);
     if(progress){const info=document.createElement('small');info.textContent=nutritionFormat(progress.percent,1)+'% · '+nutritionFormat(progress.consumed,1)+' / '+nutritionFormat(progress.goal,1)+' '+stat.unit;
       const track=document.createElement('div');track.className='nutrition-micro-track';const fill=document.createElement('span');fill.style.width=progress.arc+'%';track.append(fill);item.append(info,track)}
     micro.append(item)}
@@ -262,17 +274,28 @@ function nutritionRender(){
     button.onclick=()=>nutritionSetDate(day);history.append(button)
   }
   if(!history.childElementCount)history.textContent=nutritionLabel('История пуста.','No history yet.');
-  for(const key of ['calories','fat','carbs','fiber'])document.getElementById('nutritionGoal_'+key).value=goal[key]??'';
+  for(const key of ['calories','fat','carbs'])document.getElementById('nutritionGoal_'+key).value=goal[key]??'';
+  document.getElementById('nutritionGoal_protein').value=data.proteinGoal??'';
+  document.getElementById('proteinGoalRuleSettings').innerHTML=goalRuleEditorHTML(['protein']);
+  enhanceDateInputs();
 }
 function nutritionSaveGoals(){
+ try{
+  // Stage every value and rule before mutation. Retain hidden fibre and extension goals.
   const next={...nutritionStore().goals};
-  for(const key of ['calories','fat','carbs','fiber']){
-    const raw=document.getElementById('nutritionGoal_'+key).value.trim();
-    if(raw===''){delete next[key];continue}
-    const n=Number(raw);if(!Number.isFinite(n)||n<=0||n>1e6){nutritionMessage(nutritionLabel('Проверь цели: нужны положительные числа.','Goals must be positive numbers.'));return}
-    next[key]=n;
+  for(const key of ['calories','fat','carbs']){
+   const raw=document.getElementById('nutritionGoal_'+key).value.trim();
+   if(raw===''){delete next[key];continue}
+   const n=Number(raw);if(!Number.isFinite(n)||n<0||n>1e6)throw Error(nutritionLabel('Проверь цели: нужны числа от нуля.','Goals must be numbers of zero or more.'));next[key]=n;
   }
-  nutritionStore().goals=next;persistData({renderAfter:true,makeSnapshot:true});nutritionRender();nutritionMessage(nutritionLabel('Цели сохранены.','Goals saved.'));
+  const raw=document.getElementById('nutritionGoal_protein').value.trim(),protein=raw===''?(data.proteinGoal===undefined?undefined:null):Number(raw);
+  if(protein!=null&&(!Number.isFinite(protein)||protein<0||protein>1e6))throw Error(nutritionLabel('Проверь цель белка.','Check the protein goal.'));
+  const rule=editedGoalRule('protein',protein);
+  nutritionStore().goals=next;data.proteinGoal=protein;
+  const t=tracker('protein');if(t)t.goal=protein;
+  data.goalRules.protein=rule;
+  persistData({renderAfter:true,makeSnapshot:true});nutritionRender();nutritionMessage(nutritionLabel('Цели сохранены.','Goals saved.'));
+ }catch(e){nutritionMessage(e.message)}
 }
 function nutritionInput(id,label,unit=''){return `<div class="field"><label for="${id}">${escapeHTML(label)}${unit?' ('+escapeHTML(unit)+')':''}</label><input id="${id}" type="number" min="0" step="any" inputmode="decimal"></div>`}
 function nutritionAdvancedFields(){
@@ -310,9 +333,9 @@ function nutritionOpenForm(id=''){
   document.getElementById('nutritionFoodQuality').value=entry?Object.values(entry.nutrients).find(n=>n.quality!=='unknown')?.quality||'estimated':'estimated';
   document.getElementById('nutritionFavorite').hidden=!entry;
   document.getElementById('nutritionDeleteFood').hidden=!entry;
-  document.getElementById('nutritionForm').classList.add('show');document.getElementById('nutritionFoodName').focus();
+  nutritionStartOverlay('nutritionForm');document.getElementById('nutritionFormError').textContent='';document.getElementById('nutritionFoodName').focus({preventScroll:true});
 }
-function nutritionCancelForm(){document.getElementById('nutritionForm')?.classList.remove('show');nutritionEditId=''}
+function nutritionCancelForm(){nutritionEndOverlay('nutritionForm');nutritionEditId=''}
 function nutritionSaveFood(){
   try{
     const previous=nutritionEditId?nutritionStore().entries.find(e=>e.id===nutritionEditId):null;
@@ -344,7 +367,7 @@ async function nutritionCopyInstructions(){
   try{await navigator.clipboard.writeText(NUTRITION_CHATGPT_INSTRUCTIONS);nutritionMessage(nutritionLabel('Инструкция скопирована.','Instructions copied.'))}
   catch(e){const host=document.getElementById('nutritionInstructions');host.hidden=false;host.textContent=NUTRITION_CHATGPT_INSTRUCTIONS;nutritionMessage(nutritionLabel('Скопируй текст ниже вручную.','Copy the text below manually.'))}
 }
-function nutritionCancelImport(){nutritionPendingImport=null;document.getElementById('nutritionImportPreview')?.classList.remove('show');const file=document.getElementById('nutritionFile');if(file)file.value=''}
+function nutritionCancelImport(){nutritionPendingImport=null;nutritionEndOverlay('nutritionImportPreview');const file=document.getElementById('nutritionFile');if(file)file.value=''}
 async function nutritionReadImport(event){
   const file=event.target.files?.[0];if(!file)return;
   try{
@@ -356,13 +379,13 @@ async function nutritionReadImport(event){
 }
 function nutritionRenderImportPreview(){
   const rows=nutritionPendingImport;if(!rows)return;nutritionLocalize();
-  const box=document.getElementById('nutritionImportPreview');box.classList.add('show');
+  nutritionStartOverlay('nutritionImportPreview');document.querySelector('#nutritionImportPreview button')?.focus({preventScroll:true});
   const counts={add:0,conflict:0,duplicate:0,skip:0};rows.forEach(x=>counts[x.action]++);
   document.getElementById('nutritionPreviewCount').textContent=`${rows.length} ${nutritionLabel('продуктов','foods')} · ${new Set(rows.map(x=>x.entry.date)).size} ${nutritionLabel('дней','dates')} · ${counts.add} ${nutritionLabel('добавить','add')} · ${counts.conflict} ${nutritionLabel('конфликт','conflict')} · ${counts.duplicate+counts.skip} ${nutritionLabel('пропустить','skip')}`;
   document.getElementById('nutritionReplaceConflicts').checked=false;
   document.getElementById('nutritionReplaceWrap').hidden=!counts.conflict;
   const list=document.getElementById('nutritionPreviewList');list.replaceChildren();
-  for(const row of rows){const div=document.createElement('div');div.className='nutrition-preview-row';div.textContent=`${row.entry.date} · ${nutritionMealLabel(row.entry.meal)} · ${row.entry.name} · ${row.action}`;list.append(div)}
+  for(const row of rows){const div=document.createElement('div');div.className='nutrition-preview-row';div.textContent=`${row.entry.date} · ${nutritionMealLabel(row.entry.meal)} · ${row.entry.name} · ${nutritionLabel(...({add:['добавить','add'],conflict:['конфликт','conflict'],duplicate:['повтор','duplicate'],skip:['пропустить','skip']}[row.action]))}`;list.append(div)}
 }
 function nutritionConfirmImport(){
   if(!nutritionPendingImport)return;
@@ -373,7 +396,7 @@ function nutritionConfirmImport(){
   }catch(e){nutritionCancelImport();nutritionMessage(e.message)}
 }
 
-function nutritionEditLegacyProtein(){const date=nutritionDateKey();nutritionClose();openEntry('protein',date)}
+function nutritionEditLegacyProtein(){const date=nutritionDateKey();openEntry('protein',date)}
 const NUTRIENT_RU={calories:'Калории',protein:'Белок',fat:'Жиры',carbs:'Углеводы',fiber:'Клетчатка',sugars:'Сахара',saturatedFat:'Насыщенные жиры',transFat:'Трансжиры',omega3:'Омега-3',cholesterol:'Холестерин',calcium:'Кальций',iron:'Железо',magnesium:'Магний',potassium:'Калий',sodium:'Натрий',phosphorus:'Фосфор',zinc:'Цинк',selenium:'Селен',iodine:'Йод',copper:'Медь',manganese:'Марганец',...Object.fromEntries(['A','B1','B2','B3','B5','B6','B7','B9','B12','C','D','E','K'].map(v=>['vitamin'+v,'Витамин '+v]))};
 function nutritionScaledEntry(entry,amount){
  nutritionAssert(entry.portion&&entry.portion.amount>0,'A known original portion is required.');

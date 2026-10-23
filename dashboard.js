@@ -64,5 +64,4 @@ function dashboardWeekly(date){
  const format=s=>s.count?todayNumber(s.avg):'—';
  document.getElementById('todayWeekly').textContent=trText('Эта неделя · Средние шаги: ','This week · Average steps: ')+format(stats)+' · '+stats.count+'/'+keys.length+trText(' дней записано. Средний белок: ',' days logged. Average protein: ')+format(protein)+' g · '+protein.count+'/'+keys.length+trText(' дней.',' days.');
  document.getElementById('todayCustomize').textContent=trText('Настроить блоки','Customize blocks');
- document.getElementById('todayPrivacy').textContent=trText('Данные только в этом браузере. На другое устройство их можно перенести через JSON backup.','Records stay in this browser. Use a JSON backup to move them to another device.');
 }

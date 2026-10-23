@@ -16,12 +16,14 @@
 <meta name="apple-mobile-web-app-title" content="My Rhythm">
 
 <title>Мой ритм</title>
-<link rel="stylesheet" href="app.css?v=7000">
+<link rel="stylesheet" href="app.css?v=7100">
 
-<link rel="stylesheet" href="today.css?v=7000">
-<link rel="stylesheet" href="modules.css?v=7000">
-<link rel="stylesheet" href="habits.css?v=7000">
-<link rel="stylesheet" href="nutrition.css?v=7000">
+<link rel="stylesheet" href="today.css?v=7100">
+<link rel="stylesheet" href="modules.css?v=7100">
+<link rel="stylesheet" href="habits.css?v=7100">
+<link rel="stylesheet" href="nutrition.css?v=7100">
+<link rel="stylesheet" href="calendar.css?v=7100">
+<link rel="stylesheet" href="cleanup.css?v=7100">
 </head>
 <body class="loading-data"><div id="dataLoading" role="status">Restoring local data…</div>
 <div class="app"><p id="tabUpdateNotice" class="privacy-note" role="status" hidden data-localized></p>
@@ -55,8 +57,8 @@
       </div>
     </div>
 
+    <div id="todayGrid" class="metric-grid" data-localized></div><div id="todayWeekly" class="card weekly-compact" data-localized></div>
     <button id="todayCustomize" class="secondary" onclick="openModule('layout')" data-localized>Customize blocks</button>
-    <div id="todayGrid" class="metric-grid" data-localized></div><div id="todayWeekly" class="card weekly-compact" data-localized></div><p id="todayPrivacy" class="privacy-note" data-localized></p>
   </div>
 </section>
 
@@ -106,112 +108,115 @@
     <h2>Календарь</h2>
     <div class="sub">История заполнения по конкретным дням.</div>
   </div>
-  <div class="card"><div class="calendar-head"><button type="button" class="ghost" onclick="moveMonth(-1)">‹</button><strong id="calendarTitle"></strong><button type="button" class="ghost" onclick="moveMonth(1)">›</button></div><div class="calendar-grid" id="calendarGrid"></div></div>
+  <div class="card"><div id="progressCalendarControls"></div><strong id="calendarTitle" class="sr-only"></strong><div id="calendarGrid"></div></div>
 
 </section>
 
-<section id="settings" class="section">
-  <div class="category-head settings-page-head">
-    <div>
-      <h2>Настройки</h2>
-      <div class="sub settings-head-sub">Цели, оформление, резервные копии и служебные функции.</div>
-    </div>
-  </div>
-
-  <div class="card settings-goals-card">
-    <div class="label">🎯 Настройки целей</div>
-    <div class="field"><label for="smokeDate">Дата отказа от сигарет</label><input id="smokeDate" type="date"></div>
-    <div class="field" data-localized><label for="alcoholDate" data-i18n-ru="Дата начала учёта алкоголя" data-i18n-en="Alcohol tracking start">Alcohol tracking start</label><input id="alcoholDate" type="date"><small id="alcoholDerivedDate"></small></div>
-    <div class="field"><label for="proteinGoal">Белок, г/день</label><input id="proteinGoal" type="number"></div>
-    <div class="field"><label for="stepsGoal">Шаги / день</label><input id="stepsGoal" type="number"></div>
-    <div class="field"><label for="outdoorsGoal">Время на улице, мин/день</label><input id="outdoorsGoal" type="number"></div>
-    <div class="field"><label for="sleepGoal">Сон, ч/день</label><input id="sleepGoal" type="number" step="0.1"></div>
-    <div class="field"><label for="englishGoal">Английский, мин/неделю</label><input id="englishGoal" type="number"></div>
-    <div class="field"><label for="gymGoal">Тренировки, раз/неделю</label><input id="gymGoal" type="number"></div>
-    <button type="button" style="width:100%" onclick="saveSettings()">Сохранить настройки</button>
-  </div>
-
-  <details class="card" data-localized><summary data-i18n-ru="Правила целей" data-i18n-en="Goal rules">Goal rules</summary><div id="goalRuleSettings"></div></details>
-  <div class="card" data-localized><p data-i18n-ru="Данные хранятся в этом браузере без аккаунта и синхронизации. Общий профиль браузера означает общие записи. Перенос на другое устройство - через JSON backup." data-i18n-en="Records stay in this browser without accounts or sync. A shared browser profile shares records. Use a JSON backup for another device.">Records stay in this browser without accounts or sync.</p><button class="secondary" onclick="openModule('layout')" data-i18n-ru="Настроить главную" data-i18n-en="Customize Today">Customize Today</button><button class="ghost" onclick="downloadConflictDraft()" data-i18n-ru="Скачать черновик конфликта вкладок" data-i18n-en="Download tab conflict draft">Download tab conflict draft</button></div>
-  <div class="section-spacer"></div>
-  <div class="card">
-    <div class="label">🎨 Оформление и язык</div>
-    <div class="row">
-      <div>
-        <div class="title">Тема приложения</div>
-        <div class="small">По умолчанию — тёмная неоновая</div>
-      </div>
-      <button type="button" class="secondary" id="themeToggleBtn" onclick="toggleTheme()">Dark</button>
-    </div>
-    <div class="row">
-      <div>
-        <div class="title">Язык интерфейса</div>
-        <div class="small">Русский / English</div>
-      </div>
-      <button type="button" class="secondary" id="languageToggleBtn" onclick="toggleLanguage()">Русский</button>
-    </div>
-  </div>
-
-  <div class="section-spacer"></div>
-  <div class="card settings-backup-card">
-    <div class="label">💾 Данные и резервная копия</div>
-    <div class="small" style="margin-bottom:12px">
-      Каждое сохранение дублируется локально: основная база + зеркало + IndexedDB snapshots + recovery cache.
-      Внешний JSON-backup всё равно нужен перед удалением PWA или очисткой Safari.
-    </div>
-    <div class="row"><span>Версия приложения</span><strong id="appVersionText">V6.9 GitHub</strong></div>
-    <div class="row"><span>Версия структуры данных</span><strong id="schemaVersionText">2</strong></div>
-    <div class="row"><span>Локальная защита</span><strong id="vaultStatusText">Проверяем…</strong></div>
-    <div class="row"><span>Snapshots</span><strong id="vaultSnapshotText">—</strong></div>
-    <div class="row"><span>Последний внешний backup</span><strong id="lastBackupText">Никогда</strong></div>
-    <div id="backupReminder" class="backup-reminder"></div>
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px">
-      <button type="button" onclick="exportBackup()">↓ Экспорт backup</button>
-      <button type="button" class="secondary" onclick="document.getElementById('backupFile').click()">↑ Импорт backup</button>
-    </div>
-    <input id="backupFile" type="file" accept=".json,application/json" style="display:none" onchange="importBackupFile(event)">
-    <div class="small" id="backupStatus" style="margin-top:10px"></div>
-  </div>
-
-  <div class="section-spacer"></div>
-  <details class="settings-details">
-    <summary>🧰 Диагностика данных</summary>
-    <div class="settings-details-body">
-      <div class="row"><span>Источник данных</span><strong id="dataSourceText">—</strong></div>
-      <div class="row"><span>Дней с записями</span><strong id="dataLogDaysText">0</strong></div>
-      <div class="row"><span>Дней употребления алкоголя</span><strong id="dataAlcoholDatesText">0</strong></div>
-      <div class="row"><span>Body Check-ins</span><strong id="dataBodyCheckinsText">0</strong></div>
-      <div class="small" id="dataSourcesDetails" style="margin-top:9px"></div>
-    </div>
+<section id="settings" class="section" data-localized>
+ <div class="category-head settings-page-head"><h2 data-i18n-ru="Настройки" data-i18n-en="Settings">Settings</h2></div>
+ <div class="card settings-goals-card">
+  <details><summary data-i18n-ru="Личные даты" data-i18n-en="Personal dates">Personal dates</summary>
+   <div class="field"><label for="smokeDate" data-i18n-ru="Дата отказа от сигарет" data-i18n-en="Smoking quit date">Smoking quit date</label><input id="smokeDate" type="date" ></div>
+   <div class="field"><label for="alcoholDate" data-i18n-ru="Начало учёта алкоголя" data-i18n-en="Alcohol tracking start">Alcohol tracking start</label><input id="alcoholDate" type="date" ></div>
+   <small id="alcoholDerivedDate"></small>
   </details>
-
-  <div class="section-spacer"></div>
-  <details class="settings-details">
-    <summary>⚗️ Расширенные настройки</summary>
-    <div class="settings-details-body">
-      <div class="category-head advanced-experiment-head">
-        <div>
-          <h2>Experiments</h2>
-          <div class="sub settings-head-sub">Проверяй одну гипотезу за раз.</div>
-        </div>
-      </div>
-      <div id="experimentsList"></div>
-      <button type="button" style="width:100%" onclick="openExperiment()">＋ Новый эксперимент</button>
-
-      <div class="advanced-danger-zone">
-        <div class="label">Опасная зона</div>
-        <div class="small">Сброс удаляет локальные данные приложения. Перед этим создай внешний backup.</div>
-        <button type="button" class="danger" style="width:100%;margin-top:10px" onclick="resetAll()">Сбросить все данные</button>
-      </div>
-    </div>
-  </details>
+  <h3 data-i18n-ru="Цели активности" data-i18n-en="Activity goals">Activity goals</h3>
+  <div class="settings-goals-grid">
+   <div class="field"><label for="stepsGoal" data-i18n-ru="Шаги / день" data-i18n-en="Steps / day">Steps / day</label><input id="stepsGoal" type="number" min="0"></div>
+   <div class="field"><label for="outdoorsGoal" data-i18n-ru="На улице, мин / день" data-i18n-en="Outdoors, min / day">Outdoors, min / day</label><input id="outdoorsGoal" type="number" min="0"></div>
+   <div class="field"><label for="sleepGoal" data-i18n-ru="Сон, ч / день" data-i18n-en="Sleep, h / day">Sleep, h / day</label><input id="sleepGoal" type="number" min="0" step="0.1"></div>
+   <div class="field"><label for="gymGoal" data-i18n-ru="Тренировки / неделю" data-i18n-en="Workouts / week">Workouts / week</label><input id="gymGoal" type="number" min="0"></div>
+  </div>
+  <details><summary data-i18n-ru="Английский (необязательно)" data-i18n-en="English (optional)">English (optional)</summary><div class="field"><label for="englishGoal" data-i18n-ru="Минуты / неделю" data-i18n-en="Minutes / week">Minutes / week</label><input id="englishGoal" type="number" min="0"></div></details>
+  <details><summary data-i18n-ru="Правила целей активности" data-i18n-en="Activity goal rules">Activity goal rules</summary><div id="goalRuleSettings"></div></details>
+  <button type="button" class="settings-save" onclick="saveSettings()" data-i18n-ru="Сохранить даты и цели" data-i18n-en="Save dates &amp; goals">Save dates &amp; goals</button>
+ </div>
+ <div class="card">
+  <h3 data-i18n-ru="Оформление" data-i18n-en="Appearance">Appearance</h3>
+  <div class="row"><span data-i18n-ru="Тема приложения" data-i18n-en="App theme">App theme</span><button class="secondary" id="themeToggleBtn" onclick="toggleTheme()">Dark</button></div>
+  <div class="row"><span data-i18n-ru="Язык интерфейса" data-i18n-en="Language">Language</span><button class="secondary" id="languageToggleBtn" onclick="toggleLanguage()">Русский</button></div>
+ </div>
+ <div class="card settings-backup-card">
+  <h3 data-i18n-ru="Данные и резервная копия" data-i18n-en="Data &amp; backup">Data &amp; backup</h3>
+  <p data-i18n-ru="Данные хранятся только в этом браузере. Перенос на другое устройство - через JSON backup." data-i18n-en="Records stay in this browser. Use a JSON backup to move them to another device.">Records stay in this browser.</p>
+  <div class="row"><span data-i18n-ru="Последний backup" data-i18n-en="Last backup">Last backup</span><strong id="lastBackupText">—</strong></div>
+  <div class="backup-actions"><button onclick="exportBackup()" data-i18n-ru="↓ Экспорт" data-i18n-en="↓ Export">↓ Export</button><button class="secondary" onclick="document.getElementById('backupFile').click()" data-i18n-ru="↑ Импорт" data-i18n-en="↑ Import">↑ Import</button></div>
+  <p class="small" data-i18n-ru="Перед удалением приложения или очисткой браузера сохрани внешний backup." data-i18n-en="Save an external backup before removing the app or clearing the browser.">Save an external backup before removing the app or clearing the browser.</p>
+  <div id="backupReminder" class="backup-reminder"></div>
+  <input id="backupFile" type="file" accept=".json,application/json" hidden onchange="importBackupFile(event)">
+  <div class="small" id="backupStatus" role="status"></div>
+ </div>
+ <details class="card settings-details" id="advancedSettings">
+  <summary data-i18n-ru="Расширенные настройки" data-i18n-en="Advanced">Advanced</summary>
+  <div class="settings-details-body">
+   <h3 data-i18n-ru="Диагностика данных" data-i18n-en="Data diagnostics">Data diagnostics</h3>
+   <div class="row"><span data-i18n-ru="Версия приложения" data-i18n-en="App version">App version</span><strong id="appVersionText">—</strong></div>
+   <div class="row"><span data-i18n-ru="Версия структуры данных" data-i18n-en="Data schema">Data schema</span><strong id="schemaVersionText">—</strong></div>
+   <div class="row"><span data-i18n-ru="Локальная защита" data-i18n-en="Local protection">Local protection</span><strong id="vaultStatusText">—</strong></div>
+   <div class="row"><span data-i18n-ru="Снимки данных" data-i18n-en="Snapshots">Snapshots</span><strong id="vaultSnapshotText">—</strong></div>
+   <div class="row"><span data-i18n-ru="Источник данных" data-i18n-en="Data source">Data source</span><strong id="dataSourceText">—</strong></div>
+   <div class="row"><span data-i18n-ru="Дней с записями" data-i18n-en="Recorded days">Recorded days</span><strong id="dataLogDaysText">—</strong></div>
+   <div class="row"><span data-i18n-ru="Дней с алкоголем" data-i18n-en="Drinking days">Drinking days</span><strong id="dataAlcoholDatesText">—</strong></div>
+   <div class="row"><span data-i18n-ru="Замеры тела" data-i18n-en="Body check-ins">Body check-ins</span><strong id="dataBodyCheckinsText">—</strong></div>
+   <div class="small" id="dataSourcesDetails"></div>
+   <button id="conflictDraftButton" class="secondary" onclick="downloadConflictDraft()" hidden data-i18n-ru="Скачать черновик конфликта вкладок" data-i18n-en="Download tab conflict draft">Download tab conflict draft</button>
+   <h3>Experiments</h3><p class="small" data-i18n-ru="Проверяй одну гипотезу за раз." data-i18n-en="Test one hypothesis at a time.">Test one hypothesis at a time.</p>
+   <div id="experimentsList"></div><button class="secondary" onclick="openExperiment()" data-i18n-ru="＋ Новый эксперимент" data-i18n-en="＋ New experiment">＋ New experiment</button>
+   <div class="advanced-danger-zone"><h3 data-i18n-ru="Сброс данных" data-i18n-en="Reset data">Reset data</h3>
+    <p class="small" data-i18n-ru="Сброс удаляет локальные данные. Сначала создай внешний backup." data-i18n-en="Reset removes local records. Create an external backup first.">Reset removes local records. Create an external backup first.</p>
+    <button class="danger" onclick="resetAll()" data-i18n-ru="Сбросить все данные" data-i18n-en="Reset all data">Reset all data</button>
+   </div>
+  </div>
+ </details>
 </section>
+<section id="nutritionModal" data-localized class="section nutrition-section" aria-labelledby="nutritionTitle">
+  <div class="nutrition-page">
+    <div class="nutrition-topbar">
+      <button type="button" class="secondary" onclick="nutritionClose()"><span id="nutritionBackLabel">Назад</span></button>
+      <div><h2 id="nutritionTitle">Питание</h2><small id="nutritionSubtitle"></small></div>
+    </div>
+    <div class="nutrition-date-nav card">
+      <button type="button" class="secondary" onclick="nutritionShiftDate(-1)" aria-label="Previous day">‹</button>
+      <input id="nutritionDate" type="date" aria-label="Nutrition date" onchange="nutritionSetDate(this.value)">
+      <button type="button" class="secondary" id="nutritionNext" onclick="nutritionShiftDate(1)" aria-label="Next day">›</button>
+      <button type="button" class="ghost" id="nutritionTodayButton" onclick="nutritionSetDate(localDate())">Сегодня</button>
+    </div>
+    <div id="nutritionSummary" class="nutrition-summary"></div>
+    <div id="nutritionProteinSource" class="nutrition-explanation"></div>
+    <button type="button" class="ghost nutrition-copy" onclick="nutritionEditLegacyProtein()" data-i18n-ru="Ручной белок" data-i18n-en="Manual protein">Manual protein</button>
+    <div id="nutritionIncomplete" class="nutrition-explanation"></div>
+    <div class="nutrition-actions">
+      <button type="button" id="nutritionAddButton" onclick="nutritionOpenForm()">+ Добавить еду</button>
+      <button type="button" id="nutritionImportButton" class="secondary" onclick="document.getElementById('nutritionFile').click()">Импорт JSON</button>
+    </div>
+    <input id="nutritionFile" type="file" accept=".json,application/json" hidden onchange="nutritionReadImport(event)">
+    <button type="button" id="nutritionCopyButton" class="ghost nutrition-copy" onclick="nutritionCopyInstructions()">Скопировать инструкцию для ChatGPT</button>
+    <pre id="nutritionInstructions" class="nutrition-instructions" hidden></pre>
+    <div id="nutritionStatus" class="nutrition-status" role="status" aria-live="polite"></div>
+    <details class="card nutrition-details"><summary data-i18n-ru="Избранное и частые продукты" data-i18n-en="Favourites & frequent foods">Favourites & frequent foods</summary><div id="nutritionReuse" class="nutrition-reuse"></div></details>
+    <div class="card nutrition-copy-group"><label for="nutritionCopyDate" data-i18n-ru="Скопировать еду с другого дня" data-i18n-en="Copy foods from another day">Copy foods from another day</label><div class="nutrition-copy-controls"><input id="nutritionCopyDate" type="date" aria-label="Source day"><button class="secondary" onclick="nutritionCopyDay()" data-i18n-ru="Копировать" data-i18n-en="Copy">Copy</button></div></div>
+    <div id="nutritionDiary"></div>
+    <details class="card nutrition-details"><summary id="nutritionMicrosLabel">Витамины и минералы</summary><div id="nutritionMicros"></div></details>
+    <details class="card nutrition-details"><summary id="nutritionHistoryLabel">История дней</summary><div id="nutritionHistory"></div></details>
+    <details class="card nutrition-details"><summary data-i18n-ru="Цели" data-i18n-en="Goals">Goals</summary>
+      <div class="nutrition-goals">
+        <div class="field"><label for="nutritionGoal_calories" data-i18n-ru="Лимит калорий (kcal)" data-i18n-en="Daily calorie limit (kcal)">Daily calorie limit (kcal)</label><input id="nutritionGoal_calories" type="number" min="0" inputmode="decimal"></div>
+        <div class="field"><label for="nutritionGoal_protein" data-i18n-ru="Белок (g)" data-i18n-en="Protein (g)">Protein (g)</label><input id="nutritionGoal_protein" type="number" min="0" inputmode="decimal"></div>
+        <div class="field"><label for="nutritionGoal_fat" data-i18n-ru="Жиры (g)" data-i18n-en="Fat (g)">Fat (g)</label><input id="nutritionGoal_fat" type="number" min="0" inputmode="decimal"></div>
+        <div class="field"><label for="nutritionGoal_carbs" data-i18n-ru="Углеводы (g)" data-i18n-en="Carbs (g)">Carbs (g)</label><input id="nutritionGoal_carbs" type="number" min="0" inputmode="decimal"></div>
+      </div>
+      <button type="button" onclick="nutritionSaveGoals()" data-i18n-ru="Сохранить цели" data-i18n-en="Save goals">Save goals</button>
+      <details><summary data-i18n-ru="Режим цели белка" data-i18n-en="Protein goal mode">Protein goal mode</summary><div id="proteinGoalRuleSettings"></div></details>
+    </details>
+  </div>
+</section>
+
 </div>
 
 <div class="tabs">
 <div class="tabsin">
 <button type="button" id="tabToday" class="tab active" onclick="show('today',this)"><span class="ico">⌂</span>Сегодня</button>
-<button type="button" id="tabNutrition" class="tab" onclick="nutritionOpen(todayDateKey())"><span class="ico">◉</span><span data-i18n-ru="Питание" data-i18n-en="Nutrition">Nutrition</span></button>
+<button type="button" id="tabNutrition" class="tab" onclick="nutritionOpen(nutritionDateKey())"><span class="ico">◉</span><span data-i18n-ru="Питание" data-i18n-en="Nutrition">Nutrition</span></button>
 <button type="button" id="tabProgress" class="tab" onclick="show('progress',this)"><span class="ico">▥</span>Прогресс</button>
 <button type="button" id="tabSettings" class="tab" onclick="show('settings',this)"><span class="ico">⚙</span>Настройки</button>
 </div></div>
@@ -414,50 +419,9 @@
 </div>
 
 <div id="moduleModal" class="module-modal" role="dialog" aria-modal="true" aria-labelledby="moduleTitle" data-localized><div class="module-page"><div class="module-header"><button id="moduleBack" class="secondary" onclick="closeModule()">Back</button><h2 id="moduleTitle"></h2></div><div id="moduleContent"></div></div></div>
-<div id="nutritionModal" data-localized class="nutrition-modal" role="dialog" aria-modal="true" aria-labelledby="nutritionTitle">
-  <div class="nutrition-page">
-    <div class="nutrition-topbar">
-      <button type="button" class="secondary" onclick="nutritionClose()"><span id="nutritionBackLabel">Назад</span></button>
-      <div><h2 id="nutritionTitle">Питание</h2><small id="nutritionSubtitle"></small></div>
-    </div>
-    <div class="nutrition-date-nav card">
-      <button type="button" class="secondary" onclick="nutritionShiftDate(-1)" aria-label="Previous day">‹</button>
-      <input id="nutritionDate" type="date" aria-label="Nutrition date" onchange="nutritionSetDate(this.value)">
-      <button type="button" class="secondary" id="nutritionNext" onclick="nutritionShiftDate(1)" aria-label="Next day">›</button>
-      <button type="button" class="ghost" id="nutritionTodayButton" onclick="nutritionSetDate(localDate())">Сегодня</button>
-    </div>
-    <div id="nutritionSummary" class="nutrition-summary"></div>
-    <div id="nutritionProteinSource" class="nutrition-explanation"></div>
-    <button type="button" class="ghost nutrition-copy" onclick="nutritionEditLegacyProtein()" data-i18n-ru="Ручной белок" data-i18n-en="Manual protein">Manual protein</button>
-    <div id="nutritionIncomplete" class="nutrition-explanation"></div>
-    <div class="nutrition-actions">
-      <button type="button" id="nutritionAddButton" onclick="nutritionOpenForm()">+ Добавить еду</button>
-      <button type="button" id="nutritionImportButton" class="secondary" onclick="document.getElementById('nutritionFile').click()">Импорт JSON</button>
-    </div>
-    <input id="nutritionFile" type="file" accept=".json,application/json" hidden onchange="nutritionReadImport(event)">
-    <button type="button" id="nutritionCopyButton" class="ghost nutrition-copy" onclick="nutritionCopyInstructions()">Скопировать инструкцию для ChatGPT</button>
-    <pre id="nutritionInstructions" class="nutrition-instructions" hidden></pre>
-    <div id="nutritionStatus" class="nutrition-status" role="status" aria-live="polite"></div>
-    <details class="card nutrition-details"><summary data-i18n-ru="Избранное и частые продукты" data-i18n-en="Favourites & frequent foods">Favourites & frequent foods</summary><div id="nutritionReuse" class="nutrition-reuse"></div></details>
-    <button class="secondary" onclick="nutritionCopyDay()" data-i18n-ru="Скопировать еду с другого дня" data-i18n-en="Copy foods from another day">Copy foods from another day</button><input id="nutritionCopyDate" type="date" aria-label="Source day">
-    <div id="nutritionDiary"></div>
-    <details class="card nutrition-details"><summary id="nutritionMicrosLabel">Витамины и минералы</summary><div id="nutritionMicros"></div></details>
-    <details class="card nutrition-details"><summary id="nutritionHistoryLabel">История дней</summary><div id="nutritionHistory"></div></details>
-    <details class="card nutrition-details"><summary data-i18n-ru="Цели" data-i18n-en="Goals">Goals</summary>
-      <div class="nutrition-goals">
-        <div class="field"><label for="nutritionGoal_calories" data-i18n-ru="Лимит калорий (kcal)" data-i18n-en="Daily calorie limit (kcal)">Daily calorie limit (kcal)</label><input id="nutritionGoal_calories" type="number" min="0" inputmode="decimal"></div>
-        <div class="field"><label for="nutritionGoal_fat" data-i18n-ru="Жиры (g)" data-i18n-en="Fat (g)">Fat (g)</label><input id="nutritionGoal_fat" type="number" min="0" inputmode="decimal"></div>
-        <div class="field"><label for="nutritionGoal_carbs" data-i18n-ru="Углеводы (g)" data-i18n-en="Carbs (g)">Carbs (g)</label><input id="nutritionGoal_carbs" type="number" min="0" inputmode="decimal"></div>
-        <div class="field"><label for="nutritionGoal_fiber" data-i18n-ru="Клетчатка (g)" data-i18n-en="Fiber (g)">Fiber (g)</label><input id="nutritionGoal_fiber" type="number" min="0" inputmode="decimal"></div>
-      </div>
-      <button type="button" onclick="nutritionSaveGoals()" data-i18n-ru="Сохранить цели" data-i18n-en="Save goals">Save goals</button>
-      <small data-i18n-ru="Цель белка - в Настройках" data-i18n-en="Protein goal is in Settings">Protein goal is in Settings</small>
-    </details>
-  </div>
-</div>
 <div id="nutritionForm" data-localized class="nutrition-form" role="dialog" aria-modal="true" aria-labelledby="nutritionFormTitle">
   <div class="nutrition-form-sheet">
-    <div class="nutrition-form-head"><h2 id="nutritionFormTitle">Add food</h2><button type="button" class="secondary" onclick="nutritionCancelForm()" aria-label="Close food editor">✕</button></div>
+    <div class="nutrition-form-head"><h2 id="nutritionFormTitle">Add food</h2><button type="button" class="secondary" onclick="nutritionCancelForm()" aria-label="Close food editor" data-i18n-ru="Назад" data-i18n-en="Back">Back</button></div>
     <div class="nutrition-form-grid">
       <div class="field"><label for="nutritionFoodDate">Date / Дата</label><input id="nutritionFoodDate" type="date"></div>
       <div class="field"><label for="nutritionFoodMeal">Meal / Приём пищи</label><select id="nutritionFoodMeal"><option value="breakfast">Breakfast / Завтрак</option><option value="lunch">Lunch / Обед</option><option value="dinner">Dinner / Ужин</option><option value="snack">Snack / Перекус</option><option value="other">Other / Другое</option></select></div>
@@ -479,7 +443,7 @@
 </div>
 <div id="nutritionImportPreview" data-localized class="nutrition-form" role="dialog" aria-modal="true" aria-labelledby="nutritionPreviewTitle">
   <div class="nutrition-form-sheet">
-    <div class="nutrition-form-head"><h2 id="nutritionPreviewTitle" data-i18n-ru="Предпросмотр импорта" data-i18n-en="Import preview">Import preview</h2><button type="button" class="secondary" onclick="nutritionCancelImport()">✕</button></div>
+    <div class="nutrition-form-head"><h2 id="nutritionPreviewTitle" data-i18n-ru="Предпросмотр импорта" data-i18n-en="Import preview">Import preview</h2><button type="button" class="secondary" onclick="nutritionCancelImport()" data-i18n-ru="Назад" data-i18n-en="Back">Back</button></div>
     <p id="nutritionPreviewCount"></p><div id="nutritionPreviewList" class="nutrition-preview-list"></div>
     <label id="nutritionReplaceWrap"><input id="nutritionReplaceConflicts" type="checkbox"><span data-i18n-ru="Заменить записи с конфликтующими ID" data-i18n-en="Replace conflicting IDs">Replace conflicting IDs</span></label>
     <p class="nutrition-explanation" data-i18n-ru="Конфликты сохраняются без явного выбора замены. Те же ID пропускаются; разные ID - отдельные записи." data-i18n-en="Conflicts are kept unless replacement is selected. The same IDs are skipped; different IDs are separate entries.">Conflicts are kept unless replacement is selected. The same IDs are skipped; different IDs are separate entries.</p>
@@ -513,16 +477,17 @@
     <button type="button" id="habitSave" onclick="saveHabitEditor()">Сохранить</button>
   </div>
 </div>
-<script src="goals.js?v=7000"></script>
-<script src="coordination.js?v=7000"></script>
-<script src="modules.js?v=7000"></script>
-<script src="dashboard.js?v=7000"></script>
-<script src="analytics.js?v=7000"></script>
-<script src="today.js?v=7000"></script>
-<script src="habits.js?v=7000"></script>
-<script src="dates.js?v=7000"></script>
-<script src="storage.js?v=7000"></script>
-<script src="nutrition.js?v=7000"></script>
-<script src="app.js?v=7000"></script>
+<script src="calendar.js?v=7100"></script>
+<script src="goals.js?v=7100"></script>
+<script src="coordination.js?v=7100"></script>
+<script src="modules.js?v=7100"></script>
+<script src="dashboard.js?v=7100"></script>
+<script src="analytics.js?v=7100"></script>
+<script src="today.js?v=7100"></script>
+<script src="habits.js?v=7100"></script>
+<script src="dates.js?v=7100"></script>
+<script src="storage.js?v=7100"></script>
+<script src="nutrition.js?v=7100"></script>
+<script src="app.js?v=7100"></script>
 </body>
 </html>
