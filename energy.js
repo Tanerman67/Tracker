@@ -20,6 +20,16 @@ function energySetDate(date){if(!validDay(date)||date>localDate())return;energyD
 function energySwitch(tab){energyTab=tab;energyWorkoutId='';renderEnergy()}
 function energyClose(){energyReturnFocus?.focus?.({preventScroll:true})}
 function energyRefresh(){if(moduleView==='energy'&&!document.activeElement?.closest('.energy-workout-form,.energy-form-grid'))renderEnergy()}
+// Refresh a read-only energy view after another tab saves, without replacing a draft.
+function energyExternalUpdate(){
+ if(moduleView!=='energy'||energyTab==='profile'||energyWorkoutId||document.activeElement?.closest('.energy-workout-form,.energy-form-grid'))return;
+ saveCoordinationQueue.then(()=>{
+  if(moduleView!=='energy'||energyTab==='profile'||energyWorkoutId||JSON.stringify(data)!==JSON.stringify(storageBaseline))return;
+  const latest=bestCandidate([parseCandidate(DATA_KEY,storageGet(DATA_KEY),true),parseCandidate(MIRROR_KEY,storageGet(MIRROR_KEY))].filter(Boolean));
+  if(latest&&candidateBetter(latest,{data})){data=migrateData(latest.data);resetStorageBaseline();render()}
+ });
+}
+addEventListener('storage',e=>{if(e.key===DATA_KEY&&e.newValue)energyExternalUpdate()});
 function energyRoute(target){const date=energyKey();closeModule();if(target==='food')nutritionOpen(date);else openTodayMetric(target==='body'?'weight':'steps',date)}
 function energySelect(id,label,options,value,extra=''){
  return `<div class="field"><label for="${id}">${escapeHTML(label)}</label><select id="${id}" ${extra}>${options.map(([v,label])=>`<option value="${v}" ${value===v?'selected':''}>${escapeHTML(label)}</option>`).join('')}</select></div>`;
