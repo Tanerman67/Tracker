@@ -1,3 +1,15 @@
+# Integrated Energy Balance (7.3.0)
+
+Today contains only the optional automatic summary and a short expandable breakdown. Profile editing lives in Settings. The existing Today Workout card opens a calorie editor; new workouts store active watch calories with unknown step overlap in the existing energyBalance.workouts schema. Multiple independently identified records can be edited/deleted. Adding a workout marks the existing gym day true; deleting calories does not erase the historical gym mark. Unknown overlap suppresses additional walking as before.
+
+Existing workout records retain all original fields and calculation behavior. Their original editor is available only when editing such a record; no migration converts total calories, durations, step-counted workouts or overlap choices.
+
+Progress exposes Energy Balance through the existing metric and period controls, with expenditure and balance charts, coverage and numerical comparison against smoothed measured weight. The existing Weight metric owns the weight graph. There is no separate Energy Balance tab group, day editor or history navigation.
+
+Storage schema stays at 3. No core formula changes. Missing-step fallback, explicit zero, unknown food, imports, backups and legacy signatures remain supported. UI rendering does not write assumed records.
+
+## Earlier implementation notes (superseded where stated above)
+
 # Missing steps update (7.2.2)
 
 When daily steps are missing, use the configured habitual allowance for display and calculation only. Extra walking contributes zero. Explicit recorded steps, including zero, take priority. Existing daily and period calculations recalculate historical food days on demand without writing assumptions into logs or backups. Such days show “Steps not logged; usual activity used”. Missing food remains unknown. Workout overlap checks continue to use actual recorded steps, never assumed steps.

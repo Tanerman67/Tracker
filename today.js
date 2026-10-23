@@ -57,7 +57,7 @@ function openTodayMetric(id,date=todayDateKey()){
     alcoholViewYear=d.getFullYear();alcoholViewMonth=d.getMonth();alcoholViewMode='month';
     renderAlcoholCalendar();return;
   }
-  if(id==='gym'){ensureDay(date).gym=data.logs?.[date]?.gym!==true;save();return}
+  if(id==='gym'){energyWorkoutOpen(date);return}
   openEntry(id,date);
 }
 function openTodayHero(){
