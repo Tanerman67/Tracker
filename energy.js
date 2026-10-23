@@ -17,8 +17,9 @@ function energyWorkoutOpen(date=todayDateKey()){if(!validDay(date)||date>localDa
 function energyClose(){energyReturnFocus?.focus?.({preventScroll:true})}
 function energyRefresh(){if(moduleView==='energy'&&!document.activeElement?.closest('.energy-workout-form,.energy-form-grid'))renderEnergy()}
 function energyExternalUpdate(){
- if(document.activeElement?.closest('.energy-workout-form,.energy-form-grid'))return;
- saveCoordinationQueue.then(()=>{if(JSON.stringify(data)!==JSON.stringify(storageBaseline))return;const latest=bestCandidate([parseCandidate(DATA_KEY,storageGet(DATA_KEY),true),parseCandidate(MIRROR_KEY,storageGet(MIRROR_KEY))].filter(Boolean));if(latest&&candidateBetter(latest,{data})){data=migrateData(latest.data);resetStorageBaseline();render()}});
+ const visible=moduleView==='energy'||data.dashboard.blocks.some(b=>b.id==='energy')||trendMetricId==='energy'||document.getElementById('energySettings')?.open;
+ if(!visible||document.activeElement?.matches('input,select,textarea')||document.activeElement?.closest('.energy-workout-form,.energy-form-grid'))return;
+ saveCoordinationQueue.then(()=>{if(document.activeElement?.matches('input,select,textarea')||JSON.stringify(data)!==JSON.stringify(storageBaseline))return;const latest=bestCandidate([parseCandidate(DATA_KEY,storageGet(DATA_KEY),true),parseCandidate(MIRROR_KEY,storageGet(MIRROR_KEY))].filter(Boolean));if(latest&&candidateBetter(latest,{data})){data=migrateData(latest.data);resetStorageBaseline();render()}});
 }
 addEventListener('storage',e=>{if(e.key===DATA_KEY&&e.newValue)energyExternalUpdate()});
 function energyTodayCard(date){
