@@ -2141,7 +2141,8 @@ const TREND_METRICS=[
   {id:'protein',icon:'🥩',ru:'Белок',en:'Protein',unitRu:'г',unitEn:'g',kind:'line'},
   {id:'outdoors',icon:'☀️',ru:'Улица',en:'Outdoors',unitRu:'мин',unitEn:'min',kind:'line'},
   {id:'gym',icon:'🏋️',ru:'Тренировки',en:'Workouts',unitRu:'',unitEn:'',kind:'bars'},
-  {id:'english',icon:'🇬🇧',ru:'English',en:'English',unitRu:'мин',unitEn:'min',kind:'line'}
+  {id:'english',icon:'🇬🇧',ru:'English',en:'English',unitRu:'мин',unitEn:'min',kind:'line'},
+  {id:'energy',icon:'◒',ru:'Энергетический баланс',en:'Energy Balance',unitRu:'ккал',unitEn:'kcal',kind:'line'}
 ];
 
 let trendSelectedPoint=null;
@@ -2576,6 +2577,7 @@ function trendPointDetailText(id,row){
   return {period:trendPeriodLabel(row),value,meta};
 }
 function selectTrendPoint(index){
+  if(trendMetricId==='energy'){energyRenderProgress();return}
   const daily=trendRawSeries(trendMetricId);
   const chartSeries=trendChartSeries(trendMetricId,daily);
   const row=chartSeries[Number(index)];
@@ -2646,6 +2648,7 @@ function renderTrends(){
     `).join('');
   }
 
+  if(trendMetricId==='energy'){energyRenderProgress();return}
   const daily=trendRawSeries(trendMetricId);
   const chartSeries=trendChartSeries(trendMetricId,daily);
   const summary=trendSummary(trendMetricId,daily);
@@ -2747,6 +2750,7 @@ function updateStorageSafetyUI(){
 }
 
 function renderSettings(){
+ energyRenderSettings();
  const set=(id,v)=>{const el=document.getElementById(id);if(el)el.value=v??''};
  set('smokeDate',data.smokeDate);set('alcoholDate',alcoholTrackingStart());set('stepsGoal',data.stepsGoal);set('outdoorsGoal',data.outdoorsGoal);set('sleepGoal',data.sleepGoal);set('englishGoal',data.englishGoal);set('gymGoal',data.gymGoal);
  for(const id of ['smokeDate','alcoholDate'])document.getElementById(id).max=localDate();

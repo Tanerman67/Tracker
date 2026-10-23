@@ -26,12 +26,11 @@ function dashboardOpen(id,date){
  return openTodayMetric(id,date);
 }
 function dashboardCard(id,date){
+ if(id==='energy')return energyTodayCard(date);
  const definitions=dashboardAvailable(),definition=Object.prototype.hasOwnProperty.call(definitions,id)?definitions[id]:null;if(!definition)return null;
  const [icon,ru,en]=definition,el=document.createElement('button');el.type='button';el.className='metric-card today-metric';el.dataset.metric=id;el.onclick=()=>dashboardOpen(id,date);
  let main='—',status=trText('Нет данных','No data'),state='neutral',progress=null;
- if(id==='energy'){
-  const s=energyDay(date);main=energyKcal(s.tdee);status=trText('Питание: ','Food: ')+nutritionDisplay(s.food)+' · '+energyStatus(s.status)+(s.balance===null?'':' · '+energyBalanceText(s.balance));
- }else if(id==='nutrition'){
+ if(id==='nutrition'){
   const c=nutritionAggregate(date).calories,g=nutritionProgressState(c,data.nutrition.goals.calories);main=nutritionDisplay(c);
   status=g.goal===null?trText('Нажми, чтобы добавить еду','Tap to log food'):g.over?trText('Сверх лимита: ','Over limit: ')+todayNumber(g.over)+' kcal':g.remaining!==null?trText('Осталось: ','Remaining: ')+todayNumber(g.remaining)+' kcal':trText('Часть данных неизвестна','Some values are unknown');
   if(g.percent!==null)status+=' · '+(c.partial?'≥ ':'')+todayNumber(g.percent)+'%';state=g.over?'over':'neutral';progress=g.percent;
