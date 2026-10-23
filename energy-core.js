@@ -120,7 +120,29 @@
   }
   return store;
  }
- const api={dateNumber,addDays,dayDiff,number,stable,weightAt,ROUTINES,ageAt,resting,walking,WORKOUT_TYPES,validWorkout,exercise,fingerprint,foodSignature,activitySignature,daily,validateStore};
+ function period(db,start,end,getCalories){
+  const length=dayDiff(start,end);
+  if(length===null||length<0||length>3660)throw Error('Choose a range of 1 to 3661 days.');
+  const days=Array.from({length:length+1},(_,i)=>daily(db,addDays(start,i),getCalories(addDays(start,i))));
+  const used=days.filter(d=>d.status==='confirmed'&&d.balance!==null),sum=used.length?used.reduce((n,d)=>n+d.balance,0):null;
+  const excluded={};for(const d of days.filter(d=>d.status!=='confirmed'))for(const issue of d.issues)excluded[issue]=(excluded[issue]||0)+1;
+  const measurements=Object.keys(db.logs||{}).filter(date=>dateNumber(date)!==null&&date>=addDays(start,-6)&&date<=end&&number(db.logs[date]?.weight,Number.MIN_VALUE)!==null).sort().map(date=>({date,value:number(db.logs[date].weight)}));
+  const weights=measurements.filter(w=>w.date>=start).map(w=>{
+   const window=measurements.filter(x=>x.date>=addDays(w.date,-6)&&x.date<=w.date);
+   return {...w,smooth:window.length>=3?window.reduce((n,x)=>n+x.value,0)/window.length:null,count:window.length};
+  });
+  const smoothed=weights.filter(w=>w.smooth!==null),first=smoothed[0],last=smoothed.at(-1);
+  let comparison=null;
+  // Compare non-overlapping trailing windows; use the exact same dates for energy.
+  // Weight measurement times are unknown: full days [first, last) are illustrative.
+  if(first&&last&&dayDiff(first.date,last.date)>=7){
+   const matched=days.filter(d=>d.date>=first.date&&d.date<last.date),qualified=matched.filter(d=>d.status==='confirmed'&&d.balance!==null);
+   const energy=qualified.length?qualified.reduce((n,d)=>n+d.balance,0):null,actual=last.smooth-first.smooth;
+   comparison={start:first.date,end:last.date,first,last,actual,used:qualified.length,total:matched.length,energy,equivalent:energy===null?null:-energy/7700,discrepancy:qualified.length===matched.length&&energy!==null?actual+energy/7700:null};
+  }
+  return {start,end,days,used:used.length,excludedDays:days.length-used.length,excluded,sum,equivalent:sum===null?null:-sum/7700,weights,comparison};
+ }
+ const api={dateNumber,addDays,dayDiff,number,stable,weightAt,ROUTINES,ageAt,resting,walking,WORKOUT_TYPES,validWorkout,exercise,fingerprint,foodSignature,activitySignature,daily,validateStore,period};
  root.MyRhythmEnergy=api;
  if(typeof module==='object'&&module.exports)module.exports=api;
 })(globalThis);

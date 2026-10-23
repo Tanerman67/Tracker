@@ -110,3 +110,20 @@ test('energy schema is additive, validates unknown/null/zero, and rejects malfor
  const keep=structuredClone(db);E.daily(db,DAY,calories());assert.deepEqual(db,keep,'calculation must never mutate records');
  for(const patch of [{workouts:[workout({scope:'daily'})]},{workouts:[workout(),workout()]},{profile:{heightCm:false}},{days:{bad:{}}},{days:{[DAY]:{foodSignature:'not-valid'}}}])assert.throws(()=>E.validateStore({...db.energyBalance,...patch}));
 });
+test('period sum excludes gaps and missing or partial food without extrapolation',()=>{
+ const db=database();confirm(db);const p=E.period(db,'2024-02-28','2024-03-03',date=>date===DAY?calories():calories(null));
+ assert.equal(p.used,1);assert.equal(p.excludedDays,4);assert.equal(p.sum,E.daily(db,DAY,calories()).balance);assert.equal(p.equivalent,-p.sum/7700);
+ const empty=E.period(db,'2024-03-02','2024-03-03',()=>calories(null));assert.equal(empty.sum,null);assert.equal(empty.equivalent,null);
+ assert.throws(()=>E.period(db,'2024-03-02','2024-03-01',()=>calories()));
+});
+test('sparse weights do not invent smooth values or a confident comparison',()=>{
+ const db=database();db.logs={'2024-02-29':{weight:70},'2024-03-20':{weight:69},'2024-04-01':{weight:68}};
+ const p=E.period(db,DAY,'2024-03-30',()=>calories(null));assert.equal(p.weights.length,1);assert.equal(p.weights[0].smooth,null);assert.equal(p.comparison,null);
+});
+test('smoothed comparison matches energy dates, requires coverage, never uses future weights',()=>{
+ const db=database();db.logs={};db.nutrition.entries=[];db.energyBalance.days={};
+ for(let i=0;i<20;i++){const date=E.addDays(DAY,i);db.logs[date]={weight:70-i*.02,steps:800};db.nutrition.entries.push({id:'fictional-food-'+i,date});db.energyBalance.days[date]={foodSignature:E.foodSignature(db,date),activitySignature:E.activitySignature(db,date)}}
+ db.logs['2025-01-01']={weight:999};
+ const p=E.period(db,DAY,E.addDays(DAY,19),()=>calories(1800));assert.equal(p.weights[0].smooth,null);assert.equal(p.weights[2].count,3);assert.equal(p.weights[2].smooth,(70+69.98+69.96)/3);assert.equal(p.comparison.total,17);assert.equal(p.comparison.used,17);assert.notEqual(p.comparison.discrepancy,null);
+ assert.ok(p.weights.every(w=>w.value<100));delete db.energyBalance.days[E.addDays(DAY,8)];const gap=E.period(db,DAY,E.addDays(DAY,19),()=>calories(1800));assert.equal(gap.comparison.used,16);assert.equal(gap.comparison.discrepancy,null);
+});
