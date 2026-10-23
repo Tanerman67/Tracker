@@ -446,3 +446,10 @@ function nutritionLocalize(){
  const qualities={estimated:['Оценка','Estimated'],measured:['Измерено','Measured'],label:['Этикетка','Label'],calculated:['Расчёт','Calculated']};
  for(const option of document.getElementById('nutritionFoodQuality').options||[])option.textContent=nutritionLabel(...qualities[option.value]);
 }
+// Keep keyboard focus inside the active nested editor; the date picker has its own trap.
+document.addEventListener('keydown',event=>{
+ if(event.key!=='Tab'||datePickerState)return;
+ const host=document.querySelector('.nutrition-form.show');if(!host)return;
+ const nodes=[...host.querySelectorAll('button,input,select,textarea,summary,[tabindex]')].filter(n=>!n.disabled&&n.tabIndex>=0&&n.getClientRects().length),first=nodes[0],last=nodes[nodes.length-1];
+ if(event.shiftKey&&document.activeElement===first){event.preventDefault();last?.focus()}else if(!event.shiftKey&&document.activeElement===last){event.preventDefault();first?.focus()}
+});

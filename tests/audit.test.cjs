@@ -225,3 +225,6 @@ test('shared alcohol renderer preserves explicit markers, tracking boundaries an
 test('Today layout and shared Nutrition section contain no obsolete target or privacy controls',()=>{
  const html=fs.readFileSync(path.join(root,'index.html'),'utf8');assert.ok(html.indexOf('id="todayCustomize"')>html.indexOf('id="todayWeekly"'));assert.ok(!html.includes('todayPrivacy'));assert.ok(!html.includes('nutritionGoal_fiber'));assert.ok(!html.includes('id="proteinGoal"'));assert.equal((html.match(/class="tabsin"/g)||[]).length,1);assert.ok(html.includes('id="nutritionModal" data-localized class="section nutrition-section"'));assert.ok(html.indexOf('id="nutritionGoal_protein"')<html.indexOf('id="nutritionGoal_fat"'));
 });
+test('unusual legacy protein modes survive target editing without dropping extensions',()=>{
+ const r=runtime();r.run('data.goalRules.protein={type:"weekly",target:120,extension:false}');r.nodes.set('goalMode_protein',{value:'weekly'});assert.deepEqual(r.json('editedGoalRule("protein",130)'),{type:'weekly',target:130,extension:false});
+});

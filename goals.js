@@ -37,12 +37,13 @@ function validateV7Data(obj){
  if(obj.goalRules!==undefined){if(!isDataObject(obj.goalRules))throw Error('Invalid goal rules.');for(const g of Object.values(obj.goalRules)){if(!isDataObject(g)||!['min','max','range','boolean','weekly','observe'].includes(g.type)||g.target!==undefined&&g.target!==null&&(!Number.isFinite(g.target)||g.target<0)||g.type==='range'&&(!Number.isFinite(g.upper)||g.upper<g.target))throw Error('Invalid goal rule.')}}
 }
 function goalRuleEditorHTML(ids){
- return ids.map(id=>{const rule=goalRule(id);return `<div class="field"><label for="goalMode_${id}">${escapeHTML(trTrackerName(tracker(id)))}</label><select id="goalMode_${id}">${[['min','Минимум','Minimum'],['max','Лимит','Limit'],['range','Диапазон','Range'],['observe','Наблюдение','Observe']].map(([type,ru,en])=>`<option value="${type}" ${rule.type===type?'selected':''}>${trText(ru,en)}</option>`).join('')}</select><label for="goalUpper_${id}">${trText('Верх диапазона (для режима «Диапазон»)','Upper value (Range mode)')}</label><input id="goalUpper_${id}" type="number" min="0" step="any" value="${rule.upper??''}"></div>`}).join('');
+ return ids.map(id=>{const rule=goalRule(id);return `<div class="field"><label for="goalMode_${id}">${escapeHTML(trTrackerName(tracker(id)))}</label><select id="goalMode_${id}">${(!['min','max','range','observe'].includes(rule.type)?`<option value="${escapeHTML(rule.type)}" selected>${escapeHTML(rule.type)}</option>`:'')+[['min','Минимум','Minimum'],['max','Лимит','Limit'],['range','Диапазон','Range'],['observe','Наблюдение','Observe']].map(([type,ru,en])=>`<option value="${type}" ${rule.type===type?'selected':''}>${trText(ru,en)}</option>`).join('')}</select><label for="goalUpper_${id}">${trText('Верх диапазона (для режима «Диапазон»)','Upper value (Range mode)')}</label><input id="goalUpper_${id}" type="number" min="0" step="any" value="${rule.upper??''}"></div>`}).join('');
 }
 function renderGoalRuleSettings(){const host=document.getElementById('goalRuleSettings');if(host)host.innerHTML=goalRuleEditorHTML(['steps','sleep','outdoors'])}
 function editedGoalRule(id,target){
  const old=data.goalRules?.[id]||{type:'min'},mode=document.getElementById('goalMode_'+id);if(!mode)return {...old,target};
- const type=mode.value,raw=document.getElementById('goalUpper_'+id).value.trim(),upper=raw===''?null:Number(raw);
+ const type=mode.value;if(type===old.type&&!['min','max','range','observe'].includes(type))return {...old,target};
+ const raw=document.getElementById('goalUpper_'+id).value.trim(),upper=raw===''?null:Number(raw);
  if(!['min','max','range','observe'].includes(type)||type==='range'&&(upper===null||!Number.isFinite(upper)||upper<0||target!=null&&upper<target))throw Error(trText('Проверь границы диапазона.','Check the range limits.'));
  return {...old,type,target,...(type==='range'?{upper}:{})};
 }

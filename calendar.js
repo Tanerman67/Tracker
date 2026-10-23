@@ -18,11 +18,14 @@ function calendarMonthHTML(year,month,options={}){
   const tabStop=!disabled&&(focus||!tabAssigned&&preferred.slice(0,7)!==key.slice(0,7));if(tabStop)tabAssigned=true;
   body+=`<button type="button" class="shared-day ${cls}" data-day="${key}" aria-label="${escapeHTML(description)}" aria-pressed="${selected}" ${disabled?'disabled':''} tabindex="${tabStop?'0':'-1'}" onclick="${options.onDay||'calendarPickDay'}('${key}')">${day}${mark.dot?'<span class="shared-dot"></span>':''}</button>`;
  }
- return `<div class="shared-calendar" data-year="${year}" data-month="${month}" role="group" aria-label="${months[month]} ${year}"><div class="shared-calendar-grid" role="grid">${body}</div></div>`;
+ return `<div class="shared-calendar" data-year="${year}" data-month="${month}" data-context="${options.context||''}" role="group" aria-label="${months[month]} ${year}"><div class="shared-calendar-grid">${body}</div></div>`;
 }
 function calendarControls(kind,year,month){
  const months=CALENDAR_MONTHS[calendarLanguage()];
- return `<div class="shared-calendar-controls"><button class="secondary" type="button" aria-label="${calendarText('Предыдущий месяц','Previous month')}" onclick="calendarNavigate('${kind}',${year},${month-1})">‹</button><select aria-label="${calendarText('Месяц','Month')}" onchange="calendarNavigate('${kind}',${year},Number(this.value))">${months.map((m,i)=>`<option value="${i}" ${i===month?'selected':''}>${m}</option>`).join('')}</select><input type="number" inputmode="numeric" min="1" max="9999" value="${year}" aria-label="${calendarText('Год','Year')}" onchange="calendarNavigate('${kind}',Number(this.value),${month})"><button class="secondary" type="button" aria-label="${calendarText('Следующий месяц','Next month')}" onclick="calendarNavigate('${kind}',${year},${month+1})">›</button></div>`;
+ return `<div class="shared-calendar-controls"><button class="secondary" type="button" aria-label="${calendarText('Предыдущий месяц','Previous month')}" onclick="calendarControlChange('${kind}',this,-1)">‹</button><select aria-label="${calendarText('Месяц','Month')}" onchange="calendarControlChange('${kind}',this)">${months.map((m,i)=>`<option value="${i}" ${i===month?'selected':''}>${m}</option>`).join('')}</select><input type="number" inputmode="numeric" min="1" max="9999" value="${year}" aria-label="${calendarText('Год','Year')}" onchange="calendarControlChange('${kind}',this)"><button class="secondary" type="button" aria-label="${calendarText('Следующий месяц','Next month')}" onclick="calendarControlChange('${kind}',this,1)">›</button></div>`;
+}
+function calendarControlChange(kind,control,delta=0){
+ const host=control.closest('.shared-calendar-controls');calendarNavigate(kind,Number(host.querySelector('input').value),Number(host.querySelector('select').value)+delta);
 }
 function calendarNavigate(kind,year,month){
  if(!Number.isInteger(year)||year<1||year>9999||!Number.isInteger(month))return;
@@ -50,14 +53,17 @@ function calendarOpenPicker(input,trigger){
  if(input.id==='cycleEnd')input.min=document.getElementById('cycleStart')?.value||'';
  const value=validDay(input.value)?input.value:localDate(),d=new Date(value+'T12:00:00');
  datePickerState={input,trigger,year:d.getFullYear(),month:d.getMonth(),focus:value,overflow:document.body.style.overflow};
- let host=document.getElementById('sharedDatePicker');if(!host){host=document.createElement('div');host.id='sharedDatePicker';host.className='shared-picker';host.setAttribute('role','dialog');host.setAttribute('aria-modal','true');host.setAttribute('aria-labelledby','sharedPickerTitle');document.body.append(host)}
- host.hidden=false;document.body.style.overflow='hidden';calendarRenderPicker();
+ let host=document.getElementById('sharedDatePicker');if(!host){host=document.createElement('div');host.id='sharedDatePicker';host.className='shared-picker';host.dataset.localized='';host.setAttribute('role','dialog');host.setAttribute('aria-modal','true');host.setAttribute('aria-labelledby','sharedPickerTitle');document.body.append(host)}
+ host.innerHTML='';host.hidden=false;document.body.style.overflow='hidden';calendarRenderPicker();
  const selected=host.querySelector('.shared-day[tabindex="0"]:not(:disabled)')||host.querySelector('.shared-day:not(:disabled)')||host.querySelector('button');selected?.focus();
 }
 function calendarRenderPicker(){
  if(!datePickerState)return;const s=datePickerState,host=document.getElementById('sharedDatePicker');
+ const monthHTML=calendarMonthHTML(s.year,s.month,{selected:s.input.value,focus:s.focus,min:s.input.min,max:s.input.max});
+ // Keep focused month/year controls mounted while navigating the picker.
+ if(host.querySelector('.shared-picker-sheet')){host.querySelector('.shared-calendar').outerHTML=monthHTML;host.querySelector('.shared-calendar-controls select').value=String(s.month);host.querySelector('.shared-calendar-controls input').value=String(s.year);return}
  const title=s.input.labels?.[0]?.textContent||calendarText('Выбрать дату','Choose date');
- host.innerHTML=`<div class="shared-picker-sheet"><div class="shared-picker-head"><h2 id="sharedPickerTitle">${escapeHTML(title)}</h2><button class="secondary" onclick="calendarClosePicker()">${calendarText('Закрыть','Close')}</button></div>${calendarControls('picker',s.year,s.month)}${calendarMonthHTML(s.year,s.month,{selected:s.input.value,focus:s.focus,min:s.input.min,max:s.input.max})}<div class="shared-picker-actions"><button class="secondary" ${localDate()>(s.input.max||localDate())||s.input.min&&localDate()<s.input.min?'disabled':''} onclick="calendarPickDay(localDate())">${calendarText('Сегодня','Today')}</button>${['smokeDate','alcoholDate','cycleEnd'].includes(s.input.id)?`<button class="ghost" onclick="calendarPickDay('')">${calendarText('Очистить','Clear')}</button>`:''}</div></div>`;
+ host.innerHTML=`<div class="shared-picker-sheet"><div class="shared-picker-head"><h2 id="sharedPickerTitle">${escapeHTML(title)}</h2><button class="secondary" onclick="calendarClosePicker()">${calendarText('Закрыть','Close')}</button></div>${calendarControls('picker',s.year,s.month)}${monthHTML}<div class="shared-picker-actions"><button class="secondary" ${localDate()>(s.input.max||localDate())||s.input.min&&localDate()<s.input.min?'disabled':''} onclick="calendarPickDay(localDate())">${calendarText('Сегодня','Today')}</button>${['smokeDate','alcoholDate','cycleEnd'].includes(s.input.id)?`<button class="ghost" onclick="calendarPickDay('')">${calendarText('Очистить','Clear')}</button>`:''}</div></div>`;
 }
 function calendarClosePicker(){
  if(!datePickerState)return;const state=datePickerState;datePickerState=null;document.getElementById('sharedDatePicker').hidden=true;document.body.style.overflow=state.overflow;state.trigger?.focus();
@@ -79,10 +85,12 @@ document.addEventListener('keydown',event=>{
  if(delta)d.setDate(d.getDate()+delta);
  else if(event.key==='Home')d.setDate(d.getDate()-(d.getDay()+6)%7);
  else if(event.key==='End')d.setDate(d.getDate()+6-(d.getDay()+6)%7);
- else if(datePickerState&&['PageUp','PageDown'].includes(event.key)){d.setDate(1);d.setMonth(d.getMonth()+(event.key==='PageUp'?-1:1)*(event.shiftKey?12:1))}
+ else if(['PageUp','PageDown'].includes(event.key)){d.setDate(1);d.setMonth(d.getMonth()+(event.key==='PageUp'?-1:1)*(event.shiftKey?12:1))}
  else return;
  event.preventDefault();const key=calendarKey(d);
  if(datePickerState){const s=datePickerState;if(key>(s.input.max||localDate())||s.input.min&&key<s.input.min)return;s.focus=key;s.year=d.getFullYear();s.month=d.getMonth();calendarRenderPicker()}
- const grid=datePickerState?document.getElementById('sharedDatePicker'):button.closest('.shared-calendar'),next=grid.querySelector(`[data-day="${key}"]:not(:disabled)`);
+ let grid=datePickerState?document.getElementById('sharedDatePicker'):button.closest('.shared-calendar');
+ if(!datePickerState&&!grid.querySelector(`[data-day="${key}"]`)&&grid.dataset.context&&key<=localDate()){const kind=grid.dataset.context;calendarNavigate(kind,d.getFullYear(),d.getMonth());grid=document.querySelector(`.shared-calendar[data-context="${kind}"][data-year="${d.getFullYear()}"][data-month="${d.getMonth()}"]`)}
+ const next=grid?.querySelector(`[data-day="${key}"]:not(:disabled)`);
  if(next){grid.querySelectorAll('.shared-day').forEach(n=>n.tabIndex=-1);next.tabIndex=0;next.focus()}
 },true);
