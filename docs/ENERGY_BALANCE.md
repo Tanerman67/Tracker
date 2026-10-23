@@ -1,8 +1,8 @@
 # Energy Balance implementation
 
-Base: main 8e018f44d3554478d6e6c11aee819ff4cfda23f8 (7.1.0), schema 3.
+Current UI: 7.3.0, based on main ec8ffd15bd02062d2528f9376ca72eb5d29e07aa (7.2.0), schema 3. Formulas are unchanged.
 
-## Architecture and inventory (stage A)
+## Existing architecture
 
 - Existing weight: `data.logs[date].weight`, edited by `openBodyCheckin` / `saveBodyCheckin`. `bodyMeasurements` is not a second weight source.
 - Existing steps: `data.logs[date].steps`, edited by `openEntry`. Gym is boolean; outdoors is not walking.
@@ -12,13 +12,13 @@ Base: main 8e018f44d3554478d6e6c11aee819ff4cfda23f8 (7.1.0), schema 3.
 - Storage: additive optional `energyBalance: {profile, workouts, days}`; existing schema 3 can retain unknown fields, so no schema bump or rewrites of old records are needed. Full JSON backup and the normal mirror/IndexedDB/cache vault retain the object. Older backups without the object preserve the current module. Three-way merge handles workout arrays by stable ID.
 - Pure calculations: `energy-core.js` accepts database snapshots and the existing nutrition aggregate; UI adapter `energy.js` performs normal saves and routes to existing editors. No network requests or computed TDEE storage.
 
-## Risks to verify
+## Everyday workflow
 
-Food confirmation must become stale after editing/importing/deleting food, including changes in another tab. Activity confirmation must become stale after steps/Gym/workouts change. Historical weight must never look forward. Total workout calories require minutes and subtract resting energy. Unknown overlap must never add walking and watch estimates together. Sparse weight data and missing days must not imply a complete trend or complete cumulative history.
+No food, activity or day-completion confirmation is required. The main view shows estimated full-day expenditure, known food calories and the provisional difference. Three rows explain usual-day energy, extra walking and recorded workouts. Step totals, included allowance and extra steps are visible together. An empty diary is unknown, never zero intake.
 
-## Stages
+Profile setup shows usual activity, height, date of birth and the user's explicit male/female equation choice. Formula details, known manual RMR and the included-step override are in Advanced settings. Existing profile values and all historical weight sources are retained.
 
-A: inventory and pure utilities. B: profile, historical weight and net steps. C: workouts and overlap. D: daily statuses and UI. E: period analysis, backup/browser/offline checks and PR. Each stage is committed and tested.
+The workout form initially needs type and explicitly labelled **Active calories from your watch**. This is an explicit active-calorie input, not a reinterpretation of unknown energy. Total/unknown calories and source are in optional details; selecting Total reveals duration and requires it before saving a known calorie value. Walking/running reveal step accounting. Cycling/strength/swimming use the usual no-step-overlap assumption; other activities require an overlap choice. Existing saved types/overlap/source are preserved when edited.
 
 ## Model and assumptions
 
@@ -43,26 +43,26 @@ Workouts contain a stable ID, date, type, optional minutes/kcal/steps, source, e
 
 - Active energy: already above rest.
 - Total energy: subtract `RMR × minutes / 1440`, clamp at zero. Without duration or RMR it is not added as known exercise energy.
-- Unknown type/energy: saved as unknown, not silently converted to active or zero for confirmation.
+- Unknown type/energy: saved as unknown, not silently converted to active or zero in the data. It is excluded from known workout energy and flagged as incomplete.
 - Count from steps: watch kcal are not added.
 - Count from watch with included steps: remove known session steps from additional walking. Multiple separate sessions are handled once each. Duplicate IDs are rejected; the UI asks before adding another session with the same date/type/kcal/duration.
-- Unknown overlap: suppress all extra walking as a conservative choice, show an explicit warning, withhold balance/confirmation. An impossible session-step sum also prevents confirmation.
-- Cycling/strength/swimming require the user's explicit overlap choice. Gym is unchanged. Gym=true without an energy-bearing/step-counted session remains provisional, never a made-up energy amount. Outdoors is not used as walking.
+- Unknown overlap: suppress all extra walking as a conservative choice, show an explicit warning and a provisional difference using known components. Such dates are excluded from sufficient-data history totals. An impossible session-step sum also excludes a date from sufficient-data history.
+- New cycling/strength/swimming sessions default to no step overlap based on the activity type. Other/legacy overlap choices are retained. Gym is unchanged. Gym=true without an energy-bearing/step-counted session remains provisional, never a made-up energy amount. Outdoors is not used as walking.
 
-Food totals come exclusively from `nutritionAggregate(date).calories`. No usable food means unknown, not fasting. Partial calories cannot produce a balance. Food completeness is an explicit per-date checkbox; activity completeness is separate. Missing steps can only be treated as no extra walking after explicit user confirmation of that statement. Today has no default confirmation.
+Food totals come exclusively from `nutritionAggregate(date).calories`. Without usable calories or a base-energy profile, the balance is unavailable. Otherwise the provisional difference uses the **known** intake/activity components. Missing walking remains null in the model and visible as not logged; it is not saved as zero. Partial food values keep their ≥ marker. Missing components and unreliable overlap are disclosed in a compact limitations section, and the summary explicitly indicates missing data. No real-world diary completeness is claimed.
 
-Confirmations store two compact 32-bit change hashes of stable source serialization. These are change detectors, not cryptographic signatures, and do not store copies of meals. Food IDs/values/dates/metadata changes invalidate food confirmation; steps/Gym/workouts/no-extra-walking changes invalidate activity confirmation. Pure calculations never write calculated expenditure to the database. Read-only energy views safely refresh on cross-tab saves; unfinished editors retain drafts and use the existing conflict notice/save merge.
+Legacy `days.foodSignature`, `days.activitySignature` and `days.noExtraSteps` are retained for backup compatibility; signatures no longer gate any calculation. Existing explicit no-extra-step records remain valid historical input. Source changes recalculate the day/card/history immediately. Cross-tab refresh preserves unfinished form drafts through the existing save/conflict infrastructure. Derived expenditure is never persisted as a second source of truth.
 
 ## History and weight comparison
 
-7/14/30/90 days and custom ranges up to 3661 days are available. Only confirmed days enter the cumulative total. A period with no qualified days has an unknown sum, not zero. Counts and all exclusion reasons are visible. The daily chart uses discrete points/bars with explicit missing positions; it cannot draw a cumulative line across gaps.
+7/14/30/90 days and custom ranges up to 3661 days are available. Days automatically enter totals when profile, food calories, steps and any workout/overlap inputs are sufficiently known; no manual approval is used. All totals and comparisons remain provisional because unlogged meals/activity cannot be detected. A period with no qualified days has an unknown sum, not zero. Counts and all exclusion reasons are visible. The daily chart uses discrete points/bars with explicit missing positions; it cannot draw a cumulative line across gaps.
 
 The 7700 kcal/kg conversion is only an illustrative energy equivalent. Weight averages use at least three measurements in a trailing seven-calendar-day window and appear only on actual measurement dates. Comparison requires two such points at least seven days apart. Their measurement counts/dates are shown. Energy is compared over full days `[first average date, last average date)`; measurement times are unknown. A discrepancy is withheld unless every day in this matching interval qualifies. Sparse weight histories produce no confident trend or comparison. No automatic calibration, energy target changes, or future weight access.
 
 ## Compatibility, privacy and operation
 
-Version 7.2.0, schema remains 3. `energyBalance` is optional and not added to old databases merely by opening Today. Hiding its card retains its data. Old backups without this object preserve the current module during import, consistent with other optional modules. New full backups include it. Malformed records fail validation before storage/import. Unknown extension fields survive; existing food/steps/weight/null/zero/Gym values are not rewritten.
+Version 7.3.0, schema remains 3. `energyBalance` is optional and not added to old databases merely by opening Today. Hiding its card retains its data. Old backups without this object preserve the current module during import, consistent with other optional modules. New full backups include it. Malformed records fail validation before storage/import. Unknown extension fields survive; existing food/steps/weight/null/zero/Gym values are not rewritten.
 
-The existing localStorage primary/mirror, IndexedDB current/snapshots, recovery cache, Web Locks/fallback and ID-based three-way array merge remain in use. The app asset cache is separately versioned `my-rhythm-v7.2.0`; new assets are precached without deleting the data vault. No network calls, SDKs, account, server, health import or sync were added. Only fictional fixtures are committed. Device backups are never placed in GitHub.
+The existing localStorage primary/mirror, IndexedDB current/snapshots, recovery cache, Web Locks/fallback and ID-based three-way array merge remain in use. The app asset cache is separately versioned `my-rhythm-v7.3.0`; new assets are precached without deleting the data vault. No network calls, SDKs, account, server, health import or sync were added. Only fictional fixtures are committed. Device backups are never placed in GitHub.
 
-Enable through **Today → Customize blocks → Energy Balance**, then set Profile. Use the existing Food/Steps/Body Check-in links for those inputs. Publication requires a separate explicit approval, PR merge, then the existing Pages release process. This branch does not publish Pages.
+Enable through **Today → Customize blocks → Energy Balance**, then set Profile. Use the existing Food/Steps/Body Check-in links for those inputs. Publication follows successful unit/browser tests, PR merge and the existing GitHub Pages process. The simplification task explicitly authorizes publication.
