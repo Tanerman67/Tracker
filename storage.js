@@ -1,5 +1,5 @@
 // Persistent schema and recovery. Keep keys compatible with existing installations.
-const APP_VERSION='7.1.0';
+const APP_VERSION='7.2.0';
 const DATA_KEY='my-life-tracker-data';
 const MIRROR_KEY='my-life-tracker-data-mirror-v1';
 const CURRENT_SCHEMA_VERSION=3;
@@ -178,6 +178,7 @@ function validateStoredData(obj){
     if(obj[key]&&Object.values(obj[key]).some(row=>!isDataObject(row)))throw new Error('Invalid '+key+' row.');
   }
   validateV7Data(obj);
+  if(obj.energyBalance!==undefined&&typeof MyRhythmEnergy!=='undefined')MyRhythmEnergy.validateStore(obj.energyBalance);
   return obj;
 }
 

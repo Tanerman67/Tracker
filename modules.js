@@ -1,7 +1,7 @@
 // Lightweight secondary views. Their records are included in the normal backup.
 let moduleView='',moduleEditId='',cycleMonth=null;
 function openModule(view){cycleMonth=todayDateKey().slice(0,7)+'-01';moduleView=view;moduleEditId='';renderModule();document.getElementById('moduleModal').classList.add('show');document.body.style.overflow='hidden'}
-function closeModule(){document.getElementById('moduleModal').classList.remove('show');document.body.style.overflow='';moduleView=''}
+function closeModule(){const energy=moduleView==='energy';document.getElementById('moduleModal').classList.remove('show');document.body.style.overflow='';moduleView='';if(energy&&typeof energyClose==='function')energyClose()}
 function moduleShell(title,html){document.getElementById('moduleTitle').textContent=title;document.getElementById('moduleContent').innerHTML=html;document.getElementById('moduleBack').textContent=trText('Назад','Back');enhanceDateInputs(document.getElementById('moduleContent'))}
 function moduleInput(id,label,value='',type='text',extra=''){return `<div class="field"><label for="${id}">${escapeHTML(label)}</label><input id="${id}" type="${type}" value="${escapeHTML(value??'')}" ${extra}></div>`}
 function moduleError(e){document.getElementById('moduleError').textContent=e.message}
@@ -47,7 +47,7 @@ function deleteActivity(){if(!confirm(trText('Удалить запись вре
 let legacyActivityDate='';
 function editLegacyActivity(date){legacyActivityDate=date;const row=data.logs[date]||{};moduleShell(trText('Старая запись времени','Legacy study time'),`<p>${date}</p><p>${trText('При наличии детализации используется её сумма, иначе общий итог. Пустое поле удаляет только это значение.','Detailed types take priority over the general total. Blank fields remove only that value.')}</p>${[['english_general','📓',trText('Общий итог','General total')],...englishTypes].map(([id,icon,name])=>moduleInput('legacy_'+id,icon+' '+name,row[id]??'','number','min="0" max="1440"')).join('')}<div id="moduleError" role="alert"></div><button onclick="saveLegacyActivity()">${trText('Сохранить','Save')}</button><button class="secondary" onclick="renderActivity()">${trText('Отмена','Cancel')}</button>`)}
 function saveLegacyActivity(){try{const next={...data.logs[legacyActivityDate]};for(const id of ['english_general',...englishTypes.map(t=>t[0])]){const raw=document.getElementById('legacy_'+id).value;if(raw==='')delete next[id];else{const value=Number(raw);if(!Number.isFinite(value)||value<0||value>1440)throw Error(trText('Минуты: 0-1440.','Minutes: 0-1440.'));next[id]=value}}if(!confirm(trText('Сохранить изменения старой записи?','Save changes to the legacy record?')))return;data.logs[legacyActivityDate]=next;save();renderActivity()}catch(e){moduleError(e)}}
-function renderModule(){if(moduleView==='cycle')renderCycle();if(moduleView==='activity')renderActivity();if(moduleView==='layout')renderDashboardSettings()}
+function renderModule(){if(moduleView==='cycle')renderCycle();if(moduleView==='activity')renderActivity();if(moduleView==='layout')renderDashboardSettings();if(moduleView==='energy')renderEnergy()}
 
 function shiftCycleMonth(delta){const d=weeklyParseDate(cycleMonth||todayDateKey());cycleMonth=localDate(new Date(d.getFullYear(),d.getMonth()+delta,1,12));renderCycle()}
 

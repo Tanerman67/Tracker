@@ -218,6 +218,7 @@ function nutritionRender(){
   nutritionLocalize();
   nutritionRenderReuse();
   const date=nutritionDateKey(),total=nutritionAggregate(date),rows=nutritionRows(date),goal=nutritionStore().goals;
+  if(typeof energyNutritionCompletion==='function')energyNutritionCompletion(date);
   const put=(id,s)=>{const el=document.getElementById(id);if(el)el.textContent=s};
   put('nutritionTitle',nutritionLabel('Питание','Nutrition'));
   put('nutritionSubtitle',nutritionLabel('Еда и нутриенты по дням','Food and nutrients by day'));
