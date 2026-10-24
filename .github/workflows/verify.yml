@@ -2,6 +2,7 @@ name: Verify My Rhythm
 on:
   push:
     branches: [main, 'work/**']
+  pull_request:
 concurrency:
   group: verify-${{ github.ref }}
   cancel-in-progress: true
@@ -42,3 +43,4 @@ jobs:
             playwright-report/
             test-results/
           retention-days: 14
+

@@ -54,6 +54,7 @@ function dashboardCard(id,date){
   status=({missing:trText('Нет данных','No data'),logged:trText('Записано','Logged'),met:trText('Цель достигнута','Goal reached'),progress:trText('Ниже цели','Below goal'),within:trText('В пределах лимита','Within limit'),over:trText('Выше диапазона / лимита','Above range / limit')})[state];
  }
  el.dataset.state=state;
- el.innerHTML=`<div class="today-metric-title"><span aria-hidden="true">${escapeHTML(icon)}</span><span>${escapeHTML(trText(ru,en))}</span></div><div class="today-metric-value">${escapeHTML(main)}</div><div class="today-metric-status">${escapeHTML(status)}</div>${progress===null?'':`<div class="metric-bar" aria-hidden="true"><span style="width:${Math.max(0,Math.min(100,progress))}%"></span></div>`}`;
+ el.innerHTML=`<div class="today-metric-title"><span aria-hidden="true">${typeof uiIcon==='function'&&UI_PATHS[id]?uiIcon(id):escapeHTML(icon)}</span><span>${escapeHTML(trText(ru,en))}</span></div><div class="today-metric-value">${escapeHTML(main)}</div><div class="today-metric-status">${escapeHTML(status)}</div>${progress===null?'':`<div class="metric-bar" aria-hidden="true"><span style="width:${Math.max(0,Math.min(100,progress))}%"></span></div>`}`;
  return el;
 }
+

@@ -19,8 +19,9 @@
 .habit-activity>span{flex-basis:100%;font-size:14px;line-height:1.5;overflow-wrap:anywhere}
 #today #habitTodayButton{position:relative;min-height:44px;padding:10px 14px;white-space:normal;font-size:14px;background:var(--soft);color:var(--text);border:1px solid var(--line)}
 #habitWeekly{margin-top:14px;border-top:1px solid var(--line);padding-top:12px}
-#habitWeekly summary{cursor:pointer;min-height:44px;display:list-item;font-size:15px;font-weight:700;line-height:1.4}
+#habitWeekly summary{cursor:pointer;min-height:44px;display:list-item;font-size:15px;font-weight:650;line-height:1.4}
 .habit-week-rows>div{padding:10px 0;border-top:1px solid var(--line)}
 .habit-week-rows strong{font-size:14px}
 .habit-week-rows p{margin:5px 0;font-size:14px;line-height:1.5;color:var(--muted);overflow-wrap:anywhere}
 .habit-sheet button:focus-visible,#habitWeekly summary:focus-visible,#habitTodayButton:focus-visible{outline:2px solid var(--green);outline-offset:2px}
+

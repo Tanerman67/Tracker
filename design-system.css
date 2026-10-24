@@ -1,0 +1,101 @@
+/* Shared visual primitives. Screen modules retain layout and behaviour. */
+@font-face{font-family:Inter;src:url('./fonts/InterVariable.woff2') format('woff2');font-style:normal;font-weight:100 900;font-display:swap}
+:root{
+ --font:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+ --space-1:4px;--space-2:8px;--space-3:12px;--space-4:16px;--space-6:24px;--space-8:32px;
+ --radius-control:12px;--radius-card:18px;
+ --bg:#081411;--bg2:#081411;--card:#10211d;--card2:#142a24;--input:#0b1b16;
+ --text:#edf7f2;--muted:#a4bbb0;--green:#54dfb2;--green2:#54dfb2;--indigo:#65c9bc;--cyan:#9acddd;
+ --soft:#1a352b;--line:#304b3f;--line2:#263e33;--shadow:none;--tab-bg:#10211d;--danger:#ffad9f;
+ --type-caption:13px;--type-small:14px;--type-label:14px;--type-body:16px;--type-card-title:16px;--type-page:26px;
+ --on-accent:#06271b;--focus:#a4bfff;
+}
+body.light{--bg:#f2f6f3;--bg2:#f2f6f3;--card:#fff;--card2:#f7faf8;--input:#fff;--text:#17372a;--muted:#52695c;--green:#087353;--green2:#087353;--soft:#e4f1e9;--line:#c4d6c9;--line2:#dce7df;--shadow:none;--tab-bg:#fff;--danger:#9f3027;--on-accent:#fff;--focus:#2448ae;background:var(--bg)}
+html,body{background:var(--bg)}
+body,button,input,select,textarea{font-family:var(--font);font-synthesis:none;letter-spacing:0}
+body{background:var(--bg);color:var(--text);font-size:16px;line-height:1.5;transition:none}
+body::before,body::after{display:none}
+button,input,select,textarea{border-radius:var(--radius-control)}
+button{min-width:44px;min-height:48px;font-size:14px;font-weight:600;line-height:1.35;padding:12px 16px;background:var(--green);color:var(--on-accent);box-shadow:none;cursor:pointer;transition:transform .12s}
+button.secondary{background:var(--soft);color:var(--green);border:1px solid var(--line)}
+button.ghost{background:transparent;color:var(--green);border:1px solid transparent}
+button.danger,body.light button.danger{color:var(--danger);background:var(--card);border:1px solid var(--danger)}
+button:active:not(:disabled){transform:translateY(1px)}
+button:disabled{opacity:.48;cursor:default;transform:none}
+:where(button,input,select,textarea,a,summary):focus-visible{outline:3px solid var(--focus);outline-offset:3px}
+input,select,textarea{font-size:16px;min-height:48px;border:1px solid var(--line);color:var(--text);background-color:var(--input);scroll-margin:90px 0 24px}
+input:focus,select:focus,textarea:focus{border-color:var(--green);box-shadow:none}
+small,.small,.sub,.field label{font-size:14px;line-height:1.45;color:var(--muted)}
+h2,h3{font-weight:650;line-height:1.25}h2{font-size:26px}h3{font-size:18px}
+summary{min-height:44px;cursor:pointer;align-content:center;font-size:14px;font-weight:600}
+.ui-icon{width:22px;height:22px;vertical-align:middle;flex:none}
+.card,.sheet,.metric-card,.today-item,.insight-card,.body-summary-card,.body-chart-card,.body-history-row{background:var(--card);border:1px solid var(--line);border-radius:var(--radius-card);box-shadow:none;backdrop-filter:none;-webkit-backdrop-filter:none;color:var(--text)}
+.section{padding-top:16px}.section>*{min-width:0}
+.app{padding-bottom:calc(116px + env(safe-area-inset-bottom))}
+.tabs{left:8px;right:8px;bottom:calc(8px + env(safe-area-inset-bottom))}
+.tabsin,body.light .tabsin{background:var(--tab-bg);box-shadow:0 4px 20px #0002;border-color:var(--line);border-radius:18px;padding:4px;gap:0}
+.tabsin .tab{min-height:64px;min-width:0;padding:8px 2px;font-size:13px;font-weight:600;color:var(--muted);border:1px solid transparent;border-radius:12px;background:transparent}
+.tabsin .tab.active,body.light .tab.active{color:var(--green);background:var(--soft);border-color:transparent;box-shadow:none}
+.ico{font-size:22px;margin-bottom:4px}.ico .ui-icon{display:block;margin:auto}
+.progress span,.bar span,.metric-bar span{background:var(--green);box-shadow:none}
+#today .today-header,body.light #today .today-header{padding:16px;background:transparent;border:0;border-bottom:1px solid var(--line);border-radius:0}
+#today .app-brand{font-size:13px;letter-spacing:.12em;color:var(--green)}
+#today .hero-title{font-size:28px;font-weight:650;line-height:1.2}
+#today #heroDate{font-size:14px;min-height:44px;margin-top:4px;text-decoration:none;font-weight:500}
+#today .today-metric{padding:12px;min-height:128px;border-radius:18px;background:var(--card);box-shadow:none}
+#today .today-metric-title{font-size:14px;font-weight:600;gap:8px}
+#today .today-metric-title>span:first-child{font-size:22px;color:var(--green)}
+#today .today-metric-value{font-size:24px;line-height:1.25;font-weight:650;margin-top:12px}
+#today .today-metric-status{font-size:13px;margin-top:8px}
+#today [data-metric="nutrition"],#today [data-metric="energy"]{border-color:var(--green)}
+#todayCustomize{background:transparent;border:0;color:var(--muted);font-size:14px;min-height:44px;padding:8px 0}
+.trend-range-tabs,.body-range-tabs,.trend-metric-tabs,.body-metric-tabs{display:flex;gap:8px;overflow-x:auto;scroll-padding:4px;padding:4px 2px 8px;scrollbar-width:thin}
+.trend-range-tabs button,.body-range-tabs button,.trend-metric-tab,.body-metric-tab{min-height:44px;font-size:14px;flex-shrink:0;padding:10px 12px;border-radius:12px;background:var(--card);border:1px solid var(--line);color:var(--muted);font-weight:600;box-shadow:none}
+.trend-metric-tab.active,.body-metric-tab.active,.body-range-tabs button.active{background:var(--soft);color:var(--green);border-color:var(--green);box-shadow:none}
+.trend-summary-head{align-items:flex-start;gap:12px;flex-wrap:wrap}.trend-primary{font-size:30px;font-weight:650;color:var(--text)}
+.trend-secondary,.trend-aggregation-note,.trend-point-detail-meta{font-size:14px;color:var(--muted)}
+.weekly-review{margin-top:24px}.weekly-review h2{font-size:20px}.coverage-details{margin-top:16px}.coverage-details #dataCoverage{font-size:14px;overflow-x:auto}
+.coverage-details h3{font-size:16px}.coverage-details table{font-size:13px}
+.nutrition-topbar{background:transparent;padding:0}.nutrition-page{padding:0}.nutrition-topbar small{display:none}
+.nutrition-date-nav{grid-template-columns:44px minmax(0,1fr) 44px;margin:16px 0;padding:8px}
+.nutrition-date-nav input{font-size:16px;max-width:none}
+.nutrition-ring-name,.nutrition-ring-amounts,.nutrition-ring-caption,.nutrition-ring-center small,.nutrition-food small{font-size:13px}
+.nutrition-total{padding:12px 4px}.nutrition-ring-center strong{font-size:16px;font-weight:650}
+.nutrition-explanation{font-size:13px;margin:8px 0}.nutrition-actions{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px;margin:16px 0 8px}
+.nutrition-actions #nutritionImportButton{font-size:13px;padding:10px 12px}
+.nutrition-status:empty{display:none}.nutrition-meal{margin:16px 0 24px}.nutrition-food{background:var(--card);color:var(--text)}
+.nutrition-tools{padding:12px;margin-bottom:16px}.nutrition-tools .card{border:0;padding:8px 0;margin:8px 0;box-shadow:none}.nutrition-tools #nutritionCopyButton{margin-top:12px}
+.nutrition-form,body.light .nutrition-form{background:var(--bg);height:var(--viewport-height,100dvh);top:var(--viewport-top,0px);bottom:auto}
+.nutrition-form-head,body.light .nutrition-form-head{background:var(--bg);box-shadow:none;border-bottom:1px solid var(--line)}
+.nutrition-form-sheet{padding-bottom:calc(32px + env(safe-area-inset-bottom))}
+.nutrition-form-grid{gap:12px}.nutrition-form-grid>.field{margin:8px 0}
+.body-screen .body-topbar{position:static;background:transparent;padding:0 0 16px;grid-template-columns:1fr}
+.body-summary-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.body-summary-main{grid-column:1/-1;padding:16px}.body-summary-main .body-summary-value{font-size:36px;color:var(--text);font-weight:650}
+.body-summary-value{font-size:22px;color:var(--text)}.body-summary-label,.body-summary-delta,.body-history-values,.body-history-delta,.body-chart-note{font-size:14px;color:var(--muted)}
+.body-new-checkin,body.light .body-new-checkin{background:var(--green);color:var(--on-accent);border:0;border-radius:12px;min-height:48px;box-shadow:none;margin:16px 0}
+.body-new-checkin small{display:none}.body-new-checkin>span:first-child{background:transparent;color:inherit;box-shadow:none}.body-new-checkin strong{font-size:16px}
+.body-checkin-sheet,body.light .body-checkin-sheet{background:var(--bg);color:var(--text);max-height:var(--viewport-height,95dvh);overflow:auto;overscroll-behavior:contain}
+.body-history-row{padding:16px;margin-top:8px}.body-back,body.light .body-back{background:transparent;color:var(--green);border:0}
+#settings .card{margin-bottom:16px}#settings h3{font-size:18px;margin:8px 0 12px}#settings .row{gap:12px}#settings summary{padding:8px 0}
+.advanced-danger-zone{border-top:1px solid var(--danger);margin-top:24px;padding-top:16px}
+.shared-calendar-controls{grid-template-columns:44px minmax(0,1fr) 76px 44px;gap:4px}.shared-calendar-controls button,.shared-date-trigger{min-width:44px;min-height:44px}
+.shared-month,.shared-year{font-size:16px}.shared-calendar-grid{gap:2px}
+.close{display:inline-grid;place-items:center;min-width:44px;min-height:44px;padding:10px;background:var(--soft);color:var(--green)}
+@media(max-width:374px){.section{padding-left:12px;padding-right:12px}.nutrition-summary{gap:4px}.nutrition-total .nutrition-ring-graphic{max-width:68px}.nutrition-calorie-card .nutrition-ring-graphic{max-width:108px}.nutrition-ring-amounts{font-size:13px}.nutrition-calorie-card{grid-template-columns:108px minmax(0,1fr)}.shared-calendar-controls{grid-template-columns:44px minmax(0,1fr) 66px 44px}.nutrition-actions{grid-template-columns:1fr}.nutrition-actions #nutritionImportButton{min-height:44px}.trend-primary{font-size:26px}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{transition:none;animation:none;scroll-behavior:auto}}
+[role=button]:focus-visible{outline:3px solid var(--focus);outline-offset:3px}
+.body-subtitle,.body-section-sub,.body-history-values span,.body-chart-empty,.body-history-empty,.body-checkin-note,.shared-dow,.energy-components small{font-size:13px;line-height:1.5;color:var(--muted)}
+.body-history-row[role=button]{cursor:pointer}
+.shared-date-trigger{flex-basis:44px}
+.nutrition-total:not(.nutrition-calorie-card) .nutrition-ring-name{font-size:13px}
+/* Full-width calendar on narrow phones keeps all seven day targets at 44px. */
+.shared-calendar-grid{gap:0}.shared-calendar-grid .shared-day{min-height:44px;border-radius:10px}
+#progress .card:has(#calendarGrid){padding:12px 0;background:transparent;border:0}
+@media(max-width:374px){#progress .card:has(#calendarGrid){margin-inline:-6px}.shared-picker{padding-inline:0}.shared-picker-sheet{padding-inline:6px;max-width:100%}.shared-picker .shared-day{min-height:44px}}
+@media(min-width:375px){#progress .card:has(#calendarGrid){margin-inline:-12px}.shared-picker-sheet{padding-inline:6px}}
+.alcohol-segment button{min-height:44px}.alcohol-segment button.active{color:var(--green);background:var(--soft)}
+.alcohol-summary-value,.alcohol-streak-badge strong{color:var(--green)}
+.alcohol-month-label,.alcohol-subtitle,.alcohol-summary-label,.alcohol-summary-value small{color:var(--muted)}
+.alcohol-back{border-radius:12px;background:var(--soft);color:var(--green)}
+.body-back,body.light .body-back{background:var(--bg)}
+.trend-y-axis,.trend-x-axis{color:var(--muted);font-size:13px}

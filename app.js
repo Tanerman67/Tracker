@@ -349,8 +349,8 @@ const sectionScroll={};
 function show(id,btn){
  if(id==='english')return;
  const section=document.getElementById(id);if(!section)return;
+ if(currentSection==='nutritionModal'&&id!==currentSection){if(nutritionCancelForm()===false)return;nutritionCancelImport()}
  if(currentSection!==id){sectionScroll[currentSection]=window.scrollY||0;previousSection=currentSection;}
- if(currentSection==='nutritionModal'&&id!==currentSection){nutritionCancelForm();nutritionCancelImport()}
  document.querySelectorAll('.section').forEach(x=>x.classList.remove('active'));section.classList.add('active');
  const tabIds={today:'tabToday',nutritionModal:'tabNutrition',progress:'tabProgress',settings:'tabSettings',bodyModal:'tabProgress'};
  document.querySelectorAll('.tab').forEach(x=>{x.classList.remove('active');x.removeAttribute('aria-current')});
@@ -360,10 +360,10 @@ function show(id,btn){
  if(changed)window.scrollTo?.(0,sectionScroll[id]||0);
  enhanceDateInputs();
 }
-function openEntry(id,dateKey=localDate()){activeTracker=tracker(id);if(!activeTracker){alert(trText('Трекер не найден.','Tracker not found.'));return}activeTracker={...activeTracker,entryDate:dateKey};const unit=trUnit(activeTracker);document.getElementById('entryTitle').textContent=activeTracker.icon+' '+trTrackerName(activeTracker);document.getElementById('entryLabel').textContent=trText('Значение','Value')+(unit?' ('+unit+')':'')+' · '+dateKey;document.getElementById('entryValue').value=(id==='protein'?data.logs?.[dateKey]?.protein:val(id,dateKey))??'';document.getElementById('entryModal').classList.add('show');setTimeout(()=>document.getElementById('entryValue').focus(),80)}
+function openEntry(id,dateKey=localDate()){if(id==='protein')return nutritionOpen(dateKey);activeTracker=tracker(id);if(!activeTracker){alert(trText('Трекер не найден.','Tracker not found.'));return}activeTracker={...activeTracker,entryDate:dateKey};const unit=trUnit(activeTracker);document.getElementById('entryTitle').textContent=activeTracker.icon+' '+trTrackerName(activeTracker);document.getElementById('entryLabel').textContent=trText('Значение','Value')+(unit?' ('+unit+')':'')+' · '+dateKey;document.getElementById('entryValue').value=(id==='protein'?data.logs?.[dateKey]?.protein:val(id,dateKey))??'';document.getElementById('entryModal').classList.add('show');setTimeout(()=>document.getElementById('entryValue').focus(),80)}
 function openEnglish(id){const type=englishTypes.find(x=>x[0]===id);if(!type)return;activeTracker={id,name:type[2],icon:type[1],type:'number',unit:'мин',category:'english'};document.getElementById('entryTitle').textContent=type[1]+' '+type[2];document.getElementById('entryLabel').textContent=trText('Всего минут сегодня','Total minutes today');document.getElementById('entryValue').value=val(id)??'';document.getElementById('entryModal').classList.add('show');setTimeout(()=>document.getElementById('entryValue').focus(),80)}
 function saveEntry(){
- if(!activeTracker)return;
+ if(!activeTracker||activeTracker.id==='protein')return;
  const input=document.getElementById('entryValue');
  const raw=input?.value?.trim()||'';
  const value=Number(raw);
@@ -1234,7 +1234,7 @@ function renderTrends(){
   if(tabs){
     tabs.innerHTML=TREND_METRICS.map(m=>`
       <button class="trend-metric-tab ${trendMetricId===m.id?'active':''}" onclick="setTrendMetric('${m.id}')">
-        ${m.icon} ${(data.language||'ru')==='en'?m.en:m.ru}
+        ${typeof uiIcon==='function'?uiIcon(m.id):m.icon} ${(data.language||'ru')==='en'?m.en:m.ru}
       </button>
     `).join('');
   }
@@ -1252,7 +1252,7 @@ function renderTrends(){
   const aggregation=document.getElementById('trendAggregationNote');
   const detail=document.getElementById('trendPointDetail');
 
-  if(title)title.textContent=`${def.icon} ${trendMetricName(trendMetricId)}`;
+  if(title)title.textContent=trendMetricName(trendMetricId);
   if(primary)primary.textContent=summary.primary;
   if(secondary)secondary.textContent=summary.secondary;
   if(change){
@@ -1351,7 +1351,7 @@ function renderSettings(){
  updateStorageSafetyUI();
 
 }
-function render(){applyTheme();nutritionRender();for(const job of [renderToday,renderProgress,renderSettings]){try{job()}catch(e){console.error('Render error in '+job.name,e)}}if(typeof energyRefresh==='function')energyRefresh();try{translateDOM();enhanceDateInputs()}catch(e){console.error('Translation error',e)}}
+function render(){applyTheme();nutritionRender();for(const job of [renderToday,renderProgress,renderSettings]){try{job()}catch(e){console.error('Render error in '+job.name,e)}}if(typeof energyRefresh==='function')energyRefresh();try{translateDOM();enhanceDateInputs();if(typeof uiRefresh==='function')uiRefresh()}catch(e){console.error('Translation error',e)}}
 
 let appActiveDate=localDate();
 function checkAppDayRollover(){
@@ -1389,3 +1389,4 @@ addEventListener('keydown',e=>{
   if(currentSection==='bodyModal')return closeBody();
   if(document.getElementById('alcoholModal')?.classList.contains('show'))return closeAlcohol();
 })
+

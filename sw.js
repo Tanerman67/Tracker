@@ -1,5 +1,8 @@
-const CACHE='my-rhythm-v7.3.2';
+const CACHE='my-rhythm-v7.4.0-review1';
 const ASSETS=[
+  "./design-system.css?v=7401",
+  "./ui.js?v=7401",
+  "./fonts/InterVariable.woff2",
   "./",
   "./index.html",
   "./app.css?v=7311",
@@ -67,3 +70,4 @@ self.addEventListener('fetch',event=>{
     }
   })());
 });
+
