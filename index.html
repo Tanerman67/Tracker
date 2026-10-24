@@ -27,6 +27,7 @@
 <link rel="stylesheet" href="cleanup.css?v=7311">
 <link rel="stylesheet" href="energy.css?v=7311">
 <link rel="stylesheet" href="design-system.css?v=7401">
+<link rel="stylesheet" href="today-unified.css?v=1">
 </head>
 <body class="loading-data"><div id="dataLoading" role="status">Restoring local data…</div>
 <div class="app"><p id="tabUpdateNotice" class="privacy-note" role="status" hidden data-localized></p>
@@ -83,6 +84,13 @@
       <div class="trend-point-detail-value" id="trendPointDetailValue"></div>
       <div class="trend-point-detail-meta" id="trendPointDetailMeta"></div>
     </div>
+  </div>
+
+  <div class="card body-progress-entry" id="bodyProgressEntry">
+    <div><strong data-i18n-ru="Вес и замеры тела" data-i18n-en="Weight & body measurements">Weight & body measurements</strong>
+      <div class="sub" data-i18n-ru="Графики, история и сравнение измерений" data-i18n-en="Charts, history and measurement comparisons">Charts, history and measurement comparisons</div>
+    </div>
+    <button type="button" class="secondary" onclick="openBody()" data-i18n-ru="Открыть замеры" data-i18n-en="View measurements">View measurements</button>
   </div>
 
   <div class="weekly-review card">
@@ -396,6 +404,57 @@
   </div>
 </div>
 
+<div id="smokeModal" class="alcohol-modal" role="dialog" aria-modal="true" aria-labelledby="smokeTitle">
+  <div class="alcohol-page">
+    <div class="alcohol-topbar">
+      <button type="button" class="alcohol-back" onclick="closeSmoke()" aria-label="Back">‹</button>
+      <div>
+        <div class="alcohol-title" id="smokeTitle">Без сигарет</div>
+        <div class="alcohol-subtitle" id="smokeSubtitle">Серия по дате отказа</div>
+      </div>
+      <div class="alcohol-streak-badge"><span>🚭</span><strong id="smokeHeaderStreak">—</strong></div>
+    </div>
+    <div class="alcohol-summary-grid smoke-summary-grid" id="smokeSummaryGrid">
+      <div class="alcohol-summary-card">
+        <div class="alcohol-summary-label" id="smokeCurrentLabel">Дней после отказа</div>
+        <div class="alcohol-summary-value"><span id="smokeCurrentStreak">—</span></div>
+      </div>
+      <div class="alcohol-summary-card">
+        <div class="alcohol-summary-label" id="smokeStartLabel">Дата отказа</div>
+        <div class="alcohol-summary-value smoke-quit-value" id="smokeQuitDisplay">—</div>
+      </div>
+    </div>
+    <div class="card smoke-quit-form">
+      <div class="field"><label for="smokeQuitDate" id="smokeQuitFieldLabel">Дата отказа</label>
+        <input id="smokeQuitDate" type="date" max="9999-12-31">
+      </div>
+      <button type="button" id="smokeSaveButton" onclick="saveSmokeDate()">Сохранить дату</button>
+      <p id="smokeSaveStatus" class="smoke-feedback" role="status"></p>
+    </div>
+    <div class="alcohol-controls glass-control">
+      <div class="alcohol-segment">
+        <button type="button" id="smokeMonthModeBtn" onclick="setSmokeMode('month')">Месяц</button>
+        <button type="button" id="smokeYearModeBtn" class="active" onclick="setSmokeMode('year')">Год</button>
+      </div>
+      <div class="alcohol-year-nav">
+        <button type="button" onclick="changeSmokeYear(-1)" aria-label="Previous year">‹</button>
+        <strong id="smokeYearLabel">2026</strong>
+        <button type="button" onclick="changeSmokeYear(1)" aria-label="Next year">›</button>
+      </div>
+    </div>
+    <div class="alcohol-legend">
+      <span><i class="legend-dot sober"></i><span id="smokeLegendStart">После даты отказа</span></span>
+      <span><i class="legend-dot future"></i><span id="smokeLegendBefore">До начала отсчёта</span></span>
+      <span><i class="legend-dot future"></i><span id="smokeLegendFuture">Будущий день</span></span>
+    </div>
+    <div id="smokeCalendarHost"></div>
+    <div class="alcohol-help card">
+      <div class="title" id="smokeHelpTitle">Как это работает</div>
+      <div class="small" id="smokeHelpText"></div>
+    </div>
+  </div>
+</div>
+
 <div id="moduleModal" class="module-modal" role="dialog" aria-modal="true" aria-labelledby="moduleTitle" data-localized><div class="module-page"><div class="module-header"><button id="moduleBack" class="secondary" onclick="closeModule()">Back</button><h2 id="moduleTitle"></h2></div><div id="moduleContent"></div></div></div>
 <div id="nutritionForm" data-localized class="nutrition-form" role="dialog" aria-modal="true" aria-labelledby="nutritionFormTitle">
   <div class="nutrition-form-sheet">
@@ -462,6 +521,7 @@
 <script src="body.js?v=7311"></script>
 <script src="backup.js?v=7311"></script>
 <script src="settings.js?v=7501"></script>
+<script src="smoke.js?v=1"></script>
 <script src="app.js?v=7311"></script>
 </body>
 </html>
