@@ -70,3 +70,7 @@ The font, shared stylesheet and helpers are included in the existing service-wor
 Before adding CSS, search for an existing component. Edit the shared component or its screen layout instead of adding another override layer. Do not remove a selector just because it looks old: check active HTML, generated markup, and remaining module uses. Preserve archive readers independently from retired UI styles.
 
 For UI changes, run unit/browser regressions and inspect screenshots. Cover narrow phones, English/Russian, both themes, unknown versus zero values, keyboard/focus, backup roundtrips and offline updates. Emulated keyboard tests do not replace a physical iPhone check.
+
+## Unified Settings
+
+Settings uses one sequential editor: personal parameters, nutrition goals, activity goals, personal dates, then calculation options. Only the calculation options and data/recovery tools use disclosures. Use `openUnifiedSettings(group)` for links instead of introducing another goal editor. Keep draft fields intact during background rendering. Shared field errors use `aria-invalid` and `aria-describedby`; status messages use a live status region. See SETTINGS.md for data ownership and persistence.

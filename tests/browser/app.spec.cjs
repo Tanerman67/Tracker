@@ -26,7 +26,7 @@ test('dashboard add, move, expand, hide and refresh preserve records',async({pag
 });
 
 test('nutrition save, edit, partial rings, reuse, scale and safe delete',async({page})=>{
- await ready(page);await page.locator('#tabNutrition').click();await page.locator('details:has(#nutritionGoal_calories) > summary').click();await page.locator('#nutritionGoal_calories').fill('200');await page.locator('[onclick="nutritionSaveGoals()"]').click();await settle(page);await addFood(page);
+ await ready(page);await page.locator('#tabNutrition').click();await page.locator('#tabSettings').click();await page.locator('#nutritionGoal_calories').fill('200');await page.locator('[onclick="saveUnifiedSettings()"]').click();await settle(page);await page.locator('#tabNutrition').click();await addFood(page);
  await expect(page.locator('#nutritionSummary [data-nutrient="calories"]')).toContainText('125%');await expect(page.locator('#nutritionIncomplete')).toBeVisible();
  await page.locator('.nutrition-food').click();await page.locator('#nutritionFoodAmount').fill('150');await page.locator('[onclick="nutritionScaleForm()"]').click();await expect(page.locator('#nutritionCalories')).toHaveValue('375');await page.locator('[onclick="nutritionSaveFood()"]').click();await settle(page);
  await page.locator('.nutrition-tools>summary').click();await page.locator('details:has(> #nutritionReuse)>summary').click();await page.locator('#nutritionReuse button').first().click();await page.locator('[onclick="nutritionSaveFood()"]').click();await settle(page);await expect(page.locator('.nutrition-food')).toHaveCount(2);
@@ -46,8 +46,8 @@ test('retired English UI preserves archived activity after reload',async({page})
 });
 
 test('settings dates remain editable after history and survive refresh',async({page})=>{
- await ready(page);await page.locator('#tabSettings').click();await page.locator('#settings details:has(#smokeDate) > summary').click();await page.locator('#smokeDate').fill('2020-02-29');await page.locator('#alcoholDate').fill('2024-01-01');await page.locator('[onclick="saveSettings()"]').click();await settle(page);
- await page.evaluate(()=>{data.alcoholHistory['2024-01-03']=true;return save()});await page.locator('#alcoholDate').fill('2023-12-01');await page.locator('[onclick="saveSettings()"]').click();await settle(page);await page.reload();await page.locator('#tabSettings').click();await expect(page.locator('#alcoholDate')).toHaveValue('2023-12-01');expect(await page.evaluate(()=>data.alcoholHistory['2024-01-03'])).toBe(true);
+ await ready(page);await page.locator('#tabSettings').click();await page.locator('#smokeDate').fill('2020-02-29');await page.locator('#alcoholDate').fill('2024-01-01');await page.locator('[onclick="saveUnifiedSettings()"]').click();await settle(page);
+ await page.evaluate(()=>{data.alcoholHistory['2024-01-03']=true;return save()});await page.locator('#alcoholDate').fill('2023-12-01');await page.locator('[onclick="saveUnifiedSettings()"]').click();await settle(page);await page.reload();await page.locator('#tabSettings').click();await expect(page.locator('#alcoholDate')).toHaveValue('2023-12-01');expect(await page.evaluate(()=>data.alcoholHistory['2024-01-03'])).toBe(true);
 });
 
 test('JSON nutrition import preview, repeat import and intentional identical meals',async({page})=>{
@@ -60,7 +60,7 @@ test('JSON nutrition import preview, repeat import and intentional identical mea
 
 test('full backup export and second-profile import preserve layout, cycle and archive',async({page,browser})=>{
  await ready(page);await page.evaluate(()=>{data.cycle={enabled:true,periods:[{id:'fictional-period',start:'2024-01-02',end:'2024-01-05',notes:'example',symptoms:''}]};data.englishLearning.customItems=[{id:'custom-fixture',title:'Fictional learning content'}];data.dashboard.blocks.push({id:'cycle',size:'expanded'});return save()});
- await page.locator('#tabSettings').click();const dl=page.waitForEvent('download');await page.locator('[onclick="exportBackup()"]').click();const file=await (await dl).path();const backup=JSON.parse(fs.readFileSync(file,'utf8'));expect(backup.schemaVersion).toBe(3);
+ await page.locator('#tabSettings').click();const dl=page.waitForEvent('download');await page.locator('#advancedSettings').evaluate(el=>el.open=true);await page.locator('[onclick="exportBackup()"]').click();const file=await (await dl).path();const backup=JSON.parse(fs.readFileSync(file,'utf8'));expect(backup.schemaVersion).toBe(3);
  const second=await browser.newContext();const p=await second.newPage();await p.goto('http://127.0.0.1:8765/');await expect(p.locator('[data-metric="cycle"]')).toHaveCount(0);await p.locator('#tabSettings').click();p.on('dialog',d=>d.type()==='confirm'?d.accept():d.dismiss());await p.locator('input[onchange="importBackupFile(event)"]').setInputFiles({name:'synthetic-backup.json',mimeType:'application/json',buffer:Buffer.from(JSON.stringify(backup))});await expect(p.locator('#backupStatus')).toContainText('Backup');await settle(p);expect(await p.evaluate(()=>data.cycle.periods)).toEqual(backup.data.cycle.periods);expect(await p.evaluate(()=>data.englishLearning.customItems)).toEqual(backup.data.englishLearning.customItems);await second.close();
 });
 

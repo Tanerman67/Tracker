@@ -348,6 +348,7 @@ let currentSection='today',previousSection='today';
 const sectionScroll={};
 function show(id,btn){
  if(id==='english')return;
+ if(currentSection==='settings'&&id!=='settings'&&!settingsMayLeave())return;
  const section=document.getElementById(id);if(!section)return;
  if(currentSection==='nutritionModal'&&id!==currentSection){if(nutritionCancelForm()===false)return;nutritionCancelImport()}
  if(currentSection!==id){sectionScroll[currentSection]=window.scrollY||0;previousSection=currentSection;}
@@ -379,25 +380,7 @@ function saveEntry(){
  closeModal('entryModal');save()
 }
 function closeModal(id){document.getElementById(id).classList.remove('show')}
-function saveSettings(){
- const gv=id=>document.getElementById(id)?.value??'';
- const smoke=gv('smokeDate'),alcohol=gv('alcoholDate');
- if([smoke,alcohol].some(v=>v&&(!validDay(v)||v>localDate()))){alert(trText('Проверь даты. Будущая дата недоступна.','Check the dates. Future dates are unavailable.'));return}
- const next={};for(const key of ['stepsGoal','outdoorsGoal','sleepGoal','gymGoal']){
-  const raw=gv(key);const value=raw===''?null:Number(raw);
-  if(value!==null&&(!Number.isFinite(value)||value<0)){alert(trText('Проверь цели.','Check the goals.'));return}next[key]=value;
- }
- const before=structuredClone(data);
- data.smokeDate=smoke;data.alcoholTrackingStart=alcohol;
- // alcoholDate is a retained legacy field, no longer rewritten by derived streaks.
- Object.assign(data,next);
- for(const [id,key] of Object.entries({steps:'stepsGoal',outdoors:'outdoorsGoal',sleep:'sleepGoal',gym:'gymGoal'})){
-  const t=tracker(id);if(t)t.goal=next[key];
-  if(data.goalRules[id]&&data.goalRules[id].type!=='range')data.goalRules[id].target=next[key];
- }
- if(!saveGoalRulesFromSettings()){data=before;return;}
- save();
-}
+function saveSettings(){return saveUnifiedSettings()}
 async function resetAll(){
   const first=confirm(
     (data.language||'ru')==='en'
@@ -1325,12 +1308,7 @@ function updateStorageSafetyUI(){
 }
 
 function renderSettings(){
- energyRenderSettings();
- const set=(id,v)=>{const el=document.getElementById(id);if(el)el.value=v??''};
- set('smokeDate',data.smokeDate);set('alcoholDate',alcoholTrackingStart());set('stepsGoal',data.stepsGoal);set('outdoorsGoal',data.outdoorsGoal);set('sleepGoal',data.sleepGoal);set('englishGoal',data.englishGoal);set('gymGoal',data.gymGoal);
- for(const id of ['smokeDate','alcoholDate'])document.getElementById(id).max=localDate();
- document.getElementById('alcoholDerivedDate').textContent=trText('Текущая серия (расчёт): ','Current streak (calculated): ')+(alcoholCurrentStreakStart()||'—');
- renderGoalRuleSettings();
+ renderUnifiedSettings();
  const draft=document.getElementById('conflictDraftButton');if(draft)draft.hidden=!((typeof unsavedConflict!=='undefined'&&unsavedConflict)||storageGet('my-rhythm-conflict-draft'));
  const av=document.getElementById('appVersionText');if(av)av.textContent='V'+APP_VERSION;
  const sv=document.getElementById('schemaVersionText');if(sv)sv.textContent=String(data.schemaVersion||CURRENT_SCHEMA_VERSION);

@@ -109,3 +109,9 @@ summary{min-height:44px;cursor:pointer;align-content:center;font-size:14px;font-
 #moduleContent:has(.layout-row) .layout-row strong{display:flex;align-items:center;gap:var(--space-2);font-size:var(--type-card-title);font-weight:650}
 #moduleContent:has(.layout-row) .layout-actions{gap:var(--space-2);margin-top:var(--space-3)}
 #moduleContent:has(.layout-row) .module-actions{gap:var(--space-2);margin-bottom:var(--space-4)}
+#unifiedSettings .energy-form-grid,#unifiedSettings .nutrition-goals{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+#unifiedSettings .field,#unifiedSettings input,#unifiedSettings select{min-width:0;max-width:100%;box-sizing:border-box}
+#unifiedSettings input,#unifiedSettings select{width:100%;font-size:16px;min-height:48px}
+#unifiedSettings h3{scroll-margin-top:24px}#unifiedSettings .settings-field-error{color:var(--danger);display:block}#unifiedSettings [aria-invalid=true]{border-color:var(--danger)}
+#settingsEnergyAdvanced>summary{display:none}#settingsProfile #energyMifflinFields{display:contents}
+@media(max-width:360px){#unifiedSettings .energy-form-grid,#unifiedSettings .nutrition-goals{grid-template-columns:minmax(0,1fr)}}

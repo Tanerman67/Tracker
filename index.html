@@ -109,13 +109,17 @@
 
 <section id="settings" class="section" data-localized>
  <div class="category-head settings-page-head"><h2 data-i18n-ru="Настройки" data-i18n-en="Settings">Settings</h2></div>
- <details class="card settings-details" id="energySettings" data-localized></details>
- <div class="card settings-goals-card">
-  <details><summary data-i18n-ru="Личные даты" data-i18n-en="Personal dates">Personal dates</summary>
-   <div class="field"><label for="smokeDate" data-i18n-ru="Дата отказа от сигарет" data-i18n-en="Smoking quit date">Smoking quit date</label><input id="smokeDate" type="date" ></div>
-   <div class="field"><label for="alcoholDate" data-i18n-ru="Начало учёта алкоголя" data-i18n-en="Alcohol tracking start">Alcohol tracking start</label><input id="alcoholDate" type="date" ></div>
-   <small id="alcoholDerivedDate"></small>
-  </details>
+
+ <div class="card settings-goals-card" id="unifiedSettings">
+ <h3 data-i18n-ru="Мои параметры и цели" data-i18n-en="My parameters & goals">My parameters & goals</h3>
+ <div id="settingsProfile"></div>
+ <h3 id="settingsNutrition" tabindex="-1" data-i18n-ru="Цели питания" data-i18n-en="Nutrition goals">Nutrition goals</h3>      <div class="nutrition-goals">
+        <div class="field"><label for="nutritionGoal_calories" data-i18n-ru="Лимит калорий (kcal)" data-i18n-en="Daily calorie limit (kcal)">Daily calorie limit (kcal)</label><input id="nutritionGoal_calories" type="number" min="0" inputmode="decimal"></div>
+        <div class="field"><label for="nutritionGoal_protein" data-i18n-ru="Белок (g)" data-i18n-en="Protein (g)">Protein (g)</label><input id="nutritionGoal_protein" type="number" min="0" inputmode="decimal"></div>
+        <div class="field"><label for="nutritionGoal_fat" data-i18n-ru="Жиры (g)" data-i18n-en="Fat (g)">Fat (g)</label><input id="nutritionGoal_fat" type="number" min="0" inputmode="decimal"></div>
+        <div class="field"><label for="nutritionGoal_carbs" data-i18n-ru="Углеводы (g)" data-i18n-en="Carbs (g)">Carbs (g)</label><input id="nutritionGoal_carbs" type="number" min="0" inputmode="decimal"></div>
+      </div>
+
   <h3 data-i18n-ru="Цели активности" data-i18n-en="Activity goals">Activity goals</h3>
   <div class="settings-goals-grid">
    <div class="field"><label for="stepsGoal" data-i18n-ru="Шаги / день" data-i18n-en="Steps / day">Steps / day</label><input id="stepsGoal" type="number" min="0"></div>
@@ -123,15 +127,22 @@
    <div class="field"><label for="sleepGoal" data-i18n-ru="Сон, ч / день" data-i18n-en="Sleep, h / day">Sleep, h / day</label><input id="sleepGoal" type="number" min="0" step="0.1"></div>
    <div class="field"><label for="gymGoal" data-i18n-ru="Тренировки / неделю" data-i18n-en="Workouts / week">Workouts / week</label><input id="gymGoal" type="number" min="0"></div>
   </div>
-  <details><summary data-i18n-ru="Правила целей активности" data-i18n-en="Activity goal rules">Activity goal rules</summary><div id="goalRuleSettings"></div></details>
-  <button type="button" class="settings-save" onclick="saveSettings()" data-i18n-ru="Сохранить даты и цели" data-i18n-en="Save dates &amp; goals">Save dates &amp; goals</button>
+  <div><h3 data-i18n-ru="Личные даты" data-i18n-en="Personal dates">Personal dates</h3>
+   <div class="field"><label for="smokeDate" data-i18n-ru="Дата отказа от сигарет" data-i18n-en="Smoking quit date">Smoking quit date</label><input id="smokeDate" type="date" ></div>
+   <div class="field"><label for="alcoholDate" data-i18n-ru="Начало учёта алкоголя" data-i18n-en="Alcohol tracking start">Alcohol tracking start</label><input id="alcoholDate" type="date" ></div>
+   <small id="alcoholDerivedDate"></small>
+  </div>
+<details id="settingsCalculation"><summary data-i18n-ru="Дополнительные параметры расчётов" data-i18n-en="Calculation options">Calculation options</summary><div id="settingsEnergyAdvanced"></div><div id="goalRuleSettings"></div><div id="proteinGoalRuleSettings"></div></details>
+ <button class="settings-save" onclick="saveUnifiedSettings()" data-i18n-ru="Сохранить изменения" data-i18n-en="Save changes">Save changes</button><p id="settingsSaveStatus" role="status"></p>
  </div>
  <div class="card">
   <h3 data-i18n-ru="Оформление и язык" data-i18n-en="Appearance & language">Appearance & language</h3>
   <div class="row"><span data-i18n-ru="Тема приложения" data-i18n-en="App theme">App theme</span><button class="secondary" id="themeToggleBtn" onclick="toggleTheme()">Dark</button></div>
   <div class="row"><span data-i18n-ru="Язык интерфейса" data-i18n-en="Language">Language</span><button class="secondary" id="languageToggleBtn" onclick="toggleLanguage()">Русский</button></div>
  </div>
- <div class="card settings-backup-card">
+ <details class="card settings-details" id="advancedSettings">
+  <summary data-i18n-ru="Расширенные настройки" data-i18n-en="Advanced">Advanced</summary>
+  <div class="settings-details-body"> <div class="card settings-backup-card">
   <h3 data-i18n-ru="Данные и резервная копия" data-i18n-en="Data &amp; backup">Data &amp; backup</h3>
   <p data-i18n-ru="Данные хранятся только в этом браузере. Перенос на другое устройство - через JSON backup." data-i18n-en="Records stay in this browser. Use a JSON backup to move them to another device.">Records stay in this browser.</p>
   <div class="row"><span data-i18n-ru="Последний подготовленный экспорт" data-i18n-en="Last prepared export">Last prepared export</span><strong id="lastBackupText">—</strong></div>
@@ -142,9 +153,7 @@
   <input id="backupFile" type="file" accept=".json,application/json" hidden onchange="importBackupFile(event)">
   <div class="small" id="backupStatus" role="status"></div>
  </div>
- <details class="card settings-details" id="advancedSettings">
-  <summary data-i18n-ru="Расширенные настройки" data-i18n-en="Advanced">Advanced</summary>
-  <div class="settings-details-body">
+
    <h3 data-i18n-ru="Диагностика данных" data-i18n-en="Data diagnostics">Data diagnostics</h3>
    <div class="row"><span data-i18n-ru="Версия приложения" data-i18n-en="App version">App version</span><strong id="appVersionText">—</strong></div>
    <div class="row"><span data-i18n-ru="Версия структуры данных" data-i18n-en="Data schema">Data schema</span><strong id="schemaVersionText">—</strong></div>
@@ -193,16 +202,7 @@
     </details>
     <details class="card nutrition-details"><summary id="nutritionMicrosLabel">Витамины и минералы</summary><div id="nutritionMicros"></div></details>
     <details class="card nutrition-details"><summary id="nutritionHistoryLabel">История дней</summary><div id="nutritionHistory"></div></details>
-    <details class="card nutrition-details"><summary data-i18n-ru="Цели" data-i18n-en="Goals">Goals</summary>
-      <div class="nutrition-goals">
-        <div class="field"><label for="nutritionGoal_calories" data-i18n-ru="Лимит калорий (kcal)" data-i18n-en="Daily calorie limit (kcal)">Daily calorie limit (kcal)</label><input id="nutritionGoal_calories" type="number" min="0" inputmode="decimal"></div>
-        <div class="field"><label for="nutritionGoal_protein" data-i18n-ru="Белок (g)" data-i18n-en="Protein (g)">Protein (g)</label><input id="nutritionGoal_protein" type="number" min="0" inputmode="decimal"></div>
-        <div class="field"><label for="nutritionGoal_fat" data-i18n-ru="Жиры (g)" data-i18n-en="Fat (g)">Fat (g)</label><input id="nutritionGoal_fat" type="number" min="0" inputmode="decimal"></div>
-        <div class="field"><label for="nutritionGoal_carbs" data-i18n-ru="Углеводы (g)" data-i18n-en="Carbs (g)">Carbs (g)</label><input id="nutritionGoal_carbs" type="number" min="0" inputmode="decimal"></div>
-      </div>
-      <button type="button" onclick="nutritionSaveGoals()" data-i18n-ru="Сохранить цели" data-i18n-en="Save goals">Save goals</button>
-      <details><summary data-i18n-ru="Режим цели белка" data-i18n-en="Protein goal mode">Protein goal mode</summary><div id="proteinGoalRuleSettings"></div></details>
-    </details>
+    <button class="ghost" onclick="openUnifiedSettings('settingsNutrition')" data-i18n-ru="Изменить цели" data-i18n-en="Edit goals">Edit goals</button>
   </div>
 </section>
 
@@ -461,6 +461,7 @@
 <script src="energy.js?v=7311"></script>
 <script src="body.js?v=7311"></script>
 <script src="backup.js?v=7311"></script>
+<script src="settings.js?v=7501"></script>
 <script src="app.js?v=7311"></script>
 </body>
 </html>

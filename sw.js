@@ -2,6 +2,7 @@ const CACHE='my-rhythm-v7.4.0-layout1';
 const ASSETS=[
   "./design-system.css?v=7401",
   "./ui.js?v=7401",
+  "./settings.js?v=7501",
   "./fonts/InterVariable.woff2",
   "./",
   "./index.html",

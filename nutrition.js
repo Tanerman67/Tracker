@@ -277,28 +277,7 @@ function nutritionRender(){
     button.onclick=()=>nutritionSetDate(day);history.append(button)
   }
   if(!history.childElementCount)history.textContent=nutritionLabel('История пуста.','No history yet.');
-  for(const key of ['calories','fat','carbs'])document.getElementById('nutritionGoal_'+key).value=goal[key]??'';
-  document.getElementById('nutritionGoal_protein').value=data.proteinGoal??'';
-  document.getElementById('proteinGoalRuleSettings').innerHTML=goalRuleEditorHTML(['protein']);
   enhanceDateInputs();
-}
-async function nutritionSaveGoals(){
- try{
-  // Stage every value and rule before mutation. Retain hidden fibre and extension goals.
-  const next={...nutritionStore().goals};
-  for(const key of ['calories','fat','carbs']){
-   const raw=document.getElementById('nutritionGoal_'+key).value.trim();
-   if(raw===''){delete next[key];continue}
-   const n=Number(raw);if(!Number.isFinite(n)||n<0||n>1e6)throw Error(nutritionLabel('Проверь цели: нужны числа от нуля.','Goals must be numbers of zero or more.'));next[key]=n;
-  }
-  const raw=document.getElementById('nutritionGoal_protein').value.trim(),protein=raw===''?(data.proteinGoal===undefined?undefined:null):Number(raw);
-  if(protein!=null&&(!Number.isFinite(protein)||protein<0||protein>1e6))throw Error(nutritionLabel('Проверь цель белка.','Check the protein goal.'));
-  const rule=editedGoalRule('protein',protein);
-  nutritionStore().goals=next;data.proteinGoal=protein;
-  const t=tracker('protein');if(t)t.goal=protein;
-  data.goalRules.protein=rule;
-  if(await persistData({renderAfter:true,makeSnapshot:true})===false)return;nutritionRender();nutritionMessage(nutritionLabel('Цели сохранены.','Goals saved.'));
- }catch(e){nutritionMessage(e.message)}
 }
 function nutritionInput(id,label,unit=''){return `<div class="field"><label for="${id}">${escapeHTML(label)}${unit?' ('+escapeHTML(unit)+')':''}</label><input id="${id}" type="number" min="0" step="any" inputmode="decimal"></div>`}
 function nutritionAdvancedFields(){

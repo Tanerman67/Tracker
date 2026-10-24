@@ -23,7 +23,17 @@ function runtime(seed, original=false,coord=false){
   run(cp.execFileSync('git',['show',base+':today.js'],{cwd:root,encoding:'utf8'}));
   run(fs.readFileSync(path.join(root,'habits.js'),'utf8'));
   run(html.match(/<script>([\s\S]*?)<\/script>/)[1].split("if('serviceWorker'in navigator)")[0]);
- }else for(const f of ['ui.js','dates.js','calendar.js','goals.js','modules.js','dashboard.js','analytics.js','today.js','habits.js','energy-core.js','storage.js','nutrition.js','tests/legacy-english.js',...(coord?['coordination.js']:[]),'body.js','backup.js','app.js'])run(fs.readFileSync(path.join(root,f),'utf8').split("if('serviceWorker'in navigator)")[0]);
+ }else for(const f of ['ui.js','dates.js','calendar.js','goals.js','modules.js','dashboard.js','analytics.js','today.js','habits.js','energy-core.js','storage.js','nutrition.js','tests/legacy-english.js',...(coord?['coordination.js']:[]),'body.js','backup.js','settings.js','app.js'])run(fs.readFileSync(path.join(root,f),'utf8').split("if('serviceWorker'in navigator)")[0]);
+ if(!original){
+ for(const id of ['energyHeight','energyBirth','energyVariant','energyMode','energyManualRmr','energyRoutine','energyBaselineSteps',...['protein','steps','sleep','outdoors','gym'].flatMap(x=>['goalMode_'+x,'goalUpper_'+x])])if(!nodes.has(id))nodes.set(id,element());
+ run(`function renderUnifiedSettings(){
+ const set=(id,v)=>document.getElementById(id).value=v==null?'':String(v);
+ for(const id of ['stepsGoal','sleepGoal','outdoorsGoal','gymGoal','smokeDate'])set(id,data[id]);set('alcoholDate',alcoholTrackingStart());
+ for(const key of ['calories','fat','carbs'])set('nutritionGoal_'+key,data.nutrition.goals[key]);set('nutritionGoal_protein',data.proteinGoal);
+ for(const id of ['protein','steps','sleep','outdoors','gym']){set('goalMode_'+id,goalRule(id).type);set('goalUpper_'+id,goalRule(id).upper)}
+ settingsSnapshot=JSON.stringify(['smokeDate','alcoholDate','stepsGoal','sleepGoal','outdoorsGoal','gymGoal',...['calories','protein','fat','carbs'].map(k=>'nutritionGoal_'+k),'energyHeight','energyBirth','energyVariant','energyMode','energyManualRmr','energyRoutine','energyBaselineSteps'].map(id=>[id,document.getElementById(id).value]));
+ }`);
+ }
  return {run,nodes,memory,errors,ctx,json:s=>JSON.parse(run(`JSON.stringify(${s})`))};
 }
 function fixture(){return {schemaVersion:2,smokeDate:'2022-02-02',alcoholDate:'2023-03-03',alcoholTrackingStart:'2021-01-01',alcoholHistory:{'2023-03-02':true},bodyMeasurements:{'2023-03-03':{waist:81.2,thigh:null}},logs:{'2023-03-03':{protein:0,steps:1234,gym:false,sleep:null,weight:75.5,outdoors:'',habitDetails:{walks:[{id:'synthetic',minutes:10}]}},'2023-03-04':{gym:true,english_general:35}},trackers:[{id:'custom',goal:5},{id:'water',goal:2}],englishLearning:{customItems:[{id:'custom_1',title:'Synthetic item',kind:'word'}],review:{custom_1:{nextReview:'2023-03-05',lastReviewed:'2023-03-03'}},favorites:{custom_1:true},dailyQueue:{date:'2023-03-03',itemIds:['custom_1'],newItemIds:[],extension:'keep'},studyPlans:{sample:{answers:['saved answer']}},extension:'keep'},experiments:[{id:'sample',name:'Test',metric:'steps',target:1000,days:30,start:'2023-03-03'}],theme:'light',language:'en',motivationSeen:{sample:'seen'},lastExternalBackupAt:'2023-03-03T00:00:00Z',_storageMeta:{revision:20,savedAt:'2023-03-03T00:00:00Z',extra:'keep'},extra:{keep:true}}}
@@ -202,18 +212,18 @@ test('Settings save cannot touch canonical protein, its rule, tracker, or hidden
  const before=r.json('[data.proteinGoal,tracker("protein").goal,data.goalRules.protein,data.nutrition]');
  r.nodes.get('stepsGoal').value='4321';r.run('saveSettings();renderSettings()');assert.deepEqual(r.json('[data.proteinGoal,tracker("protein").goal,data.goalRules.protein,data.nutrition]'),before);assert.equal(r.run('data.stepsGoal'),4321);assert.equal(r.nodes.has('proteinGoal'),false);
 });
-test('Nutrition goal save synchronises protein once and preserves fibre, extensions and zero',()=>{
- const r=runtime();r.run('persistData=()=>{};data.nutrition.goals={fiber:29,calories:0,extension:{keep:false}};data.goalRules.protein={type:"min",target:120,extension:null}');
+test('Unified goal save synchronises protein once and preserves fibre, extensions and zero',async()=>{
+ const r=runtime();r.run('persistData=()=>{};data.nutrition.goals={fiber:29,calories:0,extension:{keep:false}};data.goalRules.protein={type:"min",target:120,extension:null};renderSettings()');
  for(const [id,value] of Object.entries({calories:'0',protein:'135',fat:'60',carbs:''}))r.nodes.get('nutritionGoal_'+id).value=value;
- r.run('nutritionSaveGoals()');assert.deepEqual(r.json('data.nutrition.goals'),{fiber:29,calories:0,fat:60,extension:{keep:false}});assert.equal(r.run('data.proteinGoal'),135);assert.equal(r.run('tracker("protein").goal'),135);assert.deepEqual(r.json('data.goalRules.protein'),{type:'min',target:135,extension:null});assert.equal(r.run('Object.hasOwn(data.nutrition.goals,"protein")'),false);
- r.nodes.get('nutritionGoal_protein').value='0';r.run('nutritionSaveGoals()');assert.equal(r.run('goalFor("protein")'),0);assert.equal(r.run('goalRule("protein").target'),0);
- r.nodes.get('nutritionGoal_protein').value='';r.run('nutritionSaveGoals()');assert.equal(r.run('data.proteinGoal'),null);r.run('tracker("protein").goal=999');assert.equal(r.run('goalFor("protein")'),null);assert.equal(r.run('goalRule("protein").target'),null);
+ await r.run('saveUnifiedSettings()');assert.deepEqual(r.json('data.nutrition.goals'),{fiber:29,calories:0,fat:60,extension:{keep:false}});assert.equal(r.run('data.proteinGoal'),135);assert.equal(r.run('tracker("protein").goal'),135);assert.deepEqual(r.json('data.goalRules.protein'),{type:'min',target:135,extension:null});assert.equal(r.run('Object.hasOwn(data.nutrition.goals,"protein")'),false);
+ r.nodes.get('nutritionGoal_protein').value='0';await r.run('saveUnifiedSettings()');assert.equal(r.run('goalFor("protein")'),0);assert.equal(r.run('goalRule("protein").target'),0);
+ r.nodes.get('nutritionGoal_protein').value='';await r.run('saveUnifiedSettings()');assert.equal(r.run('data.proteinGoal'),null);r.run('tracker("protein").goal=999');assert.equal(r.run('goalFor("protein")'),null);assert.equal(r.run('goalRule("protein").target'),null);
 });
-test('invalid Nutrition goal save is atomic and cannot erase hidden values',()=>{
- const r=runtime();r.run('persistData=()=>{};data.nutrition.goals={fiber:25,calories:1900};data.goalRules.protein={type:"range",target:120,upper:150}');const before=r.json('data');
+test('invalid unified goal save is atomic and cannot erase hidden values',async()=>{
+ const r=runtime();r.run('persistData=()=>{};data.nutrition.goals={fiber:25,calories:1900};data.goalRules.protein={type:"range",target:120,upper:150};renderSettings()');const before=r.json('data');
  for(const [id,value] of Object.entries({calories:'2200',protein:'160',fat:'60',carbs:'200'}))r.nodes.get('nutritionGoal_'+id).value=value;
- r.nodes.set('goalMode_protein',{value:'range'});r.nodes.set('goalUpper_protein',{value:'150'});r.run('nutritionSaveGoals()');assert.deepEqual(r.json('data'),before);
- r.nodes.get('goalUpper_protein').value='180';r.nodes.get('nutritionGoal_fat').value='-1';r.run('nutritionSaveGoals()');assert.deepEqual(r.json('data'),before);
+ r.nodes.set('goalMode_protein',{value:'range'});r.nodes.set('goalUpper_protein',{value:'150'});await r.run('saveUnifiedSettings()');assert.deepEqual(r.json('data'),before);
+ r.nodes.get('goalUpper_protein').value='180';r.nodes.get('nutritionGoal_fat').value='-1';await r.run('saveUnifiedSettings()');assert.deepEqual(r.json('data'),before);
 });
 test('edited protein and full synthetic legacy data survive validation and backup round trip',()=>{
  const f=fixture();f.proteinGoal=133;f.nutrition={entries:[food('synthetic-backup')],goals:{fiber:28,calories:0},extension:false};f.cycle={enabled:true,periods:[{id:'synthetic-cycle',start:'2024-01-02',end:'2024-01-05',notes:'fictional',symptoms:''}]};f.dashboard={blocks:[{id:'nutrition',size:'expanded'},{id:'steps',size:'compact'}]};f.englishActivity={entries:[],extension:null};const r=runtime({'my-life-tracker-data':JSON.stringify(f)});const before=r.json('data');r.ctx.backup={format:'my-life-tracker-backup',formatVersion:1,schemaVersion:3,data:before};assert.deepEqual(r.json('validateBackupObject(backup)'),before);
