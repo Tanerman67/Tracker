@@ -110,7 +110,8 @@ function openBody(){
 }
 function closeBody(){
   const panel=document.getElementById('bodyModal');
-  if(panel)panel.hidden=true;
+  if(!panel||panel.hidden)return;
+  panel.hidden=true;
   const trend=document.querySelector('.trend-card');if(trend)trend.hidden=false;
   const summary=document.querySelector('.body-progress-summary');if(summary)summary.hidden=false;
   renderBodyProgressSummary();
