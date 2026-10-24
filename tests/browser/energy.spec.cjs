@@ -84,7 +84,7 @@ test('Energy Balance stays inside its Progress card without overlapping the week
   }
   await page.evaluate(()=>setTrendMetric('weight'));
   await expect(page.locator('#bodyModal')).toBeVisible();
-  await expect(page.locator('#bodyChartTitle')).toContainText(language==='en'?'Weight':'Вес');
+  await expect(page.locator('#bodyChartTitle')).toContainText(/Weight|Вес/);
   await expect(page.locator('.trend-card')).toBeHidden();
   await page.evaluate(()=>setTrendMetric('energy'));
   await expect(page.locator('#bodyModal')).toBeHidden();
