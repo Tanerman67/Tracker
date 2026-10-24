@@ -83,7 +83,12 @@ test('Energy Balance stays inside its Progress card without overlapping the week
    expect(bounds.card.bottom).toBeLessThanOrEqual(bounds.review.top);
   }
   await page.evaluate(()=>setTrendMetric('weight'));
-  await expect(page.locator('#trendChartHost .energy-view')).toHaveCount(0);
-  expect(await page.locator('#trendChartHost').evaluate(el=>el.getBoundingClientRect().height)).toBeGreaterThan(190);
+  await expect(page.locator('#bodyModal')).toBeVisible();
+  await expect(page.locator('#bodyChartTitle')).toContainText(language==='en'?'Weight':'Вес');
+  await expect(page.locator('.trend-card')).toBeHidden();
+  await page.evaluate(()=>setTrendMetric('energy'));
+  await expect(page.locator('#bodyModal')).toBeHidden();
+  await expect(page.locator('.trend-card')).toBeVisible();
+  await expect(page.locator('#trendChartHost .energy-view')).toHaveCount(1);
  }
 });
