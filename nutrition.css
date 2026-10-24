@@ -13,3 +13,33 @@
 body.light .nutrition-modal,body.light .nutrition-form{background:#eef6f4;color:#17313b}body.light .nutrition-topbar{background:rgba(238,246,244,.96)}
 @media(max-width:390px){.nutrition-date-nav{gap:4px}.nutrition-date-nav input{max-width:126px;font-size:12px}.nutrition-date-nav button{padding:8px}.nutrition-summary{gap:6px}.nutrition-total{padding:10px 5px}.nutrition-total:not(.nutrition-calorie-card) .nutrition-ring-graphic{width:min(72px,100%)}.nutrition-total:not(.nutrition-calorie-card) .nutrition-ring-center strong{font-size:13px}.nutrition-calorie-card{grid-template-columns:114px minmax(0,1fr);padding:12px;column-gap:10px}.nutrition-calorie-card .nutrition-ring-graphic{width:108px}.nutrition-calorie-card .nutrition-ring-center strong{font-size:22px}}
 @media(prefers-reduced-motion:reduce){.nutrition-ring-fill,.nutrition-micro-track span{transition:none}}
+
+/* Consolidated final nutrition layout rules. */
+.nutrition-page{max-width:none;min-height:0;margin:0;padding:12px 0 0}
+.nutrition-topbar{position:static;background:transparent!important;backdrop-filter:none;padding:10px 0}
+.nutrition-topbar>button{display:none}
+.nutrition-date-nav{display:grid;grid-template-columns:38px minmax(0,1fr) 38px;gap:6px;padding:10px}
+.nutrition-date-nav .shared-date-field input{max-width:none;font-size:16px}
+.nutrition-date-nav>button{min-height:44px;padding:0}
+.nutrition-date-nav #nutritionTodayButton{grid-column:1/-1;padding:8px}
+.nutrition-date-nav #nutritionTodayButton[hidden]{display:none}
+.nutrition-copy-group{margin:12px 0}
+.nutrition-copy-group>label{display:block;font-size:13px;font-weight:650;margin-bottom:10px}
+.nutrition-copy-controls{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px;align-items:stretch}
+.nutrition-copy-controls>button{padding:10px;min-height:44px;font-size:13px}
+.nutrition-goals .field{min-width:0}
+.nutrition-form{height:100dvh;overscroll-behavior:contain}
+.nutrition-form-sheet{max-width:580px;padding:0 16px calc(40px + env(safe-area-inset-bottom))}
+.nutrition-form-head{position:sticky;top:0;z-index:5;padding:calc(8px + env(safe-area-inset-top)) 0 8px;margin-bottom:12px;background:#050d17;box-shadow:0 5px 12px rgba(0,0,0,.1)}
+.nutrition-form-head h2{font-size:20px;min-width:0;margin:10px 0}
+.nutrition-form-head button{min-height:44px;flex-shrink:0;padding:10px 14px}
+.nutrition-form input,.nutrition-form select{min-height:46px;font-size:16px}
+.nutrition-form-grid>.field{display:flex;flex-direction:column;gap:6px}
+.nutrition-form-grid>.field>label{min-height:19px;margin:0}
+.nutrition-form-grid .shared-date-field{flex:1}
+.nutrition-form-grid .shared-date-field input{width:0}
+.nutrition-preview-list{max-height:none}
+.nutrition-form [hidden]{display:none}
+body.light .nutrition-form-head{background:#eef6f4}
+.nutrition-section{overflow-wrap:anywhere}
+.nutrition-history-day,.nutrition-reuse button{white-space:normal;overflow-wrap:anywhere}

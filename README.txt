@@ -1,3 +1,11 @@
+CURRENT CANDIDATE: V7.3.2 - safe UI cleanup (not published).
+Read docs/SAFE_CLEANUP_7.3.2.md for changes, validation and remaining browser checks.
+Run npm ci, npm test, npx playwright install, then npm run test:browser.
+Serve the existing static application with npm run serve.
+Storage origin, paths, keys and schema remain compatible.
+
+ARCHIVED RELEASE NOTES BELOW. They describe older releases, not the current interface.
+
 CURRENT RELEASE: V6.11 — simplified Today and Progress, based on V6.10. Read UPDATE_SIMPLE.md first.
 See UPDATE_HABITS.md for features, data model, tests and update instructions.
 The entries below are historical release notes.

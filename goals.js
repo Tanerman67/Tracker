@@ -3,7 +3,7 @@ function validDay(key){
  if(typeof key!=='string'||!/^\d{4}-\d{2}-\d{2}$/.test(key))return false;
  const d=new Date(key+'T12:00:00');return Number.isFinite(d.getTime())&&localDate(d)===key;
 }
-function defaultDashboardBlocks(){return ['nutrition','protein','steps','sleep','weight','gym','outdoors','smoke','alcohol'].map(id=>({id,size:id==='nutrition'?'expanded':'compact'}))}
+function defaultDashboardBlocks(){return ['nutrition','energy','steps','sleep','weight','gym','outdoors','smoke','alcohol'].map(id=>({id,size:id==='nutrition'?'expanded':'compact'}))}
 function legacyGoalRules(d){
  const out={weight:{type:'observe'},gym:{type:'weekly',target:d.gymGoal??3},english_general:{type:'weekly',target:d.englishGoal??240},calories:{type:'max',target:d.nutrition?.goals?.calories??null}};
  for(const [id,key] of Object.entries({protein:'proteinGoal',steps:'stepsGoal',outdoors:'outdoorsGoal',sleep:'sleepGoal'}))out[id]={type:'min',target:d[key]??defaults[key]};

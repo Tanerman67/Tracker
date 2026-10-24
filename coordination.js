@@ -34,7 +34,11 @@ function coordinateSave({renderAfter=true,makeSnapshot=true}={}){
   const pending=structuredClone(data);
   data=migrateData(merged);stampCurrentData();const payload=structuredClone(data);
   const saved=writeLocalCopies(payload);
-  if(!saved.primary&&!saved.mirror)alert(trText('Ошибка сохранения. Экспортируй JSON backup.','Save failed. Export a JSON backup.'));
+  if(!saved.primary&&!saved.mirror){
+   unsavedConflict=ours;storageSet('my-rhythm-conflict-draft',JSON.stringify(ours));
+   data=migrateData(latest);resetStorageBaseline();if(renderAfter)render();
+   alert(trText('Ошибка сохранения. Изменения оставлены в черновике.','Save failed. Changes were kept as a draft.'));return false;
+  }
   if(JSON.stringify(pending)!==JSON.stringify(ours)){
    data=mergeLocalEdits(ours,pending,data,'',[]);
   }

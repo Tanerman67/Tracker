@@ -1,3 +1,5 @@
+> Archived release notes. For the current candidate see docs/SAFE_CLEANUP_7.3.2.md.
+
 # My Rhythm 6.11 — упрощение интерфейса
 
 Готовая версия на основе 6.10. Не опубликована. Этот файл описывает текущее обновление; UPDATE_HABITS.md и UPDATE_TODAY.md оставлены как история предыдущих версий.

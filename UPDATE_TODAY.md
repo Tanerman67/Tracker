@@ -1,3 +1,5 @@
+> Archived release notes. For the current candidate see docs/SAFE_CLEANUP_7.3.2.md.
+
 # My Rhythm 6.9.2 — Today
 
 Основа: доступная версия 6.9.1. Эта сборка не опубликована.

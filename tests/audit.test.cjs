@@ -16,14 +16,14 @@ function runtime(seed, original=false,coord=false){
  const ctx=vm.createContext({console:{...console,error:(...x)=>errors.push(x.join(' ')),warn(){}},structuredClone,Date,URL,Request,Response,Blob,Map,Set,Intl,document,NodeFilter:{SHOW_TEXT:4,FILTER_REJECT:2,FILTER_ACCEPT:1},localStorage,navigator:{},location:{href:'https://test.invalid/Tracker/'},requestAnimationFrame:fn=>fn(),setTimeout:()=>0,clearTimeout(){},setInterval(){},addEventListener(){},alert(){},confirm:()=>true});
  ctx.window=ctx;
  const run=s=>vm.runInContext(s,ctx);
- run('var lastWorkoutDate=null;function energyRenderSettings(){};function energyWorkoutOpen(date){lastWorkoutDate=date}');
+ run('var lastWorkoutDate=null;function energyRenderSettings(){};function energyTodayCard(){return document.createElement("div")};function energyWorkoutOpen(date){lastWorkoutDate=date}');
  if(!coord)run('function resetStorageBaseline(){};var saveCoordinationQueue=Promise.resolve()');
  if(original){
   const html=cp.execFileSync('git',['show',base+':index.html'],{cwd:root,encoding:'utf8'});
   run(cp.execFileSync('git',['show',base+':today.js'],{cwd:root,encoding:'utf8'}));
   run(fs.readFileSync(path.join(root,'habits.js'),'utf8'));
   run(html.match(/<script>([\s\S]*?)<\/script>/)[1].split("if('serviceWorker'in navigator)")[0]);
- }else for(const f of ['dates.js','calendar.js','goals.js','modules.js','dashboard.js','analytics.js','today.js','habits.js','energy-core.js','storage.js','nutrition.js','tests/legacy-english.js',...(coord?['coordination.js']:[]),'app.js'])run(fs.readFileSync(path.join(root,f),'utf8').split("if('serviceWorker'in navigator)")[0]);
+ }else for(const f of ['dates.js','calendar.js','goals.js','modules.js','dashboard.js','analytics.js','today.js','habits.js','energy-core.js','storage.js','nutrition.js','tests/legacy-english.js',...(coord?['coordination.js']:[]),'body.js','backup.js','app.js'])run(fs.readFileSync(path.join(root,f),'utf8').split("if('serviceWorker'in navigator)")[0]);
  return {run,nodes,memory,errors,ctx,json:s=>JSON.parse(run(`JSON.stringify(${s})`))};
 }
 function fixture(){return {schemaVersion:2,smokeDate:'2022-02-02',alcoholDate:'2023-03-03',alcoholTrackingStart:'2021-01-01',alcoholHistory:{'2023-03-02':true},bodyMeasurements:{'2023-03-03':{waist:81.2,thigh:null}},logs:{'2023-03-03':{protein:0,steps:1234,gym:false,sleep:null,weight:75.5,outdoors:'',habitDetails:{walks:[{id:'synthetic',minutes:10}]}},'2023-03-04':{gym:true,english_general:35}},trackers:[{id:'custom',goal:5},{id:'water',goal:2}],englishLearning:{customItems:[{id:'custom_1',title:'Synthetic item',kind:'word'}],review:{custom_1:{nextReview:'2023-03-05',lastReviewed:'2023-03-03'}},favorites:{custom_1:true},dailyQueue:{date:'2023-03-03',itemIds:['custom_1'],newItemIds:[],extension:'keep'},studyPlans:{sample:{answers:['saved answer']}},extension:'keep'},experiments:[{id:'sample',name:'Test',metric:'steps',target:1000,days:30,start:'2023-03-03'}],theme:'light',language:'en',motivationSeen:{sample:'seen'},lastExternalBackupAt:'2023-03-03T00:00:00Z',_storageMeta:{revision:20,savedAt:'2023-03-03T00:00:00Z',extra:'keep'},extra:{keep:true}}}
@@ -52,7 +52,7 @@ test('user text and IDs are escaped for HTML and JavaScript attribute contexts',
 test('asynchronous recovery picks newest vault and rechecks concurrent memory edits',async()=>{const r=runtime();r.ctx.f=fixture();r.run('vaultReadCurrent=async()=>({data:f});vaultReadSnapshots=async()=>[];vaultReadCache=async()=>null;writeVaultCopies=async()=>{};render=()=>{}');await r.run('recoverFromVaults()');assert.deepEqual(r.json('data.logs'),fixture().logs);r.run('vaultReadCurrent=async()=>{data.logs={synthetic:{steps:9}};data._storageMeta={savedAt:"2030-01-01T00:00:00Z",revision:50};return {data:f}}');await r.run('recoverFromVaults()');assert.equal(r.run('data.logs.synthetic.steps'),9);});
 test('vault writes run in invocation order and capture immutable snapshots',async()=>{const r=runtime();r.run('var seen=[];writeVaultCopiesNow=async payload=>{seen.push(payload.value)};var p={value:1};var one=writeVaultCopies(p);p.value=2;var two=writeVaultCopies(p)');await r.run('Promise.all([one,two])');assert.deepEqual(r.json('seen'),[1,2]);});
 
-test('render entry points execute against expected DOM IDs without runtime errors',()=>{const r=runtime();for(const fn of ['renderToday','renderEnglish','renderProgress','renderSettings','renderBody','renderAlcoholCalendar','renderWeeklyReview'])r.run(fn+'()');assert.deepEqual(r.errors,[])});
+test('render entry points execute against expected DOM IDs without runtime errors',()=>{const r=runtime();for(const fn of ['renderToday','renderEnglish','renderProgress','renderSettings','renderBody','renderAlcoholCalendar'])r.run(fn+'()');assert.deepEqual(r.errors,[])});
 test('invalid body measurement does not silently delete an existing record',()=>{const r=runtime();r.run('data.bodyMeasurements["2023-03-03"]={waist:80,extension:"keep"};openBodyCheckin("2023-03-03")');r.nodes.get('bodyWaistInput').value='-2';r.run('saveBodyCheckin()');assert.equal(r.run('data.bodyMeasurements["2023-03-03"].waist'),80);});
 test('English rating schedules review and study answers persist locally',()=>{const r=runtime();r.run('persistData=()=>{};englishRateItem("word_figure_out","know")');assert.equal(r.run('data.englishLearning.review.word_figure_out.nextReview'),r.run('weeklyAddDays(localDate(),3)'));r.run('saveEnglishPlanAnswer("session-1","1a",0,"synthetic answer")');assert.ok(r.memory.get('my-life-tracker-data').includes('synthetic answer'));r.run('englishRateItem("word_figure_out","again")');assert.equal(r.run('data.englishLearning.review.word_figure_out.nextReview'),r.run('localDate()'));});
 test('theme/language toggles and rollover retain records',()=>{const r=runtime({'my-life-tracker-data':JSON.stringify(fixture())});r.run('save=()=>{};toggleTheme();toggleLanguage()');assert.equal(r.run('data.theme'),'dark');assert.equal(r.run('data.language'),'ru');r.run('persistEnglishDailyQueueQuietly=()=>{};appActiveDate="2000-01-01";checkAppDayRollover()');assert.deepEqual(r.json('data.logs'),fixture().logs);});
@@ -105,7 +105,7 @@ test('manual food save, edit and delete retain independent legacy records',()=>{
  r.run('nutritionEditId=data.nutrition.entries[0].id;nutritionDeleteFood()');assert.equal(r.run('data.nutrition.entries.length'),0);assert.equal(r.run('data.logs["2024-01-02"].protein'),42);
 });
 test('restoring old backup retains current food diary while replacing historical logs',async()=>{
- const r=runtime();r.ctx.f=fixture();r.run('data.nutrition.entries=['+JSON.stringify(food('current'))+'];writeVaultCopies=async()=>{};save=()=>{}');r.ctx.FileReader=class{readAsText(){this.result=JSON.stringify({format:'my-life-tracker-backup',data:r.ctx.f});r.ctx.importDone=this.onload()}};
+ const r=runtime();r.ctx.f=fixture();r.run('data.nutrition.entries=['+JSON.stringify(food('current'))+'];writeVaultCopies=async()=>{};save=()=>true');r.ctx.FileReader=class{readAsText(){this.result=JSON.stringify({format:'my-life-tracker-backup',data:r.ctx.f});r.ctx.importDone=this.onload()}};
  r.ctx.event={target:{files:[{name:'backup.json'}],value:'selected'}};r.run('importBackupFile(event)');await r.ctx.importDone;
  assert.equal(r.run('data.nutrition.entries[0].id'),'current');assert.deepEqual(r.json('data.logs'),r.ctx.f.logs);assert.equal(r.ctx.event.target.value,'');
 });
@@ -168,12 +168,7 @@ test('manual save, correction and deletion recalculate rendered rings',()=>{
  r.run('nutritionOpenForm(data.nutrition.entries[0].id)');r.nodes.get('nutritionCalories').value='250';r.run('nutritionSaveFood()');assert.equal(center(),'125%');assert.equal(r.run('data.nutrition.entries.length'),1);
  r.run('nutritionOpenForm(data.nutrition.entries[0].id);nutritionDeleteFood()');assert.equal(center(),'—');assert.equal(r.run('data.nutrition.entries.length'),0);assert.deepEqual(r.errors,[]);
 });
-test('Home Protein ring uses effective value and leaves missing data without a ring',()=>{
- const r=runtime();r.run('data.logs["2024-01-02"]={protein:150};setTodayDate("2024-01-02");renderToday()');assert.deepEqual(r.errors,[]);assert.equal(r.run('nutritionProgressState({value:nutritionEffectiveProtein("2024-01-02").value},data.proteinGoal).percent'),125);
- r.run('delete data.logs["2024-01-02"].protein;renderToday()');assert.deepEqual(r.errors,[]);
-});
-
-module.exports={runtime,fixture,food,nutritionPayload};
+test('retired cards stay archived while other dashboard order is retained',()=>{const r=runtime();r.run("data.dashboard.blocks=[{id:'steps',size:'expanded'},{id:'protein',size:'compact'},{id:'english',size:'compact'},{id:'sleep',size:'compact'}];renderToday()");assert.deepEqual(r.json('data.dashboard.blocks.map(b=>b.id)'),['steps','protein','english','sleep']);assert.equal(r.run("dashboardCard('protein',localDate())"),null);assert.equal(r.run("dashboardCard('english',localDate())"),null);assert.deepEqual(r.json('Object.keys(dashboardAvailable()).filter(k=>["protein","english"].includes(k))'),[])});
 
 test('7.0 migration is idempotent and preserves legacy content, extensions and nulls',()=>{const r=runtime();r.ctx.f=fixture();r.run('var m=migrateData(f)');assert.deepEqual(r.json('migrateData(m)'),r.json('m'));for(const k of ['logs','englishLearning','bodyMeasurements','extra'])assert.deepEqual(r.json('m.'+k),fixture()[k]);assert.equal(r.run('m.cycle.enabled'),false);assert.equal(r.run('m.dashboard.blocks.some(b=>b.id==="cycle"||b.id==="english")'),false);});
 test('fresh install has English locale and no assumed alcohol history',()=>{const r=runtime();assert.equal(r.run('data.language'),'en');assert.equal(r.run('alcoholTrackingStart()'),'');assert.equal(r.run('alcoholIsTrackedPast(localDate())'),false);assert.equal(r.run('todayAlcoholFreeDays()'),0);});
@@ -247,4 +242,34 @@ test('automatic date bounds follow day rollover while explicit limits and saved 
   r.ctx.document.querySelectorAll=s=>s==='input[type="date"]'?[input]:[];r.run('localDate=()=>"2026-10-23";enhanceDateInputs()');assert.equal(input.max,explicit?'2020-01-01':'2026-10-23');
   r.run('localDate=()=>"2026-10-24";enhanceDateInputs()');assert.equal(input.max,explicit?'2020-01-01':'2026-10-24');assert.equal(input.value,'2019-12-31');
  }
+});
+
+test('backup overwrite guard detects independent records and archived unknown fields without logs',()=>{
+ const r=runtime();for(const expression of ['{bodyMeasurements:{"2023-03-03":{waist:80}}}','{alcoholHistory:{"2023-03-03":true}}','{experiments:[{id:"archive"}]}','{nutrition:{entries:[],favorites:[{id:"old"}]}}','{extension:{zero:0,no:false,unknown:null}}','{dashboard:{blocks:[{id:"sleep",size:"expanded"}]}}'])assert.equal(r.run(`backupHasCurrentData(migrateData(${expression}))`),true);
+});
+test('import conflict preserves original snapshot and never announces successful restoration',async()=>{
+ const r=runtime(undefined,false,true);r.ctx.FileReader=class{readAsText(){this.result=JSON.stringify({schemaVersion:3,logs:{'2023-03-03':{steps:12}}});r.ctx.importDone=this.onload()}};const alerts=[];r.ctx.alert=x=>alerts.push(x);r.run('save=async()=>false;data.bodyMeasurements={"2023-03-03":{waist:80}};importBackupFile({target:{files:[{}],value:""}})');await r.ctx.importDone;assert.ok(r.memory.has('my-rhythm-pre-import'));assert.equal(alerts.some(x=>x==='Данные восстановлены.'),false);assert.equal(alerts.length,1);
+});
+test('storage write failure restores durable state and exposes unsaved draft',async()=>{
+ const r=runtime(undefined,false,true);r.run('data.logs={"2023-03-03":{steps:10}}');await r.run('save()');r.run('data.logs["2023-03-03"].steps=20;writeLocalCopies=()=>({primary:false,mirror:false})');assert.equal(await r.run('save()'),false);assert.equal(r.run('data.logs["2023-03-03"].steps'),10);assert.equal(r.run('unsavedConflict.logs["2023-03-03"].steps'),20);
+});
+test('archived favorites do not enter frequent-food reuse UI or nutritional totals',()=>{
+ const r=runtime();r.run('data.nutrition.favorites=[{id:"archive",name:"Archive only"}];nutritionRenderReuse()');assert.equal(r.nodes.get('nutritionReuse').childElementCount,0);assert.equal(r.run('nutritionAggregate(localDate()).calories.value'),null);assert.equal(r.run('data.nutrition.favorites.length'),1);
+});
+test('dashboard reorder skips retired blocks and preserves archived sizes',()=>{
+ const r=runtime();r.run('save=()=>{};renderDashboardSettings=()=>{};data.dashboard.blocks=[{id:"steps",size:"expanded"},{id:"protein",size:"expanded"},{id:"sleep",size:"compact"}];dashboardChange("steps","move",1)');assert.deepEqual(r.json('data.dashboard.blocks'),[{id:'sleep',size:'compact'},{id:'protein',size:'expanded'},{id:'steps',size:'expanded'}]);
+});
+test('sleep timing changes preserve archived walks, blocks and extension fields',()=>{
+ const r=runtime();for(const id of ['habitDuration','habitAsleep','habitWake','habitSleepPreview'])r.nodes.set(id,{value:'',textContent:''});r.run('save=()=>{};data.logs["2023-03-03"]={habitDetails:{walks:[{minutes:10}],blocks:[{minutes:20,kind:"focus"}],extension:false}};openHabitEditor("sleep","2023-03-03")');r.nodes.get('habitAsleep').value='23:30';r.nodes.get('habitWake').value='07:00';r.run('saveHabitEditor()');assert.deepEqual(r.json('data.logs["2023-03-03"].habitDetails'),{walks:[{minutes:10}],blocks:[{minutes:20,kind:'focus'}],extension:false,sleepTiming:{asleep:'23:30',wake:'07:00'}});
+});
+test('workout ownership restores missing/false flags and retains manual true',()=>{
+ const r=runtime();r.run(fs.readFileSync(path.join(root,'energy.js'),'utf8'));for(const before of [undefined,null,false,true]){r.ctx.initialGym=before;r.run('data.logs={"2023-03-03":{}};if(initialGym!==undefined)data.logs["2023-03-03"].gym=initialGym;energyMarkWorkoutDay("2023-03-03");energyClearWorkoutDay("2023-03-03")');assert.equal(r.run('data.logs["2023-03-03"].gym'),before)}
+ r.run('data.energyBalance={workouts:[{id:"retained",date:"2023-03-03"}]};data.logs={};energyMarkWorkoutDay("2023-03-03");energyClearWorkoutDay("2023-03-03")');assert.equal(r.run('data.logs["2023-03-03"].gym'),true);
+});
+test('settings changes preserve archived English goal',()=>{const r=runtime();r.run('save=()=>{};data.englishGoal=321;renderSettings();saveSettings()');assert.equal(r.run('data.englishGoal'),321)});
+test('real concurrent import conflict keeps newer persistent values and imported draft',async()=>{
+ const r=runtime(undefined,false,true);r.run('data.logs={"2023-03-03":{steps:10}}');await r.run('save()');r.run('const concurrent=structuredClone(data);concurrent.logs["2023-03-03"].steps=20;concurrent._storageMeta.revision+=1;writeLocalCopies(concurrent)');r.ctx.FileReader=class{readAsText(){this.result=JSON.stringify({schemaVersion:3,logs:{'2023-03-03':{steps:30}}});r.ctx.importDone=this.onload()}};r.run('importBackupFile({target:{files:[{}],value:""}})');await r.ctx.importDone;assert.equal(r.run('data.logs["2023-03-03"].steps'),20);assert.equal(r.run('unsavedConflict.logs["2023-03-03"].steps'),30);assert.equal(r.nodes.get('backupStatus').textContent,'Import did not complete.');
+});
+test('unexpected save rejection restores memory and retains downloadable attempted import',async()=>{
+ const r=runtime(undefined,false,true);r.run('data.logs={"2023-03-03":{steps:10}}');await r.run('save()');r.ctx.FileReader=class{readAsText(){this.result=JSON.stringify({schemaVersion:3,logs:{'2023-03-03':{steps:30}}});r.ctx.importDone=this.onload()}};r.run('save=async()=>{throw Error("test refusal")};importBackupFile({target:{files:[{}],value:""}})');await r.ctx.importDone;assert.equal(r.run('data.logs["2023-03-03"].steps'),10);assert.equal(r.run('unsavedConflict.logs["2023-03-03"].steps'),30);
 });

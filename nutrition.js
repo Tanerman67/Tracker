@@ -331,7 +331,6 @@ function nutritionOpenForm(id=''){
     if(NUTRITION_BASIS[key])document.getElementById('nutritionBasis_'+key).value=entry?.nutrients?.[key]?.basis||'unspecified';
   }
   document.getElementById('nutritionFoodQuality').value=entry?Object.values(entry.nutrients).find(n=>n.quality!=='unknown')?.quality||'estimated':'estimated';
-  document.getElementById('nutritionFavorite').hidden=!entry;
   document.getElementById('nutritionDeleteFood').hidden=!entry;
   nutritionStartOverlay('nutritionForm');document.getElementById('nutritionFormError').textContent='';document.getElementById('nutritionFoodName').focus({preventScroll:true});
 }
@@ -412,22 +411,17 @@ function nutritionScaleForm(){try{
  document.getElementById('nutritionFormError').textContent=nutritionLabel('Порция пересчитана. Проверь и сохрани.','Portion recalculated. Review and save.');
  }catch(e){document.getElementById('nutritionFormError').textContent=e.message}}
 function nutritionReuseRecord(id){
- const entry=nutritionStore().entries.find(e=>e.id===id)||(nutritionStore().favorites||[]).find(e=>e.id===id);if(!entry)return;
+ const entry=nutritionStore().entries.find(e=>e.id===id);if(!entry)return;
  nutritionOpenForm();nutritionFormBase=structuredClone(entry);
  document.getElementById('nutritionFoodDate').value=nutritionDateKey();
  for(const [field,value] of Object.entries({nutritionFoodMeal:entry.meal,nutritionFoodName:entry.name,nutritionFoodAmount:entry.portion?.amount??'',nutritionFoodUnit:entry.portion?.unit||'g',nutritionFoodSource:entry.source,nutritionFoodNotes:entry.notes}))document.getElementById(field).value=value;
  for(const [key,n] of Object.entries(entry.nutrients)){document.getElementById(NUTRITION_FIELD_IDS[key]||'nutritionNutrient_'+key).value=n.value??'';nutritionFormQualities[key]=n.quality;if(NUTRITION_BASIS[key])document.getElementById('nutritionBasis_'+key).value=n.basis||'unspecified'}
 }
-function nutritionToggleFavorite(){
- const e=nutritionStore().entries.find(e=>e.id===nutritionEditId);if(!e)return;
- const favorites=nutritionStore().favorites||[];nutritionStore().favorites=favorites.some(f=>f.id===e.id)?favorites.filter(f=>f.id!==e.id):[...favorites,structuredClone(e)];persistData({renderAfter:false});nutritionRenderReuse();document.getElementById('nutritionFormError').textContent=nutritionLabel('Избранное обновлено.','Favourites updated.');
-}
 function nutritionRenderReuse(){
  const host=document.getElementById('nutritionReuse');if(!host)return;host.replaceChildren();
  const rows=nutritionStore().entries,counts=new Map();for(const e of rows)counts.set(e.name,(counts.get(e.name)||0)+1);
  const frequent=[...new Map(rows.slice().reverse().map(e=>[e.name,e])).values()].sort((a,b)=>counts.get(b.name)-counts.get(a.name)).slice(0,8);
- const favorites=nutritionStore().favorites||[];
- for(const e of [...favorites,...frequent.filter(e=>!favorites.some(f=>f.id===e.id))]){const b=document.createElement('button');b.className='secondary';b.textContent=(favorites.some(f=>f.id===e.id)?'★ ':'')+e.name;b.onclick=()=>nutritionReuseRecord(e.id);host.append(b)}
+ for(const e of frequent){const b=document.createElement('button');b.className='secondary';b.textContent=e.name;b.onclick=()=>nutritionReuseRecord(e.id);host.append(b)}
  if(!host.childElementCount)host.textContent=nutritionLabel('Сохранённые продукты появятся здесь.','Saved foods will appear here.');
 }
 function nutritionCopyDay(){

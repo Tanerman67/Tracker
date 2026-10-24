@@ -34,11 +34,9 @@ function habitField(id,ru,en,type='time',extra=''){
   return `<div class="field"><label for="${id}">${habitLabel(ru,en)}</label><input id="${id}" type="${type}" ${extra}></div>`;
 }
 function openHabitEditor(mode,date=todayDateKey()){
-  if(!['sleep','outdoors','blocks'].includes(mode)||date>localDate())return;
+  if(mode!=='sleep'||date>localDate())return;
   const details=habitDetails(date);
   habitEditor={mode,date,initial:JSON.stringify(details),initialValue:data.logs?.[date]?.[mode],draft:structuredClone(details)};
-  if(!Array.isArray(habitEditor.draft.walks))habitEditor.draft.walks=[];
-  if(!Array.isArray(habitEditor.draft.blocks))habitEditor.draft.blocks=[];
   const modal=document.getElementById('habitModal');
   modal.classList.add('show');document.body.style.overflow='hidden';
   renderHabitEditor();
@@ -58,10 +56,6 @@ function renderHabitEditor(){
   let content=duration+`<details class="habit-extra"><summary>${habitLabel('Подробности — необязательно','Details — optional')}</summary>`;
   if(mode==='sleep'){
     content+=`<p class="habit-note">${habitLabel('Дата записи — день подъёма. Время необязательно; засыпание может быть накануне.','The entry date is the wake-up day. Times are optional; sleep may start the day before.')}</p><div class="habit-two-fields">${habitField('habitAsleep','Время засыпания','Time you fell asleep')}${habitField('habitWake','Время подъёма','Wake-up time')}</div><p class="habit-note" id="habitSleepPreview"></p><p class="habit-note">${habitLabel('Длительность не меняется по времени автоматически. Пустая длительность сохраняет прежнее значение; пустое время удаляет только это время.','Times do not change duration automatically. Empty duration keeps the existing value; empty time clears only that time.')}</p>`;
-  }else if(mode==='outdoors'){
-    content+=`<p class="habit-note">${habitLabel('Дневной итог включает прогулки: приложение не складывает его с ними повторно. Время прогулки необязательно.','The daily total includes walks: the app does not add them again. Walk time is optional.')}</p><div id="habitActivityList"></div><div class="habit-two-fields">${habitField('habitActivityTime','Начало прогулки','Walk start')}${habitField('habitActivityMinutes','Минуты прогулки','Walk minutes','number','min="1" max="1440" inputmode="decimal" step="0.1"')}</div><button type="button" class="secondary" onclick="addHabitActivity()">${habitLabel('Добавить прогулку','Add walk')}</button><button type="button" class="secondary" onclick="useHabitWalkTotal()">${habitLabel('Подставить сумму прогулок в дневной итог','Use walk minutes as the daily total')}</button><p id="habitWalkSum" class="habit-note"></p><p class="habit-note">${habitLabel('Подстановка заменяет только поле выше; проверь его перед сохранением. Пустой итог оставляет прежнее значение.','The button replaces only the field above; check it before saving. An empty total keeps the existing value.')}</p>`;
-  }else{
-    content+=`<p class="habit-note">${habitLabel('Запиши минуты рабочего блока без отвлечений или отдыха. Это твоя запись, а не измерение качества концентрации.','Log minutes of distraction-free work or a break. This is your record, not a measurement of focus quality.')}</p><div id="habitActivityList"></div><div class="field"><label for="habitActivityKind">${habitLabel('Тип записи','Entry type')}</label><select id="habitActivityKind"><option value="focus">${habitLabel('Рабочий блок','Work block')}</option><option value="break">${habitLabel('Короткий отдых','Short break')}</option></select></div><div class="habit-two-fields">${habitField('habitActivityTime','Начало — необязательно','Start — optional')}${habitField('habitActivityMinutes','Длительность, мин','Duration, min','number','min="1" max="1440" inputmode="decimal" step="0.1"')}</div><button type="button" class="secondary" onclick="addHabitActivity()">${habitLabel('Добавить запись','Add entry')}</button><p class="habit-note">${habitLabel('Прогулку-перерыв записывай в «Улица»: повторно добавлять её здесь не нужно.','Log a break walk under Outdoors; do not add it here again.')}</p>`;
   }
   content+='</details>';
   document.getElementById('habitContent').innerHTML=content;
@@ -72,7 +66,7 @@ function renderHabitEditor(){
     document.getElementById('habitAsleep').oninput=previewHabitSleep;
     document.getElementById('habitWake').oninput=previewHabitSleep;
     previewHabitSleep();
-  }else renderHabitActivities();
+  }
 }
 function previewHabitSleep(){
   const a=document.getElementById('habitAsleep').value,b=document.getElementById('habitWake').value;
@@ -81,63 +75,11 @@ function previewHabitSleep(){
     ?trText('Для разницы нужны два разных времени.','Two different times are needed to show the difference.')
     :trText(`Между указанными часами: ${todayNumber(span/60)} ч. Это разница местного времени, без поправки на перевод часов.`,`Between these clock times: ${todayNumber(span/60)} h. This is local clock time, without clock-change adjustments.`);
 }
-function renderHabitActivities(){
-  if(!habitEditor)return;
-  const key=habitEditor.mode==='outdoors'?'walks':'blocks',list=habitEditor.draft[key];
-  document.getElementById('habitActivityList').innerHTML=list.length?list.map((item,index)=>{
-    const kind=key==='walks'?(item.purpose==='break'?trText('Прогулка-перерыв','Break walk'):trText('Прогулка','Walk')):(item.kind==='focus'?trText('Рабочий блок','Work block'):trText('Отдых','Break'));
-    const time=habitClock(item.start)===null?trText('время неизвестно','time unknown'):item.start;
-    return `<div class="habit-activity"><span>${escapeHTML(kind)} · ${escapeHTML(time)} · ${escapeHTML(todayNumber(item.minutes))} ${habitLabel('мин','min')}</span><button type="button" class="secondary" onclick="editHabitActivity(${index})">${habitLabel('Изменить','Edit')}</button><button type="button" class="secondary" onclick="removeHabitActivity(${index})">${habitLabel('Удалить','Remove')}</button></div>`;
-  }).join(''):`<p class="habit-note">${habitLabel('Записей пока нет.','No entries yet.')}</p>`;
-  if(key==='walks'){
-    const total=list.reduce((s,x)=>s+(habitMinutes(x.minutes)||0),0);
-    document.getElementById('habitWalkSum').textContent=trText(`Сумма записанных прогулок: ${todayNumber(total)} мин.`,`Recorded walks: ${todayNumber(total)} min.`);
-  }
-}
-function editHabitActivity(index){
-  const key=habitEditor.mode==='outdoors'?'walks':'blocks',item=habitEditor.draft[key][index];
-  if(!item)return;
-  habitEditor.editIndex=index;
-  document.getElementById('habitActivityTime').value=item.start||'';
-  document.getElementById('habitActivityMinutes').value=item.minutes;
-  if(key==='blocks')document.getElementById('habitActivityKind').value=item.kind;
-  document.getElementById('habitActivityMinutes').focus();
-}
-function addHabitActivity(){
-  if(!habitEditor)return false;
-  const minutes=habitMinutes(document.getElementById('habitActivityMinutes').value);
-  const start=document.getElementById('habitActivityTime').value;
-  if(minutes===null||(start&&habitClock(start)===null)){alert(trText('Укажи длительность от 0 до 1440 минут, больше нуля, и корректное время или оставь время пустым.','Enter a duration greater than zero and up to 1440 minutes, with a valid or empty start time.'));return false}
-  const key=habitEditor.mode==='outdoors'?'walks':'blocks',kind=key==='blocks'?document.getElementById('habitActivityKind').value:null;
-  const list=habitEditor.draft[key],index=habitEditor.editIndex;
-  const previous=Number.isInteger(index)?list[index]:null;
-  const item={...(previous||{}),id:previous?.id||`activity_${Date.now()}_${Math.random().toString(36).slice(2,8)}`,minutes};
-  if(start)item.start=start;else delete item.start;
-  if(key==='walks')item.purpose=previous?.purpose||'walk';else item.kind=kind==='break'?'break':'focus';
-  if(previous)list[index]=item;else list.push(item);
-  delete habitEditor.editIndex;
-  document.getElementById('habitActivityTime').value='';document.getElementById('habitActivityMinutes').value='';
-  renderHabitActivities();return true;
-}
-function removeHabitActivity(index){
-  const key=habitEditor.mode==='outdoors'?'walks':'blocks';
-  habitEditor.draft[key].splice(index,1);delete habitEditor.editIndex;
-  document.getElementById('habitActivityTime').value='';document.getElementById('habitActivityMinutes').value='';
-  renderHabitActivities();
-}
-function useHabitWalkTotal(){
-  const total=habitEditor.draft.walks.reduce((s,x)=>s+(habitMinutes(x.minutes)||0),0);
-  document.getElementById('habitDuration').value=total;
-}
 function saveHabitEditor(){
   if(!habitEditor)return false;
   const {mode,date,draft,initial,initialValue}=habitEditor;
   if(JSON.stringify(habitDetails(date))!==initial||(mode!=='blocks'&&data.logs?.[date]?.[mode]!==initialValue)){
     alert(trText('Запись изменилась, пока форма была открыта. Закрой и открой её снова, чтобы не перезаписать новые данные.','This entry changed while the form was open. Close and reopen it to avoid overwriting newer data.'));return false;
-  }
-  if(mode!=='sleep'){
-    const pending=document.getElementById('habitActivityMinutes').value.trim()!==''||document.getElementById('habitActivityTime').value.trim()!==''||Number.isInteger(habitEditor.editIndex);
-    if(pending&&!addHabitActivity())return false;
   }
   let value=null;
   if(mode!=='blocks'){
@@ -157,9 +99,6 @@ function saveHabitEditor(){
     if(asleep)timing.asleep=asleep;else delete timing.asleep;
     if(wake)timing.wake=wake;else delete timing.wake;
     if(Object.keys(timing).length)next.sleepTiming=timing;else delete next.sleepTiming;
-  }else{
-    const key=mode==='outdoors'?'walks':'blocks';
-    if(draft[key].length)next[key]=draft[key];else delete next[key];
   }
   const row=ensureDay(date);
   if(value!==null)row[mode]=value;
@@ -202,7 +141,7 @@ function renderHabitWeek(){
   rows.push([trText('Сон','Sleep'),s.durations.length?trText(`Средняя записанная длительность: ${n(s.durations.reduce((a,b)=>a+b,0)/s.durations.length)} ч; ${coverage(s.durations.length)}.`,`Average logged duration: ${n(s.durations.reduce((a,b)=>a+b,0)/s.durations.length)} h; ${coverage(s.durations.length)}.`):trText('Нет записей длительности за эту неделю.','No sleep durations logged this week.')]);
   rows.push([trText('Время подъёма','Wake-up time'),s.wakeSpread===null?trText(`Недостаточно данных: ${s.wakes.length}/4 необходимых записей.`,`Not enough data: ${s.wakes.length}/4 required entries.`):trText(`Разброс по часам: ${n(s.wakeSpread)} мин; ${coverage(s.wakes.length)}. Это описание времени, не качества сна.`,`Clock-time spread: ${n(s.wakeSpread)} min; ${coverage(s.wakes.length)}. This describes timing, not sleep quality.`)]);
   rows.push([trText('Движение','Movement'),(s.steps.length?trText(`Шаги: в среднем ${n(s.steps.reduce((a,b)=>a+b,0)/s.steps.length)}; ${coverage(s.steps.length)}. `,`Steps: average ${n(s.steps.reduce((a,b)=>a+b,0)/s.steps.length)}; ${coverage(s.steps.length)}. `):trText('Шаги не записаны. ','No steps logged. '))+(s.workoutLogged?trText(`Тренировок: ${s.workoutDays}; ${coverage(s.workoutLogged)}.`,`Workouts: ${s.workoutDays}; ${coverage(s.workoutLogged)}.`):trText('Тренировки не записаны; это не означает отсутствие движения.','No workouts logged; this does not mean no movement.'))]);
-  rows.push([trText('Улица и прогулки','Outdoors & walks'),(s.outdoorsTotal===null?trText('Дневные итоги не записаны. ','No daily totals logged. '):trText(`По дневным итогам: ${n(s.outdoorsTotal)} мин; ${coverage(s.outdoorTotals.length)}. `,`Daily totals: ${n(s.outdoorsTotal)} min; ${coverage(s.outdoorTotals.length)}. `))+(s.walkCount?trText(`Прогулок: ${s.walkCount}; до 12:00 — ${s.earlyWalks}, время неизвестно — ${s.unknownWalks}. Освещённость не измеряется.`,`Walks: ${s.walkCount}; before noon: ${s.earlyWalks}, time unknown: ${s.unknownWalks}. Light exposure is not measured.`):trText('Время прогулок неизвестно.','Walk timing is unknown.'))]);
+  rows.push([trText('Улица','Outdoors'),s.outdoorsTotal===null?trText('Дневные итоги не записаны.','No daily totals logged.'):trText(`По дневным итогам: ${n(s.outdoorsTotal)} мин.`,`Daily totals: ${n(s.outdoorsTotal)} min.`)]);
   host.innerHTML=`<div class="habit-week-rows">${rows.map(([title,text])=>`<div><strong>${escapeHTML(title)}</strong><p>${escapeHTML(text)}</p></div>`).join('')}</div>`;
 }
 

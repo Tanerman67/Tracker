@@ -34,22 +34,9 @@ function todayMetricState(id,date=todayDateKey()){
   const goal=Number.isFinite(target)&&target>0?target:null;
   return {value,goal,status:!has?'missing':goal===null?'logged':value>=goal?'met':'progress'};
 }
-function todayHint(date=todayDateKey()){
-  // Stable priority. Prefer useful existing entries over reminders to enter data.
-  for(const id of ['steps','outdoors','protein','sleep']){
-    const s=todayMetricState(id,date);
-    if(s.status!=='progress')continue;
-    const unit=id==='steps'?trText('шагов','steps'):trUnit(tracker(id));
-    const value=todayNumber(s.value),goal=todayNumber(s.goal);
-    if(id==='steps'&&date===localDate())return {id,date,text:trText(`До твоей цели по шагам осталось ${todayNumber(s.goal-s.value)}.`,`You have ${todayNumber(s.goal-s.value)} steps left to reach your goal.`)};
-    const label={steps:trText('Шаги','Steps'),outdoors:trText('Улица','Outdoors'),protein:trText('Белок','Protein'),sleep:trText('Сон','Sleep')}[id];
-    return {id,date,text:trText(`${label}: записано ${value} ${unit}. Твоя цель — ${goal} ${unit}.`,`${label}: ${value} ${unit} logged. Your goal is ${goal} ${unit}.`)};
-  }
-  return null;
-}
 function openTodayMetric(id,date=todayDateKey()){
-  if(id==='sleep'||id==='outdoors'){openHabitEditor(id,date);return}
-  if(id==='weight'){openBody();openBodyCheckin(date);return}
+  if(id==='sleep'){openHabitEditor(id,date);return}
+  if(id==='weight'){openBody();return}
   if(id==='protein'){nutritionOpen(date);return}
   if(id==='alcohol'){
     openAlcohol();
@@ -59,38 +46,6 @@ function openTodayMetric(id,date=todayDateKey()){
   }
   if(id==='gym'){energyWorkoutOpen(date);return}
   openEntry(id,date);
-}
-function openTodayHero(){
-  const hint=todayHint();
-  if(hint)openTodayMetric(hint.id,hint.date);else openMotivationDetail();
-}
-function renderTodayHero(date){
-  // Keep the original module and acknowledgement history intact.
-  renderMotivationCard();
-  const hint=todayHint(date);
-  const card=document.getElementById('motivationCard');
-  const text=document.getElementById('motivationText');
-  const sub=document.getElementById('motivationSub');
-  const kicker=document.getElementById('motivationKicker');
-  const button=document.getElementById('todayHeroAction');
-  document.getElementById('todayMotivationLink').hidden=!hint;
-  if(hint){
-    card.classList.remove('milestone','medical','personal','generic');
-    text.textContent=hint.text;
-    kicker.textContent=trText('По записям за выбранный день','From the selected day’s records');
-    sub.textContent=trText('Нажми, чтобы открыть запись','Tap to open the entry');
-    document.getElementById('motivationIcon').textContent='↗';
-  }else if(date!==localDate()){
-    // Historical screens must not present today's personal observations.
-    const g=MOTIVATION_GENERIC[motivationHash(date)%MOTIVATION_GENERIC.length];
-    currentMotivation={kind:'generic',icon:'🌱',ru:g.ru,en:g.en,detailRu:g.ru,detailEn:g.en};
-    card.classList.remove('milestone','medical','personal');card.classList.add('generic');
-    text.textContent=motivationTitle(currentMotivation);kicker.textContent='';sub.textContent='My Rhythm';
-    document.getElementById('motivationIcon').textContent='🌱';
-  }
-  button.setAttribute('aria-label',hint?hint.text:trText('Открыть мотивацию','Open motivation'));
-  const link=document.getElementById('todayMotivationLink');
-  link.textContent=trText('Мотивация','Motivation');
 }
 function renderTodayPage(){
   const date=todayDateKey(),locale=data.language==='en'?'en-NZ':'ru-RU';
@@ -107,6 +62,5 @@ function renderTodayPage(){
     const card=dashboardCard(block.id,date);if(!card)continue;
     card.classList.add(block.size==='expanded'?'block-expanded':'block-compact');grid.append(card);
   }
-  dashboardWeekly(date);
-  renderTodayHero(date);
+  document.getElementById('todayCustomize').textContent=trText('Настроить блоки','Customize blocks');
 }
