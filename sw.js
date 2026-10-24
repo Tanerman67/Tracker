@@ -1,7 +1,7 @@
-const CACHE='my-rhythm-v7.5.1-today-consistency1';
+const CACHE='my-rhythm-v7.5.2-body-progress2';
 const ASSETS=[
   "./design-system.css?v=7401",
-  "./today-unified.css?v=1",
+  "./today-unified.css?v=2",
   "./ui.js?v=7401",
   "./settings.js?v=7501",
   "./smoke.js?v=1",
