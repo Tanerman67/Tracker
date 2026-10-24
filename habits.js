@@ -39,9 +39,10 @@ function openHabitEditor(mode,date=todayDateKey()){
   habitEditor={mode,date,initial:JSON.stringify(details),initialValue:data.logs?.[date]?.[mode],draft:structuredClone(details)};
   const modal=document.getElementById('habitModal');
   modal.classList.add('show');document.body.style.overflow='hidden';
-  renderHabitEditor();
+  renderHabitEditor();uiRememberForm('habitModal');
 }
-function closeHabitEditor(){
+function closeHabitEditor(force=false){
+  if(!force&&!uiConfirmDiscard('habitModal'))return false;
   document.getElementById('habitModal').classList.remove('show');
   document.body.style.overflow='';habitEditor=null;
 }
@@ -75,7 +76,7 @@ function previewHabitSleep(){
     ?trText('Для разницы нужны два разных времени.','Two different times are needed to show the difference.')
     :trText(`Между указанными часами: ${todayNumber(span/60)} ч. Это разница местного времени, без поправки на перевод часов.`,`Between these clock times: ${todayNumber(span/60)} h. This is local clock time, without clock-change adjustments.`);
 }
-function saveHabitEditor(){
+async function saveHabitEditor(){
   if(!habitEditor)return false;
   const {mode,date,draft,initial,initialValue}=habitEditor;
   if(JSON.stringify(habitDetails(date))!==initial||(mode!=='blocks'&&data.logs?.[date]?.[mode]!==initialValue)){
@@ -104,7 +105,7 @@ function saveHabitEditor(){
   if(value!==null)row[mode]=value;
   if(Object.keys(next).length)row.habitDetails=next;else delete row.habitDetails;
   if(!Object.keys(row).length)delete data.logs[date];
-  closeHabitEditor();save();return true;
+  if(await save()===false)return false;closeHabitEditor(true);return true;
 }
 function habitWeekData(keys){
   const durations=[],wakes=[],steps=[];let workoutDays=0,workoutLogged=0;
@@ -165,4 +166,10 @@ function renderSimpleProgress(){
     ?rows.slice(0,3).map(x=>`<p>${escapeHTML(x)}</p>`).join('')
     :`<p>${habitLabel('Пока недостаточно записей для выводов за неделю.','Not enough records for weekly observations yet.')}</p>`;
   renderHabitWeek();
+}
+
+async function deleteHabitEntry(){
+ if(!habitEditor||!confirm(trText('Удалить длительность сна? Остальные данные дня сохранятся.','Delete sleep duration? Other daily records will stay.')))return;
+ const row=data.logs?.[habitEditor.date];if(row){delete row.sleep;if(!Object.keys(row).length)delete data.logs[habitEditor.date]}
+ if(await save()===false)return false;closeHabitEditor(true);
 }

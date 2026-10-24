@@ -408,9 +408,9 @@ function nutritionRenderReuse(){
  for(const e of frequent){const b=document.createElement('button');b.className='secondary';b.textContent=e.name;b.onclick=()=>nutritionReuseRecord(e.id);host.append(b)}
  if(!host.childElementCount)host.textContent=nutritionLabel('Сохранённые продукты появятся здесь.','Saved foods will appear here.');
 }
-function nutritionCopyDay(){
+async function nutritionCopyDay(){
  try{const from=document.getElementById('nutritionCopyDate').value,to=nutritionDateKey();nutritionAssert(validDay(from)&&from<=localDate()&&from!==to,'Choose a different valid source day.');const rows=nutritionRows(from);nutritionAssert(rows.length>0,'No food records on that day.');nutritionAssert(confirm(nutritionLabel(`Добавить ${rows.length} записей за ${from} на ${to}?`,`Add ${rows.length} entries from ${from} to ${to}?`)),'');
- const entries=rows.map(e=>nutritionNormalizeRecord({...e,id:nutritionId(),date:to,createdAt:new Date().toISOString(),updatedAt:new Date().toISOString()}));nutritionStore().entries.push(...entries);persistData({renderAfter:true});nutritionRender();
+ const entries=rows.map(e=>nutritionNormalizeRecord({...e,id:nutritionId(),date:to,createdAt:new Date().toISOString(),updatedAt:new Date().toISOString()}));nutritionStore().entries.push(...entries);if(await persistData({renderAfter:true})===false)return;nutritionRender();
  }catch(e){nutritionMessage(e.message)}}
 function localizeExplicit(root=document){root.querySelectorAll('[data-i18n-ru]').forEach(el=>el.textContent=data.language==='en'?el.dataset.i18nEn:el.dataset.i18nRu)}
 function nutritionLocalize(){

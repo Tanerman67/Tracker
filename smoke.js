@@ -6,10 +6,11 @@ function openSmoke(){
  smokeViewMode='year';
  document.getElementById('smokeModal')?.classList.add('show');
  document.body.style.overflow='hidden';
- renderSmokeCalendar();
+ renderSmokeCalendar();uiRememberForm('smokeModal');
 }
 
 function closeSmoke(){
+ if(!uiConfirmDiscard('smokeModal'))return false;
  document.getElementById('smokeModal')?.classList.remove('show');
  document.body.style.overflow='';
 }
@@ -44,11 +45,10 @@ async function saveSmokeDate(){
  data.smokeDate=next;
  try{
   const ok=await persistData({renderAfter:true,makeSnapshot:true});
-  if(ok===false){data.smokeDate=previous;status.textContent=trText('Не удалось сохранить дату.','Could not save the date.');return}
-  renderSmokeCalendar();
+  if(ok===false){status.textContent=trText('Не удалось сохранить дату.','Could not save the date.');return}
+  renderSmokeCalendar();uiRememberForm('smokeModal');
   document.getElementById('smokeSaveStatus').textContent=trText('Дата сохранена.','Date saved.');
  }catch(e){
-  data.smokeDate=previous;
   status.textContent=trText('Не удалось сохранить дату.','Could not save the date.');
  }
 }
@@ -68,6 +68,7 @@ function smokeMonthHTML(year,month){
 
 function renderSmokeCalendar(){
  const modal=document.getElementById('smokeModal');if(!modal)return;
+ const draft=uiFormDirty('smokeModal')?document.getElementById('smokeQuitDate').value:null;
  const date=validDay(data.smokeDate)&&data.smokeDate<=localDate()?data.smokeDate:'';
  const days=date?Math.max(0,weeklyDiffDays(date,localDate())):null;
  const locale=data.language==='en'?'en-NZ':'ru-RU';
@@ -91,7 +92,7 @@ function renderSmokeCalendar(){
  document.getElementById('smokeCurrentStreak').textContent=days??'—';
  document.getElementById('smokeQuitDisplay').textContent=formatted;
  document.getElementById('smokeYearLabel').textContent=smokeViewYear;
- const input=document.getElementById('smokeQuitDate');input.value=date;input.max=localDate();
+ const input=document.getElementById('smokeQuitDate');input.value=draft??date;input.max=localDate();
  document.getElementById('smokeSaveStatus').textContent='';
  document.getElementById('smokeMonthModeBtn').classList.toggle('active',smokeViewMode==='month');
  document.getElementById('smokeYearModeBtn').classList.toggle('active',smokeViewMode==='year');

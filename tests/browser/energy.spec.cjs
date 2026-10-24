@@ -32,7 +32,7 @@ test('legacy workouts keep their original semantics and remain editable',async({
  await page.locator('#energyKcal').fill('400');await page.locator('#energySaveWorkout').click();await settle(page);expect(await page.evaluate(()=>data.energyBalance.workouts[0])).toEqual({...before,kcal:400});expect(await page.evaluate(()=>energyDay().exercise.value)).toBeCloseTo(400-1597.5/24);
 });
 test('Progress uses existing range and metric navigation without a duplicate weight graph',async({page})=>{
- await ready(page);await seed(page);await page.locator('#tabProgress').click();await page.evaluate(()=>setTrendRange('all'));await page.evaluate(()=>setTrendMetric('energy'));await expect(page.locator('#trendChartHost')).toContainText('Daily expenditure');await expect(page.locator('#trendChartHost')).toContainText('Deficit / surplus');await expect(page.locator('#trendChartHost')).not.toContainText('Weight: 7-day average');await expect(page.locator('#trendChartHost svg')).toHaveCount(2);await page.locator('#trendRange30Btn').click();expect(await page.evaluate(()=>trendRangeDays)).toBe(30);await page.evaluate(()=>setTrendMetric('weight'));await expect(page.locator('#trendTitle')).toContainText('Weight');
+ await ready(page);await seed(page);await page.locator('#tabProgress').click();await page.evaluate(()=>setTrendRange('all'));await page.evaluate(()=>setTrendMetric('energy'));await expect(page.locator('#trendChartHost')).toContainText('Daily expenditure');await expect(page.locator('#trendChartHost')).toContainText('Deficit / surplus');await expect(page.locator('#trendChartHost')).not.toContainText('Weight: 7-day average');await expect(page.locator('#trendChartHost svg')).toHaveCount(2);await page.locator('#trendRange30Btn').click();expect(await page.evaluate(()=>trendRangeDays)).toBe(30);await page.evaluate(()=>setTrendMetric('weight'));await expect(page.locator('#bodyModal')).toBeVisible();await expect(page.locator('#bodyChartTitle')).toContainText('Weight');await expect(page.locator('.trend-card')).toBeHidden();
 });
 test('missing steps and food edits recalculate across tabs without changing historical records',async({page,context})=>{
  await ready(page);await seed(page);await addCard(page);await page.evaluate(async()=>{delete data.logs['2024-03-01'].steps;await save()});const before=await page.evaluate(()=>structuredClone(data.logs));await page.evaluate(()=>renderToday());const card=page.locator('[data-metric="energy"]');await card.locator('summary').click();await expect(card).toContainText('Steps not logged; usual activity used');expect(await page.evaluate(()=>data.logs)).toEqual(before);
@@ -83,7 +83,12 @@ test('Energy Balance stays inside its Progress card without overlapping the week
    expect(bounds.card.bottom).toBeLessThanOrEqual(bounds.review.top);
   }
   await page.evaluate(()=>setTrendMetric('weight'));
-  await expect(page.locator('#trendChartHost .energy-view')).toHaveCount(0);
-  expect(await page.locator('#trendChartHost').evaluate(el=>el.getBoundingClientRect().height)).toBeGreaterThan(190);
+  await expect(page.locator('#bodyModal')).toBeVisible();
+  await expect(page.locator('#bodyChartTitle')).toContainText(/Weight|Вес/);
+  await expect(page.locator('.trend-card')).toBeHidden();
+  await page.evaluate(()=>setTrendMetric('energy'));
+  await expect(page.locator('#bodyModal')).toBeHidden();
+  await expect(page.locator('.trend-card')).toBeVisible();
+  await expect(page.locator('#trendChartHost .energy-view')).toHaveCount(1);
  }
 });

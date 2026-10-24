@@ -1,6 +1,6 @@
 let data=loadData();
 resetStorageBaseline();
-let activeTracker=null,trendRangeDays=7,trendMetricId='weight',calendarDate=new Date();
+let activeTracker=null,trendRangeDays=7,trendMetricId='steps',calendarDate=new Date();
 
 const englishTypes=[
 ['english_chatgpt','🤖','ChatGPT'],
@@ -361,9 +361,9 @@ function show(id,btn){
  if(changed)window.scrollTo?.(0,sectionScroll[id]||0);
  enhanceDateInputs();
 }
-function openEntry(id,dateKey=localDate()){if(id==='protein')return nutritionOpen(dateKey);activeTracker=tracker(id);if(!activeTracker){alert(trText('Трекер не найден.','Tracker not found.'));return}activeTracker={...activeTracker,entryDate:dateKey};const unit=trUnit(activeTracker);document.getElementById('entryTitle').textContent=trTrackerName(activeTracker);document.getElementById('entryLabel').textContent=trText('Значение','Value')+(unit?' ('+unit+')':'')+' · '+dateKey;document.getElementById('entryValue').value=(id==='protein'?data.logs?.[dateKey]?.protein:val(id,dateKey))??'';document.getElementById('entryModal').classList.add('show');setTimeout(()=>document.getElementById('entryValue').focus(),80)}
-function openEnglish(id){const type=englishTypes.find(x=>x[0]===id);if(!type)return;activeTracker={id,name:type[2],icon:type[1],type:'number',unit:'мин',category:'english'};document.getElementById('entryTitle').textContent=type[2];document.getElementById('entryLabel').textContent=trText('Всего минут сегодня','Total minutes today');document.getElementById('entryValue').value=val(id)??'';document.getElementById('entryModal').classList.add('show');setTimeout(()=>document.getElementById('entryValue').focus(),80)}
-function saveEntry(){
+function openEntry(id,dateKey=localDate()){if(id==='protein')return nutritionOpen(dateKey);activeTracker=tracker(id);if(!activeTracker){alert(trText('Трекер не найден.','Tracker not found.'));return}activeTracker={...activeTracker,entryDate:dateKey};const unit=trUnit(activeTracker);document.getElementById('entryTitle').textContent=trTrackerName(activeTracker);document.getElementById('entryLabel').textContent=trText('Значение','Value')+(unit?' ('+unit+')':'')+' · '+dateKey;document.getElementById('entryValue').value=(id==='protein'?data.logs?.[dateKey]?.protein:val(id,dateKey))??'';document.getElementById('entryModal').classList.add('show');uiRememberForm('entryModal');setTimeout(()=>document.getElementById('entryValue').focus(),80)}
+function openEnglish(id){const type=englishTypes.find(x=>x[0]===id);if(!type)return;activeTracker={id,name:type[2],icon:type[1],type:'number',unit:'мин',category:'english'};document.getElementById('entryTitle').textContent=type[2];document.getElementById('entryLabel').textContent=trText('Всего минут сегодня','Total minutes today');document.getElementById('entryValue').value=val(id)??'';document.getElementById('entryModal').classList.add('show');uiRememberForm('entryModal');setTimeout(()=>document.getElementById('entryValue').focus(),80)}
+async function saveEntry(){
  if(!activeTracker||activeTracker.id==='protein')return;
  const input=document.getElementById('entryValue');
  const raw=input?.value?.trim()||'';
@@ -377,9 +377,16 @@ function saveEntry(){
    const total=englishTypes.reduce((s,[id])=>s+(Number(val(id))||0),0);
    ensureDay().english_general=total;
  }
- closeModal('entryModal');save()
+ if(await save()===false)return false;
+ closeModal('entryModal',true)
 }
-function closeModal(id){document.getElementById(id).classList.remove('show')}
+function closeModal(id,force=false){if(!force&&!uiConfirmDiscard(id))return false;document.getElementById(id).classList.remove('show')}
+async function deleteEntry(){
+ if(!activeTracker||!confirm(trText('Удалить эту запись?','Delete this entry?')))return;
+ const date=activeTracker.entryDate||localDate(),row=data.logs?.[date];
+ if(row){delete row[activeTracker.id];if(!Object.keys(row).length)delete data.logs[date]}
+ if(await save()===false)return false;closeModal('entryModal',true);
+}
 function saveSettings(){return saveUnifiedSettings()}
 async function resetAll(){
   const first=confirm(
@@ -468,12 +475,12 @@ function setAlcoholMode(mode){alcoholViewMode=mode==='month'?'month':'year';rend
 function changeAlcoholYear(delta){alcoholViewYear+=delta;renderAlcoholCalendar()}
 function changeAlcoholMonth(delta){alcoholViewMonth+=delta;if(alcoholViewMonth<0){alcoholViewMonth=11;alcoholViewYear--}if(alcoholViewMonth>11){alcoholViewMonth=0;alcoholViewYear++}renderAlcoholCalendar()}
 
-function toggleAlcoholDay(dateKey){
+async function toggleAlcoholDay(dateKey){
   if(!alcoholIsTrackedPast(dateKey))return;
   const hist=alcoholHistory();
   if(hist[dateKey])delete hist[dateKey];else hist[dateKey]=true;
   syncAlcoholDerivedDate();
-  persistData({renderAfter:true,makeSnapshot:true});
+  if(await persistData({renderAfter:true,makeSnapshot:true})===false)return false;
   renderAlcoholCalendar();
 }
 function alcoholDayClass(dateKey){
@@ -843,8 +850,11 @@ function setTrendRange(n){
   const allowed=[7,30,90,365,'all'];
   if(!allowed.includes(n))n=7;
   trendSetRange(n);
+  if(!document.getElementById('bodyModal')?.hidden)setBodyRange(n);
 }
 function setTrendMetric(id){
+  if(id==='weight'||id==='body'){bodySelectedMetric='weight';openBody();return}
+  closeBody();
   if(!TREND_METRICS.some(x=>x.id===id))return;
   trendMetricId=id;
   trendSelectedPoint=null;
@@ -1215,7 +1225,7 @@ function renderTrends(){
 
   const tabs=document.getElementById('trendMetricTabs');
   if(tabs){
-    tabs.innerHTML=TREND_METRICS.map(m=>`
+    tabs.innerHTML=`<button class="trend-metric-tab" onclick="openBody()">${uiIcon('weight')} Body</button>`+TREND_METRICS.filter(m=>m.id!=='weight').map(m=>`
       <button class="trend-metric-tab ${trendMetricId===m.id?'active':''}" onclick="setTrendMetric('${m.id}')">
         ${typeof uiIcon==='function'?uiIcon(m.id):m.icon} ${(data.language||'ru')==='en'?m.en:m.ru}
       </button>
@@ -1265,7 +1275,18 @@ function renderCalendar(){
  const y=calendarDate.getFullYear(),m=calendarDate.getMonth();
  document.getElementById('calendarTitle').textContent=CALENDAR_MONTHS[calendarLanguage()][m]+' '+y;
  document.getElementById('progressCalendarControls').innerHTML=calendarControls('progress',y,m);
- document.getElementById('calendarGrid').innerHTML=calendarMonthHTML(y,m,{context:'progress',onDay:'calendarOpenHistoryDay',marker:d=>{const filled=Object.keys(data.logs[d]||{}).filter(k=>k!=='habitDetails'&&weeklyHasOwn(data.logs[d],k)).length+(nutritionRows(d).length?1:0);return {className:filled>=5?'good':filled>=2?'mid':'',dot:filled>0,label:filled?trText('Есть записи','Recorded day'):trText('Нет записей','No records')}}});
+ document.getElementById('calendarGrid').innerHTML=calendarMonthHTML(y,m,{context:'progress',onDay:'calendarOpenHistoryDay',marker:d=>{return progressDayMarker(d)}});
+}
+function progressDayMarker(date){
+ const row=data.logs?.[date]||{};
+ const recorded=Object.values(row).some(v=>v!==null&&v!==undefined&&v!=='')||nutritionRows(date).length>0||Object.values(data.bodyMeasurements?.[date]||{}).some(v=>v!==null&&v!==undefined&&v!=='')||data.cycle.periods.some(p=>p.start<=date&&(p.end||p.start)>=date)||!!data.alcoholHistory?.[date];
+ // Only daily numeric goals are comparable here; weekly goals and unknown fields are excluded.
+ const states=['steps','sleep','outdoors'].flatMap(id=>{
+  const rule=goalRule(id);if(rule.type==='weekly'||rule.type==='observe')return [];
+  const state=goalState(row[id],rule).status;return ['met','within','progress','over'].includes(state)?[state]:[];
+ });
+ const missed=states.some(s=>s==='progress'||s==='over'),met=states.length>0&&!missed;
+ return {className:missed?'mid':met?'good':recorded?'recorded':'',dot:!!recorded,label:missed?trText('Есть записи; не все записанные дневные цели выполнены','Recorded; some logged daily goals not met'):met?trText('Записанные дневные цели выполнены; пропуски не оценены','Logged daily goals met; missing values not assessed'):recorded?trText('Есть записи; цели не оценены','Recorded; goals not assessed'):trText('Нет записей','No records')};
 }
 function calendarOpenHistoryDay(key){if(!validDay(key)||key>localDate())return;setTodayDate(key);show('today')}
 
@@ -1359,6 +1380,8 @@ setInterval(checkAppDayRollover,60000);
 
 addEventListener('keydown',e=>{
   if(e.key!=='Escape')return;
+ if(document.getElementById('entryModal')?.classList.contains('show'))return closeModal('entryModal');
+ if(document.getElementById('smokeModal')?.classList.contains('show'))return closeSmoke();
  if(document.getElementById('nutritionForm')?.classList.contains('show'))return nutritionCancelForm();
  if(document.getElementById('nutritionImportPreview')?.classList.contains('show'))return nutritionCancelImport();
  if(document.getElementById('moduleModal')?.classList.contains('show'))return closeModule();

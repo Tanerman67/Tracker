@@ -307,3 +307,12 @@ test('failed food persistence leaves editor open without a success message',asyn
 test('repeated Save taps cannot create two foods while persistence is pending',async()=>{
  const r=runtime();r.run('nutritionDate="2024-01-02";nutritionOpenForm();var finish;persistData=()=>new Promise(resolve=>finish=resolve)');r.nodes.get('nutritionFoodName').value='Fictional single entry';const saving=r.run('nutritionSaveFood()');await r.run('nutritionSaveFood()');assert.equal(r.run('data.nutrition.entries.length'),1);r.run('finish(true)');await saving;
 });
+
+test('progress calendar distinguishes missing, zero, observations and actual goal states',()=>{
+ const r=runtime();r.run(`data.logs={'2024-01-01':{steps:0},'2024-01-02':{steps:10000},'2024-01-03':{weight:80},'2024-01-04':{sleep:null}};data.stepsGoal=8000;data.goalRules.steps={type:'min',target:8000}`);
+ assert.equal(r.run(`progressDayMarker('2024-01-01').className`),'mid');
+ assert.equal(r.run(`progressDayMarker('2024-01-02').className`),'good');
+ assert.equal(r.run(`progressDayMarker('2024-01-03').className`),'recorded');
+ assert.equal(r.run(`progressDayMarker('2024-01-04').dot`),false);
+ assert.equal(r.run(`progressDayMarker('2024-01-05').dot`),false);
+});

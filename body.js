@@ -99,7 +99,10 @@ function openBody(){
   const panel=document.getElementById('bodyModal');
   if(!panel)return;
   bodyProgressReturnScroll=window.scrollY||0;
+  bodyRangeDays=trendRangeDays;
   panel.hidden=false;
+  document.querySelector('.trend-card').hidden=true;
+  document.querySelector('.body-progress-summary').hidden=true;
   renderBodyProgressSummary();
   renderBody();
   if(typeof uiRefresh==='function')uiRefresh();
@@ -107,7 +110,10 @@ function openBody(){
 }
 function closeBody(){
   const panel=document.getElementById('bodyModal');
-  if(panel)panel.hidden=true;
+  if(!panel||panel.hidden)return;
+  panel.hidden=true;
+  const trend=document.querySelector('.trend-card');if(trend)trend.hidden=false;
+  const summary=document.querySelector('.body-progress-summary');if(summary)summary.hidden=false;
   renderBodyProgressSummary();
   window.scrollTo?.(0,bodyProgressReturnScroll);
 }
@@ -122,7 +128,7 @@ function setBodyMetric(id){
 }
 function setBodyRange(range){
   if(![7,30,90,365,'all'].includes(range))range='all';
-  bodyRangeDays=range;
+  bodyRangeDays=range;trendRangeDays=range;renderTrends();
   bodySelectedPoint=null;
   renderBody();if(typeof uiRefresh==='function')uiRefresh();
 }
