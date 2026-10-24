@@ -20,7 +20,7 @@ test('fresh app, four destinations, English locale and no seeded personal record
 });
 
 test('dashboard add, move, expand, hide and refresh preserve records',async({page})=>{
- await ready(page);await addModule(page,'+ ◌ Cycle');await expect(page.locator('[data-metric="cycle"]')).toBeVisible();
+ await ready(page);await addModule(page,'+ Cycle');await expect(page.locator('[data-metric="cycle"]')).toBeVisible();
  await page.locator('#todayCustomize').click();const row=page.locator('.layout-row').filter({hasText:'Cycle'});await row.getByRole('button',{name:'Move up',exact:true}).click();await settle(page);await row.getByRole('button',{name:'Expand',exact:true}).click();await settle(page);await page.locator('#moduleBack').click();await page.reload();await expect(page.locator('[data-metric="cycle"]')).toHaveClass(/block-expanded/);
  await page.locator('#todayCustomize').click();await page.locator('.layout-row').filter({hasText:'Cycle'}).getByRole('button',{name:'Hide',exact:true}).click();await settle(page);await page.locator('#moduleBack').click();await expect(page.locator('[data-metric="cycle"]')).toHaveCount(0);
 });
@@ -35,7 +35,7 @@ test('nutrition save, edit, partial rings, reuse, scale and safe delete',async({
 });
 
 test('cycle create, edit, delete, validation and escaped user text',async({page})=>{
- await ready(page);await addModule(page,'+ ◌ Cycle');await page.locator('[data-metric="cycle"]').click();await page.locator('#cycleStart').fill(DAY);await page.locator('#cycleEnd').fill('2024-01-05');await page.locator('#cycleSymptoms').fill('<img src=x onerror=alert(1)>');await page.locator('[onclick="saveCycle()"]').click();await settle(page);
+ await ready(page);await addModule(page,'+ Cycle');await page.locator('[data-metric="cycle"]').click();await page.locator('#cycleStart').fill(DAY);await page.locator('#cycleEnd').fill('2024-01-05');await page.locator('#cycleSymptoms').fill('<img src=x onerror=alert(1)>');await page.locator('[onclick="saveCycle()"]').click();await settle(page);
  await expect(page.locator('.module-history')).toHaveCount(1);await expect(page.locator('#moduleContent img')).toHaveCount(0);await page.locator('.module-history').click();await page.locator('#cycleEnd').fill('2024-01-06');await page.locator('[onclick="saveCycle()"]').click();await settle(page);await expect(page.locator('.module-history')).toContainText('2024-01-06');
  await page.locator('.module-history').click();page.once('dialog',d=>d.accept());await page.locator('[onclick="deleteCycle()"]').click();await settle(page);await expect(page.locator('.module-history')).toHaveCount(0);
  await page.locator('#cycleStart').fill('2024-01-05');await page.locator('#cycleEnd').fill('2024-01-01');await page.locator('[onclick="saveCycle()"]').click();await expect(page.locator('#moduleError')).toContainText('Check dates');

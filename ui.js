@@ -19,12 +19,30 @@ function uiRefresh(){
  for(const el of document.querySelectorAll('.close,#habitClose')){el.setAttribute('aria-label',trText('Закрыть','Close'));if(!el.querySelector('svg'))el.innerHTML=uiIcon('close')}
 }
 const uiFormSnapshots=new Map();
-function uiFormValue(id){const form=document.getElementById(id);return form?JSON.stringify([...form.querySelectorAll('input,textarea,select')].filter(x=>x.type!=='file').map(x=>[x.id,x.value,x.checked])):''}
+function uiFormValue(id){const form=document.getElementById(id);return form?JSON.stringify([...form.querySelectorAll('input,textarea,select')].filter(x=>x.type!=='file'&&!x.closest?.('.shared-calendar-controls')).map(x=>[x.id,x.value,x.checked])):''}
 function uiRememberForm(id){uiFormSnapshots.set(id,uiFormValue(id))}
 function uiFormDirty(id){return document.getElementById(id)?.classList.contains('show')&&uiFormSnapshots.has(id)&&uiFormSnapshots.get(id)!==uiFormValue(id)}
-function uiConfirmDiscard(id){return !uiFormDirty(id)||confirm(trText('Закрыть без сохранения изменений?','Discard unsaved changes?'))}
-addEventListener('beforeunload',e=>{if(['nutritionForm','bodyCheckinModal'].some(uiFormDirty)){e.preventDefault();e.returnValue=''}});
+function uiConfirmDiscard(id){if(uiSavingForms.has(id))return false;return !uiFormDirty(id)||confirm(trText('Закрыть без сохранения изменений?','Discard unsaved changes?'))}
+addEventListener('beforeunload',e=>{if([...uiFormSnapshots.keys()].some(uiFormDirty)){e.preventDefault();e.returnValue=''}});
 // VisualViewport follows the usable area above the iPhone software keyboard.
 function uiViewport(){if(!globalThis.visualViewport)return;document.documentElement.style.setProperty('--viewport-height',visualViewport.height+'px');document.documentElement.style.setProperty('--viewport-top',visualViewport.offsetTop+'px')}
 if(globalThis.visualViewport){visualViewport.addEventListener('resize',uiViewport);visualViewport.addEventListener('scroll',uiViewport);uiViewport()}
 addEventListener('focusin',e=>{if(e.target.matches?.('input,textarea,select')&&e.target.closest('.nutrition-form,.body-checkin-modal'))setTimeout(()=>e.target.scrollIntoView({block:'nearest'}),250)});
+
+// One pending action per editor. Inputs remain available on failed saves.
+const uiSavingForms=new Set();
+function uiGuardEditor(name,id){
+ const action=window[name];
+ window[name]=async function(...args){
+  if(uiSavingForms.has(id))return false;
+  uiSavingForms.add(id);
+  const host=document.getElementById(id);
+  host?.setAttribute('aria-busy','true');
+  try{return await action(...args)}
+  catch(error){alert(trText('Не удалось сохранить. Введённые значения остаются в форме. ','Could not save. Your entries remain in the form. ')+error.message);return false}
+  finally{uiSavingForms.delete(id);host?.removeAttribute?.('aria-busy')}
+ };
+}
+addEventListener('DOMContentLoaded',()=>{
+ for(const [id,names] of Object.entries({entryModal:['saveEntry','deleteEntry'],habitModal:['saveHabitEditor','deleteHabitEntry'],bodyCheckinModal:['saveBodyCheckin','deleteBodyCheckin'],moduleModal:['saveCycle','deleteCycle','energySaveSimpleWorkout','energySaveWorkout','energyDeleteWorkout','energyToggleWorkoutDay'],alcoholModal:['toggleAlcoholDay'],smokeModal:['saveSmokeDate'],nutritionForm:['nutritionSaveFood','nutritionDeleteFood']}))for(const name of names)uiGuardEditor(name,id);
+});

@@ -32,7 +32,7 @@ function calendarNavigate(kind,year,month){
  const d=calendarDateParts(year,month);if(d.getFullYear()<1||d.getFullYear()>9999)return;
  if(kind==='picker'&&datePickerState){if(datePickerState.year===d.getFullYear()&&datePickerState.month===d.getMonth())return;datePickerState.year=d.getFullYear();datePickerState.month=d.getMonth();calendarRenderPicker()}
  if(kind==='progress'){calendarDate=d;renderCalendar()}
- if(kind==='cycle'){cycleMonth=calendarKey(d);renderCycle()}
+ if(kind==='cycle'){if(!uiConfirmDiscard('moduleModal'))return;cycleMonth=calendarKey(d);renderCycle()}
  if(kind==='alcohol'){alcoholViewYear=d.getFullYear();alcoholViewMonth=d.getMonth();renderAlcoholCalendar()}
 }
 function enhanceDateInputs(root=document){

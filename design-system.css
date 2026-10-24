@@ -49,7 +49,7 @@ summary{min-height:44px;cursor:pointer;align-content:center;font-size:14px;font-
 #today .today-metric-status{font-size:13px;margin-top:8px}
 #today [data-metric="nutrition"],#today [data-metric="energy"]{border-color:var(--green)}
 #todayCustomize{background:transparent;border:0;color:var(--muted);font-size:14px;min-height:44px;padding:8px 0}
-.trend-range-tabs,.body-range-tabs,.trend-metric-tabs,.body-metric-tabs{display:flex;gap:8px;overflow-x:auto;scroll-padding:4px;padding:4px 2px 8px;scrollbar-width:thin}
+.trend-range-tabs,.body-range-tabs,.trend-metric-tabs,.body-metric-tabs{display:flex;flex-wrap:wrap;gap:8px;overflow-x:auto;scroll-padding:4px;padding:4px 2px 8px;scrollbar-width:thin}
 .trend-range-tabs button,.body-range-tabs button,.trend-metric-tab,.body-metric-tab{min-height:44px;font-size:14px;flex-shrink:0;padding:10px 12px;border-radius:12px;background:var(--card);border:1px solid var(--line);color:var(--muted);font-weight:600;box-shadow:none}
 .trend-metric-tab.active,.body-metric-tab.active,.body-range-tabs button.active{background:var(--soft);color:var(--green);border-color:var(--green);box-shadow:none}
 .trend-summary-head{align-items:flex-start;gap:12px;flex-wrap:wrap}.trend-primary{font-size:30px;font-weight:650;color:var(--text)}
@@ -117,3 +117,11 @@ summary{min-height:44px;cursor:pointer;align-content:center;font-size:14px;font-
 @media(max-width:360px){#unifiedSettings .energy-form-grid,#unifiedSettings .nutrition-goals{grid-template-columns:minmax(0,1fr)}}
 
 #settingsProfile .field:has(#energyRoutine),#settingsProfile .field:has(#energyBirth){grid-column:1/-1}
+
+/* Embedded Body content must shrink inside the Progress card at 320px. */
+.body-progress-panel,.body-page,.body-page>*,.body-chart-head>*,.body-history-row>*{min-width:0;max-width:100%}
+.body-chart-head,.body-history-head,.body-section-head{flex-wrap:wrap;gap:8px}
+.body-chart-change,.body-history-values,.body-history-delta{white-space:normal;overflow-wrap:anywhere}
+.body-metric-tabs,.body-range-tabs{flex-wrap:wrap;overflow:visible}
+.body-chart-host svg{display:block;width:100%;max-width:100%}
+[aria-busy="true"] button{pointer-events:none;opacity:.65}

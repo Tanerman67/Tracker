@@ -100,6 +100,8 @@ function openBody(){
   if(!panel)return;
   bodyProgressReturnScroll=window.scrollY||0;
   panel.hidden=false;
+  document.querySelector('.trend-card').hidden=true;
+  document.querySelector('.body-progress-summary').hidden=true;
   renderBodyProgressSummary();
   renderBody();
   if(typeof uiRefresh==='function')uiRefresh();
@@ -108,6 +110,8 @@ function openBody(){
 function closeBody(){
   const panel=document.getElementById('bodyModal');
   if(panel)panel.hidden=true;
+  const trend=document.querySelector('.trend-card');if(trend)trend.hidden=false;
+  const summary=document.querySelector('.body-progress-summary');if(summary)summary.hidden=false;
   renderBodyProgressSummary();
   window.scrollTo?.(0,bodyProgressReturnScroll);
 }

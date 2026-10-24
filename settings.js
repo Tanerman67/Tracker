@@ -9,14 +9,8 @@ function renderUnifiedSettings(){
  if(settingsSaving)return;
  const dirty=settingsDirty(),draft=dirty?JSON.parse(settingsValues()):null,originalSnapshot=settingsSnapshot,focused=document.activeElement?.id;
  const profile=document.getElementById('settingsProfile');if(!profile)return;
- profile.innerHTML='<h3 tabindex="-1">'+trText('Личные параметры','Personal parameters')+'</h3>'+energyProfileHTML();
- const advanced=document.getElementById('settingsEnergyAdvanced');advanced.replaceChildren();
- const details=profile.querySelector('details');advanced.append(...details.children);advanced.querySelector('summary')?.remove();details.remove();
- advanced.append(document.getElementById('energyBaselineSteps').closest('.field'));
- const personalGrid=profile.querySelector('.energy-form-grid');for(const id of ['energyBirth','energyVariant','energyHeight','energyRoutine'])personalGrid.append(document.getElementById(id).closest('.field'));
- document.getElementById('energyMifflinFields').hidden=false;
- // Choosing a routine must not silently change an existing step allowance.
- document.getElementById('energyRoutine').setAttribute('onchange','settingsRoutineChanged(this.value)');
+ profile.innerHTML='<h3 tabindex="-1">'+trText('Личные параметры','Personal parameters')+'</h3>'+settingsProfileHTML();
+ document.getElementById('settingsEnergyAdvanced').innerHTML=settingsEnergyAdvancedHTML();
  const weight=bodyLatest('weight');const note=document.createElement('p');note.textContent=trText('Вес: ','Weight: ')+(weight?bodyFormatNumber(weight.value)+' '+bodyMetricUnit('weight'):trText('Нет данных. Добавь замер в Body.','No data. Add a Body check-in.'));profile.append(note);
  const stored=data.energyBalance?.profile||{},missing=[];
  if(stored.routine&&stored.baselineIncludedSteps==null)missing.push(trText('обычные шаги в базе','included usual steps'));
@@ -68,3 +62,20 @@ async function saveUnifiedSettings(){
 }
 
 function settingsRoutineChanged(key){const el=document.getElementById('energyBaselineSteps');if(el.value===''&&MyRhythmEnergy.ROUTINES[key])el.value=MyRhythmEnergy.ROUTINES[key].steps}
+
+function settingsProfileHTML(){
+ const p=data.energyBalance?.profile||{};
+ return `<p>${trText('Настрой один раз. Вес берётся из Body Check-in.','Set up once. Weight comes from Body Check-in.')}</p><div class="energy-form-grid" id="energyMifflinFields">
+ ${moduleInput('energyHeight',trText('Рост, см','Height, cm'),p.heightCm??'','number','min="100" max="250" step="any" inputmode="decimal"')}
+ ${moduleInput('energyBirth',trText('Дата рождения','Date of birth'),p.birthDate||'','date',`max="${localDate()}"`)}${energySelect('energyVariant',trText('Пол для расчёта','Sex used for calculation'),[['',trText('Не выбран','Not selected')],['plus5',trText('Мужской','Male')],['minus161',trText('Женский','Female')]],p.variant||'')}
+ ${energySelect('energyRoutine',trText('Обычная дневная активность','Usual daily activity'),[['',trText('Выбери обычную активность','Choose your usual activity')],...Object.entries(ENERGY_ROUTINE_LABELS).map(([k,v])=>[k,trText(...v)])],p.routine||'','onchange="settingsRoutineChanged(this.value)"')}
+</div>`;
+}
+function settingsEnergyAdvancedHTML(){
+ const p=data.energyBalance?.profile||{};
+ return `<div class="energy-form-grid">${energySelect('energyMode',trText('Источник RMR','RMR source'),[['mifflin',trText('Формула Миффлина - Сан Жеора','Mifflin-St Jeor equation')],['manual',trText('Собственный известный RMR','My known RMR')]],p.mode||'mifflin','onchange="energyProfileMode()"')}
+ <div id="energyManualFields">${moduleInput('energyManualRmr',trText('Собственный RMR, ккал/день','My RMR, kcal/day'),p.manualRmr??'','number','min="100" max="10000" step="any" inputmode="decimal"')}</div>
+ </div><p>${trText('Обычный день включает покой, бытовую активность, обычные шаги и пищеварение. Дополнительно учитываются шаги сверх выбранной нормы. Изменение профиля пересчитывает историю.','Usual day includes rest, routine movement, habitual steps and digestion. Only steps above the allowance are added. Profile changes recalculate history.')}</p> ${moduleInput('energyBaselineSteps',trText('Обычные шаги, уже включённые в базу','Usual steps already included in base energy'),p.baselineIncludedSteps??'','number','min="0" max="100000" step="1" inputmode="numeric"')}
+`;
+}
+function energyProfileMode(){const manual=document.getElementById('energyMode').value==='manual';document.getElementById('energyManualFields').hidden=!manual}
