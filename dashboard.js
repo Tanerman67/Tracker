@@ -19,7 +19,7 @@ function dashboardOpen(id,date){
  if(id==='energy')return energyOpen(date);
  if(id==='nutrition'||id==='protein')return nutritionOpen(date);
  if(id==='cycle')return openModule('cycle');
- if(id==='smoke'){show('settings',document.getElementById('tabSettings'));document.getElementById('smokeDate').focus();return}
+ if(id==='smoke')return openSmoke();
  if(id==='alcohol'&&!alcoholTrackingStart()){show('settings',document.getElementById('tabSettings'));document.getElementById('alcoholDate').focus();return}
  if(tracker(id)?.type==='boolean'&&id!=='gym'){ensureDay(date)[id]=data.logs?.[date]?.[id]!==true;save();return}
  return openTodayMetric(id,date);
