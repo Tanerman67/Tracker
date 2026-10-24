@@ -361,8 +361,8 @@ function show(id,btn){
  if(changed)window.scrollTo?.(0,sectionScroll[id]||0);
  enhanceDateInputs();
 }
-function openEntry(id,dateKey=localDate()){if(id==='protein')return nutritionOpen(dateKey);activeTracker=tracker(id);if(!activeTracker){alert(trText('Трекер не найден.','Tracker not found.'));return}activeTracker={...activeTracker,entryDate:dateKey};const unit=trUnit(activeTracker);document.getElementById('entryTitle').textContent=activeTracker.icon+' '+trTrackerName(activeTracker);document.getElementById('entryLabel').textContent=trText('Значение','Value')+(unit?' ('+unit+')':'')+' · '+dateKey;document.getElementById('entryValue').value=(id==='protein'?data.logs?.[dateKey]?.protein:val(id,dateKey))??'';document.getElementById('entryModal').classList.add('show');setTimeout(()=>document.getElementById('entryValue').focus(),80)}
-function openEnglish(id){const type=englishTypes.find(x=>x[0]===id);if(!type)return;activeTracker={id,name:type[2],icon:type[1],type:'number',unit:'мин',category:'english'};document.getElementById('entryTitle').textContent=type[1]+' '+type[2];document.getElementById('entryLabel').textContent=trText('Всего минут сегодня','Total minutes today');document.getElementById('entryValue').value=val(id)??'';document.getElementById('entryModal').classList.add('show');setTimeout(()=>document.getElementById('entryValue').focus(),80)}
+function openEntry(id,dateKey=localDate()){if(id==='protein')return nutritionOpen(dateKey);activeTracker=tracker(id);if(!activeTracker){alert(trText('Трекер не найден.','Tracker not found.'));return}activeTracker={...activeTracker,entryDate:dateKey};const unit=trUnit(activeTracker);document.getElementById('entryTitle').textContent=trTrackerName(activeTracker);document.getElementById('entryLabel').textContent=trText('Значение','Value')+(unit?' ('+unit+')':'')+' · '+dateKey;document.getElementById('entryValue').value=(id==='protein'?data.logs?.[dateKey]?.protein:val(id,dateKey))??'';document.getElementById('entryModal').classList.add('show');setTimeout(()=>document.getElementById('entryValue').focus(),80)}
+function openEnglish(id){const type=englishTypes.find(x=>x[0]===id);if(!type)return;activeTracker={id,name:type[2],icon:type[1],type:'number',unit:'мин',category:'english'};document.getElementById('entryTitle').textContent=type[2];document.getElementById('entryLabel').textContent=trText('Всего минут сегодня','Total minutes today');document.getElementById('entryValue').value=val(id)??'';document.getElementById('entryModal').classList.add('show');setTimeout(()=>document.getElementById('entryValue').focus(),80)}
 function saveEntry(){
  if(!activeTracker||activeTracker.id==='protein')return;
  const input=document.getElementById('entryValue');
@@ -1259,7 +1259,7 @@ function renderTrends(){
 }
 // V6.7.3_TRENDS_END
 
-function renderProgress(){renderSimpleProgress();renderTrends();renderCalendar();renderDataCoverage()}
+function renderProgress(){renderSimpleProgress();renderTrends();renderCalendar();renderDataCoverage();if(typeof renderBodyProgressSummary==='function')renderBodyProgressSummary();if(!document.getElementById('bodyModal')?.hidden&&typeof renderBody==='function')renderBody()}
 function moveMonth(n){calendarDate=new Date(calendarDate.getFullYear(),calendarDate.getMonth()+n,1);renderCalendar()}
 function renderCalendar(){
  const y=calendarDate.getFullYear(),m=calendarDate.getMonth();
@@ -1364,7 +1364,7 @@ addEventListener('keydown',e=>{
  if(document.getElementById('moduleModal')?.classList.contains('show'))return closeModule();
   if(document.getElementById('habitModal')?.classList.contains('show'))return closeHabitEditor();
   if(document.getElementById('bodyCheckinModal')?.classList.contains('show'))return closeBodyCheckin();
-  if(currentSection==='bodyModal')return closeBody();
+  if(currentSection==='progress'&&!document.getElementById('bodyModal')?.hidden)return closeBody();
   if(document.getElementById('alcoholModal')?.classList.contains('show'))return closeAlcohol();
 })
 

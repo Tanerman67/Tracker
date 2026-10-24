@@ -16,7 +16,7 @@ function uiRefresh(){
  for(const b of document.querySelectorAll('.trend-metric-tab,.body-metric-tab')){const id=b.getAttribute('onclick')?.match(/(?:setTrendMetric|setBodyMetric)\('([^']+)'/)?.[1];if(id&&UI_PATHS[id]&&!b.querySelector('svg')){b.textContent=b.textContent.trim().replace(/^[^A-Za-zА-Яа-яЁё]+/u,'');b.insertAdjacentHTML('afterbegin',uiIcon(id)+' ')}}
  for(const el of document.querySelectorAll('.shared-date-trigger'))el.innerHTML=uiIcon('calendar');
  for(const el of document.querySelectorAll('.body-new-checkin>span:first-child'))el.innerHTML=uiIcon('weight');
- for(const el of document.querySelectorAll('.close')){el.setAttribute('aria-label',trText('Закрыть','Close'));if(!el.querySelector('svg'))el.innerHTML=uiIcon('close')}
+ for(const el of document.querySelectorAll('.close,#habitClose')){el.setAttribute('aria-label',trText('Закрыть','Close'));if(!el.querySelector('svg'))el.innerHTML=uiIcon('close')}
 }
 const uiFormSnapshots=new Map();
 function uiFormValue(id){const form=document.getElementById(id);return form?JSON.stringify([...form.querySelectorAll('input,textarea,select')].filter(x=>x.type!=='file').map(x=>[x.id,x.value,x.checked])):''}

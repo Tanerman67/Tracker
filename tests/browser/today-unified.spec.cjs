@@ -18,13 +18,16 @@ test('Today input cards share a stable bottom sheet on mobile',async({page})=>{
   const rect=await page.locator(sel).boundingBox();
   expect(rect,metric).not.toBeNull();
   expect(rect.width,metric).toBeGreaterThanOrEqual(370);
-  expect(rect.height,metric).toBeGreaterThan(400);
+  expect(rect.height,metric).toBeGreaterThan(140);
+ expect(rect.height,metric).toBeLessThanOrEqual(720);
   expect(Math.abs(rect.y+rect.height-812),metric).toBeLessThan(3);
   const top=rect.y;
-  if(metric==='steps'||metric==='outdoors')await page.locator('#entryModal .close').click();
-  if(metric==='sleep')await page.locator('#habitClose').click();
-  if(metric==='gym')await page.locator('#moduleBack').click();
-  if(metric==='weight')await page.locator('#bodyCheckinModal .close').click();
+  const close=metric==='steps'||metric==='outdoors'?'#entryModal .close':
+    metric==='sleep'?'#habitClose':
+    metric==='gym'?'#moduleBack':'#bodyCheckinModal .close';
+  await expect(page.locator(close)).toHaveAttribute('aria-label',/Close|Закрыть/);
+  await expect(page.locator(close+' .ui-icon')).toHaveCount(1);
+  await page.locator(close).click();
   expect(top).toBeGreaterThanOrEqual(0);
  }
  expect(failures).toEqual([]);
@@ -44,10 +47,18 @@ test('Weight & body is recorded from Today and explored from Progress',async({pa
  await expect(page.locator('#today')).toHaveClass(/active/);
  await page.locator('#tabProgress').click();
  await expect(page.locator('#bodyProgressEntry')).toBeVisible();
- await page.locator('#bodyProgressEntry button').click();
- await expect(page.locator('#bodyModal')).toHaveClass(/active/);
+ await expect(page.locator('#bodyProgressWeight')).toContainText('81.2');
+ await expect(page.locator('#bodyProgressWaist')).toContainText('91.4');
+ await expect(page.locator('#bodyModal')).toBeHidden();
+ await page.locator('#bodyProgressToggle').click();
+ await expect(page.locator('#bodyModal')).toBeVisible();
+ await expect(page.locator('#bodyProgressToggle')).toHaveAttribute('aria-expanded','true');
  await page.locator('#bodyMetricTabs').getByRole('button',{name:/Waist|Талия/}).click();
  await expect(page.locator('#bodyLatestWaist')).toContainText('91.4');
+ await expect(page.locator('#bodyChartTitle')).not.toContainText('⚖️');
+ await page.locator('#bodyModal .body-back').click();
+ await expect(page.locator('#bodyModal')).toBeHidden();
+ await expect(page.locator('#progress')).toHaveClass(/active/);
  await page.reload();
  expect(await page.evaluate(()=>data.bodyMeasurements['2024-02-29'].waist)).toBe(91.4);
 });
@@ -90,4 +101,22 @@ test('Today cards use a consistent visual inset at narrow widths',async({page})=
   expect(new Set(boxes.map(b=>b.radius)).size).toBe(1);
   expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);
  }
+});
+
+test('Progress Body summary refreshes after new measurements without opening a separate page',async({page})=>{
+ await ready(page);
+ await page.evaluate(async()=>{
+  ensureDay('2024-07-01').weight=78.8;
+  data.bodyMeasurements['2024-07-01']={waist:87.2};
+  await save();
+ });
+ await page.locator('#tabProgress').click();
+ await expect(page.locator('#bodyProgressWeight')).toContainText('78.8');
+ await expect(page.locator('#bodyProgressWaist')).toContainText('87.2');
+ await page.locator('#bodyProgressToggle').click();
+ await expect(page.locator('#bodyModal')).toBeVisible();
+ await page.reload();
+ await page.locator('#tabProgress').click();
+ await expect(page.locator('#bodyProgressWeight')).toContainText('78.8');
+ await expect(page.locator('#bodyProgressWaist')).toContainText('87.2');
 });

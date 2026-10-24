@@ -1,13 +1,13 @@
 /* Today editing surfaces share dimensions, spacing and elevation. */
 /* Keep full-screen history (Alcohol, Smoke-free, Cycle, Body) separate from quick entry sheets. */
-#today .metric-grid{gap:12px}
+#today .metric-grid{gap:12px;align-items:start}
 #today .today-metric[data-metric]{
-  box-sizing:border-box;min-height:140px;padding:16px;border-radius:var(--radius-card);
+  box-sizing:border-box;min-height:116px;padding:14px;border-radius:var(--radius-card);
   background:var(--card);border:1px solid var(--line);box-shadow:none;
-  display:flex;flex-direction:column;gap:8px;text-align:left;
+  display:flex;flex-direction:column;gap:5px;text-align:left;
 }
 #today .today-metric[data-metric] .today-metric-title{margin:0;line-height:1.35;align-items:center}
-#today .today-metric[data-metric] .today-metric-value{margin:0;font-size:clamp(19px,5vw,24px);line-height:1.25}
+#today .today-metric[data-metric] .today-metric-value{margin:0;font-size:clamp(18px,5vw,22px);line-height:1.3}
 #today .today-metric[data-metric] .today-metric-status{margin-top:auto;font-size:13px;line-height:1.4}
 #today .today-metric[data-metric] .metric-bar{margin-top:0}
 #entryModal,.habit-modal,.body-checkin-modal,
@@ -19,7 +19,7 @@
 #entryModal .sheet,.habit-sheet,.body-checkin-sheet,
 #moduleModal.today-workout-dialog .module-page{
   box-sizing:border-box;position:relative;width:min(100%,560px);max-width:560px;
-  height:min(72dvh,540px);max-height:calc(100dvh - 16px);min-height:0;
+  height:auto;max-height:min(84dvh,720px);min-height:0;
   margin:0;padding:20px 16px calc(20px + env(safe-area-inset-bottom));
   overflow:auto;overscroll-behavior:contain;border:1px solid var(--line);border-bottom:0;
   border-radius:24px 24px 0 0;background:var(--card);color:var(--text);box-shadow:none;
@@ -38,7 +38,7 @@
   border:1px solid var(--line);
 }
 #entryModal .sheet>button:last-child,#habitSave{width:100%;margin-top:auto}
-#habitContent{flex:1 0 auto}
+#habitContent{flex:0 1 auto}
 .body-checkin-note{margin-top:auto}
 #moduleModal.today-workout-dialog .module-header{
   position:sticky;top:-20px;margin:0 -2px 12px;padding:0 2px 12px;
@@ -75,8 +75,45 @@
 #progress .body-progress-entry .sub{margin-top:4px}
 #progress .body-progress-entry button{flex:0 0 auto}
 @media(max-width:390px){
- #today .today-metric[data-metric]{min-height:136px;padding:12px}
+ #today .today-metric[data-metric]{min-height:110px;padding:12px}
  #smokeModal .smoke-quit-form{grid-template-columns:minmax(0,1fr)}
  #progress .body-progress-entry{align-items:stretch;flex-direction:column}
+ #progress .body-progress-entry button{width:100%}
+}
+
+/* Compact cards do not stretch to match a taller neighbour in the grid. */
+#today .today-metric[data-metric] .today-metric-title .ui-icon,
+#today .today-metric[data-metric] .today-metric-title>svg{width:20px;height:20px;flex:none}
+#today .today-metric[data-metric] .today-metric-title>span:first-child{font-size:20px;display:inline-flex;align-items:center;justify-content:center}
+#today .today-metric[data-metric] .today-metric-status{margin-top:auto}
+#entryModal .sheet,#habitModal .habit-sheet,#bodyCheckinModal .body-checkin-sheet,
+#moduleModal.today-workout-dialog .module-page{min-height:0}
+#entryModal .sheet>button:last-child,#habitSave{margin-top:18px}
+#moduleModal.today-workout-dialog .module-header #moduleBack.close{
+  display:grid;place-items:center;width:44px;height:44px;min-width:44px;
+  min-height:44px;padding:0;border-radius:12px;border:1px solid var(--line);
+  background:var(--soft);color:var(--green)
+}
+#moduleModal.today-workout-dialog .module-header #moduleBack .ui-icon{width:20px;height:20px}
+#progress .body-progress-copy{min-width:0;flex:1 1 180px}
+#progress .body-progress-summary{display:flex;flex-wrap:wrap;gap:12px 20px;margin-top:12px}
+#progress .body-progress-summary span{display:flex;flex-direction:column;gap:3px;min-width:0}
+#progress .body-progress-summary small{font-size:12px;color:var(--muted)}
+#progress .body-progress-summary strong{font-size:18px;white-space:nowrap}
+#progress #bodyModal[hidden]{display:none}
+#progress .body-progress-panel{border-top:1px solid var(--line);margin-top:10px}
+#progress .body-progress-panel .body-page{padding:12px 0 20px;max-width:720px}
+#progress .body-progress-panel .body-topbar{display:flex;justify-content:space-between;align-items:start;gap:12px}
+#progress .body-progress-panel .body-topbar>div{order:0}
+#progress .body-progress-panel .body-back,
+body.light #progress .body-progress-panel .body-back{
+  order:1;flex:none;display:grid;place-items:center;min-width:44px;width:44px;
+  min-height:44px;height:44px;padding:0;font-size:18px;line-height:1;
+  border:1px solid var(--line);border-radius:12px;background:var(--soft);color:var(--green)
+}
+#progress .body-progress-panel .body-back .ui-icon{width:20px;height:20px}
+#alcoholModal .alcohol-streak-badge .ui-icon,#smokeModal .alcohol-streak-badge .ui-icon{width:20px;height:20px}
+@media(max-width:390px){
+ #progress .body-progress-entry{align-items:flex-start}
  #progress .body-progress-entry button{width:100%}
 }
