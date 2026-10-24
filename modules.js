@@ -1,7 +1,7 @@
 // Lightweight secondary views. Their records are included in the normal backup.
 let moduleView='',moduleEditId='',cycleMonth=null;
-function openModule(view){cycleMonth=todayDateKey().slice(0,7)+'-01';moduleView=view;moduleEditId='';renderModule();document.getElementById('moduleModal').classList.add('show');document.body.style.overflow='hidden'}
-function closeModule(){const energy=moduleView==='energy';document.getElementById('moduleModal').classList.remove('show');document.body.style.overflow='';moduleView='';if(energy&&typeof energyClose==='function')energyClose()}
+function openModule(view){cycleMonth=todayDateKey().slice(0,7)+'-01';moduleView=view;moduleEditId='';renderModule();document.getElementById('moduleModal').classList.toggle('today-workout-dialog',view==='energy');document.getElementById('moduleModal').classList.add('show');document.body.style.overflow='hidden'}
+function closeModule(){const energy=moduleView==='energy';document.getElementById('moduleModal').classList.remove('show','today-workout-dialog');document.body.style.overflow='';moduleView='';if(energy&&typeof energyClose==='function')energyClose()}
 function moduleShell(title,html){document.getElementById('moduleTitle').textContent=title;document.getElementById('moduleContent').innerHTML=html;document.getElementById('moduleBack').textContent=trText('Назад','Back');enhanceDateInputs(document.getElementById('moduleContent'))}
 function moduleInput(id,label,value='',type='text',extra=''){return `<div class="field"><label for="${id}">${escapeHTML(label)}</label><input id="${id}" type="${type}" value="${escapeHTML(value??'')}" ${extra}></div>`}
 function moduleError(e){document.getElementById('moduleError').textContent=e.message}
