@@ -1,4 +1,4 @@
-const CACHE='my-rhythm-v7.4.0-layout1';
+const CACHE='my-rhythm-v7.5.0-settings-preview1';
 const ASSETS=[
   "./design-system.css?v=7401",
   "./ui.js?v=7401",

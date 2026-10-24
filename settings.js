@@ -6,7 +6,8 @@ function settingsMayLeave(){if(settingsSaving)return false;if(!settingsDirty())r
 addEventListener('beforeunload',e=>{if(settingsDirty()){e.preventDefault();e.returnValue=''}});
 function openUnifiedSettings(group='settingsProfile'){show('settings');document.getElementById(group)?.scrollIntoView({block:'start'});document.getElementById(group)?.focus()}
 function renderUnifiedSettings(){
- if(settingsDirty()||settingsSaving)return;
+ if(settingsSaving)return;
+ const dirty=settingsDirty(),draft=dirty?JSON.parse(settingsValues()):null,originalSnapshot=settingsSnapshot,focused=document.activeElement?.id;
  const profile=document.getElementById('settingsProfile');if(!profile)return;
  profile.innerHTML='<h3 tabindex="-1">'+trText('Личные параметры','Personal parameters')+'</h3>'+energyProfileHTML();
  const advanced=document.getElementById('settingsEnergyAdvanced');advanced.replaceChildren();
@@ -14,8 +15,14 @@ function renderUnifiedSettings(){
  advanced.append(document.getElementById('energyBaselineSteps').closest('.field'));
  document.getElementById('energyMifflinFields').hidden=false;
  // Choosing a routine must not silently change an existing step allowance.
- document.getElementById('energyRoutine').removeAttribute('onchange');
+ document.getElementById('energyRoutine').setAttribute('onchange','settingsRoutineChanged(this.value)');
  const weight=bodyLatest('weight');const note=document.createElement('p');note.textContent=trText('Вес: ','Weight: ')+(weight?bodyFormatNumber(weight.value)+' '+bodyMetricUnit('weight'):trText('Нет данных. Добавь замер в Body.','No data. Add a Body check-in.'));profile.append(note);
+ const stored=data.energyBalance?.profile||{},missing=[];
+ if(stored.baselineIncludedSteps==null)missing.push(trText('обычные шаги в базе','included usual steps'));
+ if(!stored.routine)missing.push(trText('обычная активность','usual activity'));
+ if(stored.mode==='manual'){if(stored.manualRmr==null)missing.push('RMR')}
+ else{if(stored.heightCm==null)missing.push(trText('рост','height'));if(!stored.birthDate)missing.push(trText('дата рождения','date of birth'));if(!stored.variant)missing.push(trText('пол для расчёта','sex used for calculation'))}
+ if(missing.length){const hint=document.createElement('p');hint.className='small';hint.textContent=trText('Для оценки расхода укажи: ','For energy estimates, add: ')+missing.join(', ')+'.';profile.append(hint)}
  const button=document.createElement('button');button.className='ghost';button.textContent=trText('Открыть Body Check-in','Open Body Check-in');button.onclick=()=>{if(settingsMayLeave())openBodyCheckin()};profile.append(button);energyProfileMode();
  const set=(id,v)=>{const el=document.getElementById(id);if(el)el.value=v??''};
  for(const id of ['stepsGoal','sleepGoal','outdoorsGoal','gymGoal','smokeDate'])set(id,data[id]);set('alcoholDate',alcoholTrackingStart());
@@ -24,12 +31,12 @@ function renderUnifiedSettings(){
  for(const key of ['calories','fat','carbs'])set('nutritionGoal_'+key,data.nutrition.goals[key]);set('nutritionGoal_protein',data.proteinGoal);
  document.getElementById('goalRuleSettings').innerHTML=goalRuleEditorHTML(['steps','sleep','outdoors','gym']);document.getElementById('proteinGoalRuleSettings').innerHTML=goalRuleEditorHTML(['protein']);
  for(const el of document.querySelectorAll('#unifiedSettings input,#unifiedSettings select')){const error=document.createElement('small');error.id=el.id+'Error';error.className='settings-field-error';error.setAttribute('role','alert');el.setAttribute('aria-describedby',error.id);el.after(error)}
- settingsSnapshot=settingsValues();
+ if(draft){for(const [id,value] of draft){const el=document.getElementById(id);if(el)el.value=value}settingsSnapshot=originalSnapshot;energyProfileMode();document.getElementById(focused)?.focus({preventScroll:true})}else settingsSnapshot=settingsValues();
 }
 function settingsInvalid(id,message){const el=document.getElementById(id);el?.setAttribute('aria-invalid','true');const error=document.getElementById(id+'Error');if(error)error.textContent=message;el?.focus();throw Error(message)}
 function settingsCandidate(){
  const next=structuredClone(data),gv=id=>document.getElementById(id).value.trim();
- const number=(id,min=0,max=1e6)=>{const raw=gv(id);if(raw==='')return null;const n=Number(raw);if(!Number.isFinite(n)||n<min||n>max)settingsInvalid(id,trText('Проверь значение.','Check the value.'));return n};
+ const number=(id,min=0,max=1e6)=>{if(document.getElementById(id).validity?.badInput)settingsInvalid(id,trText('Проверь число.','Check the number.'));const raw=gv(id);if(raw==='')return null;const n=Number(raw);if(!Number.isFinite(n)||n<min||n>max)settingsInvalid(id,trText('Проверь значение.','Check the value.'));return n};
  // Unchanged blank fields retain absent/null/zero distinctions and extensions.
  const assign=(obj,key,value,id)=>{const before=JSON.parse(settingsSnapshot||'[]').find(x=>x[0]===id)?.[1];if(before!==gv(id))obj[key]=value};
  for(const id of ['smokeDate','alcoholDate','energyBirth']){const v=gv(id);if(v&&(!validDay(v)||v>localDate()))settingsInvalid(id,trText('Проверь дату.','Check the date.'))}
@@ -38,6 +45,7 @@ function settingsCandidate(){
  for(const [key,id,min,max] of [['heightCm','energyHeight',100,250],['manualRmr','energyManualRmr',100,10000],['baselineIncludedSteps','energyBaselineSteps',0,100000]]){const v=number(id,min,max);if(key==='baselineIncludedSteps'&&v!==null&&!Number.isInteger(v))settingsInvalid(id,trText('Нужно целое число.','Use a whole number.'));assign(profile,key,v,id)}
  for(const [key,id] of [['mode','energyMode'],['birthDate','energyBirth'],['variant','energyVariant'],['routine','energyRoutine']])assign(profile,key,gv(id)||null,id);
  MyRhythmEnergy.validateStore({profile,workouts:[],days:{}});
+ if(JSON.stringify(profile)!==JSON.stringify(next.energyBalance?.profile||{})&&profile.mode===undefined)profile.mode=gv('energyMode');
  if(JSON.stringify(profile)!==JSON.stringify(next.energyBalance?.profile||{}))next.energyBalance={...(next.energyBalance||{workouts:[],days:{}}),profile};
  for(const [metric,key] of Object.entries({steps:'stepsGoal',sleep:'sleepGoal',outdoors:'outdoorsGoal',gym:'gymGoal',protein:'proteinGoal'})){
   const id=metric==='protein'?'nutritionGoal_protein':key,value=number(id);
@@ -57,3 +65,5 @@ async function saveUnifiedSettings(){
  catch(e){if(before){data=before;resetStorageBaseline()}status.textContent=e.message;return false}
  finally{settingsSaving=false;for(const el of document.querySelectorAll('#unifiedSettings input,#unifiedSettings select,#unifiedSettings .settings-save'))el.disabled=false}
 }
+
+function settingsRoutineChanged(key){const el=document.getElementById('energyBaselineSteps');if(el.value===''&&MyRhythmEnergy.ROUTINES[key])el.value=MyRhythmEnergy.ROUTINES[key].steps}
