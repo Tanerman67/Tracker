@@ -81,7 +81,7 @@ function bodyFieldCount(dateKey){
 
 function openBody(){
   show('bodyModal');
-  renderBody();
+  renderBody();uiRefresh();
 }
 
 function closeBody(){
@@ -90,13 +90,13 @@ function closeBody(){
 function setBodyMetric(id){
   bodySelectedMetric=id;
   bodySelectedPoint=null;
-  renderBody();
+  renderBody();if(typeof uiRefresh==='function')uiRefresh();
 }
 function setBodyRange(range){
   if(![7,30,90,365,'all'].includes(range))range='all';
   bodyRangeDays=range;
   bodySelectedPoint=null;
-  renderBody();
+  renderBody();if(typeof uiRefresh==='function')uiRefresh();
 }
 
 function openBodyCheckin(dateKey=''){
@@ -124,8 +124,10 @@ function openBodyCheckin(dateKey=''){
 
   translateBodyCheckin();
   document.getElementById('bodyCheckinModal')?.classList.add('show');
+  uiRememberForm('bodyCheckinModal');
 }
-function closeBodyCheckin(){
+function closeBodyCheckin(force=false){
+  if(!force&&!uiConfirmDiscard('bodyCheckinModal'))return false;
   document.getElementById('bodyCheckinModal')?.classList.remove('show');
   bodyEditingDate='';
 }
@@ -137,7 +139,7 @@ function numberOrNull(id){
   return Number.isFinite(n)&&n>0?n:null;
 }
 
-function saveBodyCheckin(){
+async function saveBodyCheckin(){
   const date=document.getElementById('bodyDateInput')?.value;
   if(!date)return alert(trText('Выбери дату.','Choose a date.'));
   if(date>localDate())return alert(trText('Нельзя записать будущую дату.','Future dates cannot be logged.'));
@@ -168,12 +170,12 @@ function saveBodyCheckin(){
   if(Object.keys(row).length)bodyStore()[date]=row;
   else delete bodyStore()[date];
 
-  persistData({renderAfter:true,makeSnapshot:true});
-  closeBodyCheckin();
-  renderBody();
+  if(await persistData({renderAfter:true,makeSnapshot:true})===false)return;
+  closeBodyCheckin(true);
+  renderBody();if(typeof uiRefresh==='function')uiRefresh();
 }
 
-function deleteBodyCheckin(){
+async function deleteBodyCheckin(){
   const date=bodyEditingDate||document.getElementById('bodyDateInput')?.value;
   if(!date)return;
   const ok=confirm(trText(`Удалить Body Check-in за ${bodyFriendlyDate(date)}?`,`Delete Body Check-in for ${bodyFriendlyDate(date)}?`));
@@ -185,9 +187,9 @@ function deleteBodyCheckin(){
     if(Object.keys(data.logs[date]).length===0)delete data.logs[date];
   }
 
-  persistData({renderAfter:true,makeSnapshot:true});
-  closeBodyCheckin();
-  renderBody();
+  if(await persistData({renderAfter:true,makeSnapshot:true})===false)return;
+  closeBodyCheckin(true);
+  renderBody();if(typeof uiRefresh==='function')uiRefresh();
 }
 
 function translateBodyCheckin(){
@@ -362,7 +364,7 @@ function renderBody(){
   set('bodyWeightLabel',trText('Текущий вес','Current weight'));
   set('bodyLastCheckinLabel',trText('Последний замер','Last check-in'));
   set('bodyWaistLabel',trText('Талия','Waist'));
-  set('bodyNewCheckinTitle',trText('Новый замер','New check-in'));
+  set('bodyNewCheckinTitle',trText('Добавить замер','Add measurement'));
   set('bodyNewCheckinSub',trText('Вес + 5 измерений тела','Weight + 5 body measurements'));
   set('bodyDynamicsTitle',trText('Динамика','Trend'));
   set('bodyDynamicsSub',trText('Выбери показатель','Choose a metric'));
@@ -395,7 +397,7 @@ function renderBody(){
 
   const tabs=document.getElementById('bodyMetricTabs');
   if(tabs){
-    tabs.innerHTML=BODY_METRICS.map(m=>`<button class="body-metric-tab ${bodySelectedMetric===m.id?'active':''}" onclick="setBodyMetric('${m.id}')">${m.icon} ${(data.language||'ru')==='en'?m.en:m.ru}</button>`).join('');
+    tabs.innerHTML=BODY_METRICS.map(m=>`<button class="body-metric-tab ${bodySelectedMetric===m.id?'active':''}" onclick="setBodyMetric('${m.id}')">${typeof uiIcon==='function'?uiIcon(m.id):m.icon} ${(data.language||'ru')==='en'?m.en:m.ru}</button>`).join('');
   }
 
   const metric=bodyMetricDef(bodySelectedMetric);
@@ -432,7 +434,7 @@ function renderBody(){
     ['bodyRangeAllBtn','all']
   ].forEach(([id,value])=>{
     const el=document.getElementById(id);
-    if(el)el.className=bodyRangeDays===value?'secondary':'ghost';
+    if(el){el.className=bodyRangeDays===value?'secondary':'ghost';el.setAttribute('aria-pressed',String(bodyRangeDays===value))}
   });
 
   const chart=document.getElementById('bodyChartHost');
@@ -462,7 +464,7 @@ function renderBody(){
         const originalIndex=rows.length-1-revIndex;
         const prev=originalIndex>0?rows[originalIndex-1]:null;
         const d=prev?Math.round((r.value-prev.value)*10)/10:null;
-        return `<div class="body-history-row" onclick="openBodyCheckin(${inlineArgument(r.date)})">
+        return `<div class="body-history-row" role="button" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click()}" onclick="openBodyCheckin(${inlineArgument(r.date)})">
           <div>
             <div class="body-history-date">${bodyFriendlyDate(r.date)}</div>
             <div class="body-history-meta">${bodySelectedMetric==='weight'?trText('Вес','Weight'):trText('Body Check-in','Body Check-in')}</div>
@@ -476,4 +478,5 @@ function renderBody(){
     }
   }
 }
+
 

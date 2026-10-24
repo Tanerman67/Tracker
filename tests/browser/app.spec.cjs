@@ -29,7 +29,7 @@ test('nutrition save, edit, partial rings, reuse, scale and safe delete',async({
  await ready(page);await page.locator('#tabNutrition').click();await page.locator('details:has(#nutritionGoal_calories) > summary').click();await page.locator('#nutritionGoal_calories').fill('200');await page.locator('[onclick="nutritionSaveGoals()"]').click();await settle(page);await addFood(page);
  await expect(page.locator('#nutritionSummary [data-nutrient="calories"]')).toContainText('125%');await expect(page.locator('#nutritionIncomplete')).toBeVisible();
  await page.locator('.nutrition-food').click();await page.locator('#nutritionFoodAmount').fill('150');await page.locator('[onclick="nutritionScaleForm()"]').click();await expect(page.locator('#nutritionCalories')).toHaveValue('375');await page.locator('[onclick="nutritionSaveFood()"]').click();await settle(page);
- await page.locator('summary').filter({hasText:'Frequent foods'}).click();await page.locator('#nutritionReuse button').first().click();await page.locator('[onclick="nutritionSaveFood()"]').click();await settle(page);await expect(page.locator('.nutrition-food')).toHaveCount(2);
+ await page.locator('.nutrition-tools>summary').click();await page.locator('details:has(> #nutritionReuse)>summary').click();await page.locator('#nutritionReuse button').first().click();await page.locator('[onclick="nutritionSaveFood()"]').click();await settle(page);await expect(page.locator('.nutrition-food')).toHaveCount(2);
  await page.locator('.nutrition-food').first().click();page.once('dialog',d=>d.accept());await page.locator('#nutritionDeleteFood').click();await settle(page);await expect(page.locator('.nutrition-food')).toHaveCount(1);
  expect(await page.evaluate(()=>data.nutrition.entries[0].nutrients.fat)).toBeUndefined();
 });
@@ -99,5 +99,9 @@ test('upgrade from actual 6.13 assets keeps existing records and local recovery 
 
 test('IndexedDB coordination fallback preserves edits without Web Locks',async({page,context})=>{
  await context.addInitScript(()=>Object.defineProperty(navigator,'locks',{value:undefined,configurable:true}));await ready(page);const other=await context.newPage();await ready(other);
- await Promise.all([page.evaluate(()=>{ensureDay('2024-01-02').steps=555;return save()}),other.evaluate(()=>{ensureDay('2024-01-02').sleep=7;return save()})]);await page.reload();await expect(page.locator('body')).not.toHaveClass(/loading-data/);expect(await page.evaluate(()=>data.logs['2024-01-02'])).toEqual({steps:555,sleep:7});
+ // Keep both writes concurrent, but observe completion through page state rather than
+ // keeping two long-lived DevTools Promise handles during the IndexedDB transaction.
+ await Promise.all([page.evaluate(()=>{ensureDay('2024-01-02').steps=555;window.fallbackSaveResult='pending';save().then(ok=>window.fallbackSaveResult=ok).catch(e=>window.fallbackSaveResult=e.message)}),other.evaluate(()=>{ensureDay('2024-01-02').sleep=7;window.fallbackSaveResult='pending';save().then(ok=>window.fallbackSaveResult=ok).catch(e=>window.fallbackSaveResult=e.message)})]);
+ await expect.poll(()=>page.evaluate(()=>window.fallbackSaveResult)).toBe(true);await expect.poll(()=>other.evaluate(()=>window.fallbackSaveResult)).toBe(true);await page.reload();await expect(page.locator('body')).not.toHaveClass(/loading-data/);expect(await page.evaluate(()=>data.logs['2024-01-02'])).toEqual({steps:555,sleep:7});
 });
+

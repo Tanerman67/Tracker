@@ -1,0 +1,46 @@
+# Changed files
+
+Relative to main 5ec2e39 (7.3.2).
+
+- `.github/workflows/verify.yml`
+- `app.css`
+- `app.js`
+- `body.js`
+- `cleanup.css`
+- `dashboard.js`
+- `design-system.css`
+- `docs/DESIGN_SYSTEM.md`
+- `docs/ux-review/README.md`
+- `docs/ux-review/VALIDATION.md`
+- `docs/ux-review/after-ru-light-320/body.png`
+- `docs/ux-review/after-ru-light-320/nutrition.png`
+- `docs/ux-review/after-ru-light-320/progress.png`
+- `docs/ux-review/after-ru-light-320/settings.png`
+- `docs/ux-review/after-ru-light-320/today.png`
+- `docs/ux-review/after/body.png`
+- `docs/ux-review/after/nutrition.png`
+- `docs/ux-review/after/progress.png`
+- `docs/ux-review/after/settings.png`
+- `docs/ux-review/after/today.png`
+- `docs/ux-review/before/body.png`
+- `docs/ux-review/before/nutrition.png`
+- `docs/ux-review/before/progress.png`
+- `docs/ux-review/before/settings.png`
+- `docs/ux-review/before/today.png`
+- `docs/ux-review/comparison.jpg`
+- `energy.js`
+- `fonts/InterVariable.woff2`
+- `fonts/OFL.txt`
+- `habits.css`
+- `index.html`
+- `nutrition.css`
+- `nutrition.js`
+- `sw.js`
+- `tests/audit.test.cjs`
+- `tests/browser/app.spec.cjs`
+- `tests/browser/cleanup.spec.cjs`
+- `tests/browser/redesign.spec.cjs`
+- `today.css`
+- `ui.js`
+- `docs/ux-review/CHANGED_FILES.md`
+- `playwright.config.cjs`

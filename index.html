@@ -16,6 +16,7 @@
 <meta name="apple-mobile-web-app-title" content="My Rhythm">
 
 <title>Мой ритм</title>
+<link rel="preload" href="./fonts/InterVariable.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="app.css?v=7311">
 
 <link rel="stylesheet" href="today.css?v=7311">
@@ -25,6 +26,7 @@
 <link rel="stylesheet" href="calendar.css?v=7311">
 <link rel="stylesheet" href="cleanup.css?v=7311">
 <link rel="stylesheet" href="energy.css?v=7311">
+<link rel="stylesheet" href="design-system.css?v=7401">
 </head>
 <body class="loading-data"><div id="dataLoading" role="status">Restoring local data…</div>
 <div class="app"><p id="tabUpdateNotice" class="privacy-note" role="status" hidden data-localized></p>
@@ -48,22 +50,12 @@
     </div>
 
     <div id="todayGrid" class="metric-grid" data-localized></div>
-    <button id="todayCustomize" class="secondary" onclick="openModule('layout')" data-localized>Customize blocks</button>
+    <button id="todayCustomize" class="ghost" onclick="openModule('layout')" data-localized>Customize blocks</button>
   </div>
 </section>
 
-<section id="progress" class="section"><div id="dataCoverage" class="card" data-localized></div>
-  <div class="weekly-review card">
-    <h2 id="simpleProgressTitle">Эта неделя</h2>
-    <div class="sub" id="simpleProgressPeriod"></div>
-    <div id="simpleProgressRows" class="simple-progress-rows"></div>
-    <details class="progress-details">
-      <summary id="simpleProgressDetails">Подробности недели</summary>
-      <div id="habitWeekly"></div>
-    </details>
-  </div>
-  <div class="section-spacer"></div>
-
+<section id="progress" class="section">
+ <div class="category-head"><h2 data-i18n-ru="Прогресс" data-i18n-en="Progress">Progress</h2></div>
   <div class="trend-controls">
     <div class="trend-range-tabs">
       <button type="button" class="secondary" id="trendRange7Btn" onclick="setTrendRange(7)">7 дней</button>
@@ -93,12 +85,25 @@
     </div>
   </div>
 
+  <div class="weekly-review card">
+    <h2 id="simpleProgressTitle">Эта неделя</h2>
+    <div class="sub" id="simpleProgressPeriod"></div>
+    <div id="simpleProgressRows" class="simple-progress-rows"></div>
+    <details class="progress-details">
+      <summary id="simpleProgressDetails">Подробности недели</summary>
+      <div id="habitWeekly"></div>
+    </details>
+  </div>
+  <div class="section-spacer"></div>
+
   <div class="section-spacer"></div>
   <div class="category-head progress-calendar-head">
     <h2>Календарь</h2>
     <div class="sub">История заполнения по конкретным дням.</div>
   </div>
   <div class="card"><div id="progressCalendarControls"></div><strong id="calendarTitle" class="sr-only"></strong><div id="calendarGrid"></div></div>
+
+<details class="card coverage-details"><summary data-i18n-ru="Полнота данных и источники" data-i18n-en="Data coverage & sources">Data coverage & sources</summary><div id="dataCoverage" data-localized></div></details>
 
 </section>
 
@@ -122,7 +127,7 @@
   <button type="button" class="settings-save" onclick="saveSettings()" data-i18n-ru="Сохранить даты и цели" data-i18n-en="Save dates &amp; goals">Save dates &amp; goals</button>
  </div>
  <div class="card">
-  <h3 data-i18n-ru="Оформление" data-i18n-en="Appearance">Appearance</h3>
+  <h3 data-i18n-ru="Оформление и язык" data-i18n-en="Appearance & language">Appearance & language</h3>
   <div class="row"><span data-i18n-ru="Тема приложения" data-i18n-en="App theme">App theme</span><button class="secondary" id="themeToggleBtn" onclick="toggleTheme()">Dark</button></div>
   <div class="row"><span data-i18n-ru="Язык интерфейса" data-i18n-en="Language">Language</span><button class="secondary" id="languageToggleBtn" onclick="toggleLanguage()">Русский</button></div>
  </div>
@@ -172,19 +177,20 @@
     </div>
     <div id="nutritionSummary" class="nutrition-summary"></div>
     <div id="nutritionProteinSource" class="nutrition-explanation"></div>
-    <button type="button" class="ghost nutrition-copy" onclick="nutritionEditLegacyProtein()" data-i18n-ru="Ручной белок" data-i18n-en="Manual protein">Manual protein</button>
     <div id="nutritionIncomplete" class="nutrition-explanation"></div>
     <div class="nutrition-actions">
       <button type="button" id="nutritionAddButton" onclick="nutritionOpenForm()">+ Добавить еду</button>
       <button type="button" id="nutritionImportButton" class="secondary" onclick="document.getElementById('nutritionFile').click()">Импорт JSON</button>
     </div>
     <input id="nutritionFile" type="file" accept=".json,application/json" hidden onchange="nutritionReadImport(event)">
+    <div id="nutritionStatus" class="nutrition-status" role="status" aria-live="polite"></div>
+    <div id="nutritionDiary"></div>
+    <details class="card nutrition-tools"><summary data-i18n-ru="Дополнительные действия" data-i18n-en="More nutrition tools">More nutrition tools</summary>
     <button type="button" id="nutritionCopyButton" class="ghost nutrition-copy" onclick="nutritionCopyInstructions()">Скопировать инструкцию для ChatGPT</button>
     <pre id="nutritionInstructions" class="nutrition-instructions" hidden></pre>
-    <div id="nutritionStatus" class="nutrition-status" role="status" aria-live="polite"></div>
     <details class="card nutrition-details"><summary data-i18n-ru="Частые продукты" data-i18n-en="Frequent foods">Frequent foods</summary><div id="nutritionReuse" class="nutrition-reuse"></div></details>
     <div class="card nutrition-copy-group"><label for="nutritionCopyDate" data-i18n-ru="Скопировать еду с другого дня" data-i18n-en="Copy foods from another day">Copy foods from another day</label><div class="nutrition-copy-controls"><input id="nutritionCopyDate" type="date" aria-label="Source day"><button class="secondary" onclick="nutritionCopyDay()" data-i18n-ru="Копировать" data-i18n-en="Copy">Copy</button></div></div>
-    <div id="nutritionDiary"></div>
+    </details>
     <details class="card nutrition-details"><summary id="nutritionMicrosLabel">Витамины и минералы</summary><div id="nutritionMicros"></div></details>
     <details class="card nutrition-details"><summary id="nutritionHistoryLabel">История дней</summary><div id="nutritionHistory"></div></details>
     <details class="card nutrition-details"><summary data-i18n-ru="Цели" data-i18n-en="Goals">Goals</summary>
@@ -447,6 +453,7 @@
 <script src="analytics.js?v=7311"></script>
 <script src="today.js?v=7311"></script>
 <script src="habits.js?v=7311"></script>
+<script src="ui.js?v=7401"></script>
 <script src="dates.js?v=7311"></script>
 <script src="energy-core.js?v=7311"></script>
 <script src="storage.js?v=7311"></script>
@@ -457,3 +464,4 @@
 <script src="app.js?v=7311"></script>
 </body>
 </html>
+

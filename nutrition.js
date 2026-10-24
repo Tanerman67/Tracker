@@ -13,6 +13,7 @@ const NUTRITION_SOURCES=['manual','label','chatgpt-estimate','other'];
 const NUTRITION_BASIS={vitaminA:['RAE','retinol','beta-carotene','unspecified'],vitaminB3:['NE','niacin','unspecified'],vitaminB9:['DFE','folate','folic-acid','unspecified'],vitaminE:['alpha-tocopherol','total','unspecified']};
 const NUTRITION_MEAL_LABELS={breakfast:['Завтрак','Breakfast'],lunch:['Обед','Lunch'],dinner:['Ужин','Dinner'],snack:['Перекус','Snack'],other:['Другое','Other']};
 const NUTRITION_FIELD_IDS={calories:'nutritionCalories',protein:'nutritionProtein',fat:'nutritionFat',carbs:'nutritionCarbs'};
+let nutritionLastImportSave=null,nutritionSaving=false;
 let nutritionFormBase=null,nutritionFormQualities={},nutritionDate=null,nutritionEditId='',nutritionPendingImport=null,nutritionImportFingerprint='',nutritionHistoryOpen=false;
 const NUTRITION_RING_CIRCUMFERENCE=2*Math.PI*43;
 const nutritionRingOffsets=new Map();
@@ -92,6 +93,7 @@ function nutritionPreview(entries,existing=nutritionStore().entries){
   });
 }
 function nutritionApplyImport(preview,{replaceConflicts=false}={}){
+  nutritionLastImportSave=null;
   const store=nutritionStore(),current=nutritionPreview(preview.map(p=>p.entry),store.entries);
   nutritionAssert(JSON.stringify(current.map(p=>p.action))===JSON.stringify(preview.map(p=>p.action)),'Nutrition changed since preview. Review the import again.');
   const result={added:0,updated:0,skipped:0};
@@ -101,7 +103,7 @@ function nutritionApplyImport(preview,{replaceConflicts=false}={}){
     else if(row.action==='conflict'&&replaceConflicts){const index=next.findIndex(e=>e.id===row.entry.id);next[index]={...next[index],...row.entry,createdAt:next[index].createdAt,updatedAt:new Date().toISOString()};result.updated++}
     else result.skipped++;
   }
-  if(result.added||result.updated){store.entries=next;persistData({renderAfter:true,makeSnapshot:true})}
+  if(result.added||result.updated){store.entries=next;nutritionLastImportSave=persistData({renderAfter:true,makeSnapshot:true})}
   return result;
 }
 function nutritionRows(date){return nutritionStore().entries.filter(x=>x.date===date)}
@@ -197,7 +199,7 @@ function nutritionCheckDate(date){nutritionAssert(nutritionDateValid(date)&&date
 function nutritionOpen(date=nutritionDateKey()){
  nutritionDate=nutritionCheckDate(date);show('nutritionModal',document.getElementById('tabNutrition'));
 }
-function nutritionClose(){nutritionCancelForm();nutritionCancelImport();show(previousSection==='nutritionModal'?'today':previousSection)}
+function nutritionClose(){if(nutritionCancelForm()===false)return;nutritionCancelImport();show(previousSection==='nutritionModal'?'today':previousSection)}
 let nutritionOverlayContext=null;
 function nutritionStartOverlay(id){
  if(!nutritionOverlayContext)nutritionOverlayContext={scroll:window.scrollY||0,overflow:document.body.style.overflow,focus:document.activeElement,date:nutritionDateKey()};
@@ -232,6 +234,7 @@ function nutritionRender(){
   put('nutritionMicrosLabel',nutritionLabel('Витамины и минералы','Vitamins & minerals'));
   put('nutritionHistoryLabel',nutritionLabel('История дней','Daily history'));
   put('nutritionIncomplete',rows.length?nutritionLabel('Указаны только известные значения. ≥ означает, что данные о части еды отсутствуют.','Only known amounts are shown. ≥ means some foods have missing data.'):nutritionLabel('На этот день пока нет записей.','No foods logged for this day.'));
+  document.getElementById('nutritionIncomplete').hidden=rows.length>0&&!NUTRITION_MAIN.some(key=>total[key].partial||total[key].value===null);
   const summary=document.getElementById('nutritionSummary');summary.replaceChildren();
   const source=nutritionEffectiveProtein(date);
   for(const key of NUTRITION_MAIN){
@@ -239,7 +242,7 @@ function nutritionRender(){
     const target=key==='protein'?data.proteinGoal:goal[key];
     summary.append(nutritionRingCard(key,stat,target,date));
   }
-  put('nutritionProteinSource',source.source==='manual'?nutritionLabel('Белок: ручная запись сохранена отдельно.','Protein: separate manual entry is in use.'):source.source==='foods'?nutritionLabel('Белок: сумма продуктов'+(source.partial?' (частично)':''),'Protein: food total'+(source.partial?' (partial)':'')):nutritionLabel('Белок: нет данных','Protein: no data'));
+  put('nutritionProteinSource',source.source==='manual'?nutritionLabel('Белок: историческая ручная запись. Не суммируется с продуктами.','Protein: historical manual record. Not added to foods.'):source.source==='foods'?nutritionLabel('Белок: сумма продуктов'+(source.partial?' (частично)':''),'Protein: food total'+(source.partial?' (partial)':'')):nutritionLabel('Белок: нет данных','Protein: no data'));
   const diary=document.getElementById('nutritionDiary');diary.replaceChildren();
   for(const meal of NUTRITION_MEALS){
     const entries=rows.filter(e=>e.meal===meal);if(!entries.length)continue;
@@ -279,7 +282,7 @@ function nutritionRender(){
   document.getElementById('proteinGoalRuleSettings').innerHTML=goalRuleEditorHTML(['protein']);
   enhanceDateInputs();
 }
-function nutritionSaveGoals(){
+async function nutritionSaveGoals(){
  try{
   // Stage every value and rule before mutation. Retain hidden fibre and extension goals.
   const next={...nutritionStore().goals};
@@ -294,7 +297,7 @@ function nutritionSaveGoals(){
   nutritionStore().goals=next;data.proteinGoal=protein;
   const t=tracker('protein');if(t)t.goal=protein;
   data.goalRules.protein=rule;
-  persistData({renderAfter:true,makeSnapshot:true});nutritionRender();nutritionMessage(nutritionLabel('Цели сохранены.','Goals saved.'));
+  if(await persistData({renderAfter:true,makeSnapshot:true})===false)return;nutritionRender();nutritionMessage(nutritionLabel('Цели сохранены.','Goals saved.'));
  }catch(e){nutritionMessage(e.message)}
 }
 function nutritionInput(id,label,unit=''){return `<div class="field"><label for="${id}">${escapeHTML(label)}${unit?' ('+escapeHTML(unit)+')':''}</label><input id="${id}" type="number" min="0" step="any" inputmode="decimal"></div>`}
@@ -332,10 +335,11 @@ function nutritionOpenForm(id=''){
   }
   document.getElementById('nutritionFoodQuality').value=entry?Object.values(entry.nutrients).find(n=>n.quality!=='unknown')?.quality||'estimated':'estimated';
   document.getElementById('nutritionDeleteFood').hidden=!entry;
-  nutritionStartOverlay('nutritionForm');document.getElementById('nutritionFormError').textContent='';document.getElementById('nutritionFoodName').focus({preventScroll:true});
+  nutritionStartOverlay('nutritionForm');uiRememberForm('nutritionForm');document.getElementById('nutritionFormError').textContent='';document.getElementById('nutritionFoodName').focus({preventScroll:true});
 }
-function nutritionCancelForm(){nutritionEndOverlay('nutritionForm');nutritionEditId=''}
-function nutritionSaveFood(){
+function nutritionCancelForm(force=false){if(!force&&!uiConfirmDiscard('nutritionForm'))return false;nutritionEndOverlay('nutritionForm');nutritionEditId='';return true}
+async function nutritionSaveFood(){
+  if(nutritionSaving)return;nutritionSaving=true;
   try{
     const previous=nutritionEditId?nutritionStore().entries.find(e=>e.id===nutritionEditId):null;
     const reference=previous||nutritionFormBase;
@@ -353,13 +357,13 @@ function nutritionSaveFood(){
     const entry=nutritionNormalizeRecord({id:previous?.id||nutritionId(),date:document.getElementById('nutritionFoodDate').value,meal:document.getElementById('nutritionFoodMeal').value,name:document.getElementById('nutritionFoodName').value,portion:amount===''?null:{amount:Number(amount),unit:document.getElementById('nutritionFoodUnit').value},nutrients,notes:document.getElementById('nutritionFoodNotes').value,source:selectedSource,createdAt:previous?.createdAt||now,updatedAt:now});
     const store=nutritionStore(),index=store.entries.findIndex(e=>e.id===entry.id);
     if(index<0)store.entries.push(entry);else store.entries[index]={...store.entries[index],...entry};
-    nutritionDate=entry.date;nutritionCancelForm();persistData({renderAfter:true,makeSnapshot:true});nutritionRender();nutritionMessage(nutritionLabel('Еда сохранена.','Food saved.'));
-  }catch(e){document.getElementById('nutritionFormError').textContent=e.message}
+    if(await persistData({renderAfter:true,makeSnapshot:true})===false){document.getElementById('nutritionFormError').textContent=nutritionLabel('Не удалось сохранить. Проверь черновик в настройках.','Save failed. Check your draft in Settings.');return}nutritionDate=entry.date;nutritionCancelForm(true);nutritionRender();nutritionMessage(nutritionLabel('Еда сохранена.','Food saved.'));
+  }catch(e){document.getElementById('nutritionFormError').textContent=e.message}finally{nutritionSaving=false}
 }
-function nutritionDeleteFood(){
+async function nutritionDeleteFood(){
   const id=nutritionEditId;if(!id)return;
   if(!confirm(nutritionLabel('Удалить эту запись?','Delete this food entry?')))return;
-  nutritionStore().entries=nutritionStore().entries.filter(e=>e.id!==id);nutritionCancelForm();persistData({renderAfter:true,makeSnapshot:true});nutritionRender();nutritionMessage(nutritionLabel('Запись удалена.','Food deleted.'));
+  nutritionStore().entries=nutritionStore().entries.filter(e=>e.id!==id);if(await persistData({renderAfter:true,makeSnapshot:true})===false)return;nutritionCancelForm(true);nutritionRender();nutritionMessage(nutritionLabel('Запись удалена.','Food deleted.'));
 }
 const NUTRITION_CHATGPT_INSTRUCTIONS=`Create a JSON file for My Rhythm nutrition import. Use format "my-rhythm-nutrition-import-v1" and an entries array. Each food needs a stable unique id (reuse it in later corrected files), local date YYYY-MM-DD, meal (breakfast/lunch/dinner/snack/other), name, optional portion {amount,unit}, source (manual/label/chatgpt-estimate/other), and nutrients. Nutrients are objects such as protein:{value:12,unit:"g",quality:"estimated"}. Use numbers, not strings. Missing values stay omitted or {value:null,quality:"unknown"}; never invent zero. Allowed quality: measured, label, calculated, estimated, unknown. Units: kcal or kJ for calories; g, mg or µg for other nutrients. Supported names: ${Object.keys(NUTRIENTS).join(', ')}. For vitaminA, vitaminB3, vitaminB9 and vitaminE include basis (e.g. RAE, NE, DFE, alpha-tocopherol); do not convert between bases or from IU without reliable information. Separate foods when possible, preserve uncertainty in notes. Output only valid JSON, using fictional IDs until real entries are described.`;
 async function nutritionCopyInstructions(){
@@ -386,16 +390,17 @@ function nutritionRenderImportPreview(){
   const list=document.getElementById('nutritionPreviewList');list.replaceChildren();
   for(const row of rows){const div=document.createElement('div');div.className='nutrition-preview-row';div.textContent=`${row.entry.date} · ${nutritionMealLabel(row.entry.meal)} · ${row.entry.name} · ${nutritionLabel(...({add:['добавить','add'],conflict:['конфликт','conflict'],duplicate:['повтор','duplicate'],skip:['пропустить','skip']}[row.action]))}`;list.append(div)}
 }
-function nutritionConfirmImport(){
+async function nutritionConfirmImport(){
   if(!nutritionPendingImport)return;
   try{
     nutritionAssert(JSON.stringify(nutritionStore().entries)===nutritionImportFingerprint,'Nutrition changed while preview was open. Select the file again.');
     const result=nutritionApplyImport(nutritionPendingImport,{replaceConflicts:document.getElementById('nutritionReplaceConflicts').checked});
+    if(await nutritionLastImportSave===false){nutritionMessage(nutritionLabel('Импорт не сохранён. Проверь черновик в настройках.','Import was not saved. Check the draft in Settings.'));return}
     nutritionCancelImport();nutritionRender();nutritionMessage(`${result.added} ${nutritionLabel('добавлено','added')}, ${result.updated} ${nutritionLabel('обновлено','updated')}, ${result.skipped} ${nutritionLabel('пропущено','skipped')}.`);
   }catch(e){nutritionCancelImport();nutritionMessage(e.message)}
 }
 
-function nutritionEditLegacyProtein(){const date=nutritionDateKey();openEntry('protein',date)}
+// Legacy protein is read-only. nutritionEffectiveProtein keeps historical precedence unchanged.
 const NUTRIENT_RU={calories:'Калории',protein:'Белок',fat:'Жиры',carbs:'Углеводы',fiber:'Клетчатка',sugars:'Сахара',saturatedFat:'Насыщенные жиры',transFat:'Трансжиры',omega3:'Омега-3',cholesterol:'Холестерин',calcium:'Кальций',iron:'Железо',magnesium:'Магний',potassium:'Калий',sodium:'Натрий',phosphorus:'Фосфор',zinc:'Цинк',selenium:'Селен',iodine:'Йод',copper:'Медь',manganese:'Марганец',...Object.fromEntries(['A','B1','B2','B3','B5','B6','B7','B9','B12','C','D','E','K'].map(v=>['vitamin'+v,'Витамин '+v]))};
 function nutritionScaledEntry(entry,amount){
  nutritionAssert(entry.portion&&entry.portion.amount>0,'A known original portion is required.');
@@ -447,3 +452,4 @@ document.addEventListener('keydown',event=>{
  const nodes=[...host.querySelectorAll('button,input,select,textarea,summary,[tabindex]')].filter(n=>!n.disabled&&n.tabIndex>=0&&n.getClientRects().length),first=nodes[0],last=nodes[nodes.length-1];
  if(event.shiftKey&&document.activeElement===first){event.preventDefault();last?.focus()}else if(!event.shiftKey&&document.activeElement===last){event.preventDefault();first?.focus()}
 });
+

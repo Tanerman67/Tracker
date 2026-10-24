@@ -1,6 +1,6 @@
 .section>*{min-width:0}
 .settings-goals-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0 12px}
-#settings details summary{cursor:pointer;padding:8px 0;font-weight:700}
+#settings details summary{cursor:pointer;padding:8px 0;font-weight:650}
 #settings details:not([open]){margin-bottom:8px}
 #settings h3{font-size:17px;margin:16px 0 10px}
 #settings .field{min-width:0}
@@ -17,7 +17,7 @@
 .shared-picker-sheet{padding:12px}
 .shared-date-trigger{flex-basis:38px;min-width:38px}
 }
-.nutrition-form{background:#050d17}
+
 .nutrition-form-grid input,.nutrition-form-grid select{height:48px;min-height:48px}
 .nutrition-form-grid .shared-date-field{height:48px;flex:0 0 48px}
 .nutrition-form-grid .shared-date-trigger{height:48px}
@@ -42,3 +42,4 @@ body.light .trend-primary{color:var(--text)}
 body.light .trend-change{color:var(--green)}
 body.light .trend-change.neutral,body.light .trend-metric-tab{color:var(--muted)}
 body.light .trend-metric-tab.active{color:var(--green)}
+
