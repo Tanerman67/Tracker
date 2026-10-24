@@ -47,8 +47,8 @@ function energyNutritionCompletion(date){const host=document.getElementById('nut
 function energyProfileHTML(){
  const p=data.energyBalance?.profile||{};
  return `<p>${trText('Настрой один раз. Вес берётся из Body Check-in.','Set up once. Weight comes from Body Check-in.')}</p><div class="energy-form-grid">
- ${energySelect('energyRoutine',trText('Обычная активность без дополнительных тренировок','Usual activity excluding extra workouts'),[['',trText('Выбери обычную активность','Choose your usual activity')],...Object.entries(ENERGY_ROUTINE_LABELS).map(([k,v])=>[k,trText(...v)])],p.routine||'','onchange="energyPreset(this.value)"')}
- ${moduleInput('energyHeight',trText('Рост, см (также для длины шага)','Height, cm (also used for step length)'),p.heightCm??'','number','min="100" max="250" step="any" inputmode="decimal"')}
+ ${energySelect('energyRoutine',trText('Обычная дневная активность','Usual daily activity'),[['',trText('Выбери обычную активность','Choose your usual activity')],...Object.entries(ENERGY_ROUTINE_LABELS).map(([k,v])=>[k,trText(...v)])],p.routine||'','onchange="settingsRoutineChanged(this.value)"')}
+ ${moduleInput('energyHeight',trText('Рост, см','Height, cm'),p.heightCm??'','number','min="100" max="250" step="any" inputmode="decimal"')}
  <div id="energyMifflinFields">${moduleInput('energyBirth',trText('Дата рождения','Date of birth'),p.birthDate||'','date',`max="${localDate()}"`)}${energySelect('energyVariant',trText('Пол для расчёта','Sex used for calculation'),[['',trText('Не выбран','Not selected')],['plus5',trText('Мужской','Male')],['minus161',trText('Женский','Female')]],p.variant||'')}</div>
  ${moduleInput('energyBaselineSteps',trText('Обычные шаги, уже включённые в базу','Usual steps already included in base energy'),p.baselineIncludedSteps??'','number','min="0" max="100000" step="1" inputmode="numeric"')}
  </div><details><summary>${trText('Расширенные настройки','Advanced settings')}</summary><div class="energy-form-grid">
@@ -57,7 +57,6 @@ ${energySelect('energyMode',trText('Источник RMR','RMR source'),[['miffl
  </div><p>${trText('Обычный день включает покой, бытовую активность, обычные шаги и пищеварение. Дополнительно учитываются шаги сверх выбранной нормы. Изменение профиля пересчитывает историю.','Usual day includes rest, routine movement, habitual steps and digestion. Only steps above the allowance are added. Profile changes recalculate history.')}</p></details>`;
 }
 function energyProfileMode(){const manual=document.getElementById('energyMode').value==='manual';document.getElementById('energyMifflinFields').hidden=false;document.getElementById('energyManualFields').hidden=!manual}
-function energyPreset(key){const p=MyRhythmEnergy.ROUTINES[key];if(p)document.getElementById('energyBaselineSteps').value=p.steps}
 function energyWorkoutHTML(){
  const w=(data.energyBalance?.workouts||[]).find(w=>w.id===energyWorkoutId)||{};
  return `<p>${trText('Только отдельная тренировка сверх обычного дня. Суточные активные калории с часов сюда вводить нельзя.','Only an individual workout beyond your usual day. Do not enter all-day active calories here.')}</p><div class="energy-form-grid">

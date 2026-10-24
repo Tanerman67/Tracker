@@ -13,12 +13,13 @@ function renderUnifiedSettings(){
  const advanced=document.getElementById('settingsEnergyAdvanced');advanced.replaceChildren();
  const details=profile.querySelector('details');advanced.append(...details.children);advanced.querySelector('summary')?.remove();details.remove();
  advanced.append(document.getElementById('energyBaselineSteps').closest('.field'));
+ const personalGrid=profile.querySelector('.energy-form-grid');for(const id of ['energyBirth','energyVariant','energyHeight','energyRoutine'])personalGrid.append(document.getElementById(id).closest('.field'));
  document.getElementById('energyMifflinFields').hidden=false;
  // Choosing a routine must not silently change an existing step allowance.
  document.getElementById('energyRoutine').setAttribute('onchange','settingsRoutineChanged(this.value)');
  const weight=bodyLatest('weight');const note=document.createElement('p');note.textContent=trText('Вес: ','Weight: ')+(weight?bodyFormatNumber(weight.value)+' '+bodyMetricUnit('weight'):trText('Нет данных. Добавь замер в Body.','No data. Add a Body check-in.'));profile.append(note);
  const stored=data.energyBalance?.profile||{},missing=[];
- if(stored.baselineIncludedSteps==null)missing.push(trText('обычные шаги в базе','included usual steps'));
+ if(stored.routine&&stored.baselineIncludedSteps==null)missing.push(trText('обычные шаги в базе','included usual steps'));
  if(!stored.routine)missing.push(trText('обычная активность','usual activity'));
  if(stored.mode==='manual'){if(stored.manualRmr==null)missing.push('RMR')}
  else{if(stored.heightCm==null)missing.push(trText('рост','height'));if(!stored.birthDate)missing.push(trText('дата рождения','date of birth'));if(!stored.variant)missing.push(trText('пол для расчёта','sex used for calculation'))}
