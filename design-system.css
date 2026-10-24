@@ -102,3 +102,4 @@ summary{min-height:44px;cursor:pointer;align-content:center;font-size:14px;font-
 /* Annual overview is intentionally dense; month editors keep full touch targets. */
 .alcohol-year-grid .shared-calendar-grid .shared-day{min-height:0}
 #moduleContent>.shared-calendar{margin-inline:-8px}
+.trend-range-tabs button.secondary,.body-range-tabs button.secondary{background:var(--soft);color:var(--green);border-color:var(--green)}

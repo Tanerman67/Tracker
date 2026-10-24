@@ -1227,7 +1227,7 @@ function renderTrends(){
   ];
   buttons.forEach(([id,value])=>{
     const el=document.getElementById(id);
-    if(el)el.className=trendRangeDays===value?'secondary':'ghost';
+    if(el){el.className=trendRangeDays===value?'secondary':'ghost';el.setAttribute('aria-pressed',String(trendRangeDays===value))}
   });
 
   const tabs=document.getElementById('trendMetricTabs');

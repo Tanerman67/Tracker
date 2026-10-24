@@ -42,3 +42,8 @@ test('Alcohol annual overview stays compact after shared calendar target changes
  await ready(page);await page.setViewportSize({width:320,height:844});await page.evaluate(async()=>{data.alcoholTrackingStart='2024-01-01';await save();openAlcohol()});
  const day=page.locator('.alcohol-year-grid .shared-day').first();await expect(day).toBeVisible();const box=await day.boundingBox();expect(box.height).toBeLessThan(40);expect(await page.locator('#alcoholModal').evaluate(el=>el.scrollWidth<=el.clientWidth+1)).toBe(true);
 });
+test('selected periods stay visually distinct and exposed to assistive technology',async({page})=>{
+ await ready(page);await page.locator('#tabProgress').click();await page.locator('#trendRange30Btn').click();await expect(page.locator('#trendRange30Btn')).toHaveAttribute('aria-pressed','true');await expect(page.locator('#trendRange7Btn')).toHaveAttribute('aria-pressed','false');
+ const colours=await page.evaluate(()=>['trendRange30Btn','trendRange7Btn'].map(id=>getComputedStyle(document.getElementById(id)).backgroundColor));expect(colours[0]).not.toBe(colours[1]);
+ await page.evaluate(()=>openBody());await page.locator('#bodyRange30Btn').click();await expect(page.locator('#bodyRange30Btn')).toHaveAttribute('aria-pressed','true');await expect(page.locator('#bodyRange7Btn')).toHaveAttribute('aria-pressed','false');
+});

@@ -434,7 +434,7 @@ function renderBody(){
     ['bodyRangeAllBtn','all']
   ].forEach(([id,value])=>{
     const el=document.getElementById(id);
-    if(el)el.className=bodyRangeDays===value?'secondary':'ghost';
+    if(el){el.className=bodyRangeDays===value?'secondary':'ghost';el.setAttribute('aria-pressed',String(bodyRangeDays===value))}
   });
 
   const chart=document.getElementById('bodyChartHost');

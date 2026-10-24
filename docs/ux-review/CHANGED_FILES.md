@@ -43,3 +43,4 @@ Relative to main 5ec2e39 (7.3.2).
 - `today.css`
 - `ui.js`
 - `docs/ux-review/CHANGED_FILES.md`
+- `playwright.config.cjs`
