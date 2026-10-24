@@ -3,3 +3,6 @@
 .energy-chart{display:block;width:100%;height:auto;margin:18px 0;color:var(--muted)}.energy-history-list{max-height:420px;overflow:auto}
 
 .today-metric[data-metric=energy]{grid-column:1/-1;text-align:left}.today-metric[data-metric=energy] .today-metric-value{font-size:20px}.today-metric[data-metric=energy] details{margin-top:8px;padding:8px 0 0;border:0}.today-metric[data-metric=energy] p{font-size:13px;line-height:1.6}
+
+/* Energy history contains multiple charts and must participate in normal flow. */
+#trendChartHost:has(> .energy-view){height:auto;min-width:0;display:flow-root}

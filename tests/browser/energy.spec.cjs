@@ -65,3 +65,25 @@ test('energy backup, restore, vault and offline reload preserve existing records
   await new Promise(resolve=>server.close(resolve));await page.reload();await expect(page.locator('body')).not.toHaveClass(/loading-data/);await open(page);expect(await page.evaluate(()=>energyDay().status)).toBe('provisional');
  }finally{if(server.listening)await new Promise(resolve=>server.close(resolve))}
 });
+
+test('Energy Balance stays inside its Progress card without overlapping the weekly review',async({page})=>{
+ await ready(page);await seed(page);await page.locator('#tabProgress').click();
+ for(const width of [320,390,1280]){
+  await page.setViewportSize({width,height:844});
+  for(const language of ['en','ru']){
+   await page.evaluate(lang=>{data.language=lang;setTrendRange('all');setTrendMetric('energy')},language);
+   await expect(page.locator('#trendChartHost svg')).toHaveCount(2);
+   const bounds=await page.evaluate(()=>{
+    const host=document.getElementById('trendChartHost'),card=host.closest('.trend-card');
+    const rect=el=>{const r=el.getBoundingClientRect();return {top:r.top,bottom:r.bottom}};
+    return {host:rect(host),energy:rect(host.firstElementChild),card:rect(card),review:rect(document.querySelector('.weekly-review'))};
+   });
+   expect(bounds.energy.bottom).toBeLessThanOrEqual(bounds.host.bottom+1);
+   expect(bounds.energy.bottom).toBeLessThanOrEqual(bounds.card.bottom);
+   expect(bounds.card.bottom).toBeLessThanOrEqual(bounds.review.top);
+  }
+  await page.evaluate(()=>setTrendMetric('weight'));
+  await expect(page.locator('#trendChartHost .energy-view')).toHaveCount(0);
+  expect(await page.locator('#trendChartHost').evaluate(el=>el.getBoundingClientRect().height)).toBeGreaterThan(190);
+ }
+});

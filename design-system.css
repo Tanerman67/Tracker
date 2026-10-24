@@ -103,3 +103,9 @@ summary{min-height:44px;cursor:pointer;align-content:center;font-size:14px;font-
 .alcohol-year-grid .shared-calendar-grid .shared-day{min-height:0}
 #moduleContent>.shared-calendar{margin-inline:-8px}
 .trend-range-tabs button.secondary,.body-range-tabs button.secondary{background:var(--soft);color:var(--green);border-color:var(--green)}
+
+/* Customize Blocks uses the same cards, spacing and type as Today. */
+#moduleContent:has(.layout-row) .layout-row{padding:var(--space-4);margin:var(--space-3) 0;background:var(--card);border:1px solid var(--line);border-radius:var(--radius-card)}
+#moduleContent:has(.layout-row) .layout-row strong{display:flex;align-items:center;gap:var(--space-2);font-size:var(--type-card-title);font-weight:650}
+#moduleContent:has(.layout-row) .layout-actions{gap:var(--space-2);margin-top:var(--space-3)}
+#moduleContent:has(.layout-row) .module-actions{gap:var(--space-2);margin-bottom:var(--space-4)}
