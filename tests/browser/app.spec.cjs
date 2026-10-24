@@ -99,6 +99,9 @@ test('upgrade from actual 6.13 assets keeps existing records and local recovery 
 
 test('IndexedDB coordination fallback preserves edits without Web Locks',async({page,context})=>{
  await context.addInitScript(()=>Object.defineProperty(navigator,'locks',{value:undefined,configurable:true}));await ready(page);const other=await context.newPage();await ready(other);
- await Promise.all([page.evaluate(()=>{ensureDay('2024-01-02').steps=555;return save()}),other.evaluate(()=>{ensureDay('2024-01-02').sleep=7;return save()})]);await page.reload();await expect(page.locator('body')).not.toHaveClass(/loading-data/);expect(await page.evaluate(()=>data.logs['2024-01-02'])).toEqual({steps:555,sleep:7});
+ // Keep both writes concurrent, but observe completion through page state rather than
+ // keeping two long-lived DevTools Promise handles during the IndexedDB transaction.
+ await Promise.all([page.evaluate(()=>{ensureDay('2024-01-02').steps=555;window.fallbackSaveResult='pending';save().then(ok=>window.fallbackSaveResult=ok).catch(e=>window.fallbackSaveResult=e.message)}),other.evaluate(()=>{ensureDay('2024-01-02').sleep=7;window.fallbackSaveResult='pending';save().then(ok=>window.fallbackSaveResult=ok).catch(e=>window.fallbackSaveResult=e.message)})]);
+ await expect.poll(()=>page.evaluate(()=>window.fallbackSaveResult)).toBe(true);await expect.poll(()=>other.evaluate(()=>window.fallbackSaveResult)).toBe(true);await page.reload();await expect(page.locator('body')).not.toHaveClass(/loading-data/);expect(await page.evaluate(()=>data.logs['2024-01-02'])).toEqual({steps:555,sleep:7});
 });
 

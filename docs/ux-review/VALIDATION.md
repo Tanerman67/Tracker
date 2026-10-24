@@ -27,3 +27,7 @@ The annual Alcohol overview retains smaller day cells as an overview; the normal
 ## Data contracts
 
 No storage code/schema/key changes. No personal data in fixtures or screenshots. Historical protein values are read-only and preserved by backups; complete food data takes priority, incomplete food data falls back to a historical manual value, and sources never sum together.
+
+## CI follow-up
+
+The first remote run stopped during the existing IndexedDB fallback test with a DevTools execution-context error. The trace showed no navigation request. The test now starts the same two concurrent saves and polls their completion results instead of holding two long-lived DevTools Promise handles. Both results must still be true and the merged records must still survive reload. Application storage logic is unchanged. This version passed 20 local repetitions across desktop/mobile Chromium; remote Chromium/WebKit verification is rerun on the updated head.
