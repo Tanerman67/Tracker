@@ -47,7 +47,4 @@ function editedGoalRule(id,target){
  if(!['min','max','range','observe'].includes(type)||type==='range'&&(upper===null||!Number.isFinite(upper)||upper<0||target!=null&&upper<target))throw Error(trText('Проверь границы диапазона.','Check the range limits.'));
  return {...old,type,target,...(type==='range'?{upper}:{})};
 }
-function saveGoalRulesFromSettings(){
- try{const next=structuredClone(data.goalRules);for(const id of ['steps','sleep','outdoors'])next[id]=editedGoalRule(id,goalFor(id));data.goalRules=next;return true}
- catch(e){alert(e.message);return false}
-}
+

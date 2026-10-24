@@ -19,7 +19,7 @@
 #entryModal .sheet,.habit-sheet,.body-checkin-sheet,
 #moduleModal.today-workout-dialog .module-page{
   box-sizing:border-box;position:relative;width:min(100%,560px);max-width:560px;
-  height:auto;max-height:min(84dvh,720px);min-height:0;
+  height:auto;max-height:min(84dvh,var(--viewport-height,84dvh),720px);min-height:0;
   margin:0;padding:20px 16px calc(20px + env(safe-area-inset-bottom));
   overflow:auto;overscroll-behavior:contain;border:1px solid var(--line);border-bottom:0;
   border-radius:24px 24px 0 0;background:var(--card);color:var(--text);box-shadow:none;
@@ -37,7 +37,7 @@
   padding:0;border-radius:12px;background:var(--soft);color:var(--green);
   border:1px solid var(--line);
 }
-#entryModal .sheet>button:last-child,#habitSave{width:100%;margin-top:auto}
+#entryModal .sheet>button:not(.close),#habitSave{width:100%;margin-top:18px}
 #habitContent{flex:0 1 auto}
 .body-checkin-note{margin-top:auto}
 #moduleModal.today-workout-dialog .module-header{
@@ -85,16 +85,15 @@
 #today .today-metric[data-metric] .today-metric-title .ui-icon,
 #today .today-metric[data-metric] .today-metric-title>svg{width:20px;height:20px;flex:none}
 #today .today-metric[data-metric] .today-metric-title>span:first-child{font-size:20px;display:inline-flex;align-items:center;justify-content:center}
-#today .today-metric[data-metric] .today-metric-status{margin-top:auto}
 #entryModal .sheet,#habitModal .habit-sheet,#bodyCheckinModal .body-checkin-sheet,
 #moduleModal.today-workout-dialog .module-page{min-height:0}
-#entryModal .sheet>button:last-child,#habitSave{margin-top:18px}
-#moduleModal.today-workout-dialog .module-header #moduleBack.close{
+
+#moduleModal .module-header #moduleBack.close{
   display:grid;place-items:center;width:44px;height:44px;min-width:44px;
   min-height:44px;padding:0;border-radius:12px;border:1px solid var(--line);
   background:var(--soft);color:var(--green)
 }
-#moduleModal.today-workout-dialog .module-header #moduleBack .ui-icon{width:20px;height:20px}
+#moduleModal .module-header #moduleBack .ui-icon{width:20px;height:20px}
 #progress .body-progress-copy{min-width:0;flex:1 1 180px}
 #progress .body-progress-summary{display:flex;flex-wrap:wrap;gap:12px 20px;margin-top:12px}
 #progress .body-progress-summary span{display:flex;flex-direction:column;gap:3px;min-width:0}
@@ -117,3 +116,5 @@ body.light #progress .body-progress-panel .body-back{
  #progress .body-progress-entry{align-items:flex-start}
  #progress .body-progress-entry button{width:100%}
 }
+
+#progress .body-progress-summary[hidden]{display:none}

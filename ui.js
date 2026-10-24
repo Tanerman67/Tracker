@@ -27,7 +27,7 @@ addEventListener('beforeunload',e=>{if([...uiFormSnapshots.keys()].some(uiFormDi
 // VisualViewport follows the usable area above the iPhone software keyboard.
 function uiViewport(){if(!globalThis.visualViewport)return;document.documentElement.style.setProperty('--viewport-height',visualViewport.height+'px');document.documentElement.style.setProperty('--viewport-top',visualViewport.offsetTop+'px')}
 if(globalThis.visualViewport){visualViewport.addEventListener('resize',uiViewport);visualViewport.addEventListener('scroll',uiViewport);uiViewport()}
-addEventListener('focusin',e=>{if(e.target.matches?.('input,textarea,select')&&e.target.closest('.nutrition-form,.body-checkin-modal'))setTimeout(()=>e.target.scrollIntoView({block:'nearest'}),250)});
+addEventListener('focusin',e=>{if(e.target.matches?.('input,textarea,select')&&e.target.closest('.nutrition-form,.body-checkin-modal,#entryModal,#habitModal,#moduleModal'))setTimeout(()=>e.target.scrollIntoView({block:'nearest'}),250)});
 
 // One pending action per editor. Inputs remain available on failed saves.
 const uiSavingForms=new Set();
@@ -38,9 +38,11 @@ function uiGuardEditor(name,id){
   uiSavingForms.add(id);
   const host=document.getElementById(id);
   host?.setAttribute('aria-busy','true');
+  const fields=[...(host?.querySelectorAll('input,select,textarea')||[])].map(el=>[el,el.disabled]);
+  for(const [el] of fields)el.disabled=true;
   try{return await action(...args)}
   catch(error){alert(trText('Не удалось сохранить. Введённые значения остаются в форме. ','Could not save. Your entries remain in the form. ')+error.message);return false}
-  finally{uiSavingForms.delete(id);host?.removeAttribute?.('aria-busy')}
+  finally{for(const [el,disabled] of fields)el.disabled=disabled;uiSavingForms.delete(id);host?.removeAttribute?.('aria-busy')}
  };
 }
 addEventListener('DOMContentLoaded',()=>{

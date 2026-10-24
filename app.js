@@ -850,6 +850,7 @@ function setTrendRange(n){
   const allowed=[7,30,90,365,'all'];
   if(!allowed.includes(n))n=7;
   trendSetRange(n);
+  if(!document.getElementById('bodyModal')?.hidden)setBodyRange(n);
 }
 function setTrendMetric(id){
   if(id==='weight'||id==='body'){bodySelectedMetric='weight';openBody();return}
@@ -1379,6 +1380,8 @@ setInterval(checkAppDayRollover,60000);
 
 addEventListener('keydown',e=>{
   if(e.key!=='Escape')return;
+ if(document.getElementById('entryModal')?.classList.contains('show'))return closeModal('entryModal');
+ if(document.getElementById('smokeModal')?.classList.contains('show'))return closeSmoke();
  if(document.getElementById('nutritionForm')?.classList.contains('show'))return nutritionCancelForm();
  if(document.getElementById('nutritionImportPreview')?.classList.contains('show'))return nutritionCancelImport();
  if(document.getElementById('moduleModal')?.classList.contains('show'))return closeModule();

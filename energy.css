@@ -6,3 +6,5 @@
 
 /* Energy history contains multiple charts and must participate in normal flow. */
 #trendChartHost:has(> .energy-view){height:auto;min-width:0;display:flow-root}
+
+.energy-chart{border:1px solid var(--line);border-radius:var(--radius-card);background:var(--card);padding:8px;box-sizing:border-box}
