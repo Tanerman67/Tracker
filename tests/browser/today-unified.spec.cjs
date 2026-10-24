@@ -62,7 +62,8 @@ test('Smoke-free uses original quit date and does not invent daily smoking logs'
  await page.locator('[data-metric="smoke"]').click();
  await expect(page.locator('#smokeModal')).toHaveClass(/show/);
  await expect(page.locator('#smokeQuitDate')).toHaveValue('2024-01-10');
- await expect(page.locator('#smokeCalendarHost .shared-day')).toHaveCount(12*0+365+1); // leap year
+ await page.evaluate(()=>{smokeViewYear=2024;renderSmokeCalendar()});
+ await expect(page.locator('#smokeCalendarHost .shared-day')).toHaveCount(366); // leap year
  const original=await page.evaluate(()=>JSON.stringify(data.logs));
  await page.locator('#smokeQuitDate').fill('2024-02-01');
  await page.locator('#smokeSaveButton').click();
