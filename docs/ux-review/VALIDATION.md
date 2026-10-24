@@ -6,7 +6,7 @@ Baseline: `main` 5ec2e39 (7.3.2). Latest five main commits inspected; no open PR
 
 - Baseline `npm test`: 113 passed.
 - Revised `npm test`: 116 passed, including historical protein source combinations, blocking the legacy writer, failed-save feedback and repeated Save taps.
-- Playwright: Chromium desktop and iPhone-emulated Chromium; complete suite plus the added contrast check. 70 checks passed in the complete Chromium run (35 per project). The final contrast regression passed in both Chromium projects, giving 72 successful Chromium checks across the suite and the added check. The default command then stopped on WebKit launch because host libraries are unavailable.
+- Playwright: Chromium desktop and iPhone-emulated Chromium; complete suite plus the added contrast check. 70 checks passed in the complete Chromium run (35 per project). The final contrast regression passed in both Chromium projects, and the compact Alcohol-year regression passed in both projects, giving 74 successful Chromium checks across the suite and the added checks. The default command then stopped on WebKit launch because host libraries are unavailable.
 - Widths: 320, 360, 375, 390, 414px; English/Russian; dark/light; main screens and food editor, plus a dedicated Body matrix.
 - Focus-visible and 44px main controls; 16px fields; contrast checks for controls/headings/labels. Visual inspection corrected low-contrast light chart labels and narrow calendar targets.
 - Food save/edit/delete, partial and over-100% rings, frequent-food reuse, scaling and copy-day behaviour.

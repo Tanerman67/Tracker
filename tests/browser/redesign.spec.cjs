@@ -38,3 +38,7 @@ test('shared headings, labels and actions keep normal-text contrast in both them
   }
  }
 });
+test('Alcohol annual overview stays compact after shared calendar target changes',async({page})=>{
+ await ready(page);await page.setViewportSize({width:320,height:844});await page.evaluate(async()=>{data.alcoholTrackingStart='2024-01-01';await save();openAlcohol()});
+ const day=page.locator('.alcohol-year-grid .shared-day').first();await expect(day).toBeVisible();const box=await day.boundingBox();expect(box.height).toBeLessThan(40);expect(await page.locator('#alcoholModal').evaluate(el=>el.scrollWidth<=el.clientWidth+1)).toBe(true);
+});
