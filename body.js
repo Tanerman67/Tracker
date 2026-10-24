@@ -3,6 +3,7 @@ let bodySelectedMetric='weight';
 let bodyRangeDays='all';
 let bodySelectedPoint=null;
 let bodyEditingDate='';
+let bodyProgressReturnScroll=0;
 
 const BODY_METRICS=[
   {id:'weight',icon:'⚖️',ru:'Вес',en:'Weight',unitRu:'кг',unitEn:'kg'},
@@ -97,6 +98,7 @@ function openBody(){
   if(currentSection!=='progress')return;
   const panel=document.getElementById('bodyModal');
   if(!panel)return;
+  bodyProgressReturnScroll=window.scrollY||0;
   panel.hidden=false;
   renderBodyProgressSummary();
   renderBody();
@@ -107,7 +109,7 @@ function closeBody(){
   const panel=document.getElementById('bodyModal');
   if(panel)panel.hidden=true;
   renderBodyProgressSummary();
-  document.getElementById('bodyProgressEntry')?.scrollIntoView?.({block:'nearest'});
+  window.scrollTo?.(0,bodyProgressReturnScroll);
 }
 function toggleBodyProgress(){
   const panel=document.getElementById('bodyModal');
