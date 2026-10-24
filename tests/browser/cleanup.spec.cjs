@@ -70,3 +70,15 @@ test('upgrade from 7.0 preserves full synthetic data and works offline with new 
  await new Promise(resolve=>server.close(resolve));await page.reload();await expect(page.locator('body')).not.toHaveClass(/loading-data/);await page.locator('#tabNutrition').click();await picker(page,'nutritionDate');await expect(page.locator('#sharedDatePicker .shared-calendar')).toBeVisible();expect(await page.evaluate(()=>data.proteinGoal)).toBe(137);
  }finally{if(server.listening)await new Promise(resolve=>server.close(resolve))}
 });
+
+test('Body is a Progress screen with one Add action, metric charts and restored return position',async({page})=>{
+ await ready(page);await seed(page);await page.evaluate(async()=>{data.logs['2024-02-29'].weight=75;await save()});
+ const errors=[];page.on('pageerror',e=>errors.push(e.message));
+ for(const language of ['en','ru'])for(const theme of ['dark','light'])for(const width of [320,360,375,390,414]){
+  await page.setViewportSize({width,height:844});await page.evaluate(({language,theme})=>{data.language=language;data.theme=theme;render();show('progress');scrollTo(0,200)},{language,theme});const position=await page.evaluate(()=>scrollY);
+  await page.evaluate(()=>openBody());await expect(page.locator('#bodyModal')).toHaveClass(/active/);await expect(page.locator('#bodyModal button[onclick="openBodyCheckin()"]')).toHaveCount(1);await expect(page.locator('#bodyModal .body-back')).toContainText(language==='en'?'Progress':'Прогресс');if(theme==='light')await readableControl(page,'#bodyModal .body-back');
+  for(const metric of ['weight','waist','chest','abdomen','hips','thigh']){await page.evaluate(metric=>setBodyMetric(metric),metric);await noOverflow(page);await noOverflow(page,'#bodyModal')}
+  await page.locator('#bodyModal .body-back').click();await expect(page.locator('#progress')).toHaveClass(/active/);expect(Math.abs(await page.evaluate(()=>scrollY)-position)).toBeLessThan(3);
+ }
+ await page.evaluate(()=>{openBody();setBodyMetric('weight')});await page.screenshot({path:test.info().outputPath('body-progress-screen.png'),fullPage:true});expect(errors).toEqual([]);
+});

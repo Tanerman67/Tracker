@@ -1765,3 +1765,14 @@ input,select,textarea{font-size:16px}
 .body-screen .body-topbar{grid-template-columns:auto 1fr}
 .body-screen .body-back{width:auto;padding:10px 14px;border-radius:14px}
 .body-screen .body-page{padding:12px 0 28px;min-height:0}
+/* Keep the Progress return action and heading bounded on narrow screens. */
+.body-screen .body-topbar{grid-template-columns:minmax(0,1fr);gap:8px}
+.body-screen .body-topbar>div{min-width:0}
+.body-screen .body-back{width:fit-content;max-width:100%;height:auto;min-height:44px;font-size:14px;line-height:1.3;white-space:normal;text-align:left}
+.body-screen .body-title{font-size:24px;overflow-wrap:anywhere}
+body.light .body-screen .body-topbar{background:var(--bg)}
+body.light .body-summary-card,body.light .body-chart-card,body.light .body-history-row,body.light .body-checkin-sheet{background:var(--card);border-color:var(--line);color:var(--text);box-shadow:var(--shadow)}
+body.light .body-back,body.light .body-new-checkin,body.light .body-metric-tab{background:var(--card);color:var(--text);border-color:var(--line);box-shadow:var(--shadow)}
+body.light .body-summary-value,body.light .body-chart-change,body.light .body-history-value,body.light .body-summary-delta.good{color:var(--green)}
+body.light .body-summary-delta,body.light .body-summary-delta.neutral,body.light .body-new-checkin small,body.light .body-chart-empty,body.light .body-chart-note,body.light .body-history-delta,body.light .body-history-empty{color:var(--muted)}
+body.light .body-metric-tab.active{color:var(--green);background:var(--card);border-color:var(--green)}

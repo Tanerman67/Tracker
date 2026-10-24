@@ -1,6 +1,6 @@
-MY RHYTHM 7.3.2 - UNPUBLISHED CANDIDATE
-See docs/SAFE_CLEANUP_7.3.2.md. Complete browser checks before deployment.
-Publishing requires a separate user instruction. Keep the same Pages origin and /Tracker/ path.
+MY RHYTHM 7.3.2 - STATIC GITHUB PAGES APP
+See docs/SAFE_CLEANUP_7.3.2.md. Chromium desktop/mobile browser checks passed; Safari is not independently verified.
+Publication authorised by the user on 2026-10-24. Keep the same Pages origin and /Tracker/ path.
 
 ARCHIVED INSTRUCTIONS BELOW:
 MY RHYTHM 7.0 - STATIC GITHUB PAGES APP

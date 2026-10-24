@@ -1,4 +1,4 @@
-CURRENT CANDIDATE: V7.3.2 - safe UI cleanup (not published).
+CURRENT RELEASE: V7.3.2 - safe UI cleanup.
 Read docs/SAFE_CLEANUP_7.3.2.md for changes, validation and remaining browser checks.
 Run npm ci, npm test, npx playwright install, then npm run test:browser.
 Serve the existing static application with npm run serve.
