@@ -79,13 +79,39 @@ function bodyFieldCount(dateKey){
   return ['chest','waist','abdomen','hips','thigh'].filter(k=>Number(row[k])>0).length;
 }
 
-function openBody(){
-  show('bodyModal');
-  renderBody();uiRefresh();
+function renderBodyProgressSummary(){
+  const weight=bodyLatest('weight'),waist=bodyLatest('waist');
+  const weightEl=document.getElementById('bodyProgressWeight');
+  const waistEl=document.getElementById('bodyProgressWaist');
+  if(weightEl)weightEl.textContent=weight?bodyFormatNumber(weight.value)+' '+bodyMetricUnit('weight'):'—';
+  if(waistEl)waistEl.textContent=waist?bodyFormatNumber(waist.value)+' '+bodyMetricUnit('waist'):'—';
+  const toggle=document.getElementById('bodyProgressToggle');
+  if(toggle){
+    const expanded=!document.getElementById('bodyModal')?.hidden;
+    toggle.setAttribute('aria-expanded',String(expanded));
+    toggle.textContent=expanded?trText('Скрыть статистику','Hide statistics'):trText('Графики и история','Charts & history');
+  }
 }
-
+function openBody(){
+  if(currentSection!=='progress')show('progress',document.getElementById('tabProgress'));
+  if(currentSection!=='progress')return;
+  const panel=document.getElementById('bodyModal');
+  if(!panel)return;
+  panel.hidden=false;
+  renderBodyProgressSummary();
+  renderBody();
+  if(typeof uiRefresh==='function')uiRefresh();
+  panel.scrollIntoView?.({block:'nearest'});
+}
 function closeBody(){
-  show('progress');
+  const panel=document.getElementById('bodyModal');
+  if(panel)panel.hidden=true;
+  renderBodyProgressSummary();
+  document.getElementById('bodyProgressEntry')?.scrollIntoView?.({block:'nearest'});
+}
+function toggleBodyProgress(){
+  const panel=document.getElementById('bodyModal');
+  if(panel?.hidden)openBody();else closeBody();
 }
 function setBodyMetric(id){
   bodySelectedMetric=id;
@@ -196,7 +222,7 @@ function translateBodyCheckin(){
   const set=(id,ru,en)=>{const el=document.getElementById(id);if(el)el.textContent=trText(ru,en)};
   set('bodyCheckinTitle','Body Check-in','Body Check-in');
   set('bodyDateLabel','Дата','Date');
-  set('bodyWeightInputLabel','⚖️ Вес, кг','⚖️ Weight, kg');
+  set('bodyWeightInputLabel','Вес, кг','Weight, kg');
   set('bodyChestInputLabel','Грудь, см','Chest, cm');
   set('bodyWaistInputLabel','Талия, см','Waist, cm');
   set('bodyAbdomenInputLabel','Живот, см','Abdomen, cm');
@@ -359,7 +385,7 @@ function renderBody(){
   const set=(id,text)=>{const el=document.getElementById(id);if(el)el.textContent=text};
 
   set('bodyTitle',trText('Замеры тела','Body measurements'));
-  const back=document.querySelector('.body-back');if(back){back.textContent=trText('‹ Прогресс','‹ Progress');back.setAttribute('aria-label',trText('Вернуться в Прогресс','Back to Progress'))}
+  const back=document.querySelector('.body-back');if(back){back.setAttribute('aria-label',trText('Скрыть статистику','Hide statistics'));if(typeof uiIcon==='function')back.innerHTML=uiIcon('close')}
   set('bodySubtitle',trText('Замеры и динамика','Measurements & trends'));
   set('bodyWeightLabel',trText('Текущий вес','Current weight'));
   set('bodyLastCheckinLabel',trText('Последний замер','Last check-in'));
@@ -406,7 +432,7 @@ function renderBody(){
   const chartSeries=bodyChartSeries(bodySelectedMetric,dailySeries);
   const visibleRows=dailySeries.filter(r=>r.value!==null);
 
-  set('bodyChartTitle',`${metric.icon} ${bodyMetricName(bodySelectedMetric)}`);
+  set('bodyChartTitle',bodyMetricName(bodySelectedMetric));
 
   const first=visibleRows.length?visibleRows[0]:null;
   const last=visibleRows.length?visibleRows[visibleRows.length-1]:null;
