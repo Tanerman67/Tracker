@@ -27,7 +27,7 @@
 <link rel="stylesheet" href="cleanup.css?v=7311">
 <link rel="stylesheet" href="energy.css?v=7311">
 <link rel="stylesheet" href="design-system.css?v=7401">
-<link rel="stylesheet" href="today-unified.css?v=1">
+<link rel="stylesheet" href="today-unified.css?v=2">
 </head>
 <body class="loading-data"><div id="dataLoading" role="status">Restoring local data…</div>
 <div class="app"><p id="tabUpdateNotice" class="privacy-note" role="status" hidden data-localized></p>
@@ -87,10 +87,100 @@
   </div>
 
   <div class="card body-progress-entry" id="bodyProgressEntry">
-    <div><strong data-i18n-ru="Вес и замеры тела" data-i18n-en="Weight & body measurements">Weight & body measurements</strong>
-      <div class="sub" data-i18n-ru="Графики, история и сравнение измерений" data-i18n-en="Charts, history and measurement comparisons">Charts, history and measurement comparisons</div>
+    <div class="body-progress-copy">
+      <strong data-i18n-ru="Вес и замеры тела" data-i18n-en="Weight & body measurements">Weight & body measurements</strong>
+      <div class="sub" data-i18n-ru="Графики и история в разделе Прогресс" data-i18n-en="Charts and history in Progress">Charts and history in Progress</div>
+      <div class="body-progress-summary">
+        <span><small data-i18n-ru="Вес" data-i18n-en="Weight">Weight</small><strong id="bodyProgressWeight">—</strong></span>
+        <span><small data-i18n-ru="Талия" data-i18n-en="Waist">Waist</small><strong id="bodyProgressWaist">—</strong></span>
+      </div>
     </div>
-    <button type="button" class="secondary" onclick="openBody()" data-i18n-ru="Открыть замеры" data-i18n-en="View measurements">View measurements</button>
+    <button type="button" id="bodyProgressToggle" class="secondary" onclick="toggleBodyProgress()" aria-controls="bodyModal" aria-expanded="false" data-i18n-ru="Графики и история" data-i18n-en="Charts & history">Charts & history</button>
+  </div>
+  <div id="bodyModal" class="body-screen body-progress-panel" hidden>
+  <div class="body-page">
+    <div class="body-topbar">
+      <button type="button" class="close body-back" onclick="closeBody()" aria-label="Close measurements">✕</button>
+      <div>
+        <div class="body-title" id="bodyTitle">Body</div>
+        <div class="body-subtitle" id="bodySubtitle">Замеры и динамика</div>
+      </div>
+
+    </div>
+
+    <div class="body-summary-grid">
+      <div class="body-summary-card body-summary-main">
+        <div class="body-summary-label" id="bodyWeightLabel">Текущий вес</div>
+        <div class="body-summary-value" id="bodyLatestWeight">—</div>
+        <div class="body-summary-delta" id="bodyWeightDelta">—</div>
+      </div>
+      <div class="body-summary-card">
+        <div class="body-summary-label" id="bodyLastCheckinLabel">Последний замер</div>
+        <div class="body-summary-value body-summary-date" id="bodyLastCheckin">—</div>
+        <div class="body-summary-delta" id="bodyLastCheckinFields">—</div>
+      </div>
+      <div class="body-summary-card">
+        <div class="body-summary-label" id="bodyWaistLabel">Талия</div>
+        <div class="body-summary-value" id="bodyLatestWaist">—</div>
+        <div class="body-summary-delta" id="bodyWaistDelta">—</div>
+      </div>
+    </div>
+
+    <button type="button" class="body-new-checkin" onclick="openBodyCheckin()">
+      <span>＋</span>
+      <span>
+        <strong id="bodyNewCheckinTitle">Новый замер</strong>
+        <small id="bodyNewCheckinSub">Вес + 5 измерений тела</small>
+      </span>
+    </button>
+
+    <div class="body-section-head">
+      <div>
+        <div class="body-section-title" id="bodyDynamicsTitle">Динамика</div>
+        <div class="body-section-sub" id="bodyDynamicsSub">Выбери показатель</div>
+      </div>
+    </div>
+
+    <div class="body-metric-tabs" id="bodyMetricTabs"></div>
+
+    <div class="body-range-tabs">
+      <button type="button" class="ghost" id="bodyRange7Btn" onclick="setBodyRange(7)">7 дней</button>
+      <button type="button" class="ghost" id="bodyRange30Btn" onclick="setBodyRange(30)">30 дней</button>
+      <button type="button" class="ghost" id="bodyRange90Btn" onclick="setBodyRange(90)">3 месяца</button>
+      <button type="button" class="ghost" id="bodyRange365Btn" onclick="setBodyRange(365)">1 год</button>
+      <button type="button" class="secondary" id="bodyRangeAllBtn" onclick="setBodyRange('all')">Всё время</button>
+    </div>
+
+    <div class="body-chart-card">
+      <div class="body-chart-head">
+        <div>
+          <div class="body-chart-title" id="bodyChartTitle">Талия</div>
+          <div class="body-chart-range" id="bodyChartRange">—</div>
+        </div>
+        <div class="body-chart-change" id="bodyChartChange">—</div>
+      </div>
+      <div id="bodyChartHost" class="body-chart-host"></div>
+      <div class="body-chart-note" id="bodyChartNote"></div>
+      <div class="trend-point-detail" id="bodyPointDetail" hidden>
+        <div class="trend-point-detail-period" id="bodyPointDetailPeriod"></div>
+        <div class="trend-point-detail-value" id="bodyPointDetailValue"></div>
+        <div class="trend-point-detail-meta" id="bodyPointDetailMeta"></div>
+      </div>
+    </div>
+
+    <div class="body-history-head">
+      <div>
+        <div class="body-section-title" id="bodyHistoryTitle">История</div>
+        <div class="body-section-sub" id="bodyHistorySub">Нажми на запись, чтобы изменить её</div>
+      </div>
+    </div>
+    <div id="bodyHistoryList" class="body-history-list"></div>
+
+    <div class="body-help card">
+      <div class="title" id="bodyHelpTitle">Для сравнимых замеров</div>
+      <div class="small" id="bodyHelpText">Старайся измеряться примерно в одинаковых условиях и в одинаковых местах тела. Поля можно оставлять пустыми.</div>
+    </div>
+  </div>
   </div>
 
   <div class="weekly-review card">
@@ -214,91 +304,7 @@
   </div>
 </section>
 
-<section id="bodyModal" class="section body-screen">
-  <div class="body-page">
-    <div class="body-topbar">
-      <button type="button" class="body-back" onclick="closeBody()">‹</button>
-      <div>
-        <div class="body-title" id="bodyTitle">Body</div>
-        <div class="body-subtitle" id="bodySubtitle">Замеры и динамика</div>
-      </div>
 
-    </div>
-
-    <div class="body-summary-grid">
-      <div class="body-summary-card body-summary-main">
-        <div class="body-summary-label" id="bodyWeightLabel">Текущий вес</div>
-        <div class="body-summary-value" id="bodyLatestWeight">—</div>
-        <div class="body-summary-delta" id="bodyWeightDelta">—</div>
-      </div>
-      <div class="body-summary-card">
-        <div class="body-summary-label" id="bodyLastCheckinLabel">Последний замер</div>
-        <div class="body-summary-value body-summary-date" id="bodyLastCheckin">—</div>
-        <div class="body-summary-delta" id="bodyLastCheckinFields">—</div>
-      </div>
-      <div class="body-summary-card">
-        <div class="body-summary-label" id="bodyWaistLabel">Талия</div>
-        <div class="body-summary-value" id="bodyLatestWaist">—</div>
-        <div class="body-summary-delta" id="bodyWaistDelta">—</div>
-      </div>
-    </div>
-
-    <button type="button" class="body-new-checkin" onclick="openBodyCheckin()">
-      <span>＋</span>
-      <span>
-        <strong id="bodyNewCheckinTitle">Новый замер</strong>
-        <small id="bodyNewCheckinSub">Вес + 5 измерений тела</small>
-      </span>
-    </button>
-
-    <div class="body-section-head">
-      <div>
-        <div class="body-section-title" id="bodyDynamicsTitle">Динамика</div>
-        <div class="body-section-sub" id="bodyDynamicsSub">Выбери показатель</div>
-      </div>
-    </div>
-
-    <div class="body-metric-tabs" id="bodyMetricTabs"></div>
-
-    <div class="body-range-tabs">
-      <button type="button" class="ghost" id="bodyRange7Btn" onclick="setBodyRange(7)">7 дней</button>
-      <button type="button" class="ghost" id="bodyRange30Btn" onclick="setBodyRange(30)">30 дней</button>
-      <button type="button" class="ghost" id="bodyRange90Btn" onclick="setBodyRange(90)">3 месяца</button>
-      <button type="button" class="ghost" id="bodyRange365Btn" onclick="setBodyRange(365)">1 год</button>
-      <button type="button" class="secondary" id="bodyRangeAllBtn" onclick="setBodyRange('all')">Всё время</button>
-    </div>
-
-    <div class="body-chart-card">
-      <div class="body-chart-head">
-        <div>
-          <div class="body-chart-title" id="bodyChartTitle">Талия</div>
-          <div class="body-chart-range" id="bodyChartRange">—</div>
-        </div>
-        <div class="body-chart-change" id="bodyChartChange">—</div>
-      </div>
-      <div id="bodyChartHost" class="body-chart-host"></div>
-      <div class="body-chart-note" id="bodyChartNote"></div>
-      <div class="trend-point-detail" id="bodyPointDetail" hidden>
-        <div class="trend-point-detail-period" id="bodyPointDetailPeriod"></div>
-        <div class="trend-point-detail-value" id="bodyPointDetailValue"></div>
-        <div class="trend-point-detail-meta" id="bodyPointDetailMeta"></div>
-      </div>
-    </div>
-
-    <div class="body-history-head">
-      <div>
-        <div class="body-section-title" id="bodyHistoryTitle">История</div>
-        <div class="body-section-sub" id="bodyHistorySub">Нажми на запись, чтобы изменить её</div>
-      </div>
-    </div>
-    <div id="bodyHistoryList" class="body-history-list"></div>
-
-    <div class="body-help card">
-      <div class="title" id="bodyHelpTitle">Для сравнимых замеров</div>
-      <div class="small" id="bodyHelpText">Старайся измеряться примерно в одинаковых условиях и в одинаковых местах тела. Поля можно оставлять пустыми.</div>
-    </div>
-  </div>
-</section>
 
 
 </div>
@@ -326,7 +332,7 @@
 
     <div class="body-checkin-grid">
       <div class="field">
-        <label id="bodyWeightInputLabel" for="bodyWeightInput">⚖️ Вес, кг</label><input id="bodyWeightInput" type="number" step="0.1" inputmode="decimal">
+        <label id="bodyWeightInputLabel" for="bodyWeightInput">Вес, кг</label><input id="bodyWeightInput" type="number" step="0.1" inputmode="decimal">
       </div>
       <div class="field">
         <label id="bodyChestInputLabel" for="bodyChestInput">Грудь, см</label><input id="bodyChestInput" type="number" step="0.1" inputmode="decimal">
@@ -359,7 +365,7 @@
         <div class="alcohol-title" id="alcoholTitle">Алкоголь</div>
         <div class="alcohol-subtitle" id="alcoholSubtitle">История и календарь</div>
       </div>
-      <div class="alcohol-streak-badge"><span>🍷</span><strong id="alcoholHeaderStreak">0</strong></div>
+      <div class="alcohol-streak-badge"><span aria-hidden="true"><svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3h12l-1 7a5 5 0 0 1-10 0ZM12 15v6m-4 0h8"/></svg></span><strong id="alcoholHeaderStreak">0</strong></div>
     </div>
 
     <div class="alcohol-summary-grid">
@@ -412,7 +418,7 @@
         <div class="alcohol-title" id="smokeTitle">Без сигарет</div>
         <div class="alcohol-subtitle" id="smokeSubtitle">Серия по дате отказа</div>
       </div>
-      <div class="alcohol-streak-badge"><span>🚭</span><strong id="smokeHeaderStreak">—</strong></div>
+      <div class="alcohol-streak-badge"><span aria-hidden="true"><svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 13h14v5H3Zm18 0v5m-1-9c-4-1 1-4-3-6M3 3l18 18"/></svg></span><strong id="smokeHeaderStreak">—</strong></div>
     </div>
     <div class="alcohol-summary-grid smoke-summary-grid" id="smokeSummaryGrid">
       <div class="alcohol-summary-card">
