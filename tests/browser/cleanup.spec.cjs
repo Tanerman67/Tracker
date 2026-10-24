@@ -76,7 +76,7 @@ test('Body charts expand inside Progress with one Add action and restored scroll
  const errors=[];page.on('pageerror',e=>errors.push(e.message));
  for(const language of ['en','ru'])for(const theme of ['dark','light'])for(const width of [320,360,375,390,414]){
   await page.setViewportSize({width,height:844});await page.evaluate(({language,theme})=>{data.language=language;data.theme=theme;render();show('progress');scrollTo(0,200)},{language,theme});const position=await page.evaluate(()=>scrollY);
-  await page.evaluate(()=>openBody());await expect(page.locator('#bodyModal')).toBeVisible();await expect(page.locator('#bodyModal button[onclick="openBodyCheckin()"]')).toHaveCount(1);await expect(page.locator('#bodyModal .body-back')).toHaveAttribute('aria-label',language==='en'?'Hide statistics':'Скрыть статистику');if(theme==='light')await readableControl(page,'#bodyModal .body-back');
+  await page.evaluate(()=>openBody());await expect(page.locator('#bodyModal')).toBeVisible();await expect(page.locator('#bodyModal button[onclick="openBodyCheckin()"]')).toHaveCount(1);await expect(page.locator('#bodyModal .body-back')).toHaveAttribute('aria-label',language==='en'?'Close':'Закрыть');if(theme==='light')await readableControl(page,'#bodyModal .body-back');
   for(const metric of ['weight','waist','chest','abdomen','hips','thigh']){await page.evaluate(metric=>setBodyMetric(metric),metric);await noOverflow(page);await noOverflow(page,'#bodyModal')}
   await page.locator('#bodyModal .body-back').click();await expect(page.locator('#progress')).toHaveClass(/active/);expect(Math.abs(await page.evaluate(()=>scrollY)-position)).toBeLessThan(3);
  }
