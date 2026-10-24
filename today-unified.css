@@ -1,0 +1,82 @@
+/* Today editing surfaces share dimensions, spacing and elevation. */
+/* Keep full-screen history (Alcohol, Smoke-free, Cycle, Body) separate from quick entry sheets. */
+#today .metric-grid{gap:12px}
+#today .today-metric[data-metric]{
+  box-sizing:border-box;min-height:140px;padding:16px;border-radius:var(--radius-card);
+  background:var(--card);border:1px solid var(--line);box-shadow:none;
+  display:flex;flex-direction:column;gap:8px;text-align:left;
+}
+#today .today-metric[data-metric] .today-metric-title{margin:0;line-height:1.35;align-items:center}
+#today .today-metric[data-metric] .today-metric-value{margin:0;font-size:clamp(19px,5vw,24px);line-height:1.25}
+#today .today-metric[data-metric] .today-metric-status{margin-top:auto;font-size:13px;line-height:1.4}
+#today .today-metric[data-metric] .metric-bar{margin-top:0}
+#entryModal,.habit-modal,.body-checkin-modal,
+#moduleModal.today-workout-dialog{
+  align-items:flex-end;justify-content:center;background:rgba(0,10,14,.62);
+  backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);padding:0;
+}
+#moduleModal.today-workout-dialog.show{display:flex}
+#entryModal .sheet,.habit-sheet,.body-checkin-sheet,
+#moduleModal.today-workout-dialog .module-page{
+  box-sizing:border-box;position:relative;width:min(100%,560px);max-width:560px;
+  height:min(72dvh,540px);max-height:calc(100dvh - 16px);min-height:0;
+  margin:0;padding:20px 16px calc(20px + env(safe-area-inset-bottom));
+  overflow:auto;overscroll-behavior:contain;border:1px solid var(--line);border-bottom:0;
+  border-radius:24px 24px 0 0;background:var(--card);color:var(--text);box-shadow:none;
+}
+#entryModal .sheet,.habit-sheet,.body-checkin-sheet{
+  display:flex;flex-direction:column;
+}
+#entryModal .sheet h3,.habit-sheet h3,.body-checkin-sheet h3,
+#moduleModal.today-workout-dialog .module-header h2{
+  margin:0 48px 20px 0;font-size:20px;font-weight:650;line-height:1.35;
+}
+#entryModal .sheet>.close,.body-checkin-sheet>.close,
+.habit-sheet #habitClose{
+  position:absolute;right:16px;top:16px;float:none;width:44px;height:44px;
+  padding:0;border-radius:12px;background:var(--soft);color:var(--green);
+  border:1px solid var(--line);
+}
+#entryModal .sheet>button:last-child,#habitSave{width:100%;margin-top:auto}
+#habitContent{flex:1 0 auto}
+.body-checkin-note{margin-top:auto}
+#moduleModal.today-workout-dialog .module-header{
+  position:sticky;top:-20px;margin:0 -2px 12px;padding:0 2px 12px;
+  background:var(--card);z-index:3;gap:12px;
+}
+#moduleModal.today-workout-dialog .module-header h2{margin:0}
+#moduleModal.today-workout-dialog .module-header #moduleBack{
+  min-width:44px;min-height:44px;padding:8px 12px;
+}
+#moduleModal.today-workout-dialog .module-page button{min-height:44px}
+#moduleModal.today-workout-dialog .energy-view>p:first-child{
+  color:var(--muted);font-size:13px;margin-top:0;
+}
+.alcohol-page,.body-page{max-width:720px;padding-left:16px;padding-right:16px}
+.alcohol-summary-grid,.body-summary-grid{gap:12px}
+.alcohol-summary-card,.body-summary-card{
+  background:var(--card);border:1px solid var(--line);border-radius:var(--radius-card);
+  box-shadow:none;padding:16px;
+}
+.alcohol-help,.body-help{margin-top:16px}
+#smokeModal .smoke-quit-form{
+  padding:16px;margin:0 0 16px;display:grid;grid-template-columns:minmax(0,1fr) auto;
+  align-items:end;gap:12px;
+}
+#smokeModal .smoke-quit-form .field{margin:0}
+#smokeModal .smoke-quit-form button{min-height:48px}
+#smokeModal .smoke-summary-grid{grid-template-columns:1fr 1fr}
+#smokeModal .smoke-quit-value{font-size:16px;white-space:normal;overflow-wrap:anywhere}
+#smokeModal .smoke-feedback{grid-column:1/-1;margin:0;font-size:13px;color:var(--muted)}
+#progress .body-progress-entry{
+  display:flex;justify-content:space-between;align-items:center;gap:14px;
+  padding:16px;margin:16px 0;
+}
+#progress .body-progress-entry .sub{margin-top:4px}
+#progress .body-progress-entry button{flex:0 0 auto}
+@media(max-width:390px){
+ #today .today-metric[data-metric]{min-height:136px;padding:12px}
+ #smokeModal .smoke-quit-form{grid-template-columns:minmax(0,1fr)}
+ #progress .body-progress-entry{align-items:stretch;flex-direction:column}
+ #progress .body-progress-entry button{width:100%}
+}

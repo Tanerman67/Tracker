@@ -36,7 +36,7 @@ function todayMetricState(id,date=todayDateKey()){
 }
 function openTodayMetric(id,date=todayDateKey()){
   if(id==='sleep'){openHabitEditor(id,date);return}
-  if(id==='weight'){openBody();return}
+  if(id==='weight'){openBodyCheckin(date);return}
   if(id==='protein'){nutritionOpen(date);return}
   if(id==='alcohol'){
     openAlcohol();
