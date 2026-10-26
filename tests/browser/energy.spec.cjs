@@ -22,10 +22,26 @@ test('Today has only automatic summary and Settings owns profile',async({page})=
 test('existing Workout card records multiple active calorie entries, edits and deletes without double counting',async({page})=>{
  await ready(page);await seed(page);await page.locator('[data-metric="gym"]').click();await expect(page.locator('#moduleTitle')).toHaveText('Workout');await expect(page.locator('#energyWorkoutType,#energyMinutes,#energyOverlap')).toHaveCount(0);
  for(const value of ['300','150']){await page.locator('#energySimpleKcal').fill(value);await page.locator('#energySaveWorkout').click();await settle(page)}
- expect(await page.evaluate(()=>energyDay().exercise.value)).toBe(450);expect(await page.evaluate(()=>energyDay().walking.value)).toBe(0);expect(await page.evaluate(()=>data.logs['2024-03-01'].gym)).toBe(true);
+ expect(await page.evaluate(()=>energyDay().exercise.value)).toBe(450);expect(await page.evaluate(()=>data.energyBalance.workouts.every(w=>w.overlap==='none'))).toBe(true);expect(await page.evaluate(()=>energyDay().walking.value)).toBeGreaterThan(0);expect(await page.evaluate(()=>data.logs['2024-03-01'].gym)).toBe(true);
  await page.locator('#moduleContent .module-history').first().click();await page.locator('#energySimpleKcal').fill('200');await page.locator('#energySaveWorkout').click();await settle(page);expect(await page.evaluate(()=>energyDay().exercise.value)).toBe(350);
  await page.locator('#moduleContent .module-history').last().click();page.once('dialog',d=>d.accept());await page.getByRole('button',{name:'Delete workout',exact:true}).click();await settle(page);expect(await page.evaluate(()=>energyDay().exercise.value)).toBe(200);
  await page.reload();await expect(page.locator('body')).not.toHaveClass(/loading-data/);expect(await page.evaluate(()=>data.energyBalance.workouts.length)).toBe(1);
+});
+test('historic simple workout calories and steps are additive without rewriting records',async({page})=>{
+ await ready(page);await seed(page);await addCard(page);
+ await page.evaluate(async()=>{
+  data.energyBalance.workouts=[{id:'historic-simple',date:'2024-03-01',type:'other',source:'watch',scope:'workout',counting:'watch',energyType:'active',overlap:'unknown',kcal:440,minutes:null,steps:null}];
+  await save();renderToday();
+ });
+ const before=await page.evaluate(()=>structuredClone(data.energyBalance.workouts));
+ const result=await page.evaluate(()=>energyDay('2024-03-01'));
+ expect(result.walking.value).toBeGreaterThan(0);expect(result.exercise.value).toBe(440);
+ expect(result.tdee).toBeCloseTo(result.base+result.walking.value+440);
+ expect(result.issues).not.toContain('unknownOverlap');
+ expect(await page.evaluate(()=>data.energyBalance.workouts)).toEqual(before);
+ await open(page);await page.locator('#moduleContent .module-history').click();
+ await expect(page.locator('#energySimpleKcal')).toHaveValue('440');
+ await expect(page.locator('#energyWorkoutType,#energyMinutes,#energyOverlap')).toHaveCount(0);
 });
 test('legacy workouts keep their original semantics and remain editable',async({page})=>{
  await ready(page);await seed(page);await page.evaluate(async()=>{data.energyBalance.workouts=[{id:'legacy-total',date:'2024-03-01',type:'cycling',source:'watch',scope:'workout',counting:'watch',energyType:'total',overlap:'none',kcal:300,minutes:60,steps:null}];await save()});const before=await page.evaluate(()=>structuredClone(data.energyBalance.workouts[0]));await open(page);await page.locator('#moduleContent .module-history').click();await expect(page.locator('#moduleContent')).toContainText('original calculation method is preserved');expect(await page.evaluate(()=>data.energyBalance.workouts[0])).toEqual(before);
