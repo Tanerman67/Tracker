@@ -59,7 +59,22 @@ test('walking/running watch sessions exclude their known steps; step mode never 
  const bySteps=E.exercise([{...w,counting:'steps'}],DAY,1600,6800);assert.equal(bySteps.value,0);assert.equal(bySteps.excludedSteps,0);
  }
 });
-test('unknown overlap suppresses all extra walking and never blindly adds both estimates',()=>{
+test('simplified workout calories add to daily walking for new and historic records',()=>{
+ for(const overlap of ['unknown','none']){
+  const db=database(),w=workout({type:'other',overlap,minutes:null,steps:null,kcal:440});
+  db.energyBalance.workouts=[w];const saved=JSON.stringify(db.energyBalance.workouts);
+  const result=E.daily(db,DAY,calories());
+  assert.equal(E.simpleWorkout(w),true);
+  assert.equal(result.exercise.value,440);
+  assert.ok(result.walking.value>0);
+  assert.equal(result.walking.suppressed,false);
+  assert.ok(!result.issues.includes('unknownOverlap'));
+  assert.ok(Math.abs(result.tdee-result.base-result.walking.value-440)<1e-9);
+  assert.equal(JSON.stringify(db.energyBalance.workouts),saved);
+ }
+ assert.equal(E.simpleWorkout(workout({type:'running',overlap:'included',steps:null})),false);
+});
+test('unknown overlap suppresses walking for historical detailed workouts',()=>{
  const x=E.exercise([workout({type:'running',overlap:'included',steps:null})],DAY,1600,6800);
  assert.equal(x.suppressWalking,true);assert.ok(x.issues.includes('unknownOverlap'));assert.equal(E.walking(profile,logs(),DAY,{suppress:x.suppressWalking}).value,0);
  assert.ok(E.exercise([workout({overlap:'included',steps:9000})],DAY,1600,6800).issues.includes('inconsistentSteps'));
