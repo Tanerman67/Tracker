@@ -62,6 +62,13 @@
    &&(!['walking','running'].includes(w.type)||w.overlap!=='none')
    &&(w.counting!=='steps'||w.overlap==='included');
  }
+ // A simplified workout records the final additional calories on top of daily steps.
+ // Earlier simple records used overlap='unknown'; their persisted data is unchanged.
+ function simpleWorkout(w){
+  return !!w&&w.type==='other'&&w.source==='watch'&&w.counting==='watch'
+   &&w.energyType==='active'&&(w.overlap==='none'||w.overlap==='unknown')
+   &&w.minutes===null&&w.steps===null;
+ }
  function exercise(workouts,date,rmr,recordedSteps){
   let value=0,excludedSteps=0,suppressWalking=false;
   const issues=[],rows=[],seen=new Set();
@@ -70,7 +77,7 @@
    if(w.counting==='steps'){rows.push({id:w.id,value:0,source:'steps'});continue}
    let net=w.energyType==='active'?w.kcal:w.energyType==='total'&&w.minutes!==null&&rmr!==null&&w.kcal!==null?Math.max(0,w.kcal-rmr*w.minutes/1440):null;
    if(net===null){issues.push(w.energyType==='total'&&w.minutes===null?'totalNeedsDuration':'unknownWorkout');rows.push({id:w.id,value:null,source:w.energyType});continue}
-   if(w.overlap==='unknown'||w.overlap==='included'&&(w.steps===null||recordedSteps===null)){
+   if(!simpleWorkout(w)&&(w.overlap==='unknown'||w.overlap==='included'&&(w.steps===null||recordedSteps===null))){
     suppressWalking=true;issues.push('unknownOverlap');
    }else if(w.overlap==='included')excludedSteps+=w.steps;
    value+=net;rows.push({id:w.id,value:net,source:w.energyType});
@@ -142,7 +149,7 @@
   }
   return {start,end,days,used:used.length,excludedDays:days.length-used.length,excluded,sum,equivalent:sum===null?null:-sum/7700,weights,comparison};
  }
- const api={dateNumber,addDays,dayDiff,number,stable,weightAt,ROUTINES,ageAt,resting,walking,WORKOUT_TYPES,validWorkout,exercise,fingerprint,foodSignature,activitySignature,daily,validateStore,period};
+ const api={dateNumber,addDays,dayDiff,number,stable,weightAt,ROUTINES,ageAt,resting,walking,WORKOUT_TYPES,validWorkout,simpleWorkout,exercise,fingerprint,foodSignature,activitySignature,daily,validateStore,period};
  root.MyRhythmEnergy=api;
  if(typeof module==='object'&&module.exports)module.exports=api;
 })(globalThis);
