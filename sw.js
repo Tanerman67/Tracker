@@ -1,4 +1,4 @@
-const CACHE='my-rhythm-v7.5.3-unified-editors-progress';
+const CACHE='my-rhythm-v7.5.4-additive-simple-workouts';
 const ASSETS=[
   "./design-system.css?v=7401",
   "./today-unified.css?v=2",
@@ -16,8 +16,8 @@ const ASSETS=[
   "./calendar.css?v=7311",
   "./cleanup.css?v=7311",
   "./energy.css?v=7311",
-  "./energy-core.js?v=7311",
-  "./energy.js?v=7311",
+  "./energy-core.js?v=7312",
+  "./energy.js?v=7312",
   "./calendar.js?v=7311",
   "./goals.js?v=7311",
   "./coordination.js?v=7311",
